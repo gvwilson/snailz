@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.29">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.31">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.76a95c52.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.3cba04c6.min.css">
       
       
 
@@ -551,11 +551,31 @@
   
   
     <li class="md-nav__item">
-      <a href="../survey/" class="md-nav__link">
+      <a href="../staff/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Survey
+    Staff
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../surveymap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Surveymap
   </span>
   
 
@@ -1516,11 +1536,11 @@
 <span class="normal">127</span>
 <span class="normal">128</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">grid</span><span class="p">(</span><span class="n">options</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;Main driver.&#39;&#39;&#39;</span>
-    <span class="n">options</span><span class="o">.</span><span class="n">grids</span> <span class="o">=</span> <span class="n">load_params</span><span class="p">(</span><span class="n">GridParams</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">grids</span><span class="p">)</span>
+    <span class="n">options</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">load_params</span><span class="p">(</span><span class="n">GridParams</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
     <span class="n">options</span><span class="o">.</span><span class="n">sites</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">sites</span><span class="p">)</span>
-    <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">grids</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">options</span><span class="o">.</span><span class="n">sites</span><span class="o">.</span><span class="n">iter_rows</span><span class="p">(</span><span class="n">named</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="n">grid</span> <span class="o">=</span> <span class="n">Grid</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">grids</span><span class="p">)</span>
+        <span class="n">grid</span> <span class="o">=</span> <span class="n">Grid</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
         <span class="n">grid</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
         <span class="n">_save</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">outdir</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;site_id&#39;</span><span class="p">],</span> <span class="n">grid</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -1552,11 +1572,11 @@
 <span class="normal">136</span>
 <span class="normal">137</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">_save</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="n">site_id</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;Save grid as CSV.&#39;&#39;&#39;</span>
-    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">height</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;1&#39;</span> <span class="k">if</span> <span class="n">grid</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="s1">&#39;0&#39;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">width</span><span class="p">())))</span>
+    <span class="n">Path</span><span class="p">(</span><span class="n">outdir</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">site_id</span><span class="si">}</span><span class="s1">.csv&#39;</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rows</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">writer</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">height</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;1&#39;</span> <span class="k">if</span> <span class="n">grid</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="s1">&#39;0&#39;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">width</span><span class="p">()))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">writer</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

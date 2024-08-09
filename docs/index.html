@@ -14,7 +14,7 @@
       
       
       <link rel="icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.29">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.31">
     
     
       
@@ -22,7 +22,7 @@
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.76a95c52.min.css">
+      <link rel="stylesheet" href="assets/stylesheets/main.3cba04c6.min.css">
       
       
 
@@ -439,11 +439,31 @@
   
   
     <li class="md-nav__item">
-      <a href="survey/" class="md-nav__link">
+      <a href="staff/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Survey
+    Staff
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="surveymap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Surveymap
   </span>
   
 
@@ -553,84 +573,16 @@ that are growing to unusual size as a result of exposure to pollution.</p>
 <p><img src="https://raw.githubusercontent.com/gvwilson/snailz/main/img/survey.png" alt="survey sites"></p>
 <h2 id="usage">Usage</h2>
 <ol>
-<li>Create a fresh Python environment: <code>mamba create -y -n snailz python=3.12</code></li>
+<li>Create a fresh Python environment: <code>mamba create -y -n snailz python=3.11</code></li>
 <li>Activate that environment: <code>mamba activate snailz</code></li>
 <li>Build development version of package: <code>pip install -e .</code></li>
 <li>View available commands: <code>snailz --help</code></li>
-<li>Copy default parameter files: <code>snailz params --outdir .</code></li>
+<li>Copy default parameter files: <code>snailz params --outdir ./params</code></li>
 <li>See how to regenerate datasets: <code>python -c 'import snailz; help(snailz)'</code></li>
 </ol>
-<p>This project also includes a Makefile that will re-execute commands as needed.
-To see available commands, run:</p>
-<pre><code>make DATA=data PARAMS=snailz/params commands
+<p>To regenerate all data using the default parameters provided, run:</p>
+<pre><code>snailz everything --paramsdir ./params --datadir ./data --verbose
 </code></pre>
-<p>(To keep the Makefile simple,
-<code>DATA</code> and <code>PARAMS</code> must be defined even for commands that don't need them.)
-To regenerate all of the datasets, run:</p>
-<pre><code>make DATA=data PARAMS=snailz/params datasets
-</code></pre>
-<table>
-<thead>
-<tr>
-<th>command</th>
-<th>action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>dev</code></td>
-<td>rebuild development version of package</td>
-</tr>
-<tr>
-<td><code>lint</code></td>
-<td>check code using ruff</td>
-</tr>
-<tr>
-<td><code>clean</code></td>
-<td>remove datafiles</td>
-</tr>
-<tr>
-<td><code>commands</code></td>
-<td>show available commands</td>
-</tr>
-<tr>
-<td><code>datasets</code></td>
-<td>make all datasets</td>
-</tr>
-<tr>
-<td><code>survey</code></td>
-<td>generate survey map</td>
-</tr>
-<tr>
-<td><code>mangled</code></td>
-<td>create inconsistent plate files</td>
-</tr>
-<tr>
-<td><code>db</code></td>
-<td>generate database</td>
-</tr>
-<tr>
-<td><code>plates</code></td>
-<td>generate plate files</td>
-</tr>
-<tr>
-<td><code>assays</code></td>
-<td>generate assay files</td>
-</tr>
-<tr>
-<td><code>samples</code></td>
-<td>sample snails from survey sites</td>
-</tr>
-<tr>
-<td><code>genomes</code></td>
-<td>synthesize genomes</td>
-</tr>
-<tr>
-<td><code>grids</code></td>
-<td>synthesize pollution grids</td>
-</tr>
-</tbody>
-</table>
 <h2 id="database">Database</h2>
 <p>The final database <code>data/lab.db</code> is structured as shown below.
 Note that the data from the file <code>assays.json</code> is split between several tables.
@@ -701,6 +653,12 @@ it does <em>not</em> contain the SQLite database file <code>lab.db</code>;
 run <code>snailz db</code> to regenerate it.
 (See <code>help(snailz)</code> for an example invocation.)</p>
 <ul>
+<li>Staff: <code>staff.csv</code><ul>
+<li><code>staff_id</code>: unique staff member identifier (int &gt; 0)</li>
+<li><code>personal</code>: personal name (text)</li>
+<li><code>family</code>: family name (text)</li>
+</ul>
+</li>
 <li>Genomes: <code>genomes.json</code><ul>
 <li><code>length</code>: number of base pairs (int &gt; 0)</li>
 <li><code>reference</code>: the unmutated reference genome (text)</li>
@@ -724,12 +682,6 @@ run <code>snailz db</code> to regenerate it.
 </ul>
 </li>
 <li>Assays: <code>assays.json</code><ul>
-<li><code>staff</code>:<ul>
-<li><code>staff_id</code>: unique staff member identifier (int &gt; 0)</li>
-<li><code>personal</code>: personal name (text)</li>
-<li><code>family</code>: family name (text)</li>
-</ul>
-</li>
 <li><code>experiment</code>: experiment details<ul>
 <li><code>sample_id</code>: sample that experiment used (int &gt; 0)</li>
 <li><code>kind</code>: "ELISA" or "JESS" (text)</li>
@@ -786,16 +738,17 @@ run <code>snailz db</code> to regenerate it.
 <p>The workflow used to generate the database and data files is shown below:</p>
 <ul>
 <li><code>snailz</code> or <code>snailz --help</code>: show available commands</li>
-<li><code>snailz all</code>: make all datasets</li>
-<li><code>snailz map</code>: generate SVG map of sample locations (in progress)</li>
+<li><code>snailz clean</code>: remove all datasets</li>
+<li><code>snailz everything</code>: make all datasets</li>
+<li><code>snailz grids</code>: synthesize pollution grids</li>
+<li><code>snailz genomes</code>: synthesize genomes</li>
+<li><code>snailz samples</code>: sample snails from survey sites</li>
+<li><code>snailz staff</code>: synthesize staff</li>
+<li><code>snailz assays</code>: generate assay files</li>
+<li><code>snailz plates</code>: generate plate files</li>
 <li><code>snailz mangle</code>: create mangled plate reading files</li>
 <li><code>snailz db</code>: generate database</li>
-<li><code>snailz plates</code>: generate plate files</li>
-<li><code>snailz assays</code>: generate assay files</li>
-<li><code>snailz samples</code>: sample snails from survey sites</li>
-<li><code>snailz genomes</code>: synthesize genomes</li>
-<li><code>snailz grids</code>: synthesize pollution grids</li>
-<li><code>snailz clean</code>: remove all datasets</li>
+<li><code>snailz map</code>: generate SVG map of sample locations (in progress)</li>
 </ul>
 <p><img src="https://raw.githubusercontent.com/gvwilson/snailz/main/img/workflow.svg" alt="data generation workflow"></p>
 <h2 id="parameters">Parameters</h2>
@@ -809,6 +762,13 @@ see the table of commands given earlier for options.</p>
 <li><code>site_id</code>: unique label for site (text)</li>
 <li><code>lon</code>: longitude of site reference marker (deg)</li>
 <li><code>lat</code>: latitude of site reference marker (deg)</li>
+</ul>
+</li>
+<li>Grids: <code>grids.json</code><ul>
+<li><code>depth</code>: range of random values per cell (int &gt; 0)</li>
+<li><code>height</code>: number of cells on Y axis (int &gt; 0)</li>
+<li><code>seed</code>: RNG seed (int &gt; 0)</li>
+<li><code>width</code>: number of cells on X axis (int &gt; 0)</li>
 </ul>
 </li>
 <li>Surveys: <code>surveys.csv</code><ul>
@@ -827,11 +787,10 @@ see the table of commands given earlier for options.</p>
 <li><code>snp_probs</code>: probability of selecting various bases (list of 4 float summing to 1.0)</li>
 </ul>
 </li>
-<li>Grids: <code>grids.json</code><ul>
-<li><code>depth</code>: range of random values per cell (int &gt; 0)</li>
-<li><code>height</code>: number of cells on Y axis (int &gt; 0)</li>
+<li>Staff: <code>staff.json</code><ul>
+<li><code>locale</code>: locale to use when generating staff names (text)</li>
+<li><code>num</code>: number of staff (int &gt; 0)</li>
 <li><code>seed</code>: RNG seed (int &gt; 0)</li>
-<li><code>width</code>: number of cells on X axis (int &gt; 0)</li>
 </ul>
 </li>
 <li>Assays: <code>assays.json</code><ul>
@@ -843,10 +802,9 @@ see the table of commands given earlier for options.</p>
 <li><code>controls</code>: labels to used for control wells (list of text)</li>
 <li><code>enddate</code>: end of all experiments</li>
 <li><code>filename_length</code>: length of stem of design/readings filenames (int &gt; 0)</li>
-<li><code>invalid</code>: probability of plate being invalidted (float in 0..1)</li>
-<li><code>locale</code>: locale to use when generating staff names (text)</li>
+<li><code>fraction</code>: fraction of samples that have been used in experiments</li>
+<li><code>invalid</code>: probability of plate being invalidated (float in 0..1)</li>
 <li><code>seed</code>: RNG seed (int &gt; 0)</li>
-<li><code>staff</code>: number of staff (int &gt; 0)</li>
 <li><code>startdate</code>: start of all experiments</li>
 <li><code>stdev</code>: standard deviation on readings (float &gt; 0)</li>
 <li><code>treated_val</code>: nominal reading value for treated well (float &gt; 0)</li>

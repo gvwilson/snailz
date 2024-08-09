@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.29">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.31">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.76a95c52.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.3cba04c6.min.css">
       
       
 
@@ -246,6 +246,33 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#snailz.clui.everything" class="md-nav__link">
+    <span class="md-ellipsis">
+      everything
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snailz.clui._make_options" class="md-nav__link">
+    <span class="md-ellipsis">
+      _make_options
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snailz.clui._verbose" class="md-nav__link">
+    <span class="md-ellipsis">
+      _verbose
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -401,11 +428,31 @@
   
   
     <li class="md-nav__item">
-      <a href="../survey/" class="md-nav__link">
+      <a href="../staff/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Survey
+    Staff
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../surveymap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Surveymap
   </span>
   
 
@@ -442,6 +489,33 @@
   <a href="#snailz.clui" class="md-nav__link">
     <span class="md-ellipsis">
       clui
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snailz.clui.everything" class="md-nav__link">
+    <span class="md-ellipsis">
+      everything
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snailz.clui._make_options" class="md-nav__link">
+    <span class="md-ellipsis">
+      _make_options
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snailz.clui._verbose" class="md-nav__link">
+    <span class="md-ellipsis">
+      _verbose
     </span>
   </a>
   
@@ -484,6 +558,300 @@
 
 
 
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="snailz.clui.everything" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">everything</span><span class="p">(</span><span class="n">options</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Build everything using default values.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>snailz/clui.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">everything</span><span class="p">(</span><span class="n">options</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;Build everything using default values.&#39;&#39;&#39;</span>
+    <span class="c1"># Common values</span>
+    <span class="n">assays_data</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">datadir</span><span class="p">,</span> <span class="s1">&#39;assays.json&#39;</span><span class="p">)</span>
+    <span class="n">assays_params</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">paramsdir</span><span class="p">,</span> <span class="s1">&#39;assays.json&#39;</span><span class="p">)</span>
+    <span class="n">db_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">datadir</span><span class="p">,</span> <span class="s1">&#39;lab.db&#39;</span><span class="p">)</span>
+    <span class="n">designs_data_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">datadir</span><span class="p">,</span> <span class="s1">&#39;designs&#39;</span><span class="p">)</span>
+    <span class="n">genomes_data</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">datadir</span><span class="p">,</span> <span class="s1">&#39;genomes.json&#39;</span><span class="p">)</span>
+    <span class="n">genomes_params</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">paramsdir</span><span class="p">,</span> <span class="s1">&#39;genomes.json&#39;</span><span class="p">)</span>
+    <span class="n">grids_data_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">datadir</span><span class="p">,</span> <span class="s1">&#39;grids&#39;</span><span class="p">)</span>
+    <span class="n">grids_params</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">paramsdir</span><span class="p">,</span> <span class="s1">&#39;grids.json&#39;</span><span class="p">)</span>
+    <span class="n">mangled_data_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">datadir</span><span class="p">,</span> <span class="s1">&#39;mangled&#39;</span><span class="p">)</span>
+    <span class="n">readings_data_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">datadir</span><span class="p">,</span> <span class="s1">&#39;readings&#39;</span><span class="p">)</span>
+    <span class="n">samples_data</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">datadir</span><span class="p">,</span> <span class="s1">&#39;samples.csv&#39;</span><span class="p">)</span>
+    <span class="n">samples_params</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">paramsdir</span><span class="p">,</span> <span class="s1">&#39;samples.json&#39;</span><span class="p">)</span>
+    <span class="n">sites_params</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">paramsdir</span><span class="p">,</span> <span class="s1">&#39;sites.csv&#39;</span><span class="p">)</span>
+    <span class="n">staff_data</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">datadir</span><span class="p">,</span> <span class="s1">&#39;staff.csv&#39;</span><span class="p">)</span>
+    <span class="n">staff_params</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">paramsdir</span><span class="p">,</span> <span class="s1">&#39;staff.json&#39;</span><span class="p">)</span>
+    <span class="n">surveys_params</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">paramsdir</span><span class="p">,</span> <span class="s1">&#39;surveys.csv&#39;</span><span class="p">)</span>
+    <span class="n">surveymap_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">datadir</span><span class="p">,</span> <span class="s1">&#39;survey.png&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Grids</span>
+    <span class="n">_verbose</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="s1">&#39;grids&#39;</span><span class="p">)</span>
+    <span class="n">grids_data_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">grid</span><span class="p">(</span><span class="n">_make_options</span><span class="p">(</span>
+        <span class="n">outdir</span><span class="o">=</span><span class="n">grids_data_dir</span><span class="p">,</span>
+        <span class="n">params</span><span class="o">=</span><span class="n">grids_params</span><span class="p">,</span>
+        <span class="n">sites</span><span class="o">=</span><span class="n">sites_params</span><span class="p">,</span>
+    <span class="p">))</span>
+    <span class="n">Path</span><span class="p">(</span><span class="n">grids_data_dir</span><span class="p">,</span> <span class="n">TOUCH</span><span class="p">)</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
+
+    <span class="c1"># Genomes</span>
+    <span class="n">_verbose</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="s1">&#39;genomes&#39;</span><span class="p">)</span>
+    <span class="n">genomes</span><span class="p">(</span><span class="n">_make_options</span><span class="p">(</span>
+        <span class="n">params</span><span class="o">=</span><span class="n">genomes_params</span><span class="p">,</span>
+        <span class="n">outfile</span><span class="o">=</span><span class="n">genomes_data</span><span class="p">,</span>
+    <span class="p">))</span>
+
+    <span class="c1"># Samples</span>
+    <span class="n">_verbose</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="s1">&#39;samples&#39;</span><span class="p">)</span>
+    <span class="n">samples</span><span class="p">(</span><span class="n">_make_options</span><span class="p">(</span>
+        <span class="n">genomes</span><span class="o">=</span><span class="n">genomes_data</span><span class="p">,</span>
+        <span class="n">grids</span><span class="o">=</span><span class="n">grids_data_dir</span><span class="p">,</span>
+        <span class="n">outfile</span><span class="o">=</span><span class="n">samples_data</span><span class="p">,</span>
+        <span class="n">params</span><span class="o">=</span><span class="n">samples_params</span><span class="p">,</span>
+        <span class="n">sites</span><span class="o">=</span><span class="n">sites_params</span><span class="p">,</span>
+        <span class="n">surveys</span><span class="o">=</span><span class="n">surveys_params</span><span class="p">,</span>
+    <span class="p">))</span>
+
+    <span class="c1"># Staff</span>
+    <span class="n">_verbose</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="s1">&#39;staff&#39;</span><span class="p">)</span>
+    <span class="n">staff</span><span class="p">(</span><span class="n">_make_options</span><span class="p">(</span>
+        <span class="n">params</span><span class="o">=</span><span class="n">staff_params</span><span class="p">,</span>
+        <span class="n">outfile</span><span class="o">=</span><span class="n">staff_data</span><span class="p">,</span>
+    <span class="p">))</span>
+
+    <span class="c1"># Assays</span>
+    <span class="n">_verbose</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="s1">&#39;assays&#39;</span><span class="p">)</span>
+    <span class="n">assays</span><span class="p">(</span><span class="n">_make_options</span><span class="p">(</span>
+        <span class="n">genomes</span><span class="o">=</span><span class="n">genomes_data</span><span class="p">,</span>
+        <span class="n">outfile</span><span class="o">=</span><span class="n">assays_data</span><span class="p">,</span>
+        <span class="n">params</span><span class="o">=</span><span class="n">assays_params</span><span class="p">,</span>
+        <span class="n">samples</span><span class="o">=</span><span class="n">samples_data</span><span class="p">,</span>
+        <span class="n">staff</span><span class="o">=</span><span class="n">staff_data</span><span class="p">,</span>
+    <span class="p">))</span>
+
+    <span class="c1"># Plates</span>
+    <span class="n">_verbose</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="s1">&#39;plates&#39;</span><span class="p">)</span>
+    <span class="n">designs_data_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">readings_data_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">plates</span><span class="p">(</span><span class="n">_make_options</span><span class="p">(</span>
+        <span class="n">designs</span><span class="o">=</span><span class="n">designs_data_dir</span><span class="p">,</span>
+        <span class="n">readings</span><span class="o">=</span><span class="n">readings_data_dir</span><span class="p">,</span>
+        <span class="n">assays</span><span class="o">=</span><span class="n">assays_data</span><span class="p">,</span>
+        <span class="n">params</span><span class="o">=</span><span class="n">assays_params</span><span class="p">,</span>
+    <span class="p">))</span>
+    <span class="n">Path</span><span class="p">(</span><span class="n">designs_data_dir</span><span class="p">,</span> <span class="n">TOUCH</span><span class="p">)</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
+    <span class="n">Path</span><span class="p">(</span><span class="n">readings_data_dir</span><span class="p">,</span> <span class="n">TOUCH</span><span class="p">)</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
+
+    <span class="c1"># Database</span>
+    <span class="n">_verbose</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="s1">&#39;db&#39;</span><span class="p">)</span>
+    <span class="n">db</span><span class="p">(</span><span class="n">_make_options</span><span class="p">(</span>
+        <span class="n">dbfile</span><span class="o">=</span><span class="n">db_file</span><span class="p">,</span>
+        <span class="n">assays</span><span class="o">=</span><span class="n">assays_data</span><span class="p">,</span>
+        <span class="n">samples</span><span class="o">=</span><span class="n">samples_data</span><span class="p">,</span>
+        <span class="n">sites</span><span class="o">=</span><span class="n">sites_params</span><span class="p">,</span>
+        <span class="n">staff</span><span class="o">=</span><span class="n">staff_data</span><span class="p">,</span>
+        <span class="n">surveys</span><span class="o">=</span><span class="n">surveys_params</span><span class="p">,</span>
+    <span class="p">))</span>
+
+    <span class="c1"># Mangled plate files</span>
+    <span class="n">_verbose</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="s1">&#39;mangled&#39;</span><span class="p">)</span>
+    <span class="n">mangled_data_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">mangle</span><span class="p">(</span><span class="n">_make_options</span><span class="p">(</span>
+        <span class="n">dbfile</span><span class="o">=</span><span class="n">db_file</span><span class="p">,</span>
+        <span class="n">tidy</span><span class="o">=</span><span class="n">readings_data_dir</span><span class="p">,</span>
+        <span class="n">outdir</span><span class="o">=</span><span class="n">mangled_data_dir</span><span class="p">,</span>
+    <span class="p">))</span>
+    <span class="n">Path</span><span class="p">(</span><span class="n">mangled_data_dir</span><span class="p">,</span> <span class="n">TOUCH</span><span class="p">)</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
+
+    <span class="c1"># Survey map</span>
+    <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">withmap</span><span class="p">:</span>
+        <span class="n">_verbose</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="s1">&#39;survey map&#39;</span><span class="p">)</span>
+        <span class="n">surveymap</span><span class="p">(</span><span class="n">_make_options</span><span class="p">(</span>
+            <span class="n">outfile</span><span class="o">=</span><span class="n">surveymap_file</span><span class="p">,</span>
+            <span class="n">samples</span><span class="o">=</span><span class="n">samples_data</span><span class="p">,</span>
+        <span class="p">))</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="snailz.clui._make_options" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">_make_options</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Build an argparse options object.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>snailz/clui.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">_make_options</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;Build an argparse options object.&#39;&#39;&#39;</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">options</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="snailz.clui._verbose" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">_verbose</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Possibly report progress.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>snailz/clui.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">_verbose</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;Possibly report progress.&#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;...</span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
 
 
 

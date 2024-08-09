@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.29">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.31">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.76a95c52.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.3cba04c6.min.css">
       
       
 
@@ -398,6 +398,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#snailz.params.StaffParams" class="md-nav__link">
+    <span class="md-ellipsis">
+      StaffParams
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#snailz.params.export_params" class="md-nav__link">
     <span class="md-ellipsis">
       export_params
@@ -470,11 +479,31 @@
   
   
     <li class="md-nav__item">
-      <a href="../survey/" class="md-nav__link">
+      <a href="../staff/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Survey
+    Staff
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../surveymap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Surveymap
   </span>
   
 
@@ -562,6 +591,15 @@
   <a href="#snailz.params.SampleParams" class="md-nav__link">
     <span class="md-ellipsis">
       SampleParams
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snailz.params.StaffParams" class="md-nav__link">
+    <span class="md-ellipsis">
+      StaffParams
     </span>
   </a>
   
@@ -675,13 +713,12 @@
 <span class="normal">54</span>
 <span class="normal">55</span>
 <span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="normal">57</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">AssayParams</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;Parameters for assay data generation.&#39;&#39;&#39;</span>
 
-    <span class="n">assay_types</span><span class="p">:</span> <span class="nb">list</span>
     <span class="n">assay_staff</span><span class="p">:</span> <span class="nb">list</span>
+    <span class="n">assay_types</span><span class="p">:</span> <span class="nb">list</span>
     <span class="n">assay_duration</span><span class="p">:</span> <span class="nb">list</span>
     <span class="n">assay_plates</span><span class="p">:</span> <span class="nb">list</span>
     <span class="n">control_val</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">5.0</span>
@@ -689,10 +726,9 @@
     <span class="n">enddate</span><span class="p">:</span> <span class="n">date</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">experiments</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">filename_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">fraction</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">invalid</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span>
-    <span class="n">locale</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;en_IN&#39;</span>
     <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">staff</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">startdate</span><span class="p">:</span> <span class="n">date</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">stdev</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3.0</span>
     <span class="n">treated_val</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">8.0</span>
@@ -739,7 +775,8 @@
 
             <details class="quote">
               <summary>Source code in <code>snailz/params.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">48</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">47</span>
+<span class="normal">48</span>
 <span class="normal">49</span>
 <span class="normal">50</span>
 <span class="normal">51</span>
@@ -748,8 +785,7 @@
 <span class="normal">54</span>
 <span class="normal">55</span>
 <span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">57</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;Convert dates if provided.&#39;&#39;&#39;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">startdate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">startdate</span> <span class="o">=</span> <span class="n">DEFAULT_START_DATE</span>
@@ -796,15 +832,15 @@
 
               <details class="quote">
                 <summary>Source code in <code>snailz/params.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">61</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">60</span>
+<span class="normal">61</span>
 <span class="normal">62</span>
 <span class="normal">63</span>
 <span class="normal">64</span>
 <span class="normal">65</span>
 <span class="normal">66</span>
 <span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="normal">68</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">GenomeParams</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;Gene sequence parameters.&#39;&#39;&#39;</span>
     <span class="n">snp_probs</span><span class="p">:</span> <span class="nb">list</span>
@@ -858,13 +894,13 @@
 
               <details class="quote">
                 <summary>Source code in <code>snailz/params.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">72</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">71</span>
+<span class="normal">72</span>
 <span class="normal">73</span>
 <span class="normal">74</span>
 <span class="normal">75</span>
 <span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="normal">77</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">GridParams</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;Invasion percolation parameters.&#39;&#39;&#39;</span>
     <span class="n">depth</span><span class="p">:</span> <span class="nb">int</span>
@@ -916,20 +952,76 @@
 
               <details class="quote">
                 <summary>Source code in <code>snailz/params.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">81</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">80</span>
+<span class="normal">81</span>
 <span class="normal">82</span>
 <span class="normal">83</span>
 <span class="normal">84</span>
 <span class="normal">85</span>
 <span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="normal">87</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">SampleParams</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;Sampled snail parameters.&#39;&#39;&#39;</span>
     <span class="n">min_snail_size</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">max_snail_size</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">mutant</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">normal</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="snailz.params.StaffParams" class="doc doc-heading">
+            <code>StaffParams</code>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+
+      <p>Staff parameters.</p>
+
+              <details class="quote">
+                <summary>Source code in <code>snailz/params.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">StaffParams</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;Staff parameters.&#39;&#39;&#39;</span>
+    <span class="n">locale</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;hy_AM&#39;</span>
+    <span class="n">num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -970,15 +1062,15 @@
 
             <details class="quote">
               <summary>Source code in <code>snailz/params.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span>
-<span class="normal">95</span>
-<span class="normal">96</span>
-<span class="normal">97</span>
-<span class="normal">98</span>
-<span class="normal">99</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">export_params</span><span class="p">(</span><span class="n">options</span><span class="p">):</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">export_params</span><span class="p">(</span><span class="n">options</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;Export parameter files.&#39;&#39;&#39;</span>
     <span class="n">outdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">outdir</span><span class="p">)</span>
     <span class="n">outdir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1008,9 +1100,9 @@
 
             <details class="quote">
               <summary>Source code in <code>snailz/params.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_params</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_params</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;Load parameters from file.&#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()))</span>
 </code></pre></div></td></tr></table></div>
