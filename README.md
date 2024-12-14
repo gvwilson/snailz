@@ -16,9 +16,9 @@ that are growing to unusual size as a result of exposure to pollution.
 
 ## Usage
 
-1.  Create a fresh Python environment: `mamba create -y -n snailz python=3.11`
-2.  Activate that environment: `mamba activate snailz`
-3.  Build development version of package: `pip install -e .`
+1.  Create a fresh Python environment: `uv venv`
+2.  Activate that environment: `source .venv/bin/activate`
+3.  Build development version of package: `uv pip install -e .`
 4.  View available commands: `snailz --help`
 5.  Copy default parameter files: `snailz params --outdir ./params`
 6.  See how to regenerate datasets: `python -c 'import snailz; help(snailz)'`

@@ -20,7 +20,7 @@ but must abide by our Code of Conduct.
 
 ## Build and Release
 
--   `pip install build twine`
+-   `uv pip install build twine`
 -   `python -m build`
 -   `twine upload --verbose -u __token__ -p pypi-your-access-token dist/*`
 

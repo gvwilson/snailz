@@ -1,4 +1,0 @@
-include snailz/Makefile
-include snailz/params/*.json
-include snailz/params/*.csv
-include img/*.*

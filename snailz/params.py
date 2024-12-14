@@ -2,7 +2,7 @@
 
 from argparse import Namespace
 from dataclasses import dataclass, field
-from datetime import date, datetime, timezone
+from datetime import datetime
 from importlib.resources import files
 import json
 from pathlib import Path

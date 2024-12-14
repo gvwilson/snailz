@@ -6,11 +6,11 @@ build-backend = "setuptools.build_meta"
 packages = ["snailz"]
 
 [tool.setuptools.package-data]
-mypkg = ["*.json", "*.csv"]
+mypkg = ["Makefile", "img/*", "*.json", "*.csv"]
 
 [project]
 name = "snailz"
-version = "0.1.13"
+version = "0.1.15"
 authors = [
     {name = "Greg Wilson", email = "gvwilson@third-bit.com"},
 ]
@@ -37,18 +37,16 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-tests = [
-  "pytest",
-  "pytest-cov",
-]
-lint = [
-  "ruff",
-]
-docs = [
+dev = [
+  "build",
   "markdown-include",
   "mkdocs",
-  "mkdocstrings[python]",
   "mkdocs-material",
+  "mkdocstrings[python]",
+  "pytest",
+  "pytest-cov",
+  "ruff",
+  "twine",
 ]
 
 [project.scripts]

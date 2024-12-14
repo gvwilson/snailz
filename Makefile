@@ -38,6 +38,7 @@ clean:
 	@find . -name '*~' -exec rm {} \;
 	@find . -type d -name __pycache__ | xargs rm -r
 	@find . -type d -name .pytest_cache | xargs rm -r
+	@rm -rf dist *.egg-info
 	@rm -rf ./data/*
 	@mkdir -p ./data
 	@touch ./data/.touch
