@@ -1,0 +1,9 @@
+{
+    "length": 15,
+    "max_mass": 33.0,
+    "min_mass": 15.0,
+    "mut_scale": 0.5,
+    "mutations": 3,
+    "number": 20,
+    "seed": 4712389
+}

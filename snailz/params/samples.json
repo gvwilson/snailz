@@ -1,7 +1,0 @@
-{
-    "min_snail_size": 0.5,
-    "max_snail_size": 5.0,
-    "mutant": 10.0,
-    "normal": 1.0,
-    "seed": 1791128
-}

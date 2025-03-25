@@ -1,11 +1,21 @@
-*.bkp
-*.db
+# Python files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
 *.egg-info
-*.pyc
+.coverage
+
+# Virtual environments
+.venv
+
+# Database files
+*.db
+
+# Temporary files
+tmp/
+
+# Editor backup files
 *~
-.#*
-.pytest_cache
-.ruff_cache
-__pycache__
-data/survey.png
-dist
+*.bkp

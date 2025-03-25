@@ -1,43 +1,34 @@
 # Contributing
 
-Contributions are very welcome.
-Please file issues or submit pull requests in our GitHub repository.
-All contributors will be acknowledged,
-but must abide by our Code of Conduct.
+Contributions are very welcome.  Please file issues or submit pull
+requests in our GitHub repository.  All contributors will be
+acknowledged, but must abide by our Code of Conduct.
 
-## Site Structure
+## Please
 
--   `README.md`: overview
--   `LICENSE.md`: content license
--   `CODE_OF_CONDUCT.md`: code of conduct
--   `CONTRIBUTING.md`: this contributors' guide
--   `pyproject.toml`: Python package description
--   `Makefile`: repeatable commands
--   `src/snailz/`: Python source
-    -   `src/snailz/params/`: sample data synthesis parameters
--   `data/`: sample synthesized data
--   `img/`: images
+-   Use [Conventional Commits][conventional].
+-   [Open an issue][repo] *before* creating a pull request.
 
-## Build and Release
+## Setup
 
--   `uv pip install build twine`
--   `python -m build`
--   `twine upload --verbose -u __token__ -p pypi-your-access-token dist/*`
+1.  Fork or clone [the repository][repo].
+1.  `uv sync --extra dev" to install an editable version of this
+    package along with all its dependencies (including developer
+    dependencies).
+1.  Use <code>uv run <em>COMMAND</em></code> to run commands
+    in the virtual environments.
+    In particular, use `uv run doit list` to see available commands
+    and <code>uv run doit <em>COMMAND</em></code> to run a command.
 
-## Labels
+Alternatively:
 
-| Name             | Description                  | Color   |
-| ---------------- | ---------------------------- | ------- |
-| change           | something different          | #FBCA04 |
-| feature          | new feature                  | #B60205 |
-| fix              | something broken             | #5319E7 |
-| good first issue | newcomers are always welcome | #D4C5F9 |
-| talk             | question or discussion       | #0E8A16 |
-| task             | one-off task                 | #1D76DB |
+1.  Create a fresh Python environment: `uv venv`
+1.  Activate that environment: `source .venv/bin/activate`
+1.  Install dependencies and editable version of package: `uv pip install -e '.[dev]'`
 
-Please use [Conventional Commits][conventional] style for pull requests
-by using `change:`, `feature:`, `fix:`, or `task:` as the first word
-in the title of the commit message.
-You may also use `publish:` if the PR just rebuilds the HTML version of the lesson.
+## Publishing
+
+1.  `twine upload --verbose -u __token__ -p pypi-your-access-token dist/*`
 
 [conventional]: https://www.conventionalcommits.org/
+[repo]: https://github.com/gvwilson/snailz

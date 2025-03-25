@@ -1,0 +1,9 @@
+{
+    "baseline": 1.0,
+    "end_date": "2023-02-15",
+    "mutant": 10.0,
+    "noise": 0.1,
+    "plate_size": 4,
+    "seed": 7421398,
+    "start_date": "2023-01-10"
+}

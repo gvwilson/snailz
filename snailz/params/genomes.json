@@ -1,8 +1,0 @@
-{
-    "length": 40,
-    "num_genomes": 100,
-    "num_snp": 5,
-    "prob_other": 0.01,
-    "seed": 102938,
-    "snp_probs": [0.70, 0.15, 0.08, 0.07]
-}

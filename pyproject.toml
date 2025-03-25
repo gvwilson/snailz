@@ -1,48 +1,31 @@
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
-
-[tool.setuptools]
-packages = ["snailz"]
-
-[tool.setuptools.package-data]
-mypkg = ["Makefile", "img/*", "*.json", "*.csv"]
-
 [project]
 name = "snailz"
-version = "0.1.15"
-authors = [
-    {name = "Greg Wilson", email = "gvwilson@third-bit.com"},
-]
-maintainers = [
-    {name = "Greg Wilson", email = "gvwilson@third-bit.com"},
-]
+version = "0.2.2"
 description = "Synthetic data generator for snail mutation survey"
 keywords = ["open science", "synthetic data"]
 readme = "README.md"
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
+authors = [
+    { name = "Greg Wilson", email = "gvwilson@third-bit.com" }
 ]
+requires-python = ">=3.12"
 dependencies = [
-    "faker>=26.0",
-    "geopy>=2.4",
-    "kaleido>=0.2",
-    "pandas>=2.2",
-    "plotly>=5.22",
-    "polars>=1.1",
-    "pyarrow>=16.1",
-    "sqlalchemy>=2.0",
+    "click",
+    "faker",
+    "pydantic",
 ]
+
+[project.urls]
+home = "https://github.com/gvwilson/snailz"
 
 [project.optional-dependencies]
 dev = [
   "build",
+  "doit",
   "markdown-include",
-  "mkdocs",
   "mkdocs-material",
   "mkdocstrings[python]",
+  "pyfakefs",
+  "pyright",
   "pytest",
   "pytest-cov",
   "ruff",
@@ -50,4 +33,17 @@ dev = [
 ]
 
 [project.scripts]
-snailz = "snailz:clui.main"
+snailz = "snailz.clui:cli"
+
+[tool.pyright]
+include = ["src/snailz"]
+exclude = ["tests"]
+typeCheckingMode = "basic"
+reportMissingTypeStubs = false
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
