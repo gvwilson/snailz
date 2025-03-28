@@ -211,9 +211,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
+  <a href="#parameters-and-workflow" class="md-nav__link">
     <span class="md-ellipsis">
-      Parameters
+      Parameters and Workflow
     </span>
   </a>
   
@@ -419,9 +419,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
+  <a href="#parameters-and-workflow" class="md-nav__link">
     <span class="md-ellipsis">
-      Parameters
+      Parameters and Workflow
     </span>
   </a>
   
@@ -465,48 +465,211 @@ exposure to pollution. At a high level:</p>
 <li>Each assay is represented by a <em>design file</em> and an <em>assay file</em>.</li>
 <li>Assay files are mangled to create <em>raw</em> files with formatting glitches.</li>
 </ul>
-<p>In more detail:</p>
-<ul>
-<li>
-<p><code>snailz</code> uses <a href="https://en.wikipedia.org/wiki/Invasion_percolation">invasion percolation</a>
-    to create a square grid of integers
-    in which 0 marks sample sites without pollution and positive values show how polluted a site is.
-    Invasion percolation guarantees that all of the polluted sites are connected,
-    so one exercise is to try to find the origin of the pollution.
-    (In the present version it is always the center of the grid,
-    but that could easily be modified.)</p>
-</li>
-<li>
+<p>In more detail,
+<code>snailz</code> uses <a href="https://en.wikipedia.org/wiki/Invasion_percolation">invasion percolation</a>
+to create a square grid of integers
+in which 0 marks sample sites without pollution and positive values show how polluted a site is.
+Invasion percolation guarantees that all of the polluted sites are connected,
+so one exercise is to try to find the origin of the pollution.
+(It is always the center of the grid in the present version of the software,
+but that could easily be modified.)
+Grids are stored as JSON and converted to CSV;
+the default parameters included with the package generated the following small grid,
+which uses spaces instead of zeroes for clarity:</p>
+<pre><code>+---------------+
+|         1     |
+|         3     |
+|         3     |
+|        22     |
+|      2222     |
+|       2       |
+|     3111      |
+|      28       |
+|               |
+|               |
+|               |
+|               |
+|               |
+|               |
+|               |
++---------------+
+</code></pre>
 <p>The package also generates a set of snails (referred to as "specimens"),
-    each of which has a genome represented as a single string of ACGT bases,
-    a body mass,
-    and the grid coordinates where it was collected.
-    Individual genomes are created by mutating a reference genome at several randomly-selected loci.
-    One combination of locus and single-nucleotide polymorphism are considered "significant":
-    if a snail has that mutation at that locus <em>and</em> is collected from a polluted sample site,
-    its mass is increased by an amount that depends on how polluted the site is.</p>
-</li>
-<li>
+each of which has a genome represented as a single string of ACGT bases,
+a body mass,
+and the grid coordinates where it was collected.
+Individual genomes are created by mutating a reference genome at several randomly-selected loci.
+One combination of locus and single-nucleotide polymorphism are considered "significant":
+if a snail has that mutation at that locus <em>and</em> is collected from a polluted sample site,
+its mass is increased by an amount that depends on how polluted the site is.
+Once again the results are saved as both JSON and CSV,
+and the default parameters included with the package generate specimens like these:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">ident</th>
+<th style="text-align: right;">x</th>
+<th style="text-align: right;">y</th>
+<th style="text-align: left;">genome</th>
+<th style="text-align: right;">mass</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">AZ5PXJ</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">GACGATGTTAGAGCT</td>
+<td style="text-align: right;">22.95</td>
+</tr>
+<tr>
+<td style="text-align: left;">AZP8M5</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">ACGGATGTTAGAGCT</td>
+<td style="text-align: right;">20.00</td>
+</tr>
+<tr>
+<td style="text-align: left;">AZJMU7</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">CTAGATGTTAGAGCT</td>
+<td style="text-align: right;">23.41</td>
+</tr>
+<tr>
+<td style="text-align: left;">AZGH04</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">AGGGATGTTAGAGCT</td>
+<td style="text-align: right;">18.07</td>
+</tr>
+<tr>
+<td style="text-align: left;">…</td>
+<td style="text-align: right;">…</td>
+<td style="text-align: right;">…</td>
+<td style="text-align: left;">…</td>
+<td style="text-align: right;">…</td>
+</tr>
+</tbody>
+</table>
 <p><code>snailz</code> uses Python's <a href="https://faker.readthedocs.io/">faker</a> module
-    to generate a set of laboratory staff with personal and family names.</p>
-</li>
-<li>
+to generate a set of laboratory staff with personal and family names,
+which are saved as JSON and CSV.
+The defaults include:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">ident</th>
+<th style="text-align: left;">personal</th>
+<th style="text-align: left;">family</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">aa1942</td>
+<td style="text-align: left;">Artur</td>
+<td style="text-align: left;">Aasmäe</td>
+</tr>
+<tr>
+<td style="text-align: left;">kk0085</td>
+<td style="text-align: left;">Katrin</td>
+<td style="text-align: left;">Kool</td>
+</tr>
+<tr>
+<td style="text-align: left;">ta4600</td>
+<td style="text-align: left;">Aivar</td>
+<td style="text-align: left;">Toomsalu</td>
+</tr>
+<tr>
+<td style="text-align: left;">ea5044</td>
+<td style="text-align: left;">Anne</td>
+<td style="text-align: left;">Eller</td>
+</tr>
+<tr>
+<td style="text-align: left;">…</td>
+<td style="text-align: left;">…</td>
+<td style="text-align: left;">…</td>
+</tr>
+</tbody>
+</table>
 <p>Every specimen is used in an assay,
-    which is performed by a single member of staff on a particular date.
-    Each assay is represented by two CSV files:
-    a design file which records whether each well in the assay plate contained a control (C) or a specimen sample (S),
-    and an assay file which records the response measured in each well.
-    If the well contains a control, the assay value is a small (positive) amount of noise.
-    If the well contains genetic material from a specimen that <em>doesn't</em> have the significant mutation,
-    the assay value is some intermediate value with added noise,
-    while the assay value for a specimen with the significant mutation is a larger value (also with noise).</p>
-</li>
-<li>
+which is performed by a single member of staff on a particular date.
+Each assay is represented by two CSV files:
+a design file which records whether each well in the assay plate contained a control (C) or a specimen sample (S),
+and an assay file which records the response measured in each well.
+If the well contains a control, the assay value is a small (positive) amount of noise.
+If the well contains genetic material from a specimen that <em>doesn't</em> have the significant mutation,
+the assay value is some intermediate value with added noise,
+while the assay value for a specimen with the significant mutation is a larger value (also with noise).
+All assay data is saved in a single JSON file;
+a summary of all assays is saved as CSV like this:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">ident</th>
+<th style="text-align: left;">specimen_id</th>
+<th style="text-align: left;">performed</th>
+<th style="text-align: left;">performed_by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">878987</td>
+<td style="text-align: left;">AZ5PXJ</td>
+<td style="text-align: left;">2023-02-09</td>
+<td style="text-align: left;">ta4600</td>
+</tr>
+<tr>
+<td style="text-align: left;">274653</td>
+<td style="text-align: left;">AZP8M5</td>
+<td style="text-align: left;">2023-01-22</td>
+<td style="text-align: left;">ea5044</td>
+</tr>
+<tr>
+<td style="text-align: left;">129820</td>
+<td style="text-align: left;">AZJMU7</td>
+<td style="text-align: left;">2023-02-03</td>
+<td style="text-align: left;">bt0138</td>
+</tr>
+<tr>
+<td style="text-align: left;">707990</td>
+<td style="text-align: left;">AZGH04</td>
+<td style="text-align: left;">2023-02-15</td>
+<td style="text-align: left;">kk0085</td>
+</tr>
+<tr>
+<td style="text-align: left;">…</td>
+<td style="text-align: left;">…</td>
+<td style="text-align: left;">…</td>
+<td style="text-align: left;">…</td>
+</tr>
+</tbody>
+</table>
+<p>Each assay design is saved as CSV like this:</p>
+<pre><code>id,230779,,,
+specimen,AZQTWF,,,
+performed,2023-02-04,,,
+performed_by,aa1942,,,
+,A,B,C,D
+1,S,S,S,C
+2,S,C,C,C
+3,C,S,C,C
+4,C,C,C,C
+</code></pre>
+<p>and each assay result like this:</p>
+<pre><code>id,277650,,,
+specimen,AZTZNU,,,
+performed,2023-02-13,,,
+performed_by,aa1942,,,
+,A,B,C,D
+1,0.09,0.03,10.75,0.05
+2,10.43,10.36,10.47,0.01
+3,0.08,10.58,0.06,0.04
+4,10.19,0.08,0.05,0.09
+</code></pre>
 <p>Finally, a "raw" assay file is created by taking the clean ones
-    and introducing zero or more deliberate formatting errors
-    to simulate the kind of data that laboratories commonly produce.</p>
-</li>
-</ul>
+and introducing zero or more deliberate formatting errors
+to simulate the kind of data that laboratories commonly produce.</p>
 <h2 id="for-users">For Users</h2>
 <ol>
 <li><code>pip install snailz</code> (or the equivalent command for your Python environment).</li>
@@ -550,7 +713,34 @@ exposure to pollution. At a high level:</p>
 </tr>
 </tbody>
 </table>
-<h2 id="parameters">Parameters</h2>
+<p>To generate example data in a fresh directory:</p>
+<pre><code># Create and activate Python virtual environment
+$ uv venv
+$ source .venv/bin/activate
+
+# Install snailz and dependencies
+$ uv pip install snailz
+
+# Copy default parameter values into ./params/*.json
+$ snailz init --output params
+
+# Create a grid JSON file in ./tmp/grid.json and a CSV file in ./tmp/grid.csv
+$ snailz grid --params params/grid.json --output tmp/grid.json
+$ snailz convert --kind grid --input tmp/grid.json --output tmp/grid.csv
+
+# Create people JSON and CSV files in ./tmp/people.json and ./tmp/people.csv
+$ snailz people --params params/people.json --output tmp/people.json
+$ snailz convert --kind people --input tmp/people.json --output tmp/people.csv
+
+# Create specimen JSON and CSV files in ./tmp/specimens.json and ./tmp/specimens.csv
+$ snailz specimens --params params/specimens.json --grid tmp/grid.json --output tmp/specimens.json
+$ snailz convert --kind specimens --input tmp/specimens.json --output tmp/specimens.csv
+
+# Create assay JSON and CSV files in ./tmp/assays.json, ./tmp/assays.csv, and ./tmp/assays/*.csv
+$ snailz assays --params params/assays.json --specimens tmp/specimens.json --people tmp/people.json --output tmp/assays.json
+$ snailz convert --kind assays --input tmp/assays.json --output tmp
+</code></pre>
+<h2 id="parameters-and-workflow">Parameters and Workflow</h2>
 <p><img src="https://raw.githubusercontent.com/gvwilson/snailz/main/img/workflow.png" alt="workflow"></p>
 <p><code>./params</code> contains the parameter files used to control generation of the reference dataset.</p>
 <ul>
