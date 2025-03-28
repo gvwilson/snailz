@@ -26,6 +26,28 @@ Alternatively:
 1.  Activate that environment: `source .venv/bin/activate`
 1.  Install dependencies and editable version of package: `uv pip install -e '.[dev]'`
 
+## Actions
+
+`uv run doit list` prints a list of available commands.
+
+| Command   | Action |
+| --------- | ------ |
+| all       | Regenerate all data using example parameters. |
+| assays    | Generate sample assays file. |
+| build     | Build the Python package in the current directory. |
+| coverage  | Run tests with coverage. |
+| docs      | Generate documentation using MkDocs. |
+| format    | Reformat code. |
+| grid      | Generate sample grid file. |
+| init      | Regenerate default parameters. |
+| lint      | Check the code format. |
+| mangle    | Mangle generated assay files. |
+| people    | Generate sample people file. |
+| specimens | Generate sample specimens file. |
+| test      | Run tests. |
+| tidy      | Clean all build artifacts. |
+| typing    | Check types with pyright. |
+
 ## Publishing
 
 1.  `twine upload --verbose -u __token__ -p pypi-your-access-token dist/*`

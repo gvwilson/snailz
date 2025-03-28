@@ -1,6 +1,7 @@
 """Test CLI command functionality."""
 
 import json
+from pathlib import Path
 import pytest
 from click.testing import CliRunner
 from datetime import date
@@ -10,21 +11,21 @@ from snailz.clui import (
     assays,
     convert,
     grid,
+    init,
     mangle,
     people,
     specimens,
+)
+from snailz.defaults import (
+    DEFAULT_SPECIMEN_PARAMS,
+    DEFAULT_PEOPLE_PARAMS,
+    DEFAULT_ASSAY_PARAMS,
 )
 from snailz.grid import Grid, GridParams
 from snailz.people import AllPersons
 from snailz.specimens import AllSpecimens
 from snailz.assays import AllAssays, Assay, ASSAYS_SUBDIR
 from snailz.utils import serialize_values
-
-from utils import (
-    SPECIMEN_PARAMS,
-    PEOPLE_PARAMS,
-    ASSAY_PARAMS,
-)
 
 
 def create_test_assays(fs):
@@ -40,7 +41,7 @@ def create_test_assays(fs):
                 treatments=[["S", "C"], ["C", "S"]],
             )
         ],
-        params=ASSAY_PARAMS,
+        params=DEFAULT_ASSAY_PARAMS,
     )
 
     assays_file = "/test_assays.json"
@@ -74,7 +75,7 @@ def create_test_people(fs):
             {"personal": "John", "family": "Doe", "ident": "jd1234"},
             {"personal": "Jane", "family": "Smith", "ident": "js5678"},
         ],
-        params=PEOPLE_PARAMS,
+        params=DEFAULT_PEOPLE_PARAMS,
     )
 
     people_file = "/test_people.json"
@@ -100,7 +101,7 @@ def create_test_specimens(fs):
         reference="ACGT",
         susceptible_base="A",
         susceptible_locus=0,
-        params=SPECIMEN_PARAMS,
+        params=DEFAULT_SPECIMEN_PARAMS,
     )
 
     specimens_file = "/test_specimens.json"
@@ -685,3 +686,119 @@ def test_mangle_command(runner, fs):
     with open(raw_file, "r") as f:
         content = f.read()
         assert "123456" in content  # ID should still be present
+
+
+# Tests for init command
+def test_init_command_default_directory(runner, fs):
+    """Test init command with default output directory."""
+    # Store the current working directory that will be used
+    cwd = fs.cwd
+
+    # Run the init command
+    result = runner.invoke(init)
+
+    assert result.exit_code == 0
+
+    # Check all parameter files were created in the current directory
+    expected_files = ["assays.json", "grid.json", "people.json", "specimens.json"]
+    for filename in expected_files:
+        filepath = Path(cwd) / filename
+        assert fs.exists(filepath)
+
+        # Check content is valid JSON and has trailing newline
+        with open(filepath, "r") as f:
+            content_text = f.read()
+            assert content_text.endswith("\n"), (
+                f"File {filepath} does not end with newline"
+            )
+
+            # Reset file pointer and load as JSON
+            f.seek(0)
+            content = json.load(f)
+            assert isinstance(content, dict)
+            assert "seed" in content  # All parameter files have seed
+
+            # Check specific fields for each file type
+            if filename == "assays.json":
+                assert "baseline" in content
+                assert "end_date" in content
+            elif filename == "grid.json":
+                assert "depth" in content
+                assert "size" in content
+            elif filename == "people.json":
+                assert "locale" in content
+                assert "number" in content
+            elif filename == "specimens.json":
+                assert "length" in content
+                assert "mutations" in content
+
+
+def test_init_command_custom_directory(runner, fs):
+    """Test init command with custom output directory."""
+    # Define a custom directory that doesn't exist yet
+    custom_dir = "/custom/params/dir"
+
+    # Run the init command with custom directory
+    result = runner.invoke(init, ["--output", custom_dir])
+
+    assert result.exit_code == 0
+
+    # Check the directory was created
+    assert fs.exists(custom_dir)
+
+    # Check all parameter files were created in the custom directory
+    expected_files = ["assays.json", "grid.json", "people.json", "specimens.json"]
+    for filename in expected_files:
+        filepath = Path(custom_dir) / filename
+        assert fs.exists(filepath)
+
+        # Check content is valid JSON and has trailing newline
+        with open(filepath, "r") as f:
+            content_text = f.read()
+            assert content_text.endswith("\n"), (
+                f"File {filepath} does not end with newline"
+            )
+
+            # Reset file pointer and load as JSON
+            f.seek(0)
+            content = json.load(f)
+            assert isinstance(content, dict)
+
+
+def test_init_command_no_overwrite(runner, fs):
+    """Test init command respects the overwrite flag."""
+    # Create a file that would be overwritten
+    cwd = fs.cwd
+    existing_file = Path(cwd) / "assays.json"
+    fs.create_file(existing_file, contents="{}")
+
+    # Run the init command without overwrite flag
+    result = runner.invoke(init)
+
+    # Should fail with error message
+    assert result.exit_code != 0
+    assert "Refusing" in result.output
+
+    # Original file should be unchanged
+    with open(existing_file, "r") as f:
+        assert f.read() == "{}"
+
+
+def test_init_command_with_overwrite(runner, fs):
+    """Test init command with overwrite flag."""
+    # Create a file that would be overwritten
+    cwd = fs.cwd
+    existing_file = Path(cwd) / "assays.json"
+    fs.create_file(existing_file, contents="{}")
+
+    # Run the init command with overwrite flag
+    result = runner.invoke(init, ["--overwrite"])
+
+    # Should succeed
+    assert result.exit_code == 0
+
+    # File should be overwritten
+    with open(existing_file, "r") as f:
+        content = f.read()
+        assert content != "{}"
+        assert "baseline" in content

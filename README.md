@@ -49,29 +49,20 @@ In more detail:
     and introducing zero or more deliberate formatting errors
     to simulate the kind of data that laboratories commonly produce.
 
-## For Use
+## For Users
 
 1.  `pip install snailz` (or the equivalent command for your Python environment).
-1.  `doit list` to see available commands.
-
-`uv run doit list` prints a list of available commands.
+1.  `snailz --help` to see available commands.
 
 | Command   | Action |
 | --------- | ------ |
-| all       | Regenerate all data using example parameters. |
-| assays    | Generate sample assays file. |
-| build     | Build the Python package in the current directory. |
-| coverage  | Run tests with coverage. |
-| docs      | Generate documentation using MkDocs. |
-| format    | Reformat code. |
-| grid      | Generate sample grid file. |
-| lint      | Check the code format. |
-| mangle    | Mangle generated assay files. |
-| people    | Generate sample people file. |
-| specimens | Generate sample specimens file. |
-| test      | Run tests. |
-| tidy      | Clean all build artifacts. |
-| typing    | Check types with pyright. |
+| assays    | Generate assays for specimens within a date range. |
+| convert   | Convert JSON data to CSV format. |
+| grid      | Generate grid. |
+| init      | Initialize parameter files for snailz. |
+| mangle    | Modify assay files by reassigning people. |
+| people    | Generate people. |
+| specimens | Generate specimens. |
 
 ## Parameters
 

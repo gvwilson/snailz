@@ -9,6 +9,7 @@ are required.
 
 from datetime import date
 import json
+from pathlib import Path
 import random
 
 import click
@@ -23,6 +24,7 @@ from .specimens import (
     specimens_generate,
 )
 from .mangle import mangle_assays
+from . import defaults
 from . import utils
 
 
@@ -183,6 +185,53 @@ def grid(
 
 @cli.command()
 @click.option(
+    "--output",
+    type=click.Path(file_okay=False),
+    help="Directory to create parameter files in (defaults to current directory)",
+)
+@click.option(
+    "--overwrite",
+    is_flag=True,
+    default=False,
+    help="Overwrite existing parameter files",
+)
+def init(output=None, overwrite=False):
+    """Initialize parameter files for snailz.
+
+    Creates JSON parameter files in the specified directory (or current directory
+    if not specified). Creates the directory if it doesn't exist.
+
+    By default, will not overwrite existing files unless --overwrite is specified.
+    """
+    try:
+        output_dir = Path.cwd() if output is None else Path(output)
+        output_dir.mkdir(parents=True, exist_ok=True)
+        params = {
+            "assays.json": defaults.DEFAULT_ASSAY_PARAMS,
+            "grid.json": defaults.DEFAULT_GRID_PARAMS,
+            "people.json": defaults.DEFAULT_PEOPLE_PARAMS,
+            "specimens.json": defaults.DEFAULT_SPECIMEN_PARAMS,
+        }
+
+        if not overwrite:
+            _check_not_overwriting(output_dir, params)
+
+        for filename, param_obj in params.items():
+            file_path = output_dir / filename
+            with file_path.open("w") as writer:
+                param_dict = param_obj.model_dump()
+                for key, value in param_dict.items():
+                    if isinstance(value, date):
+                        param_dict[key] = value.isoformat()
+                json.dump(param_dict, writer, indent=4)
+                writer.write("\n")
+
+    except Exception as e:
+        utils.fail(f"Error creating parameter files: {str(e)}")
+
+
+@cli.command()
+@click.option(
     "--dir",
     type=click.Path(exists=True, file_okay=False, dir_okay=True),
     required=True,
@@ -290,6 +339,18 @@ def specimens(
         utils.report_result(output, result)
     except Exception as e:
         utils.fail(f"Error generating specimens: {str(e)}")
+
+
+def _check_not_overwriting(output_dir: Path, params: dict[str, BaseModel]) -> None:
+    existing_files = []
+    for filename in params.keys():
+        file_path = output_dir / filename
+        if file_path.exists():
+            existing_files.append(str(file_path))
+
+    if existing_files:
+        msg = f"Refusing to overwrite {', '.join(existing_files)}"
+        utils.fail(msg)
 
 
 def _get_params(

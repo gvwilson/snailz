@@ -94,6 +94,18 @@ def task_grid():
     }
 
 
+def task_init():
+    """Initialize parameter files."""
+
+    return {
+        "actions": [
+            f"snailz init --output {PARAMS_DIR}",
+        ],
+        "verbosity": VERBOSITY,
+        "uptodate": [False],
+    }
+
+
 def task_lint():
     """Check the code format."""
 

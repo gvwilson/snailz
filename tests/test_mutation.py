@@ -4,6 +4,8 @@ import pytest
 import random
 from unittest.mock import patch
 
+from snailz.defaults import DEFAULT_SPECIMEN_PARAMS
+from snailz.grid import Grid, GridParams
 from snailz import specimens_generate
 from snailz.specimens import (
     BASES,
@@ -14,15 +16,12 @@ from snailz.specimens import (
     mutate_masses,
     mutate_mass,
 )
-from snailz.grid import Grid, GridParams
-
-from utils import SPECIMEN_PARAMS
 
 
 def test_mutate_mass_no_effect_on_zero_cells():
     """Test that zero cells in grid don't affect mass but site coordinates are updated."""
-    random.seed(SPECIMEN_PARAMS.seed)
-    specimens = specimens_generate(SPECIMEN_PARAMS)
+    random.seed(DEFAULT_SPECIMEN_PARAMS.seed)
+    specimens = specimens_generate(DEFAULT_SPECIMEN_PARAMS)
     grid_params = GridParams(size=5, depth=8, seed=123)
     grid = Grid(
         grid=[[0 for _ in range(5)] for _ in range(5)],
@@ -51,8 +50,8 @@ def test_mutate_mass_no_effect_on_zero_cells():
 
 def test_mutate_mass_effect_with_susceptible_genomes():
     """Test that mutations occur only with non-zero cells and susceptible genomes."""
-    random.seed(SPECIMEN_PARAMS.seed)
-    specimens = specimens_generate(SPECIMEN_PARAMS)
+    random.seed(DEFAULT_SPECIMEN_PARAMS.seed)
+    specimens = specimens_generate(DEFAULT_SPECIMEN_PARAMS)
 
     # Create a grid with all cells = 1
     grid_params = GridParams(size=5, depth=8, seed=123)

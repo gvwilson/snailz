@@ -5,9 +5,10 @@ import io
 import pytest
 import random
 
+from snailz.defaults import DEFAULT_GRID_PARAMS
 from snailz.grid import grid_generate, Invperc, Grid, GridParams
 
-from utils import GRID_PARAMS, check_params_stored
+from utils import check_params_stored
 
 
 @pytest.mark.parametrize(
@@ -21,7 +22,7 @@ from utils import GRID_PARAMS, check_params_stored
 )
 def test_grid_fail_bad_parameter_value(name, value):
     """Test grid generation fails with invalid parameter values."""
-    params_dict = GRID_PARAMS.model_dump()
+    params_dict = DEFAULT_GRID_PARAMS.model_dump()
     params_dict[name] = value
     with pytest.raises(ValueError):
         GridParams(**params_dict)
@@ -29,7 +30,7 @@ def test_grid_fail_bad_parameter_value(name, value):
 
 def test_grid_fail_missing_parameter():
     """Test grid generation fails with missing parameters."""
-    params_dict = GRID_PARAMS.model_dump()
+    params_dict = DEFAULT_GRID_PARAMS.model_dump()
     del params_dict["depth"]
     with pytest.raises(ValueError):
         GridParams(**params_dict)
@@ -37,7 +38,7 @@ def test_grid_fail_missing_parameter():
 
 def test_grid_fail_extra_parameter():
     """Test grid generation fails with extra parameters."""
-    params_dict = GRID_PARAMS.model_dump()
+    params_dict = DEFAULT_GRID_PARAMS.model_dump()
     params_dict["extra"] = 1.0
     with pytest.raises(ValueError):
         GridParams(**params_dict)
@@ -48,7 +49,7 @@ def test_grid_valid_structure(seed):
     """Test that generated grids have the correct structure."""
     random.seed(seed)
     # Create a new params object with updated seed
-    params_dict = GRID_PARAMS.model_dump()
+    params_dict = DEFAULT_GRID_PARAMS.model_dump()
     params_dict["seed"] = seed
     params = GridParams(**params_dict)
     result = grid_generate(params)
@@ -67,7 +68,7 @@ def test_grid_valid_structure(seed):
 def test_grid_deterministic_with_same_seed():
     """Test that grids generated with the same seed are identical."""
     seed = 12345
-    params_dict = GRID_PARAMS.model_dump()
+    params_dict = DEFAULT_GRID_PARAMS.model_dump()
     params_dict["seed"] = seed
     params = GridParams(**params_dict)
 
@@ -85,13 +86,13 @@ def test_grid_deterministic_with_same_seed():
 def test_grid_different_with_different_seeds():
     """Test that grids generated with different seeds are different."""
     # First grid with seed 123
-    params_dict1 = GRID_PARAMS.model_dump()
+    params_dict1 = DEFAULT_GRID_PARAMS.model_dump()
     params_dict1["seed"] = 123
     random.seed(123)
     grid1 = grid_generate(GridParams(**params_dict1))
 
     # Second grid with seed 456
-    params_dict2 = GRID_PARAMS.model_dump()
+    params_dict2 = DEFAULT_GRID_PARAMS.model_dump()
     params_dict2["seed"] = 456
     random.seed(456)
     grid2 = grid_generate(GridParams(**params_dict2))
@@ -104,7 +105,7 @@ def test_grid_shape_with_different_sizes():
     """Test that grid size parameter properly affects dimensions."""
     sizes = [5, 10, 15]
     for size in sizes:
-        params_dict = GRID_PARAMS.model_dump()
+        params_dict = DEFAULT_GRID_PARAMS.model_dump()
         params_dict["size"] = size
         params = GridParams(**params_dict)
         result = grid_generate(params)
@@ -118,7 +119,7 @@ def test_grid_depth_affects_values():
     """Test that depth parameter affects the range of values in the grid."""
     depth_values = [3, 5, 10]
     for depth in depth_values:
-        params_dict = GRID_PARAMS.model_dump()
+        params_dict = DEFAULT_GRID_PARAMS.model_dump()
         params_dict["depth"] = depth
         params = GridParams(**params_dict)
         result = grid_generate(params)
@@ -131,7 +132,7 @@ def test_grid_depth_affects_values():
 def test_grid_has_path_to_border():
     """Test that the filled grid creates a path to the border."""
     # Use a smaller grid for this test
-    params_dict = GRID_PARAMS.model_dump()
+    params_dict = DEFAULT_GRID_PARAMS.model_dump()
     params_dict["size"] = 10
     params = GridParams(**params_dict)
     result = grid_generate(params)
@@ -160,7 +161,7 @@ def test_grid_center_always_filled():
     """Test that the center cell is always filled."""
     # Try different size grids
     for size in [5, 7, 9]:
-        params_dict = GRID_PARAMS.model_dump()
+        params_dict = DEFAULT_GRID_PARAMS.model_dump()
         params_dict["size"] = size
         params = GridParams(**params_dict)
         result = grid_generate(params)

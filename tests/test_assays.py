@@ -8,14 +8,14 @@ from datetime import date
 
 from snailz import assays_generate, specimens_generate, people_generate
 from snailz.assays import Assay, AllAssays, AssayParams
+from snailz.defaults import (
+    DEFAULT_ASSAY_PARAMS,
+    DEFAULT_SPECIMEN_PARAMS,
+    DEFAULT_PEOPLE_PARAMS,
+)
 from snailz.specimens import BASES, AllSpecimens, Specimen, Point
 
-from utils import (
-    ASSAY_PARAMS,
-    SPECIMEN_PARAMS,
-    PEOPLE_PARAMS,
-    check_params_stored,
-)
+from utils import check_params_stored
 
 
 @pytest.mark.parametrize(
@@ -33,7 +33,7 @@ from utils import (
 )
 def test_assays_fail_bad_parameter_value(name, value):
     """Test assay generation fails with invalid parameter values."""
-    params_dict = ASSAY_PARAMS.model_dump()
+    params_dict = DEFAULT_ASSAY_PARAMS.model_dump()
     params_dict[name] = value
     with pytest.raises(ValueError):
         AssayParams(**params_dict)
@@ -41,7 +41,7 @@ def test_assays_fail_bad_parameter_value(name, value):
 
 def test_assays_fail_date_order():
     """Test assay generation fails when end date is before start date."""
-    params_dict = ASSAY_PARAMS.model_dump()
+    params_dict = DEFAULT_ASSAY_PARAMS.model_dump()
     params_dict["start_date"] = date.fromisoformat("2025-01-01")
     params_dict["end_date"] = date.fromisoformat("2024-01-01")
     with pytest.raises(ValueError):
@@ -50,8 +50,8 @@ def test_assays_fail_date_order():
 
 def test_assays_fail_missing_parameter():
     """Test assay generation fails with missing parameters."""
-    for key in ASSAY_PARAMS.model_dump().keys():
-        params_dict = ASSAY_PARAMS.model_dump()
+    for key in DEFAULT_ASSAY_PARAMS.model_dump().keys():
+        params_dict = DEFAULT_ASSAY_PARAMS.model_dump()
         del params_dict[key]
         with pytest.raises(ValueError):
             AssayParams(**params_dict)
@@ -59,7 +59,7 @@ def test_assays_fail_missing_parameter():
 
 def test_assays_fail_extra_parameter():
     """Test assay generation fails with extra parameters."""
-    params_dict = ASSAY_PARAMS.model_dump()
+    params_dict = DEFAULT_ASSAY_PARAMS.model_dump()
     params_dict["extra"] = 1.0
     with pytest.raises(ValueError):
         AssayParams(**params_dict)
@@ -71,13 +71,13 @@ def test_assays_valid_result(seed):
     random.seed(seed)
 
     # Prepare parameters
-    params_dict = ASSAY_PARAMS.model_dump()
+    params_dict = DEFAULT_ASSAY_PARAMS.model_dump()
     params_dict["seed"] = seed
     params = AssayParams(**params_dict)
 
     # Generate specimens and people for assays
-    specimens = specimens_generate(SPECIMEN_PARAMS)
-    people = people_generate(PEOPLE_PARAMS)
+    specimens = specimens_generate(DEFAULT_SPECIMEN_PARAMS)
+    people = people_generate(DEFAULT_PEOPLE_PARAMS)
 
     # Generate assays
     result = assays_generate(params, specimens, people)
@@ -111,10 +111,10 @@ def test_assays_valid_result(seed):
 
 def test_assay_reading_values():
     """Test that assay readings follow the specified distributions."""
-    random.seed(ASSAY_PARAMS.seed)
+    random.seed(DEFAULT_ASSAY_PARAMS.seed)
 
     # Prepare parameters with controlled values for easier testing
-    params_dict = ASSAY_PARAMS.model_dump()
+    params_dict = DEFAULT_ASSAY_PARAMS.model_dump()
     params_dict["baseline"] = 5.0
     params_dict["mutant"] = 20.0
     params_dict["noise"] = 1.0
@@ -143,14 +143,14 @@ def test_assay_reading_values():
     specimens = AllSpecimens(
         individuals=[susceptible_individual, non_susceptible_individual],
         loci=[susc_locus],
-        params=SPECIMEN_PARAMS,
+        params=DEFAULT_SPECIMEN_PARAMS,
         reference=reference,
         susceptible_base=susc_base,
         susceptible_locus=susc_locus,
     )
 
     # Create mock people data
-    people = people_generate(PEOPLE_PARAMS)
+    people = people_generate(DEFAULT_PEOPLE_PARAMS)
 
     # Generate assays with fixed random seed for reproducibility
     result = assays_generate(params, specimens, people)

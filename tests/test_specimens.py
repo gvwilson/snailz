@@ -6,6 +6,7 @@ import pytest
 import random
 
 from snailz import specimens_generate
+from snailz.defaults import DEFAULT_SPECIMEN_PARAMS
 from snailz.specimens import (
     BASES,
     Point,
@@ -16,22 +17,22 @@ from snailz.specimens import (
 from snailz.grid import Grid, GridParams
 from snailz import utils
 
-from utils import SPECIMEN_PARAMS, check_params_stored
+from utils import check_params_stored
 
 
 @pytest.mark.parametrize(
     "name, value",
     [
         ("length", 0),
-        ("max_mass", 0.5 * SPECIMEN_PARAMS.min_mass),
+        ("max_mass", 0.5 * DEFAULT_SPECIMEN_PARAMS.min_mass),
         ("min_mass", -1.0),
-        ("mutations", SPECIMEN_PARAMS.length * 2),
+        ("mutations", DEFAULT_SPECIMEN_PARAMS.length * 2),
         ("number", 0),
     ],
 )
 def test_specimens_fail_bad_parameter_value(name, value):
     # Create a dictionary with the updated value
-    params_dict = SPECIMEN_PARAMS.model_dump()
+    params_dict = DEFAULT_SPECIMEN_PARAMS.model_dump()
     params_dict[name] = value
     with pytest.raises(ValueError):
         SpecimenParams(**params_dict)
@@ -41,7 +42,7 @@ def test_specimens_fail_bad_parameter_value(name, value):
 def test_specimens_valid_result(seed):
     random.seed(seed)
     # Create a new parameter object with the specific seed
-    params_dict = SPECIMEN_PARAMS.model_dump()
+    params_dict = DEFAULT_SPECIMEN_PARAMS.model_dump()
     params_dict["seed"] = seed
     params = SpecimenParams(**params_dict)
     result = specimens_generate(params)
@@ -235,7 +236,7 @@ def test_specimens_not_mutated_without_grid():
     random.seed(seed)
 
     # Generate specimens without a grid
-    result = specimens_generate(SPECIMEN_PARAMS)
+    result = specimens_generate(DEFAULT_SPECIMEN_PARAMS)
 
     # Verify that site coordinates are empty
     for ind in result.individuals:
@@ -244,6 +245,8 @@ def test_specimens_not_mutated_without_grid():
 
     # Verify masses are within the original range
     for ind in result.individuals:
-        assert SPECIMEN_PARAMS.min_mass <= ind.mass <= SPECIMEN_PARAMS.max_mass, (
-            "Mass should be in original range"
-        )
+        assert (
+            DEFAULT_SPECIMEN_PARAMS.min_mass
+            <= ind.mass
+            <= DEFAULT_SPECIMEN_PARAMS.max_mass
+        ), "Mass should be in original range"

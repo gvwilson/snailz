@@ -5,9 +5,10 @@ import io
 import pytest
 import random
 
+from snailz.defaults import DEFAULT_PEOPLE_PARAMS
 from snailz.people import people_generate, AllPersons, Person, PeopleParams
 
-from utils import PEOPLE_PARAMS, check_params_stored
+from utils import check_params_stored
 
 
 @pytest.mark.parametrize(
@@ -20,7 +21,7 @@ from utils import PEOPLE_PARAMS, check_params_stored
 )
 def test_people_fail_bad_parameter_value(name, value):
     """Test people generation fails with invalid parameter values."""
-    params_dict = PEOPLE_PARAMS.model_dump()
+    params_dict = DEFAULT_PEOPLE_PARAMS.model_dump()
     params_dict[name] = value
     with pytest.raises(ValueError):
         PeopleParams(**params_dict)
@@ -31,7 +32,7 @@ def test_people_valid_result(seed):
     """Test that people generation returns the expected structure."""
     random.seed(seed)
     # Create a new params object with updated seed
-    params_dict = PEOPLE_PARAMS.model_dump()
+    params_dict = DEFAULT_PEOPLE_PARAMS.model_dump()
     params_dict["seed"] = seed
     params = PeopleParams(**params_dict)
     result = people_generate(params)
@@ -42,7 +43,7 @@ def test_people_valid_result(seed):
     assert isinstance(result.individuals, list)
 
     # Check that the individuals list has the right number of people
-    assert len(result.individuals) == PEOPLE_PARAMS.number
+    assert len(result.individuals) == DEFAULT_PEOPLE_PARAMS.number
 
     # Check that all individuals have personal and family names
     for person in result.individuals:
