@@ -31,18 +31,13 @@ def test_people_fail_bad_parameter_value(name, value):
 def test_people_valid_result(seed):
     """Test that people generation returns the expected structure."""
     random.seed(seed)
-    # Create a new params object with updated seed
-    params_dict = DEFAULT_PEOPLE_PARAMS.model_dump()
-    params_dict["seed"] = seed
-    params = PeopleParams(**params_dict)
+    params = DEFAULT_PEOPLE_PARAMS.model_copy(update={"seed": seed})
     result = people_generate(params)
     check_params_stored(params, result)
 
     # Check result has correct structure
     assert hasattr(result, "individuals")
     assert isinstance(result.individuals, list)
-
-    # Check that the individuals list has the right number of people
     assert len(result.individuals) == DEFAULT_PEOPLE_PARAMS.number
 
     # Check that all individuals have personal and family names
@@ -52,7 +47,6 @@ def test_people_valid_result(seed):
         assert isinstance(person.personal, str)
         assert isinstance(person.family, str)
 
-        # Check that the ident has the correct format
         assert len(person.ident) == 6
         assert person.ident[:2] == (person.family[0] + person.personal[0]).lower()
         assert person.ident[2:].isdigit()
@@ -66,28 +60,20 @@ def test_people_valid_result(seed):
     assert result.params.seed == seed
 
 
-@pytest.fixture
-def sample_people():
-    """Create a small test people object."""
-    individuals = [
-        Person(personal="John", family="Doe", ident="jd1234"),
-        Person(personal="Jane", family="Smith", ident="js5678"),
-    ]
-    return AllPersons(
-        individuals=individuals, params={"locale": "en_US", "number": 2, "seed": 12345}
+def test_people_to_csv():
+    """Test exporting people to CSV string."""
+    people = AllPersons(
+        individuals=[
+            Person(personal="John", family="Doe", ident="jd1234"),
+            Person(personal="Jane", family="Smith", ident="js5678"),
+        ],
+        params={"locale": "en_US", "number": 2, "seed": 12345},
     )
 
-
-def test_people_to_csv(sample_people):
-    """Test exporting people to CSV string."""
-    # Get the CSV string
-    csv_string = sample_people.to_csv()
-
-    # Parse the CSV output
+    csv_string = people.to_csv()
     rows = list(csv.reader(io.StringIO(csv_string)))
 
-    # Check the output
-    assert len(rows) == 3  # Header + 2 people
+    assert len(rows) == 3
     assert rows[0] == ["ident", "personal", "family"]
     assert rows[1] == ["jd1234", "John", "Doe"]
     assert rows[2] == ["js5678", "Jane", "Smith"]

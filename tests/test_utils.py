@@ -8,15 +8,18 @@ from pydantic import BaseModel
 from click.testing import CliRunner
 
 from snailz.clui import convert
-from snailz.grid import Grid, GridParams
+from snailz.defaults import DEFAULT_GRID_PARAMS
+from snailz.grid import Grid
 from snailz.utils import load_data, report_result, serialize_values, validate_date
 
 
 class ValueClass(BaseModel):
-    """Test Pydantic model for load_data tests."""
+    """Pydantic model for utility tests."""
 
     name: str
-    value: int
+    value: int = 0
+    date_value: date = None
+    items: list = []
 
 
 def test_load_data_valid_json(fs):
@@ -50,7 +53,8 @@ def test_load_data_invalid_json(fs):
 
 def test_load_data_incompatible_data(fs):
     """Test that load_data raises an error when JSON doesn't match dataclass."""
-    test_data = {"name": "test"}
+    # Use a completely incompatible data structure
+    test_data = {"wrong_field": "test", "another_wrong": 42}
     test_file = "/incompatible.json"
     fs.create_file(test_file, contents=json.dumps(test_data))
     with pytest.raises(Exception):
@@ -59,30 +63,19 @@ def test_load_data_incompatible_data(fs):
 
 def test_load_data_empty_filename():
     """Test that load_data raises an assertion error for empty filenames."""
-    with pytest.raises(ValueError):
+    with pytest.raises(IOError):
         load_data("test", "", ValueClass)
-
-
-class ResultClass(BaseModel):
-    """Test Pydantic model for report_result tests."""
-
-    name: str
-    date_value: date
-    items: list
 
 
 def test_report_result_to_file(fs):
     """Test that report_result writes to a file when output is specified."""
-    # Test data
-    test_data = ResultClass(
+    test_data = ValueClass(
         name="Test Result", date_value=date(2025, 3, 22), items=[1, 2, 3]
     )
     output_file = "/output.json"
 
-    # Call report_result
     report_result(output_file, test_data)
 
-    # Check that the file was created with correct content
     assert fs.exists(output_file)
     with open(output_file, "r") as f:
         content = json.load(f)
@@ -93,15 +86,12 @@ def test_report_result_to_file(fs):
 
 def test_report_result_to_stdout(capsys):
     """Test that report_result writes to stdout when output is not specified."""
-    # Test data
-    test_data = ResultClass(
+    test_data = ValueClass(
         name="Test Result", date_value=date(2025, 3, 22), items=[1, 2, 3]
     )
 
-    # Call report_result
     report_result(None, test_data)
 
-    # Check that output was printed to stdout
     captured = capsys.readouterr()
     content = json.loads(captured.out)
     assert content["name"] == "Test Result"
@@ -111,43 +101,34 @@ def test_report_result_to_stdout(capsys):
 
 def test_serialize_values():
     """Test that serialize_values correctly handles dates and floats."""
-    # Test date serialization
     test_date = date(2025, 3, 22)
     result = serialize_values(test_date)
     assert result == "2025-03-22"
 
-    # Test with non-serializable value raises TypeError
     with pytest.raises(TypeError):
         serialize_values("not a date or float")
 
 
 def test_validate_date():
     """Test that validate_date converts string to date object."""
-    # Mock click context and param
-    ctx = None
-    param = None
-
     # Test with valid date string
-    result = validate_date(ctx, param, "2025-03-22")
+    result = validate_date(None, None, "2025-03-22")
     assert isinstance(result, date)
     assert result.year == 2025
     assert result.month == 3
     assert result.day == 22
 
     # Test with None returns None
-    result = validate_date(ctx, param, None)
-    assert result is None
+    assert validate_date(None, None, None) is None
 
 
 def test_convert_command_integration(fs):
-    """Test that convert command works correctly with different data types."""
-    grid_params = GridParams(depth=8, seed=12345, size=3)
+    """Test CSV conversion."""
     grid_data = Grid(
         grid=[[0, 1, 2], [3, 4, 5], [6, 7, 8]],
-        params=grid_params,
+        params=DEFAULT_GRID_PARAMS,
     )
 
-    # Create a JSON file with grid data
     grid_file = "/test_grid.json"
     fs.create_file(
         grid_file,
@@ -157,14 +138,10 @@ def test_convert_command_integration(fs):
         ),
     )
 
-    # Run the convert command with grid data to stdout
     runner = CliRunner()
     result = runner.invoke(convert, ["--input", grid_file, "--kind", "grid"])
-
-    # Check that the command completed successfully
     assert result.exit_code == 0
 
-    # Check that the CSV output contains the expected values
     assert "0,1,2" in result.output
     assert "3,4,5" in result.output
     assert "6,7,8" in result.output

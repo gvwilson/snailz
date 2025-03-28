@@ -11,10 +11,13 @@ from datetime import date
 import json
 from pathlib import Path
 import random
+from typing import Callable, Type, TypeVar, cast
 
 import click
 from pydantic import BaseModel
 
+from . import defaults
+from . import utils
 from .assays import AssayParams, assays_generate, assays_to_csv
 from .grid import Grid, GridParams, grid_generate
 from .people import AllPersons, PeopleParams, people_generate
@@ -24,8 +27,10 @@ from .specimens import (
     specimens_generate,
 )
 from .mangle import mangle_assays
-from . import defaults
-from . import utils
+
+
+# TypeVar for model types that inherit from BaseModel
+BaseModelType = TypeVar("BaseModelType", bound=BaseModel)
 
 
 @click.group()
@@ -77,6 +82,10 @@ def assays(
         # Load previously-generated data.
         people = utils.load_data("people", people, AllPersons)
         specimens = utils.load_data("specimens", specimens, AllSpecimens)
+
+        # Type casting for the type checker
+        people = cast(AllPersons, people)
+        specimens = cast(AllSpecimens, specimens)
 
         # Get parameters for assay generation
         supplied = (
@@ -135,15 +144,18 @@ def convert(input, kind, output):
             assays_to_csv(input, output)
         elif kind == "grid":
             data = utils.load_data("grid", input, Grid)
-            content = data.to_csv()
+            grid_data = cast(Grid, data)
+            content = grid_data.to_csv()
             _write_content(output, content)
         elif kind == "people":
             data = utils.load_data("people", input, AllPersons)
-            content = data.to_csv()
+            people_data = cast(AllPersons, data)
+            content = people_data.to_csv()
             _write_content(output, content)
         elif kind == "specimens":
             data = utils.load_data("specimens", input, AllSpecimens)
-            content = data.to_csv()
+            specimens_data = cast(AllSpecimens, data)
+            content = specimens_data.to_csv()
             _write_content(output, content)
         else:
             raise ValueError(f"unknown kind {kind}")
@@ -321,7 +333,10 @@ def specimens(
     """Generate specimens."""
     try:
         # Load previously-generated data.
-        grid = utils.load_data("grid", grid, Grid)
+        grid_data = utils.load_data("grid", grid, Grid)
+
+        # Type casting for the type checker
+        grid = cast(Grid, grid_data)
 
         # Get parameters for specimen generation.
         supplied = (
@@ -355,11 +370,11 @@ def _check_not_overwriting(output_dir: Path, params: dict[str, BaseModel]) -> No
 
 def _get_params(
     caller: str,
-    param_class: BaseModel,
-    supplied: tuple[tuple],
+    param_class: Type[BaseModelType],
+    supplied: tuple[tuple[str, object], ...],
     params_file: str | None,
-    **converters: dict[str, callable],
-) -> BaseModel:
+    **converters: Callable,
+) -> BaseModelType:
     """Get and check parameter values.
 
     Parameters:

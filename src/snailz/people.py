@@ -1,6 +1,5 @@
 """Generate synthetic people."""
 
-import csv
 import io
 import random
 
@@ -62,7 +61,7 @@ class AllPersons(BaseModel):
             A CSV-formatted string with people data (without parameters) using Unix line endings
         """
         output = io.StringIO()
-        writer = csv.writer(output, **utils.CSV_SETTINGS)
+        writer = utils.csv_writer(output)
         writer.writerow(["ident", "personal", "family"])
         for person in self.individuals:
             writer.writerow([person.ident, person.personal, person.family])

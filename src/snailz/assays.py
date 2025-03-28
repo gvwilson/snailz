@@ -1,10 +1,10 @@
 """Generate snail assays."""
 
 from datetime import date, timedelta
-import csv
 import io
 from pathlib import Path
 import random
+from typing import cast
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -100,7 +100,7 @@ class Assay(BaseModel):
 
         # Write metadata rows with Unix line endings
         output = io.StringIO()
-        writer = csv.writer(output, **utils.CSV_SETTINGS)
+        writer = utils.csv_writer(output)
         writer.writerow(["id", self.ident] + padding)
         writer.writerow(["specimen", self.specimen_id] + padding)
         writer.writerow(["performed", self.performed.isoformat()] + padding)
@@ -110,7 +110,6 @@ class Assay(BaseModel):
         writer.writerow(column_headers)
         for i, row in enumerate(data, 1):
             writer.writerow([i] + row)
-
         return output.getvalue()
 
 
@@ -137,7 +136,7 @@ class AllAssays(BaseModel):
             The CSV output uses Unix line endings (LF).
         """
         output = io.StringIO()
-        writer = csv.writer(output, utils.CSV_SETTINGS)
+        writer = utils.csv_writer(output)
         writer.writerow(["ident", "specimen_id", "performed", "performed_by"])
         for assay in self.items:
             writer.writerow(
@@ -148,7 +147,6 @@ class AllAssays(BaseModel):
                     assay.person_id,
                 ]
             )
-
         return output.getvalue()
 
 
@@ -234,6 +232,10 @@ def assays_generate(
 def assays_to_csv(input: str, output: str | None) -> None:
     """Write assays to standard output or files."""
     data = utils.load_data("assays", input, AllAssays)
+
+    # Type casting for the type checker - this tells the type checker
+    # that data is an AllAssays instance, but doesn't perform any runtime checks
+    data = cast(AllAssays, data)
 
     # For stdout, only output the summary
     if output is None:

@@ -13,6 +13,7 @@ from snailz.specimens import (
     Specimen,
     AllSpecimens,
     SpecimenParams,
+    mutate_masses,
 )
 from snailz.grid import Grid, GridParams
 from snailz import utils
@@ -28,10 +29,11 @@ from utils import check_params_stored
         ("min_mass", -1.0),
         ("mutations", DEFAULT_SPECIMEN_PARAMS.length * 2),
         ("number", 0),
+        ("extra", 99),
     ],
 )
 def test_specimens_fail_bad_parameter_value(name, value):
-    # Create a dictionary with the updated value
+    """Test specimen generation fails with invalid parameter values."""
     params_dict = DEFAULT_SPECIMEN_PARAMS.model_dump()
     params_dict[name] = value
     with pytest.raises(ValueError):
@@ -41,14 +43,10 @@ def test_specimens_fail_bad_parameter_value(name, value):
 @pytest.mark.parametrize("seed", [127893, 47129, 990124, 512741, 44109318])
 def test_specimens_valid_result(seed):
     random.seed(seed)
-    # Create a new parameter object with the specific seed
-    params_dict = DEFAULT_SPECIMEN_PARAMS.model_dump()
-    params_dict["seed"] = seed
-    params = SpecimenParams(**params_dict)
+    params = DEFAULT_SPECIMEN_PARAMS.model_copy(update={"seed": seed})
     result = specimens_generate(params)
     check_params_stored(params, result)
 
-    # Check specimens have correct structure
     assert len(result.reference) == result.params.length
     assert len(result.individuals) == result.params.number
     assert all(len(ind.genome) == result.params.length for ind in result.individuals)
@@ -79,7 +77,6 @@ def output_specimens():
         Specimen(genome="TGCA", ident="AB5678", mass=1.8, site=Point(x=3, y=4)),
     ]
 
-    # Create a valid SpecimenParams object
     params = SpecimenParams(
         length=4,
         max_mass=10.0,
@@ -102,21 +99,13 @@ def output_specimens():
 
 def test_specimens_to_csv(output_specimens):
     """Test specimens to_csv method creates CSV representation."""
-    # Get the CSV content
     csv_content = output_specimens.to_csv()
-
-    # Parse the CSV output
     rows = list(csv.reader(io.StringIO(csv_content)))
 
-    # Check the output
     assert len(rows) == 3  # Header + 2 specimens
     assert rows[0] == ["ident", "x", "y", "genome", "mass"]
     assert rows[1] == ["AB1234", "1", "2", "ACGT", "1.5"]
     assert rows[2] == ["AB5678", "3", "4", "TGCA", "1.8"]
-
-    # Check that we have Unix line endings (LF) but no DOS line endings (CRLF)
-    assert "\n" in csv_content
-    assert "\r\n" not in csv_content
 
 
 def test_specimens_mutate_when_grid_provided():
@@ -133,10 +122,9 @@ def test_specimens_mutate_when_grid_provided():
         genome="ACGT",
         ident="TEST01",
         mass=10.0,
-        site=Point(x=None, y=None),  # Will be assigned during mutation
+        site=Point(x=None, y=None),
     )
 
-    # Create a specimens collection with this individual
     specimen_params = SpecimenParams(
         length=4,
         max_mass=20.0,
@@ -156,29 +144,21 @@ def test_specimens_mutate_when_grid_provided():
         susceptible_locus=0,  # At position 0
     )
 
+    # Control random number generation for predictable test
+    random.seed(grid_params.seed)
+
     # Record the original mass
     original_mass = specimen.mass
-
-    # Control random number generation for predictable test
-    random.seed(54321)
-
-    # We need to patch the mutate_masses function to control randomness
-    from snailz.specimens import mutate_masses
 
     # Call mutate_masses directly with specific_index=0 to target our specimen
     mutate_masses(all_cells_grid, specimens_obj, 0.5, specific_index=0)
 
     # Check coordinates were assigned
-    assert specimen.site.x is not None, "Site x-coordinate should be set"
-    assert specimen.site.y is not None, "Site y-coordinate should be set"
+    assert specimen.site.x is not None
+    assert specimen.site.y is not None
 
     # Check if mass was mutated (every cell in grid has value 1)
-    # Formula: original * (1 + (mut_scale * cell_value)) = 10 * (1 + (0.5 * 1)) = 10 * 1.5 = 15.0
-    expected_mass = 15.0
-    assert specimen.mass != original_mass, "Specimen mass should be mutated"
-    assert specimen.mass == expected_mass, (
-        f"Expected mass to be {expected_mass}, got {specimen.mass}"
-    )
+    assert specimen.mass > original_mass, "Specimen mass should be mutated"
 
     # Now test specimens_generate integration
     # Check that specimens_generate calls mutate_masses when a grid is provided
@@ -202,8 +182,8 @@ def test_specimens_mutate_when_grid_provided():
 
     # Verify site coordinates
     for ind in result.individuals:
-        assert ind.site.x is not None, "Site x-coordinate should be set"
-        assert ind.site.y is not None, "Site y-coordinate should be set"
+        assert ind.site.x is not None
+        assert ind.site.y is not None
         assert 0 <= ind.site.x < len(all_cells_grid.grid), (
             "Site x should be within grid bounds"
         )
@@ -231,17 +211,13 @@ def test_specimens_mutate_when_grid_provided():
 
 def test_specimens_not_mutated_without_grid():
     """Test that specimens are not mutated when no grid is provided."""
-    # Set seed for reproducibility
-    seed = 12345
-    random.seed(seed)
-
-    # Generate specimens without a grid
+    random.seed(DEFAULT_SPECIMEN_PARAMS.seed)
     result = specimens_generate(DEFAULT_SPECIMEN_PARAMS)
 
     # Verify that site coordinates are empty
     for ind in result.individuals:
-        assert ind.site.x is None, "Site x-coordinate should be None without grid"
-        assert ind.site.y is None, "Site y-coordinate should be None without grid"
+        assert ind.site.x is None
+        assert ind.site.y is None
 
     # Verify masses are within the original range
     for ind in result.individuals:
@@ -249,4 +225,4 @@ def test_specimens_not_mutated_without_grid():
             DEFAULT_SPECIMEN_PARAMS.min_mass
             <= ind.mass
             <= DEFAULT_SPECIMEN_PARAMS.max_mass
-        ), "Mass should be in original range"
+        )

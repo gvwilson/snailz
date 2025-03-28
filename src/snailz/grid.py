@@ -18,11 +18,12 @@ The grid is saved as a list of lists. 0 shows unfilled cells, while
 positive numbers show the original value of filled cells.
 """
 
-import csv
 import io
 import random
 
 from pydantic import BaseModel, Field
+
+from . import utils
 
 
 class GridParams(BaseModel):
@@ -56,10 +57,9 @@ class Grid(BaseModel):
             using Unix line endings (LF).
         """
         output = io.StringIO(newline="\n")
-        writer = csv.writer(output, lineterminator="\n")
+        writer = utils.csv_writer(output)
         for row in self.grid:
             writer.writerow(row)
-
         return output.getvalue()
 
 

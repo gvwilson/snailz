@@ -1,11 +1,11 @@
-"""Test mass mutation functionality."""
+"""Test mass mutation."""
 
 import pytest
 import random
 from unittest.mock import patch
 
-from snailz.defaults import DEFAULT_SPECIMEN_PARAMS
-from snailz.grid import Grid, GridParams
+from snailz.defaults import DEFAULT_GRID_PARAMS, DEFAULT_SPECIMEN_PARAMS
+from snailz.grid import Grid
 from snailz import specimens_generate
 from snailz.specimens import (
     BASES,
@@ -18,14 +18,19 @@ from snailz.specimens import (
 )
 
 
-def test_mutate_mass_no_effect_on_zero_cells():
-    """Test that zero cells in grid don't affect mass but site coordinates are updated."""
+@pytest.fixture
+def specimens():
+    """Default specimens (also initializes RNG)."""
     random.seed(DEFAULT_SPECIMEN_PARAMS.seed)
-    specimens = specimens_generate(DEFAULT_SPECIMEN_PARAMS)
-    grid_params = GridParams(size=5, depth=8, seed=123)
+    return specimens_generate(DEFAULT_SPECIMEN_PARAMS)
+
+
+def test_mutate_mass_no_effect_on_zero_cells(specimens):
+    """Test that zero cells in grid don't affect mass but site coordinates are updated."""
+    size = DEFAULT_GRID_PARAMS.size
     grid = Grid(
-        grid=[[0 for _ in range(5)] for _ in range(5)],
-        params=grid_params,
+        grid=[[0 for _ in range(size)] for _ in range(size)],
+        params=DEFAULT_GRID_PARAMS,
     )
     original_masses = [ind.mass for ind in specimens.individuals]
 
@@ -44,20 +49,16 @@ def test_mutate_mass_no_effect_on_zero_cells():
     for ind in specimens.individuals:
         assert ind.site.x is not None
         assert ind.site.y is not None
-        assert 0 <= ind.site.x < 5
-        assert 0 <= ind.site.y < 5
+        assert 0 <= ind.site.x < size
+        assert 0 <= ind.site.y < size
 
 
-def test_mutate_mass_effect_with_susceptible_genomes():
+def test_mutate_mass_effect_with_susceptible_genomes(specimens):
     """Test that mutations occur only with non-zero cells and susceptible genomes."""
-    random.seed(DEFAULT_SPECIMEN_PARAMS.seed)
-    specimens = specimens_generate(DEFAULT_SPECIMEN_PARAMS)
-
     # Create a grid with all cells = 1
-    grid_params = GridParams(size=5, depth=8, seed=123)
     grid = Grid(
         grid=[[1 for _ in range(5)] for _ in range(5)],
-        params=grid_params,
+        params=DEFAULT_GRID_PARAMS,
     )
 
     # Make a copy of the original masses
@@ -82,8 +83,6 @@ def test_mutate_mass_effect_with_susceptible_genomes():
     # Verify only susceptible genomes have changed but all sites are recorded
     for i, individual in enumerate(specimens.individuals):
         # All individuals should have site coordinates
-        assert individual.site.x is not None
-        assert individual.site.y is not None
         assert 0 <= individual.site.x < 5
         assert 0 <= individual.site.y < 5
 
@@ -103,9 +102,7 @@ def test_mutate_mass_with_variable_grid_values():
     genomes = ["A" * 10 for _ in range(num_specimens)]
     susc_locus = 5
     susc_base = "A"
-
     identifiers = ["AB1234", "AB5678", "AB90CD", "ABEF12", "AB3456"]
-
     individuals = [
         Specimen(genome=g, mass=m, site=Point(), ident=i)
         for g, m, i in zip(genomes, masses.copy(), identifiers)

@@ -1,27 +1,23 @@
 """Utilities."""
 
+import csv
 from datetime import date
+from io import StringIO
 import json
 import sys
-from typing import TypeVar, Type
+from typing import Any, Callable, TextIO, Type
 
 from pydantic import BaseModel
 
 
-# Settings for class-to-CSV conversion.
-CSV_SETTINGS = {"lineterminator": "\n"}
-
 # Decimal places in floating-point values.
 PRECISION = 2
-
-# A type variable for type annotations.
-T = TypeVar("T")
 
 
 class UniqueIdGenerator:
     """Generate unique IDs using provided function."""
 
-    def __init__(self, name: str, func: callable, limit: int = 10000) -> None:
+    def __init__(self, name: str, func: Callable, limit: int = 10000) -> None:
         """Initialize the unique ID generator.
 
         Parameters:
@@ -55,6 +51,12 @@ class UniqueIdGenerator:
         raise RuntimeError(f"failed to find unique ID for {self._name}")
 
 
+def csv_writer(output: TextIO | StringIO) -> Any:
+    """Wrapper to get line terminator settings right."""
+
+    return csv.writer(output, lineterminator="\n")
+
+
 def fail(msg: str) -> None:
     """Print message to standard error and exit with status 1.
 
@@ -65,23 +67,23 @@ def fail(msg: str) -> None:
     sys.exit(1)
 
 
-def load_data(parameter_name: str, filename: str, cls: Type[T]) -> T:
+def load_data(
+    parameter_name: str, filename: str | None, cls: Type[BaseModel]
+) -> BaseModel:
     """Construct a Pydantic model from serialized JSON.
 
     Parameters:
         parameter_name: Name of the parameter requiring this file (for error messages)
-        filename: Path to the JSON file to load
+        filename: Path to the JSON file to load (allowed to be None so that checking is done in one place)
         cls: The Pydantic model to instantiate with the loaded data
 
     Returns:
         An instance of cls constructed from the JSON data
 
     Raises:
-        ValueError: If filename is None or empty
         IOError: If the file cannot be read
     """
-    if not filename:
-        raise ValueError(f"--{parameter_name} is required")
+    assert filename is not None, f"--{parameter_name} is required"
     with open(filename, "r") as reader:
         return cls.model_validate(json.load(reader))
 
@@ -104,7 +106,7 @@ def report_result(output: str | None, result: BaseModel) -> None:
         print(result_json)
 
 
-def serialize_values(obj: object) -> str:
+def serialize_values(obj: object) -> str | dict:
     """Custom JSON serializer for JSON conversion.
 
     Parameters:

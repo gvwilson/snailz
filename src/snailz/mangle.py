@@ -25,7 +25,7 @@ def mangle_assays(assays_dir: str, people_file: str) -> None:
         mangled = _mangle_assay(people, original)
         output_file = str(filename).replace("_assay.csv", "_raw.csv")
         with open(output_file, "w") as stream:
-            csv.writer(stream, **utils.CSV_SETTINGS).writerows(mangled)
+            utils.csv_writer(stream).writerows(mangled)
 
 
 def _load_people(filename: str) -> dict[str, dict]:

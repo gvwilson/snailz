@@ -1,6 +1,5 @@
 """Generate snail specimens."""
 
-import csv
 import io
 import random
 import string
@@ -107,7 +106,7 @@ class AllSpecimens(BaseModel):
             - mass: snail mass in grams
         """
         output = io.StringIO()
-        writer = csv.writer(output, **utils.CSV_SETTINGS)
+        writer = utils.csv_writer(output)
         writer.writerow(["ident", "x", "y", "genome", "mass"])
         for indiv in self.individuals:
             writer.writerow(
@@ -116,7 +115,9 @@ class AllSpecimens(BaseModel):
         return output.getvalue()
 
 
-def specimens_generate(params: SpecimenParams, grid: Grid = None) -> AllSpecimens:
+def specimens_generate(
+    params: SpecimenParams, grid: Grid | None = None
+) -> AllSpecimens:
     """Generate specimens with random genomes and masses.
 
     Each genome is a string of bases of the same length. One locus is
