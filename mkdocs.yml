@@ -16,6 +16,7 @@ theme:
 markdown_extensions:
 - markdown_include.include:
     base_path: docs
+- footnotes
 
 exclude_docs: >
   *~
