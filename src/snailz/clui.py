@@ -19,6 +19,7 @@ from pydantic import BaseModel
 from . import defaults
 from . import utils
 from .assays import AssayParams, assays_generate, assays_to_csv
+from .database import make_database
 from .grid import Grid, GridParams, grid_generate
 from .people import AllPersons, PeopleParams, people_generate
 from .specimens import (
@@ -161,6 +162,39 @@ def convert(input, kind, output):
             raise ValueError(f"unknown kind {kind}")
     except Exception as e:
         utils.fail(f"Error converting data: {str(e)}")
+
+
+@cli.command()
+@click.option(
+    "--assays",
+    type=click.Path(exists=True),
+    required=True,
+    help="Path to assay CSV file",
+)
+@click.option(
+    "--output",
+    type=click.Path(),
+    required=True,
+    help="Path to SQLite database file to create",
+)
+@click.option(
+    "--people",
+    type=click.Path(exists=True),
+    required=True,
+    help="Path to people CSV file",
+)
+@click.option(
+    "--specimens",
+    type=click.Path(exists=True),
+    required=True,
+    help="Path to specimen CSV file",
+)
+def database(assays, output, people, specimens):
+    """Create a SQLite database from CSV files."""
+    try:
+        make_database(assays, people, specimens, output)
+    except Exception as e:
+        utils.fail(f"Error creating database: {str(e)}")
 
 
 @cli.command()

@@ -17,6 +17,7 @@ DIRS_TO_TIDY = ["build", "dist", "*.egg-info"]
 # Directories and files.
 PARAMS_DIR = Path("params")
 OUT_DIR = Path("tmp")
+ASSAYS_CSV = str(OUT_DIR / "assays.csv")
 ASSAYS_PARAMS = str(PARAMS_DIR / "assays.json")
 ASSAYS_JSON = str(OUT_DIR / "assays.json")
 GRID_PARAMS = str(PARAMS_DIR / "grid.json")
@@ -25,6 +26,7 @@ GRID_CSV = str(OUT_DIR / "grid.csv")
 PEOPLE_PARAMS = str(PARAMS_DIR / "people.json")
 PEOPLE_JSON = str(OUT_DIR / "people.json")
 PEOPLE_CSV = str(OUT_DIR / "people.csv")
+SNAILZ_DB = str(OUT_DIR / "snailz.db")
 SPECIMENS_PARAMS = str(PARAMS_DIR / "specimens.json")
 SPECIMENS_JSON = str(OUT_DIR / "specimens.json")
 SPECIMENS_CSV = str(OUT_DIR / "specimens.csv")
@@ -34,7 +36,7 @@ def task_all():
     """Rebuild all data."""
     return {
         "actions": None,
-        "task_dep": ["grid", "specimens", "people", "assays", "mangle"],
+        "task_dep": ["grid", "specimens", "people", "assays", "mangle", "database"],
         "verbosity": VERBOSITY,
         "uptodate": [False],
     }
@@ -63,6 +65,18 @@ def task_build():
             "twine check dist/*",
         ],
         "task_dep": ["tidy"],
+        "verbosity": VERBOSITY,
+        "uptodate": [False],
+    }
+
+
+def task_database():
+    """Generate SQLite database."""
+
+    return {
+        "actions": [
+            f"uv run snailz database --assays {ASSAYS_CSV} --people {PEOPLE_CSV} --specimens {SPECIMENS_CSV} --output {SNAILZ_DB}"
+        ],
         "verbosity": VERBOSITY,
         "uptodate": [False],
     }

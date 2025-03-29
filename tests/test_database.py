@@ -1,0 +1,55 @@
+"""Test database functionality."""
+
+import sqlite3
+from pathlib import Path
+
+import pytest
+
+from snailz.clui import database
+from snailz.database import make_database
+
+
+@pytest.fixture
+def assays_csv(fs):
+    """An assays CSV file."""
+    content = """ident,specimen_id,performed,performed_by
+123456,AB1234,2023-01-15,jd1234
+789012,CD5678,2023-01-16,js5678"""
+    path = "/assays.csv"
+    fs.create_file(path, contents=content)
+    return path
+
+
+@pytest.fixture
+def people_csv(fs):
+    """A specimens CSV file."""
+    content = """ident,personal,family
+jd1234,John,Doe
+js5678,Jane,Smith"""
+    path = "/people.csv"
+    fs.create_file(path, contents=content)
+    return path
+
+
+@pytest.fixture
+def specimens_csv(fs):
+    """A specimens CSV file."""
+    content = """ident,x,y,genome,mass
+AB1234,1,2,ACGT,1.5
+CD5678,3,4,CGTA,2.5"""
+    path = "/specimens.csv"
+    fs.create_file(path, contents=content)
+    return path
+
+
+def test_make_database(fs, assays_csv, people_csv, specimens_csv):
+    """Test creating a database from CSV files."""
+    conn = make_database(assays_csv, people_csv, specimens_csv, None)
+    
+    cursor = conn.cursor()
+    for table in ("assays", "people", "specimens"):
+        stmt = f"select count(*) from {table}"
+        cursor.execute(stmt)
+        assert cursor.fetchone()[0] == 2
+    
+    conn.close()
