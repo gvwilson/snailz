@@ -48,7 +48,8 @@ which uses spaces instead of zeroes for clarity:
 The package also generates a set of snails (referred to as "specimens"),
 each of which has a genome represented as a single string of ACGT bases,
 a body mass,
-and the grid coordinates where it was collected.
+the grid coordinates where it was collected,
+and a collection date.
 Individual genomes are created by mutating a reference genome at several randomly-selected loci.
 One combination of locus and single-nucleotide polymorphism are considered "significant":
 if a snail has that mutation at that locus *and* is collected from a polluted sample site,
@@ -56,13 +57,13 @@ its mass is increased by an amount that depends on how polluted the site is.
 Once again the results are saved as both JSON and CSV,
 and the default parameters included with the package generate specimens like these:
 
-| ident  |  x |  y | genome          | mass  |
-| :----- | -: | -: | :-------------- | ----: |
-| AZ5PXJ |  6 |  8 | GACGATGTTAGAGCT | 22.95 |
-| AZP8M5 |  9 |  0 | ACGGATGTTAGAGCT | 20.00 |
-| AZJMU7 |  1 |  6 | CTAGATGTTAGAGCT | 23.41 |
-| AZGH04 |  0 |  7 | AGGGATGTTAGAGCT | 18.07 |
-| …      |  … |  … | …               | …     |
+| ident  |  x |  y | genome          | mass  | collected_on |
+| :----- | -: | -: | :-------------- | ----: | :----------- |
+| AZ5PXJ |  6 |  8 | GACGATGTTAGAGCT | 22.95 | 2025-03-12   |
+| AZP8M5 |  9 |  0 | ACGGATGTTAGAGCT | 20.00 | 2025-03-07   |
+| AZJMU7 |  1 |  6 | CTAGATGTTAGAGCT | 23.41 | 2025-03-15   |
+| AZGH04 |  0 |  7 | AGGGATGTTAGAGCT | 18.07 | 2025-03-10   |
+| …      |  … |  … | …               | …     | …            |
 
 `snailz` uses Python's [faker](https://faker.readthedocs.io/) module
 to generate a set of laboratory staff with personal and family names,
@@ -201,6 +202,7 @@ $ snailz convert --kind assays --input tmp/assays.json --output tmp
     -   `number`: number of staff to create
     -   `seed`: RNG seed
 -   `specimens.json`
+    -   `end_date`: end date for specimen collection
     -   `length`: genome length in characters
     -   `max_mass`: maximum specimen mass
     -   `min_mass`: minimum specimen mass
@@ -208,6 +210,7 @@ $ snailz convert --kind assays --input tmp/assays.json --output tmp
     -   `mutations`: number of mutations to introduce
     -   `number`: number of specimens to create
     -   `seed`: RNG seed
+    -   `start_date`: start date for specimen collection
 -   `assays.json`
     -   `baseline`: assay response for unmutated specimens
     -   `end_date`: date of final assay
@@ -247,4 +250,5 @@ Note: there are no parameters for assay file mangling.
     -   `y`: Y coordinate of collection cell (integer)
     -   `genome`: base sequence (text)
     -   `mass`: snail mass (real)
+    -   `collected_on`: date when specimen was collected (date)
 -   `specimens.json`: specimen data in JSON format.

@@ -2,6 +2,7 @@
 
 import pytest
 import random
+from datetime import date
 from unittest.mock import patch
 
 from snailz.defaults import DEFAULT_GRID_PARAMS, DEFAULT_SPECIMEN_PARAMS
@@ -104,7 +105,9 @@ def test_mutate_mass_with_variable_grid_values():
     susc_base = "A"
     identifiers = ["AB1234", "AB5678", "AB90CD", "ABEF12", "AB3456"]
     individuals = [
-        Specimen(genome=g, mass=m, site=Point(), ident=i)
+        Specimen(
+            genome=g, mass=m, site=Point(), ident=i, collected_on=date(2025, 3, 10)
+        )
         for g, m, i in zip(genomes, masses.copy(), identifiers)
     ]
 
@@ -116,6 +119,8 @@ def test_mutate_mass_with_variable_grid_values():
         mutations=3,
         number=num_specimens,
         seed=12345,
+        start_date=date(2025, 3, 5),
+        end_date=date(2025, 3, 19),
     )
 
     specimens = AllSpecimens(

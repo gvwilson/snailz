@@ -127,7 +127,10 @@ def test_assays_valid_result(seed, people):
     """Test that assay generation returns the expected structure."""
     random.seed(seed)
     params = DEFAULT_ASSAY_PARAMS.model_copy(update={"seed": seed})
+    # Ensure DEFAULT_SPECIMEN_PARAMS is used with start_date and end_date already set
     specimens = specimens_generate(DEFAULT_SPECIMEN_PARAMS)
+    # Verify that all specimens have a collected_on date
+    assert all(spec.collected_on is not None for spec in specimens.individuals)
     result = assays_generate(params, people, specimens)
     check_params_stored(params, result)
 
@@ -161,13 +164,18 @@ def test_assay_reading_values(people):
         ident="AB1234",
         mass=1.0,
         site=Point(),
+        collected_on=date(2025, 3, 10),
     )
 
     # Modify a copy of the reference genome to not have the susceptible base
     non_susceptible_genome = list(reference)
     non_susceptible_genome[susc_locus] = next(b for b in BASES if b != susc_base)
     non_susceptible_individual = Specimen(
-        genome="".join(non_susceptible_genome), ident="AB5678", mass=1.0, site=Point()
+        genome="".join(non_susceptible_genome),
+        ident="AB5678",
+        mass=1.0,
+        site=Point(),
+        collected_on=date(2025, 3, 15),
     )
 
     specimens = AllSpecimens(

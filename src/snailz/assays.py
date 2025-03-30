@@ -36,14 +36,14 @@ class AssayParams(BaseModel):
     seed: int = Field()
     start_date: date = Field()
 
+    model_config = {"extra": "forbid"}
+
     @model_validator(mode="after")
-    def validate_date_range(self):
+    def validate_fields(self):
         """Validate that start_date is not after end_date."""
         if self.start_date > self.end_date:
             raise ValueError("start date must be less than or equal to end date")
         return self
-
-    model_config = {"extra": "forbid"}
 
 
 class Assay(BaseModel):

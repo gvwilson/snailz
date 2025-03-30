@@ -96,6 +96,7 @@ def specimens_file(fs):
                 "ident": "AB1234",
                 "mass": 1.5,
                 "site": {"x": 1, "y": 2},
+                "collected_on": date.fromisoformat("2025-03-10"),
             }
         ],
         loci=[0, 2],
@@ -592,6 +593,10 @@ def test_specimens_command_with_params(runner, fs, grid_file):
             "2",
             "--seed",
             "12345",
+            "--start-date",
+            "2025-03-05",
+            "--end-date",
+            "2025-03-19",
         ],
     )
 
@@ -613,6 +618,8 @@ def test_specimens_command_with_params_file(runner, fs, grid_file):
         "mutations": 2,
         "number": 3,
         "seed": 67890,
+        "start_date": "2025-03-05",
+        "end_date": "2025-03-19",
     }
     fs.create_file(params_file, contents=json.dumps(params))
 
@@ -649,6 +656,10 @@ def test_specimens_command_with_output_file(runner, fs, grid_file):
             "2",
             "--seed",
             "12345",
+            "--start-date",
+            "2025-03-05",
+            "--end-date",
+            "2025-03-19",
             "--output",
             output_file,
         ],

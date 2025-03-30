@@ -31,6 +31,7 @@ DEFAULT_PEOPLE_PARAMS = PeopleParams(
 )
 
 DEFAULT_SPECIMEN_PARAMS = SpecimenParams(
+    end_date=date.fromisoformat("2025-03-19"),
     length=15,
     max_mass=33.0,
     min_mass=15.0,
@@ -38,4 +39,5 @@ DEFAULT_SPECIMEN_PARAMS = SpecimenParams(
     mutations=3,
     number=20,
     seed=4712389,
+    start_date=date.fromisoformat("2025-03-05"),
 )

@@ -3,6 +3,7 @@
 import io
 import random
 import string
+from datetime import date
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -16,6 +17,7 @@ BASES = "ACGT"
 class SpecimenParams(BaseModel):
     """Parameters for specimen generation.
 
+    - end_date: End date for specimen collection
     - length: Length of specimen genomes (must be positive)
     - max_mass: Maximum mass for specimens (must be positive)
     - min_mass: Minimum mass for specimens (must be positive and less than max_mass)
@@ -23,8 +25,11 @@ class SpecimenParams(BaseModel):
     - mutations: Number of mutations in specimens (must be between 0 and length)
     - number: Number of specimens to generate (must be positive)
     - seed: Random seed for reproducibility
+    - start_date: Start date for specimen collection
+    - end_date: End date for specimen collection
     """
 
+    end_date: date = Field()
     length: int = Field(gt=0)
     max_mass: float = Field(gt=0)
     min_mass: float = Field(gt=0)
@@ -32,22 +37,20 @@ class SpecimenParams(BaseModel):
     mutations: int = Field(ge=0)
     number: int = Field(gt=0)
     seed: int = Field()
-
-    @model_validator(mode="after")
-    def validate_mass_range(self):
-        """Validate that max_mass is greater than min_mass."""
-        if self.min_mass >= self.max_mass:
-            raise ValueError("max_mass must be greater than min_mass")
-        return self
-
-    @model_validator(mode="after")
-    def validate_mutations_range(self):
-        """Validate that mutations is not greater than genome length."""
-        if self.mutations > self.length:
-            raise ValueError("mutations must be between 0 and length")
-        return self
+    start_date: date = Field()
 
     model_config = {"extra": "forbid"}
+
+    @model_validator(mode="after")
+    def validate_fields(self):
+        """Validate requirements on fields."""
+        if self.min_mass >= self.max_mass:
+            raise ValueError("max_mass must be greater than min_mass")
+        if self.mutations > self.length:
+            raise ValueError("mutations must be between 0 and length")
+        if self.end_date < self.start_date:
+            raise ValueError("end_date must be greater than or equal to start_date")
+        return self
 
 
 class Point(BaseModel):
@@ -62,18 +65,20 @@ class Point(BaseModel):
 
 
 class Specimen(BaseModel):
-    """A single specimen with unique identifier, genome, mass, and site location.
+    """A single specimen with unique identifier, genome, mass, site location, and collection date.
 
     - genome: bases in genome
     - ident: unique identifier
     - mass: snail mass in grams
     - site: grid location where specimen was collected
+    - collected_on: date when specimen was collected
     """
 
     genome: str
     ident: str
     mass: float
     site: Point
+    collected_on: date
 
 
 class AllSpecimens(BaseModel):
@@ -104,13 +109,21 @@ class AllSpecimens(BaseModel):
             - y: Y coordinate in grid
             - genome: bases in genome
             - mass: snail mass in grams
+            - collected_on: date when specimen was collected
         """
         output = io.StringIO()
         writer = utils.csv_writer(output)
-        writer.writerow(["ident", "x", "y", "genome", "mass"])
+        writer.writerow(["ident", "x", "y", "genome", "mass", "collected_on"])
         for indiv in self.individuals:
             writer.writerow(
-                [indiv.ident, indiv.site.x, indiv.site.y, indiv.genome, indiv.mass]
+                [
+                    indiv.ident,
+                    indiv.site.x,
+                    indiv.site.y,
+                    indiv.genome,
+                    indiv.mass,
+                    indiv.collected_on,
+                ]
             )
         return output.getvalue()
 
@@ -141,10 +154,11 @@ def specimens_generate(
     genomes = [_make_genome(reference, loci) for i in range(params.number)]
     masses = _make_masses(params, genomes, susc_loc, susc_base)
     identifiers = _make_idents(params.number)
+    collection_dates = _make_collection_dates(params)
 
     individuals = [
-        Specimen(genome=g, mass=m, site=Point(), ident=i)
-        for g, m, i in zip(genomes, masses, identifiers)
+        Specimen(genome=g, mass=m, site=Point(), ident=i, collected_on=d)
+        for g, m, i, d in zip(genomes, masses, identifiers, collection_dates)
     ]
 
     result = AllSpecimens(
@@ -312,6 +326,26 @@ def _make_masses(
     return [
         round(random.uniform(params.min_mass, params.max_mass), utils.PRECISION)
         for _ in genomes
+    ]
+
+
+def _make_collection_dates(params: SpecimenParams) -> list[date]:
+    """Generate random collection dates for specimens.
+
+    Parameters:
+        params: SpecimenParams with start_date, end_date, and number attributes
+
+    Returns:
+        List of randomly generated collection dates between start_date and end_date
+    """
+    start_ordinal = params.start_date.toordinal()
+    end_ordinal = params.end_date.toordinal()
+    if start_ordinal == end_ordinal:
+        return [params.start_date] * params.number
+
+    return [
+        date.fromordinal(random.randint(start_ordinal, end_ordinal))
+        for _ in range(params.number)
     ]
 
 

@@ -1,6 +1,7 @@
 """Test specimen generation."""
 
 import csv
+from datetime import date
 import io
 import pytest
 import random
@@ -30,6 +31,7 @@ from utils import check_params_stored
         ("mutations", DEFAULT_SPECIMEN_PARAMS.length * 2),
         ("number", 0),
         ("extra", 99),
+        ("end_date", date(2025, 3, 1)),  # End date before start date
     ],
 )
 def test_specimens_fail_bad_parameter_value(name, value):
@@ -73,8 +75,20 @@ def test_specimens_valid_result(seed):
 def output_specimens():
     """Create a small test specimen dataset."""
     individuals = [
-        Specimen(genome="ACGT", ident="AB1234", mass=1.5, site=Point(x=1, y=2)),
-        Specimen(genome="TGCA", ident="AB5678", mass=1.8, site=Point(x=3, y=4)),
+        Specimen(
+            genome="ACGT",
+            ident="AB1234",
+            mass=1.5,
+            site=Point(x=1, y=2),
+            collected_on=date(2025, 3, 10),
+        ),
+        Specimen(
+            genome="TGCA",
+            ident="AB5678",
+            mass=1.8,
+            site=Point(x=3, y=4),
+            collected_on=date(2025, 3, 15),
+        ),
     ]
 
     params = SpecimenParams(
@@ -85,6 +99,8 @@ def output_specimens():
         mutations=2,
         number=2,
         seed=12345,
+        start_date=date(2025, 3, 5),
+        end_date=date(2025, 3, 19),
     )
 
     return AllSpecimens(
@@ -103,9 +119,9 @@ def test_specimens_to_csv(output_specimens):
     rows = list(csv.reader(io.StringIO(csv_content)))
 
     assert len(rows) == 3  # Header + 2 specimens
-    assert rows[0] == ["ident", "x", "y", "genome", "mass"]
-    assert rows[1] == ["AB1234", "1", "2", "ACGT", "1.5"]
-    assert rows[2] == ["AB5678", "3", "4", "TGCA", "1.8"]
+    assert rows[0] == ["ident", "x", "y", "genome", "mass", "collected_on"]
+    assert rows[1] == ["AB1234", "1", "2", "ACGT", "1.5", "2025-03-10"]
+    assert rows[2] == ["AB5678", "3", "4", "TGCA", "1.8", "2025-03-15"]
 
 
 def test_specimens_mutate_when_grid_provided():
@@ -123,6 +139,7 @@ def test_specimens_mutate_when_grid_provided():
         ident="TEST01",
         mass=10.0,
         site=Point(x=None, y=None),
+        collected_on=date(2025, 3, 10),
     )
 
     specimen_params = SpecimenParams(
@@ -133,6 +150,8 @@ def test_specimens_mutate_when_grid_provided():
         mutations=2,
         number=1,
         seed=12345,
+        start_date=date(2025, 3, 5),
+        end_date=date(2025, 3, 19),
     )
 
     specimens_obj = AllSpecimens(
@@ -171,6 +190,8 @@ def test_specimens_mutate_when_grid_provided():
         mutations=2,
         number=10,  # Generate enough specimens to increase chances of mutation
         seed=12345,
+        start_date=date(2025, 3, 5),
+        end_date=date(2025, 3, 19),
     )
 
     # Force random numbers to be predictable

@@ -21,14 +21,14 @@ class PeopleParams(BaseModel):
     number: int = Field(gt=0)
     seed: int = Field()
 
+    model_config = {"extra": "forbid"}
+
     @field_validator("locale")
-    def validate_locale(cls, v):
+    def validate_fields(cls, v):
         """Validate that the locale is available in faker."""
         if v not in faker_config.AVAILABLE_LOCALES:
             raise ValueError(f"Unknown locale {v}")
         return v
-
-    model_config = {"extra": "forbid"}
 
 
 class Person(BaseModel):

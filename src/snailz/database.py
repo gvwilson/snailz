@@ -33,11 +33,12 @@ create table specimens (
     x integer,
     y integer,
     genome text,
-    mass real
+    mass real,
+    collected_on text
 )
 """
-SPECIMENS_HEADER = ["ident", "x", "y", "genome", "mass"]
-SPECIMENS_INSERT = "insert into specimens values (?, ?, ?, ?, ?)"
+SPECIMENS_HEADER = ["ident", "x", "y", "genome", "mass", "collected_on"]
+SPECIMENS_INSERT = "insert into specimens values (?, ?, ?, ?, ?, ?)"
 
 
 def make_database(

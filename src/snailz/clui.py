@@ -395,6 +395,16 @@ def people(
     "--params", type=click.Path(exists=True), help="Path to JSON parameter file"
 )
 @click.option("--seed", type=int, help="Random seed")
+@click.option(
+    "--start-date",
+    callback=utils.validate_date,
+    help="Start date for specimen collection (YYYY-MM-DD)",
+)
+@click.option(
+    "--end-date",
+    callback=utils.validate_date,
+    help="End date for specimen collection (YYYY-MM-DD)",
+)
 def specimens(
     grid=None,
     length=None,
@@ -406,6 +416,8 @@ def specimens(
     output=None,
     params=None,
     seed=None,
+    start_date=None,
+    end_date=None,
 ):
     """Generate specimens."""
     try:
@@ -424,6 +436,8 @@ def specimens(
             ("mutations", mutations),
             ("number", number),
             ("seed", seed),
+            ("start_date", start_date),
+            ("end_date", end_date),
         )
         _make_specimens_json(params, output, grid, supplied)
 
@@ -531,7 +545,14 @@ def _make_specimens_json(
     grid: Grid,
     supplied_params: tuple[tuple[str, object], ...] = (),
 ) -> AllSpecimens:
-    parameters = _get_params("specimens", SpecimenParams, supplied_params, params_path)
+    parameters = _get_params(
+        "specimens",
+        SpecimenParams,
+        supplied_params,
+        params_path,
+        start_date=date.fromisoformat,
+        end_date=date.fromisoformat,
+    )
     random.seed(parameters.seed)
     result = specimens_generate(parameters, grid)
     utils.report_result(output_path, result)
