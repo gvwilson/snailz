@@ -26,23 +26,23 @@ the default parameters included with the package generated the following small g
 which uses spaces instead of zeroes for clarity:
 
 ```
-+---------------+
-|         1     |
-|         3     |
-|         3     |
-|        22     |
-|      2222     |
-|       2       |
-|     3111      |
-|      28       |
-|               |
-|               |
-|               |
-|               |
-|               |
-|               |
-|               |
-+---------------+
++-----------------------------+
+|                             |
+|                             |
+|                             |
+|              2              |
+|            2 3              |
+|        2   5 3              |
+|    4 1 3 4 5                |
+|    1 3 5 4 5 2 5 5          |
+|        3 2     1   3        |
+|          3 1 5 4 3 1 5 1 2 1|
+|            1   3       1    |
+|              4 4 2          |
+|            2 4              |
+|              3              |
+|                             |
++-----------------------------+
 ```
 
 The package also generates a set of snails (referred to as "specimens"),
@@ -125,9 +125,12 @@ performed_by,aa1942,,,
 4,10.19,0.08,0.05,0.09
 ```
 
-Finally, a "raw" assay file is created by taking the clean ones
+A "raw" assay file is also created by taking the clean ones
 and introducing zero or more deliberate formatting errors
 to simulate the kind of data that laboratories commonly produce.
+Finally,
+a SQLite database file is created that stores the people, specimens, and assay summary information
+in tables with the obvious names and columns.
 
 ## For Users
 
@@ -136,8 +139,10 @@ to simulate the kind of data that laboratories commonly produce.
 
 | Command   | Action |
 | --------- | ------ |
-| assays    | Generate assays for specimens within a date range. |
+| all       | Generate all data files. |
+| assays    | Generate assays for specimens. |
 | convert   | Convert JSON data to CSV format. |
+| database  | Create a SQLite database from CSV files. |
 | grid      | Generate grid. |
 | init      | Initialize parameter files for snailz. |
 | mangle    | Modify assay files by reassigning people. |
@@ -157,6 +162,13 @@ $ uv pip install snailz
 # Copy default parameter values into ./params/*.json
 $ snailz init --output params
 
+# Regenerate all output files in ./tmp
+$ snailz all --params params --output tmp
+```
+
+To generate individual data files:
+
+```
 # Create a grid JSON file in ./tmp/grid.json and a CSV file in ./tmp/grid.csv
 $ snailz grid --params params/grid.json --output tmp/grid.json
 $ snailz convert --kind grid --input tmp/grid.json --output tmp/grid.csv

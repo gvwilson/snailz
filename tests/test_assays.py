@@ -128,7 +128,7 @@ def test_assays_valid_result(seed, people):
     random.seed(seed)
     params = DEFAULT_ASSAY_PARAMS.model_copy(update={"seed": seed})
     specimens = specimens_generate(DEFAULT_SPECIMEN_PARAMS)
-    result = assays_generate(params, specimens, people)
+    result = assays_generate(params, people, specimens)
     check_params_stored(params, result)
 
     assert len(result.items) == len(specimens.individuals)
@@ -179,7 +179,7 @@ def test_assay_reading_values(people):
         susceptible_locus=susc_locus,
     )
 
-    result = assays_generate(params, specimens, people)
+    result = assays_generate(params, people, specimens)
 
     # Test reading values for susceptible specimen
     susceptible_assay = result.items[0]

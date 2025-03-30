@@ -1576,7 +1576,7 @@
 
 
 <h2 id="snailz.assays.assays_generate" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">assays_generate</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">specimens</span><span class="p">,</span> <span class="n">people</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">assays_generate</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">people</span><span class="p">,</span> <span class="n">specimens</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1615,22 +1615,6 @@
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>specimens</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="AllSpecimens (snailz.specimens.AllSpecimens)" href="../specimens/#snailz.specimens.AllSpecimens">AllSpecimens</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Specimens object with individual specimens to generate assays for</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
                 <code>people</code>
             </td>
             <td>
@@ -1639,6 +1623,22 @@
             <td>
               <div class="doc-md-description">
                 <p>People object with staff members</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>specimens</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="AllSpecimens (snailz.specimens.AllSpecimens)" href="../specimens/#snailz.specimens.AllSpecimens">AllSpecimens</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Specimens object with individual specimens to generate assays for</p>
               </div>
             </td>
             <td>
@@ -1751,14 +1751,14 @@
 <span class="normal">227</span>
 <span class="normal">228</span>
 <span class="normal">229</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">assays_generate</span><span class="p">(</span>
-    <span class="n">params</span><span class="p">:</span> <span class="n">AssayParams</span><span class="p">,</span> <span class="n">specimens</span><span class="p">:</span> <span class="n">AllSpecimens</span><span class="p">,</span> <span class="n">people</span><span class="p">:</span> <span class="n">AllPersons</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">AssayParams</span><span class="p">,</span> <span class="n">people</span><span class="p">:</span> <span class="n">AllPersons</span><span class="p">,</span> <span class="n">specimens</span><span class="p">:</span> <span class="n">AllSpecimens</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AllAssays</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate an assay for each specimen.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        params: AssayParams object containing assay generation parameters</span>
-<span class="sd">        specimens: Specimens object with individual specimens to generate assays for</span>
 <span class="sd">        people: People object with staff members</span>
+<span class="sd">        specimens: Specimens object with individual specimens to generate assays for</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Assays object containing generated assays and parameters</span>
@@ -1881,7 +1881,7 @@
 <span class="normal">261</span>
 <span class="normal">262</span>
 <span class="normal">263</span>
-<span class="normal">264</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">assays_to_csv</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">264</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">assays_to_csv</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Write assays to standard output or files.&quot;&quot;&quot;</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="s2">&quot;assays&quot;</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">AllAssays</span><span class="p">)</span>
 

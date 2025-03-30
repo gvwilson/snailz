@@ -40,7 +40,12 @@ SPECIMENS_HEADER = ["ident", "x", "y", "genome", "mass"]
 SPECIMENS_INSERT = "insert into specimens values (?, ?, ?, ?, ?)"
 
 
-def make_database(assays: str, people: str, specimens: str, output: str = None) -> sqlite3.Connection:
+def make_database(
+    assays: Path | str,
+    people: Path | str,
+    specimens: Path | str,
+    output: Path | str | None = None,
+) -> sqlite3.Connection | None:
     """Create a SQLite database from CSV files.
 
     Parameters:
@@ -57,7 +62,7 @@ def make_database(assays: str, people: str, specimens: str, output: str = None) 
     else:
         Path(output).unlink(missing_ok=True)
         conn = sqlite3.connect(output)
-    
+
     cursor = conn.cursor()
 
     for filepath, header, create, insert in (
@@ -72,7 +77,7 @@ def make_database(assays: str, people: str, specimens: str, output: str = None) 
             cursor.executemany(insert, data[1:])
 
     conn.commit()
-    
+
     if output is None:
         return conn
     else:

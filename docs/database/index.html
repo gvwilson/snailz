@@ -552,7 +552,7 @@
                 <code>assays</code>
             </td>
             <td>
-                  <code><span title="str">str</span></code>
+                  <code><span title="pathlib.Path">Path</span> | <span title="str">str</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -568,7 +568,7 @@
                 <code>people</code>
             </td>
             <td>
-                  <code><span title="str">str</span></code>
+                  <code><span title="pathlib.Path">Path</span> | <span title="str">str</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -584,7 +584,7 @@
                 <code>specimens</code>
             </td>
             <td>
-                  <code><span title="str">str</span></code>
+                  <code><span title="pathlib.Path">Path</span> | <span title="str">str</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -600,7 +600,7 @@
                 <code>output</code>
             </td>
             <td>
-                  <code><span title="str">str</span></code>
+                  <code><span title="pathlib.Path">Path</span> | <span title="str">str</span> | None</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -626,7 +626,7 @@
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="sqlite3.Connection">Connection</span></code>
+                  <code><span title="sqlite3.Connection">Connection</span> | None</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -677,7 +677,17 @@
 <span class="normal">77</span>
 <span class="normal">78</span>
 <span class="normal">79</span>
-<span class="normal">80</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_database</span><span class="p">(</span><span class="n">assays</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">people</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">specimens</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Connection</span><span class="p">:</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_database</span><span class="p">(</span>
+    <span class="n">assays</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">people</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">specimens</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">output</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Connection</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a SQLite database from CSV files.</span>
 
 <span class="sd">    Parameters:</span>

@@ -11,6 +11,7 @@ from datetime import date
 import json
 from pathlib import Path
 import random
+import shutil
 from typing import Callable, Type, TypeVar, cast
 
 import click
@@ -18,7 +19,7 @@ from pydantic import BaseModel
 
 from . import defaults
 from . import utils
-from .assays import AssayParams, assays_generate, assays_to_csv
+from .assays import AllAssays, AssayParams, assays_generate, assays_to_csv
 from .database import make_database
 from .grid import Grid, GridParams, grid_generate
 from .people import AllPersons, PeopleParams, people_generate
@@ -37,6 +38,72 @@ BaseModelType = TypeVar("BaseModelType", bound=BaseModel)
 @click.group()
 def cli():
     """Command-line interface for snailz."""
+
+
+@cli.command()
+@click.option(
+    "--params",
+    type=click.Path(exists=True, file_okay=False, dir_okay=True),
+    required=True,
+    help="Directory containing parameter files",
+)
+@click.option(
+    "--output",
+    type=click.Path(file_okay=False, dir_okay=True),
+    required=True,
+    help="Directory for output files",
+)
+def all(params, output):
+    """Generate all data files."""
+    try:
+        # Check that all required parameter files exist
+        params_dir = Path(params)
+        required_files = ["grid.json", "people.json", "specimens.json", "assays.json"]
+        for filename in required_files:
+            if not (params_dir / filename).exists():
+                utils.fail(
+                    f"Required parameter file {filename} not found in {params_dir}"
+                )
+
+        # Prepare output directory
+        output_dir = Path(output)
+        if output_dir.exists():
+            shutil.rmtree(output)
+        output_dir.mkdir()
+
+        # Create grid
+        grid = _make_grid_json(params_dir / "grid.json", output_dir / "grid.json")
+        _write_content(output_dir / "grid.csv", grid.to_csv())
+
+        # Create people
+        people = _make_people_json(
+            params_dir / "people.json", output_dir / "people.json"
+        )
+        _write_content(output_dir / "people.csv", people.to_csv())
+
+        # Create specimens
+        specimens = _make_specimens_json(
+            params_dir / "specimens.json", output_dir / "specimens.json", grid
+        )
+        _write_content(output_dir / "specimens.csv", specimens.to_csv())
+
+        # Create assays
+        assays_output_path = output_dir / "assays.json"
+        _make_assays_json(
+            params_dir / "assays.json", assays_output_path, people, specimens
+        )
+        assays_to_csv(assays_output_path, output)
+
+        # Create database
+        make_database(
+            output_dir / "assays.csv",
+            output_dir / "people.csv",
+            output_dir / "specimens.csv",
+            output_dir / "snailz.db",
+        )
+
+    except Exception as e:
+        utils.fail(f"Error in 'all' command: {str(e)}")
 
 
 @cli.command()
@@ -63,9 +130,7 @@ def cli():
 @click.option(
     "--start-date", callback=utils.validate_date, help="Start date (YYYY-MM-DD)"
 )
-@click.pass_context
 def assays(
-    ctx,
     baseline=None,
     end_date=None,
     mutant=None,
@@ -78,7 +143,7 @@ def assays(
     specimens=None,
     start_date=None,
 ):
-    """Generate assays for specimens within a date range."""
+    """Generate assays for specimens."""
     try:
         # Load previously-generated data.
         people = utils.load_data("people", people, AllPersons)
@@ -88,7 +153,7 @@ def assays(
         people = cast(AllPersons, people)
         specimens = cast(AllSpecimens, specimens)
 
-        # Get parameters for assay generation
+        # Create
         supplied = (
             ("baseline", baseline),
             ("end_date", end_date),
@@ -98,19 +163,8 @@ def assays(
             ("seed", seed),
             ("start_date", start_date),
         )
-        parameters = _get_params(
-            "assays",
-            AssayParams,
-            supplied,
-            params,
-            end_date=date.fromisoformat,
-            start_date=date.fromisoformat,
-        )
-        random.seed(parameters.seed)
+        _make_assays_json(params, output, people, specimens, supplied)
 
-        # Generate assays with specimens and people
-        result = assays_generate(parameters, specimens, people)
-        utils.report_result(output, result)
     except Exception as e:
         utils.fail(f"Error generating assays: {str(e)}")
 
@@ -205,9 +259,7 @@ def database(assays, output, people, specimens):
 )
 @click.option("--seed", type=int, help="Random seed")
 @click.option("--size", type=int, help="Grid size")
-@click.pass_context
 def grid(
-    ctx,
     depth=None,
     output=None,
     params=None,
@@ -221,10 +273,7 @@ def grid(
             ("seed", seed),
             ("size", size),
         )
-        parameters = _get_params("grid", GridParams, supplied, params)
-        random.seed(parameters.seed)
-        result = grid_generate(parameters)
-        utils.report_result(output, result)
+        _make_grid_json(params, output, supplied)
     except Exception as e:
         utils.fail(f"Error generating grid: {str(e)}")
 
@@ -313,9 +362,7 @@ def mangle(seed, dir, people):
     "--params", type=click.Path(exists=True), help="Path to JSON parameter file"
 )
 @click.option("--seed", type=int, help="Random seed")
-@click.pass_context
 def people(
-    ctx,
     locale=None,
     number=None,
     output=None,
@@ -329,10 +376,8 @@ def people(
             ("number", number),
             ("seed", seed),
         )
-        parameters = _get_params("people", PeopleParams, supplied, params)
-        random.seed(parameters.seed)
-        result = people_generate(parameters)
-        utils.report_result(output, result)
+        _make_people_json(params, output, supplied)
+
     except Exception as e:
         utils.fail(f"Error generating people: {str(e)}")
 
@@ -350,9 +395,7 @@ def people(
     "--params", type=click.Path(exists=True), help="Path to JSON parameter file"
 )
 @click.option("--seed", type=int, help="Random seed")
-@click.pass_context
 def specimens(
-    ctx,
     grid=None,
     length=None,
     max_mass=None,
@@ -382,10 +425,8 @@ def specimens(
             ("number", number),
             ("seed", seed),
         )
-        parameters = _get_params("specimens", SpecimenParams, supplied, params)
-        random.seed(parameters.seed)
-        result = specimens_generate(parameters, grid)
-        utils.report_result(output, result)
+        _make_specimens_json(params, output, grid, supplied)
+
     except Exception as e:
         utils.fail(f"Error generating specimens: {str(e)}")
 
@@ -406,7 +447,7 @@ def _get_params(
     caller: str,
     param_class: Type[BaseModelType],
     supplied: tuple[tuple[str, object], ...],
-    params_file: str | None,
+    params_file: str | Path | None,
     **converters: Callable,
 ) -> BaseModelType:
     """Get and check parameter values.
@@ -439,7 +480,65 @@ def _get_params(
     return param_class(**result)
 
 
-def _write_content(output: str | None, content: str) -> None:
+def _make_assays_json(
+    params_path: str | Path | None,
+    output_path: str | Path | None,
+    people: AllPersons,
+    specimens: AllSpecimens,
+    supplied_params: tuple[tuple[str, object], ...] = (),
+) -> AllAssays:
+    parameters = _get_params(
+        "assays",
+        AssayParams,
+        supplied_params,
+        params_path,
+        end_date=date.fromisoformat,
+        start_date=date.fromisoformat,
+    )
+    random.seed(parameters.seed)
+    result = assays_generate(parameters, people, specimens)
+    utils.report_result(output_path, result)
+    return result
+
+
+def _make_grid_json(
+    params_path: str | Path | None,
+    output_path: str | Path | None,
+    supplied_params: tuple[tuple[str, object], ...] = (),
+) -> Grid:
+    parameters = _get_params("grid", GridParams, supplied_params, params_path)
+    random.seed(parameters.seed)
+    result = grid_generate(parameters)
+    utils.report_result(output_path, result)
+    return result
+
+
+def _make_people_json(
+    params_path: str | Path | None,
+    output_path: str | Path | None,
+    supplied_params: tuple[tuple[str, object], ...] = (),
+) -> AllPersons:
+    parameters = _get_params("people", PeopleParams, supplied_params, params_path)
+    random.seed(parameters.seed)
+    result = people_generate(parameters)
+    utils.report_result(output_path, result)
+    return result
+
+
+def _make_specimens_json(
+    params_path: str | Path | None,
+    output_path: str | Path | None,
+    grid: Grid,
+    supplied_params: tuple[tuple[str, object], ...] = (),
+) -> AllSpecimens:
+    parameters = _get_params("specimens", SpecimenParams, supplied_params, params_path)
+    random.seed(parameters.seed)
+    result = specimens_generate(parameters, grid)
+    utils.report_result(output_path, result)
+    return result
+
+
+def _write_content(output: str | Path | None, content: str) -> None:
     """Write content to standard output or a file."""
     if output:
         with open(output, "w") as writer:

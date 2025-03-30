@@ -151,14 +151,14 @@ class AllAssays(BaseModel):
 
 
 def assays_generate(
-    params: AssayParams, specimens: AllSpecimens, people: AllPersons
+    params: AssayParams, people: AllPersons, specimens: AllSpecimens
 ) -> AllAssays:
     """Generate an assay for each specimen.
 
     Parameters:
         params: AssayParams object containing assay generation parameters
-        specimens: Specimens object with individual specimens to generate assays for
         people: People object with staff members
+        specimens: Specimens object with individual specimens to generate assays for
 
     Returns:
         Assays object containing generated assays and parameters
@@ -229,7 +229,7 @@ def assays_generate(
     return AllAssays(items=items, params=params)
 
 
-def assays_to_csv(input: str, output: str | None) -> None:
+def assays_to_csv(input: str | Path, output: str | Path | None) -> None:
     """Write assays to standard output or files."""
     data = utils.load_data("assays", input, AllAssays)
 

@@ -539,23 +539,23 @@ but that could easily be modified.)
 Grids are stored as JSON and converted to CSV;
 the default parameters included with the package generated the following small grid,
 which uses spaces instead of zeroes for clarity:</p>
-<pre><code>+---------------+
-|         1     |
-|         3     |
-|         3     |
-|        22     |
-|      2222     |
-|       2       |
-|     3111      |
-|      28       |
-|               |
-|               |
-|               |
-|               |
-|               |
-|               |
-|               |
-+---------------+
+<pre><code>+-----------------------------+
+|                             |
+|                             |
+|                             |
+|              2              |
+|            2 3              |
+|        2   5 3              |
+|    4 1 3 4 5                |
+|    1 3 5 4 5 2 5 5          |
+|        3 2     1   3        |
+|          3 1 5 4 3 1 5 1 2 1|
+|            1   3       1    |
+|              4 4 2          |
+|            2 4              |
+|              3              |
+|                             |
++-----------------------------+
 </code></pre>
 <p>The package also generates a set of snails (referred to as "specimens"),
 each of which has a genome represented as a single string of ACGT bases,
@@ -730,9 +730,12 @@ performed_by,aa1942,,,
 3,0.08,10.58,0.06,0.04
 4,10.19,0.08,0.05,0.09
 </code></pre>
-<p>Finally, a "raw" assay file is created by taking the clean ones
+<p>A "raw" assay file is also created by taking the clean ones
 and introducing zero or more deliberate formatting errors
-to simulate the kind of data that laboratories commonly produce.</p>
+to simulate the kind of data that laboratories commonly produce.
+Finally,
+a SQLite database file is created that stores the people, specimens, and assay summary information
+in tables with the obvious names and columns.</p>
 <h2 id="for-users">For Users</h2>
 <ol>
 <li><code>pip install snailz</code> (or the equivalent command for your Python environment).</li>
@@ -747,12 +750,20 @@ to simulate the kind of data that laboratories commonly produce.</p>
 </thead>
 <tbody>
 <tr>
+<td>all</td>
+<td>Generate all data files.</td>
+</tr>
+<tr>
 <td>assays</td>
-<td>Generate assays for specimens within a date range.</td>
+<td>Generate assays for specimens.</td>
 </tr>
 <tr>
 <td>convert</td>
 <td>Convert JSON data to CSV format.</td>
+</tr>
+<tr>
+<td>database</td>
+<td>Create a SQLite database from CSV files.</td>
 </tr>
 <tr>
 <td>grid</td>
@@ -787,7 +798,11 @@ $ uv pip install snailz
 # Copy default parameter values into ./params/*.json
 $ snailz init --output params
 
-# Create a grid JSON file in ./tmp/grid.json and a CSV file in ./tmp/grid.csv
+# Regenerate all output files in ./tmp
+$ snailz all --params params --output tmp
+</code></pre>
+<p>To generate individual data files:</p>
+<pre><code># Create a grid JSON file in ./tmp/grid.json and a CSV file in ./tmp/grid.csv
 $ snailz grid --params params/grid.json --output tmp/grid.json
 $ snailz convert --kind grid --input tmp/grid.json --output tmp/grid.csv
 

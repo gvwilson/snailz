@@ -35,8 +35,9 @@ SPECIMENS_CSV = str(OUT_DIR / "specimens.csv")
 def task_all():
     """Rebuild all data."""
     return {
-        "actions": None,
-        "task_dep": ["grid", "specimens", "people", "assays", "mangle", "database"],
+        "actions": [
+            f"snailz all --params {PARAMS_DIR} --output {OUT_DIR}",
+        ],
         "verbosity": VERBOSITY,
         "uptodate": [False],
     }

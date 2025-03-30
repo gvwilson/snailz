@@ -1,11 +1,7 @@
 """Test database functionality."""
 
-import sqlite3
-from pathlib import Path
-
 import pytest
 
-from snailz.clui import database
 from snailz.database import make_database
 
 
@@ -45,11 +41,11 @@ CD5678,3,4,CGTA,2.5"""
 def test_make_database(fs, assays_csv, people_csv, specimens_csv):
     """Test creating a database from CSV files."""
     conn = make_database(assays_csv, people_csv, specimens_csv, None)
-    
+
     cursor = conn.cursor()
     for table in ("assays", "people", "specimens"):
         stmt = f"select count(*) from {table}"
         cursor.execute(stmt)
         assert cursor.fetchone()[0] == 2
-    
+
     conn.close()

@@ -5,6 +5,7 @@ from datetime import date
 from io import StringIO
 import json
 import sys
+from pathlib import Path
 from typing import Any, Callable, TextIO, Type
 
 from pydantic import BaseModel
@@ -68,7 +69,7 @@ def fail(msg: str) -> None:
 
 
 def load_data(
-    parameter_name: str, filename: str | None, cls: Type[BaseModel]
+    parameter_name: str, filename: str | Path | None, cls: Type[BaseModel]
 ) -> BaseModel:
     """Construct a Pydantic model from serialized JSON.
 
@@ -88,7 +89,7 @@ def load_data(
         return cls.model_validate(json.load(reader))
 
 
-def report_result(output: str | None, result: BaseModel) -> None:
+def report_result(output: str | Path | None, result: BaseModel) -> None:
     """Save or display result as JSON.
 
     Parameters:
