@@ -5,6 +5,7 @@ import io
 import pytest
 import random
 from datetime import date, timedelta
+from unittest.mock import patch
 
 from snailz import assays_generate, specimens_generate, people_generate
 from snailz.assays import Assay, AllAssays, AssayParams
@@ -69,6 +70,7 @@ def sample_assays(sample_assay):
     params = AssayParams(
         baseline=1.0,
         delay=14,
+        degrade=0.05,
         mutant=10.0,
         noise=0.1,
         plate_size=3,
@@ -92,6 +94,9 @@ def sample_assays(sample_assay):
         ("noise", -0.1),
         ("plate_size", 0),
         ("plate_size", -3),
+        ("delay", 0),
+        ("degrade", -0.2),
+        ("degrade", 1.2),
         ("extra", 99),
     ],
 )
@@ -99,14 +104,6 @@ def test_assays_fail_bad_parameter_value(name, value):
     """Test assay generation fails with invalid parameter values."""
     params_dict = DEFAULT_ASSAY_PARAMS.model_dump()
     params_dict[name] = value
-    with pytest.raises(ValueError):
-        AssayParams(**params_dict)
-
-
-def test_assay_invalid_delay():
-    """Test assay generation fails when delay is not greater than 0."""
-    params_dict = DEFAULT_ASSAY_PARAMS.model_dump()
-    params_dict["delay"] = 0
     with pytest.raises(ValueError):
         AssayParams(**params_dict)
 
@@ -152,7 +149,7 @@ def test_assay_reading_values(people):
     """Test that assay readings follow the specified distributions."""
     random.seed(DEFAULT_ASSAY_PARAMS.seed)
     params = DEFAULT_ASSAY_PARAMS.model_copy(
-        update={"baseline": 5.0, "mutant": 20.0, "noise": 1.0}
+        update={"baseline": 5.0, "mutant": 20.0, "noise": 1.0, "degrade": 0.1}
     )
     susc_locus = 3
     reference = "ACGTACGTACGTACG"
@@ -191,28 +188,46 @@ def test_assay_reading_values(people):
 
     # Test reading values for susceptible specimen
     susceptible_assay = result.items[0]
+
+    # Calculate days since collection and expected degradation factor
+    days_since_collection = (susceptible_assay.performed - susceptible_individual.collected_on).days
+    degradation_days = max(0, days_since_collection - 1)  # No degradation on day 1
+    degradation_factor = 1.0 - (params.degrade * degradation_days)
+    degradation_factor = max(0.0, degradation_factor)
+
+    expected_mutant_value = params.mutant * degradation_factor
+
     for row in range(params.plate_size):
         for col in range(params.plate_size):
             if susceptible_assay.treatments[row][col] == "C":
                 # Control cells should have values between 0 and noise
                 assert 0 <= susceptible_assay.readings[row][col] <= params.noise
             else:
-                # Susceptible cells should have mutant value plus scaled noise
+                # Susceptible cells should have degraded mutant value plus scaled noise
                 reading = susceptible_assay.readings[row][col]
                 scaled_noise = params.noise * params.mutant / params.baseline
-                assert params.mutant <= reading <= params.mutant + scaled_noise
+                assert expected_mutant_value <= reading <= expected_mutant_value + scaled_noise
 
     # Test reading values for non-susceptible specimen
     non_susceptible_assay = result.items[1]
+
+    # Calculate days since collection and expected degradation factor
+    days_since_collection = (non_susceptible_assay.performed - non_susceptible_individual.collected_on).days
+    degradation_days = max(0, days_since_collection - 1)  # No degradation on day 1
+    degradation_factor = 1.0 - (params.degrade * degradation_days)
+    degradation_factor = max(0.0, degradation_factor)
+
+    expected_baseline_value = params.baseline * degradation_factor
+
     for row in range(params.plate_size):
         for col in range(params.plate_size):
             if non_susceptible_assay.treatments[row][col] == "C":
                 # Control cells should have values between 0 and noise
                 assert 0 <= non_susceptible_assay.readings[row][col] <= params.noise
             else:
-                # Non-susceptible cells should have baseline value plus noise
+                # Non-susceptible cells should have degraded baseline value plus noise
                 reading = non_susceptible_assay.readings[row][col]
-                assert params.baseline <= reading <= params.baseline + params.noise
+                assert expected_baseline_value <= reading <= expected_baseline_value + params.noise
 
 
 def test_assay_to_csv_readings(sample_assay):
@@ -265,6 +280,87 @@ def test_assay_to_csv_invalid_data_type(sample_assay):
     """Test to_csv raises error for invalid data type."""
     with pytest.raises(ValueError):
         sample_assay.to_csv(data_type="invalid")
+
+
+def test_assay_degradation(people):
+    """Test that sample responses decrease with time since collection."""
+    random.seed(1234)
+    # Set a high degradation rate to clearly see the effect
+    params = AssayParams(
+        baseline=5.0,
+        delay=14,
+        degrade=0.2,  # 20% reduction per day after first day
+        mutant=20.0,
+        noise=0.1,
+        plate_size=3,
+        seed=1234,
+    )
+
+    # Create specimen with fixed collection date
+    collection_date = date(2025, 3, 1)
+    specimen = Specimen(
+        genome="ACGT",
+        ident="TEST01",
+        mass=1.0,
+        site=Point(),
+        collected_on=collection_date,
+    )
+
+    specimens_obj = AllSpecimens(
+        individuals=[specimen],
+        loci=[0],
+        params=DEFAULT_SPECIMEN_PARAMS,
+        reference="ACGT",
+        susceptible_base="A",
+        susceptible_locus=0,
+    )
+
+    # Force the assay performed date - 1 day after collection (no degradation)
+    with patch("random.randint", return_value=1):
+        result_day1 = assays_generate(params, people, specimens_obj)
+        
+    # 5 days after collection (4 days of degradation at 20% per day)
+    with patch("random.randint", return_value=5):
+        result_day5 = assays_generate(params, people, specimens_obj)
+        
+    # 10 days after collection (9 days of degradation at 20% per day)
+    with patch("random.randint", return_value=10):
+        result_day10 = assays_generate(params, people, specimens_obj)
+
+    # Find sample (non-control) readings from each assay
+    day1_samples = []
+    day5_samples = []
+    day10_samples = []
+
+    for row in range(params.plate_size):
+        for col in range(params.plate_size):
+            if result_day1.items[0].treatments[row][col] == "S":
+                day1_samples.append(result_day1.items[0].readings[row][col])
+            if result_day5.items[0].treatments[row][col] == "S":
+                day5_samples.append(result_day5.items[0].readings[row][col])
+            if result_day10.items[0].treatments[row][col] == "S":
+                day10_samples.append(result_day10.items[0].readings[row][col])
+
+    # Check that readings decrease with time
+    assert sum(day1_samples) > sum(day5_samples) > sum(day10_samples)
+
+    # Calculate expected degradation factors
+    day1_factor = 1.0  # No degradation on day 1
+    day5_factor = 1.0 - (params.degrade * 4)  # 4 days of degradation
+    day10_factor = 1.0 - (params.degrade * 9)  # 9 days of degradation (might be 0 if fully degraded)
+    day10_factor = max(0.0, day10_factor)  # Ensure it's not negative
+
+    # Verify the average readings follow expected degradation pattern
+    # Allow some tolerance for random noise
+    avg_day1 = sum(day1_samples) / len(day1_samples)
+    avg_day5 = sum(day5_samples) / len(day5_samples)
+
+    # Expected ratio of day 5 to day 1 should be approximately the degradation factor
+    expected_ratio = day5_factor / day1_factor
+    actual_ratio = avg_day5 / avg_day1
+
+    # Allow for some tolerance due to random noise
+    assert abs(actual_ratio - expected_ratio) < 0.2
 
 
 def test_assays_to_csv(sample_assays):

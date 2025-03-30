@@ -87,6 +87,8 @@ If the well contains a control, the assay value is a small (positive) amount of 
 If the well contains genetic material from a specimen that *doesn't* have the significant mutation,
 the assay value is some intermediate value with added noise,
 while the assay value for a specimen with the significant mutation is a larger value (also with noise).
+(Responses for both mutated and unmutated specimens will decrease over time
+depending on the value of the degradation parameter.)
 All assay data is saved in a single JSON file;
 a summary of all assays is saved as CSV like this:
 
@@ -214,6 +216,7 @@ $ snailz convert --kind assays --input tmp/assays.json --output tmp
 -   `assays.json`
     -   `baseline`: assay response for unmutated specimens
     -   `delay`: maximum days between specimen collection and assay
+    -   `degrade`: rate at which sample responses decrease per day after first day (0-1)
     -   `mutant`: assay response for mutated specimens
     -   `noise`: noise to add to control cells
     -   `plate_size`: width and height of assay plate

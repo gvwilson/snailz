@@ -11,6 +11,7 @@ from .specimens import SpecimenParams
 DEFAULT_ASSAY_PARAMS = AssayParams(
     baseline=1.0,
     delay=14,
+    degrade=0.05,
     mutant=10.0,
     noise=0.1,
     plate_size=4,

@@ -118,6 +118,11 @@ def all(params, output):
     help="Maximum days between specimen collection and assay (must be > 0)",
 )
 @click.option(
+    "--degrade",
+    type=float,
+    help="Rate at which sample responses decrease per day after first day (0-1)",
+)
+@click.option(
     "--mutant", type=float, help="Reading value for susceptible specimens (must be > 0)"
 )
 @click.option("--noise", type=float, help="Noise level for readings (must be > 0)")
@@ -134,6 +139,7 @@ def all(params, output):
 def assays(
     baseline=None,
     delay=None,
+    degrade=None,
     mutant=None,
     noise=None,
     output=None,
@@ -157,6 +163,7 @@ def assays(
         supplied = (
             ("baseline", baseline),
             ("delay", delay),
+            ("degrade", degrade),
             ("mutant", mutant),
             ("noise", noise),
             ("plate_size", plate_size),
