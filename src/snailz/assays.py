@@ -6,7 +6,7 @@ from pathlib import Path
 import random
 from typing import cast
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field
 
 from . import utils
 from .specimens import AllSpecimens
@@ -20,30 +20,21 @@ class AssayParams(BaseModel):
     """Parameters for assay generation.
 
     - baseline: Baseline reading value (must be positive)
-    - end_date: End date for assay generation
+    - delay: Maximum number of days between specimen collection and assay (must be positive)
     - mutant: Mutant reading value (must be positive)
     - noise: Noise level for readings (must be positive)
     - plate_size: Size of assay plate (must be positive)
     - seed: Random seed for reproducibility
-    - start_date: Start date for assay generation (must not be after end_date)
     """
 
     baseline: float = Field(gt=0)
-    end_date: date = Field()
+    delay: int = Field(gt=0)
     mutant: float = Field(gt=0)
     noise: float = Field(gt=0)
     plate_size: int = Field(gt=0)
     seed: int = Field()
-    start_date: date = Field()
 
     model_config = {"extra": "forbid"}
-
-    @model_validator(mode="after")
-    def validate_fields(self):
-        """Validate that start_date is not after end_date."""
-        if self.start_date > self.end_date:
-            raise ValueError("start date must be less than or equal to end date")
-        return self
 
 
 class Assay(BaseModel):
@@ -163,7 +154,6 @@ def assays_generate(
     Returns:
         Assays object containing generated assays and parameters
     """
-    days_delta = (params.end_date - params.start_date).days + 1
     individuals = specimens.individuals
     susc_locus = specimens.susceptible_locus
     susc_base = specimens.susceptible_base
@@ -172,8 +162,9 @@ def assays_generate(
     gen = utils.UniqueIdGenerator("assays", lambda: f"{random.randint(0, 999999):06d}")
 
     for individual in individuals:
-        assay_date = params.start_date + timedelta(
-            days=random.randint(0, days_delta - 1)
+        # Set assay date to specimen collection date plus a random number of days (0 to delay)
+        assay_date = individual.collected_on + timedelta(
+            days=random.randint(0, params.delay)
         )
         assay_id = gen.next()
 

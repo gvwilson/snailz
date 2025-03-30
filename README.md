@@ -213,12 +213,11 @@ $ snailz convert --kind assays --input tmp/assays.json --output tmp
     -   `start_date`: start date for specimen collection
 -   `assays.json`
     -   `baseline`: assay response for unmutated specimens
-    -   `end_date`: date of final assay
+    -   `delay`: maximum days between specimen collection and assay
     -   `mutant`: assay response for mutated specimens
     -   `noise`: noise to add to control cells
     -   `plate_size`: width and height of assay plate
     -   `seed`: RNG seed
-    -   `start_date`: date of first assay
 
 Note: there are no parameters for assay file mangling.
 

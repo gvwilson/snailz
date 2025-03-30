@@ -4,7 +4,7 @@ import csv
 import io
 import pytest
 import random
-from datetime import date
+from datetime import date, timedelta
 
 from snailz import assays_generate, specimens_generate, people_generate
 from snailz.assays import Assay, AllAssays, AssayParams
@@ -68,12 +68,11 @@ def sample_assays(sample_assay):
 
     params = AssayParams(
         baseline=1.0,
-        end_date=date(2023, 12, 31),
+        delay=14,
         mutant=10.0,
         noise=0.1,
         plate_size=3,
         seed=12345,
-        start_date=date(2023, 1, 1),
     )
 
     return AllAssays(
@@ -104,11 +103,10 @@ def test_assays_fail_bad_parameter_value(name, value):
         AssayParams(**params_dict)
 
 
-def test_assays_fail_date_order():
-    """Test assay generation fails when end date is before start date."""
+def test_assay_invalid_delay():
+    """Test assay generation fails when delay is not greater than 0."""
     params_dict = DEFAULT_ASSAY_PARAMS.model_dump()
-    params_dict["start_date"] = date.fromisoformat("2025-01-01")
-    params_dict["end_date"] = date.fromisoformat("2024-01-01")
+    params_dict["delay"] = 0
     with pytest.raises(ValueError):
         AssayParams(**params_dict)
 
@@ -135,8 +133,10 @@ def test_assays_valid_result(seed, people):
     check_params_stored(params, result)
 
     assert len(result.items) == len(specimens.individuals)
-    for assay in result.items:
-        assert params.start_date <= assay.performed <= params.end_date
+    for i, assay in enumerate(result.items):
+        specimen = specimens.individuals[i]
+        # Check that assay date is between collection date and collection date + delay days
+        assert specimen.collected_on <= assay.performed <= specimen.collected_on + timedelta(days=params.delay)
         assert len(assay.ident) == len(result.items[0].ident)
         assert assay.ident.isdigit()
         assert len(assay.treatments) == params.plate_size

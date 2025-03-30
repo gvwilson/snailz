@@ -340,9 +340,6 @@ def _make_collection_dates(params: SpecimenParams) -> list[date]:
     """
     start_ordinal = params.start_date.toordinal()
     end_ordinal = params.end_date.toordinal()
-    if start_ordinal == end_ordinal:
-        return [params.start_date] * params.number
-
     return [
         date.fromordinal(random.randint(start_ordinal, end_ordinal))
         for _ in range(params.number)

@@ -130,8 +130,8 @@ def test_assays_command_with_params(runner, fs, people_file, specimens_file):
             specimens_file,
             "--baseline",
             "1.0",
-            "--end-date",
-            "2023-02-28",
+            "--delay",
+            "14",
             "--mutant",
             "10.0",
             "--noise",
@@ -140,8 +140,6 @@ def test_assays_command_with_params(runner, fs, people_file, specimens_file):
             "3",
             "--seed",
             "12345",
-            "--start-date",
-            "2023-01-01",
         ],
     )
 
@@ -155,12 +153,11 @@ def test_assays_command_with_params_file(runner, fs, people_file, specimens_file
     params_file = "/assays_params.json"
     params = {
         "baseline": 2.0,
-        "end_date": "2023-03-31",
+        "delay": 14,
         "mutant": 15.0,
         "noise": 0.3,
         "plate_size": 4,
         "seed": 67890,
-        "start_date": "2023-02-01",
     }
     fs.create_file(params_file, contents=json.dumps(params))
 
@@ -197,8 +194,8 @@ def test_assays_command_with_output_file(runner, fs, people_file, specimens_file
             specimens_file,
             "--baseline",
             "1.0",
-            "--end-date",
-            "2023-02-28",
+            "--delay",
+            "14",
             "--mutant",
             "10.0",
             "--noise",
@@ -207,8 +204,6 @@ def test_assays_command_with_output_file(runner, fs, people_file, specimens_file
             "3",
             "--seed",
             "12345",
-            "--start-date",
-            "2023-01-01",
             "--output",
             output_file,
         ],

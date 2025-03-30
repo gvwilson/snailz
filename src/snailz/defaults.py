@@ -10,12 +10,11 @@ from .specimens import SpecimenParams
 
 DEFAULT_ASSAY_PARAMS = AssayParams(
     baseline=1.0,
-    end_date=date.fromisoformat("2023-02-15"),
+    delay=14,
     mutant=10.0,
     noise=0.1,
     plate_size=4,
     seed=7421398,
-    start_date=date.fromisoformat("2023-01-10"),
 )
 
 DEFAULT_GRID_PARAMS = GridParams(

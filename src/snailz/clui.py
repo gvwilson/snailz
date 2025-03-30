@@ -112,7 +112,11 @@ def all(params, output):
     type=float,
     help="Baseline reading value for non-susceptible specimens (must be > 0)",
 )
-@click.option("--end-date", callback=utils.validate_date, help="End date (YYYY-MM-DD)")
+@click.option(
+    "--delay",
+    type=int,
+    help="Maximum days between specimen collection and assay (must be > 0)",
+)
 @click.option(
     "--mutant", type=float, help="Reading value for susceptible specimens (must be > 0)"
 )
@@ -127,12 +131,9 @@ def all(params, output):
 @click.option(
     "--specimens", type=click.Path(exists=True), help="Path to specimens JSON file"
 )
-@click.option(
-    "--start-date", callback=utils.validate_date, help="Start date (YYYY-MM-DD)"
-)
 def assays(
     baseline=None,
-    end_date=None,
+    delay=None,
     mutant=None,
     noise=None,
     output=None,
@@ -141,7 +142,6 @@ def assays(
     plate_size=None,
     seed=None,
     specimens=None,
-    start_date=None,
 ):
     """Generate assays for specimens."""
     try:
@@ -156,12 +156,11 @@ def assays(
         # Create
         supplied = (
             ("baseline", baseline),
-            ("end_date", end_date),
+            ("delay", delay),
             ("mutant", mutant),
             ("noise", noise),
             ("plate_size", plate_size),
             ("seed", seed),
-            ("start_date", start_date),
         )
         _make_assays_json(params, output, people, specimens, supplied)
 
@@ -506,8 +505,6 @@ def _make_assays_json(
         AssayParams,
         supplied_params,
         params_path,
-        end_date=date.fromisoformat,
-        start_date=date.fromisoformat,
     )
     random.seed(parameters.seed)
     result = assays_generate(parameters, people, specimens)
