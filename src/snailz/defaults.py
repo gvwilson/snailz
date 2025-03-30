@@ -14,6 +14,7 @@ DEFAULT_ASSAY_PARAMS = AssayParams(
     degrade=0.05,
     mutant=10.0,
     noise=0.1,
+    oops=0.5,
     plate_size=4,
     seed=7421398,
 )

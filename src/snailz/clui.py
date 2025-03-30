@@ -126,6 +126,11 @@ def all(params, output):
     "--mutant", type=float, help="Reading value for susceptible specimens (must be > 0)"
 )
 @click.option("--noise", type=float, help="Noise level for readings (must be > 0)")
+@click.option(
+    "--oops",
+    type=float,
+    help="Factor to multiply response values by for one random person (0 means no adjustment, must be >= 0)",
+)
 @click.option("--output", type=click.Path(), help="Path to JSON output file")
 @click.option(
     "--params", type=click.Path(exists=True), help="Path to JSON parameter file"
@@ -142,6 +147,7 @@ def assays(
     degrade=None,
     mutant=None,
     noise=None,
+    oops=None,
     output=None,
     params=None,
     people=None,
@@ -166,6 +172,7 @@ def assays(
             ("degrade", degrade),
             ("mutant", mutant),
             ("noise", noise),
+            ("oops", oops),
             ("plate_size", plate_size),
             ("seed", seed),
         )

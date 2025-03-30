@@ -73,6 +73,7 @@ def sample_assays(sample_assay):
         degrade=0.05,
         mutant=10.0,
         noise=0.1,
+        oops=0.0,
         plate_size=3,
         seed=12345,
     )
@@ -97,6 +98,7 @@ def sample_assays(sample_assay):
         ("delay", 0),
         ("degrade", -0.2),
         ("degrade", 1.2),
+        ("oops", -0.1),
         ("extra", 99),
     ],
 )
@@ -133,7 +135,11 @@ def test_assays_valid_result(seed, people):
     for i, assay in enumerate(result.items):
         specimen = specimens.individuals[i]
         # Check that assay date is between collection date and collection date + delay days
-        assert specimen.collected_on <= assay.performed <= specimen.collected_on + timedelta(days=params.delay)
+        assert (
+            specimen.collected_on
+            <= assay.performed
+            <= specimen.collected_on + timedelta(days=params.delay)
+        )
         assert len(assay.ident) == len(result.items[0].ident)
         assert assay.ident.isdigit()
         assert len(assay.treatments) == params.plate_size
@@ -149,7 +155,13 @@ def test_assay_reading_values(people):
     """Test that assay readings follow the specified distributions."""
     random.seed(DEFAULT_ASSAY_PARAMS.seed)
     params = DEFAULT_ASSAY_PARAMS.model_copy(
-        update={"baseline": 5.0, "mutant": 20.0, "noise": 1.0, "degrade": 0.1}
+        update={
+            "baseline": 5.0,
+            "mutant": 20.0,
+            "noise": 1.0,
+            "degrade": 0.1,
+            "oops": 0.0,
+        }
     )
     susc_locus = 3
     reference = "ACGTACGTACGTACG"
@@ -190,7 +202,9 @@ def test_assay_reading_values(people):
     susceptible_assay = result.items[0]
 
     # Calculate days since collection and expected degradation factor
-    days_since_collection = (susceptible_assay.performed - susceptible_individual.collected_on).days
+    days_since_collection = (
+        susceptible_assay.performed - susceptible_individual.collected_on
+    ).days
     degradation_days = max(0, days_since_collection - 1)  # No degradation on day 1
     degradation_factor = 1.0 - (params.degrade * degradation_days)
     degradation_factor = max(0.0, degradation_factor)
@@ -206,13 +220,19 @@ def test_assay_reading_values(people):
                 # Susceptible cells should have degraded mutant value plus scaled noise
                 reading = susceptible_assay.readings[row][col]
                 scaled_noise = params.noise * params.mutant / params.baseline
-                assert expected_mutant_value <= reading <= expected_mutant_value + scaled_noise
+                assert (
+                    expected_mutant_value
+                    <= reading
+                    <= expected_mutant_value + scaled_noise
+                )
 
     # Test reading values for non-susceptible specimen
     non_susceptible_assay = result.items[1]
 
     # Calculate days since collection and expected degradation factor
-    days_since_collection = (non_susceptible_assay.performed - non_susceptible_individual.collected_on).days
+    days_since_collection = (
+        non_susceptible_assay.performed - non_susceptible_individual.collected_on
+    ).days
     degradation_days = max(0, days_since_collection - 1)  # No degradation on day 1
     degradation_factor = 1.0 - (params.degrade * degradation_days)
     degradation_factor = max(0.0, degradation_factor)
@@ -227,7 +247,11 @@ def test_assay_reading_values(people):
             else:
                 # Non-susceptible cells should have degraded baseline value plus noise
                 reading = non_susceptible_assay.readings[row][col]
-                assert expected_baseline_value <= reading <= expected_baseline_value + params.noise
+                assert (
+                    expected_baseline_value
+                    <= reading
+                    <= expected_baseline_value + params.noise
+                )
 
 
 def test_assay_to_csv_readings(sample_assay):
@@ -292,6 +316,7 @@ def test_assay_degradation(people):
         degrade=0.2,  # 20% reduction per day after first day
         mutant=20.0,
         noise=0.1,
+        oops=0.0,
         plate_size=3,
         seed=1234,
     )
@@ -318,11 +343,11 @@ def test_assay_degradation(people):
     # Force the assay performed date - 1 day after collection (no degradation)
     with patch("random.randint", return_value=1):
         result_day1 = assays_generate(params, people, specimens_obj)
-        
+
     # 5 days after collection (4 days of degradation at 20% per day)
     with patch("random.randint", return_value=5):
         result_day5 = assays_generate(params, people, specimens_obj)
-        
+
     # 10 days after collection (9 days of degradation at 20% per day)
     with patch("random.randint", return_value=10):
         result_day10 = assays_generate(params, people, specimens_obj)
@@ -347,7 +372,9 @@ def test_assay_degradation(people):
     # Calculate expected degradation factors
     day1_factor = 1.0  # No degradation on day 1
     day5_factor = 1.0 - (params.degrade * 4)  # 4 days of degradation
-    day10_factor = 1.0 - (params.degrade * 9)  # 9 days of degradation (might be 0 if fully degraded)
+    day10_factor = 1.0 - (
+        params.degrade * 9
+    )  # 9 days of degradation (might be 0 if fully degraded)
     day10_factor = max(0.0, day10_factor)  # Ensure it's not negative
 
     # Verify the average readings follow expected degradation pattern
@@ -361,6 +388,118 @@ def test_assay_degradation(people):
 
     # Allow for some tolerance due to random noise
     assert abs(actual_ratio - expected_ratio) < 0.2
+
+
+def test_assay_oops_factor(people):
+    """Test that oops factor correctly affects assay values for one random person."""
+    random.seed(1234)
+
+    # Create test parameters with oops factor
+    params = AssayParams(
+        baseline=5.0,
+        delay=1,
+        degrade=0.0,  # No degradation to simplify testing
+        mutant=20.0,
+        noise=0.1,
+        oops=0.5,  # 50% increase in values
+        plate_size=3,
+        seed=1234,
+    )
+
+    # Create a few specimens
+    specimens = []
+    for i in range(3):
+        specimens.append(
+            Specimen(
+                genome="ACGT",
+                ident=f"TEST{i:02d}",
+                mass=1.0,
+                site=Point(),
+                collected_on=date(2025, 3, 1),
+            )
+        )
+
+    specimens_obj = AllSpecimens(
+        individuals=specimens,
+        loci=[0],
+        params=DEFAULT_SPECIMEN_PARAMS,
+        reference="ACGT",
+        susceptible_base="A",
+        susceptible_locus=0,
+    )
+
+    # Generate assays with oops factor
+    with patch(
+        "random.choice", side_effect=lambda x: x[0]
+    ):  # Force first person to be selected for both oops and assay assignment
+        result_with_oops = assays_generate(params, people, specimens_obj)
+
+    # Generate assays without oops factor for comparison
+    params_no_oops = params.model_copy(update={"oops": 0.0})
+    with patch(
+        "random.choice", side_effect=lambda x: x[0]
+    ):  # Keep consistent person assignment
+        result_without_oops = assays_generate(params_no_oops, people, specimens_obj)
+
+    # Check that all assays are performed by the same person (the first one)
+    first_person_id = people.individuals[0].ident
+    for assay in result_with_oops.items:
+        assert assay.person_id == first_person_id
+
+    # Check that assay values are increased by the oops factor for non-control cells
+    for i, assay in enumerate(result_with_oops.items):
+        for row in range(params.plate_size):
+            for col in range(params.plate_size):
+                if (
+                    assay.treatments[row][col] == "S"
+                ):  # Only check sample cells, not controls
+                    with_oops = assay.readings[row][col]
+                    without_oops = result_without_oops.items[i].readings[row][col]
+                    # The value with oops should be approximately (1 + oops) times the value without oops
+                    # Using a larger tolerance due to randomness in the test
+                    assert abs(with_oops / without_oops - (1 + params.oops)) < 0.05
+                else:  # Control cells
+                    # Control cells should be the same regardless of oops factor
+                    with_oops = assay.readings[row][col]
+                    without_oops = result_without_oops.items[i].readings[row][col]
+                    assert with_oops == without_oops
+
+    # Generate assays with different random person assignments
+    # Some assays should be affected by oops, others not
+    random.seed(5678)  # Different seed to get varied person assignments
+    params_mixed = params.model_copy(update={"seed": 5678})
+    mixed_result = assays_generate(params_mixed, people, specimens_obj)
+
+    # Check if at least one assay has a different person than the oops person
+    oops_person_id = None
+    non_oops_person_found = False
+
+    # Find the oops person's ID (it will be set in the first few assays)
+    for assay in mixed_result.items:
+        if oops_person_id is None:
+            for row in range(params.plate_size):
+                for col in range(params.plate_size):
+                    if assay.treatments[row][col] == "S":
+                        # Find a non-control cell and compare it with a baseline
+                        # If it's significantly higher than baseline * (1 + noise ratio), it's the oops person
+                        reading = assay.readings[row][col]
+                        baseline = (
+                            params.baseline + params.noise
+                        )  # Max possible baseline reading
+                        if reading > baseline * 1.2:  # Adding a margin for noise
+                            oops_person_id = assay.person_id
+                            break
+                if oops_person_id is not None:
+                    break
+        else:
+            # We found the oops person, now check if we have non-oops persons
+            if assay.person_id != oops_person_id:
+                non_oops_person_found = True
+                break
+
+    # Ensure we identified an oops person and found at least one non-oops person
+    assert oops_person_id is not None
+    assert non_oops_person_found
 
 
 def test_assays_to_csv(sample_assays):

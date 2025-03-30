@@ -24,6 +24,7 @@ class AssayParams(BaseModel):
     - delay: Maximum number of days between specimen collection and assay (must be positive)
     - mutant: Mutant reading value (must be positive)
     - noise: Noise level for readings (must be positive)
+    - oops: Factor to multiply response values by for one random person (0 means no adjustment)
     - plate_size: Size of assay plate (must be positive)
     - seed: Random seed for reproducibility
     """
@@ -33,6 +34,7 @@ class AssayParams(BaseModel):
     delay: int = Field(gt=0)
     mutant: float = Field(gt=0)
     noise: float = Field(gt=0)
+    oops: float = Field(ge=0)
     plate_size: int = Field(gt=0)
     seed: int = Field()
 
@@ -163,6 +165,12 @@ def assays_generate(
 
     gen = utils.UniqueIdGenerator("assays", lambda: f"{random.randint(0, 999999):06d}")
 
+    # If oops factor is greater than 0, select one person randomly to have their values adjusted
+    oops_person_id = None
+    if params.oops > 0:
+        oops_person = random.choice(people.individuals)
+        oops_person_id = oops_person.ident
+
     for individual in individuals:
         # Set assay date to specimen collection date plus a random number of days (0 to delay)
         assay_date = individual.collected_on + timedelta(
@@ -180,8 +188,14 @@ def assays_generate(
 
         # Calculate degradation factor based on days since collection
         days_since_collection = (assay_date - individual.collected_on).days
-        degradation_days = max(0, days_since_collection - 1)  # No degradation on first day
+        degradation_days = max(
+            0, days_since_collection - 1
+        )  # No degradation on first day
         degradation_factor = max(0.0, 1.0 - (params.degrade * degradation_days))
+
+        # Randomly select a person to perform the assay
+        person = random.choice(people.individuals)
+        person_id = person.ident
 
         # Generate readings based on treatments and susceptibility
         readings = []
@@ -191,31 +205,26 @@ def assays_generate(
             for col in range(params.plate_size):
                 if treatments[row][col] == "C":
                     # Control cells have values uniformly distributed between 0 and noise
-                    # Controls are not affected by degradation
-                    reading_row.append(random.uniform(0, params.noise))
-                elif is_susceptible:
-                    # Susceptible specimens (with susceptible base at susceptible locus)
-                    # Base mutant value plus noise scaled by mutant/baseline ratio
-                    # Apply degradation factor to mutant response
-                    scaled_noise = round(
-                        params.noise * params.mutant / params.baseline, utils.PRECISION
-                    )
-                    base_value = params.mutant * degradation_factor
-                    reading_row.append(base_value + random.uniform(0, scaled_noise))
+                    # Controls are not affected by degradation or oops factor
+                    value = random.uniform(0, params.noise)
                 else:
-                    # Non-susceptible specimens
-                    # Base baseline value plus uniform noise
-                    # Apply degradation factor to baseline response
-                    base_value = params.baseline * degradation_factor
-                    reading_row.append(
-                        base_value + random.uniform(0, params.noise)
-                    )
-            # Handle limited precision.
-            reading_row = [round(r, utils.PRECISION) for r in reading_row]
-            readings.append(reading_row)
+                    if is_susceptible:
+                        # Susceptible specimens
+                        noise = params.noise * params.mutant / params.baseline
+                        base_value = params.mutant * degradation_factor
+                    else:
+                        # Non-susceptible specimens
+                        noise = params.noise
+                        base_value = params.baseline * degradation_factor
 
-        # Randomly select a person to perform the assay
-        person = random.choice(people.individuals)
+                    # Calculate value and adjust for oops
+                    value = base_value + random.uniform(0, noise)
+                    if params.oops > 0 and person_id == oops_person_id:
+                        value = value * (1 + params.oops)
+
+                reading_row.append(round(value, utils.PRECISION))
+
+            readings.append(reading_row)
 
         # Create the assay record
         items.append(
@@ -223,7 +232,7 @@ def assays_generate(
                 performed=assay_date,
                 ident=assay_id,
                 specimen_id=individual.ident,
-                person_id=person.ident,
+                person_id=person_id,
                 readings=readings,
                 treatments=treatments,
             )
