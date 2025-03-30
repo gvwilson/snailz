@@ -560,7 +560,8 @@ which uses spaces instead of zeroes for clarity:</p>
 <p>The package also generates a set of snails (referred to as "specimens"),
 each of which has a genome represented as a single string of ACGT bases,
 a body mass,
-and the grid coordinates where it was collected.
+the grid coordinates where it was collected,
+and a collection date.
 Individual genomes are created by mutating a reference genome at several randomly-selected loci.
 One combination of locus and single-nucleotide polymorphism are considered "significant":
 if a snail has that mutation at that locus <em>and</em> is collected from a polluted sample site,
@@ -575,6 +576,7 @@ and the default parameters included with the package generate specimens like the
 <th style="text-align: right;">y</th>
 <th style="text-align: left;">genome</th>
 <th style="text-align: right;">mass</th>
+<th style="text-align: left;">collected_on</th>
 </tr>
 </thead>
 <tbody>
@@ -584,6 +586,7 @@ and the default parameters included with the package generate specimens like the
 <td style="text-align: right;">8</td>
 <td style="text-align: left;">GACGATGTTAGAGCT</td>
 <td style="text-align: right;">22.95</td>
+<td style="text-align: left;">2025-03-12</td>
 </tr>
 <tr>
 <td style="text-align: left;">AZP8M5</td>
@@ -591,6 +594,7 @@ and the default parameters included with the package generate specimens like the
 <td style="text-align: right;">0</td>
 <td style="text-align: left;">ACGGATGTTAGAGCT</td>
 <td style="text-align: right;">20.00</td>
+<td style="text-align: left;">2025-03-07</td>
 </tr>
 <tr>
 <td style="text-align: left;">AZJMU7</td>
@@ -598,6 +602,7 @@ and the default parameters included with the package generate specimens like the
 <td style="text-align: right;">6</td>
 <td style="text-align: left;">CTAGATGTTAGAGCT</td>
 <td style="text-align: right;">23.41</td>
+<td style="text-align: left;">2025-03-15</td>
 </tr>
 <tr>
 <td style="text-align: left;">AZGH04</td>
@@ -605,6 +610,7 @@ and the default parameters included with the package generate specimens like the
 <td style="text-align: right;">7</td>
 <td style="text-align: left;">AGGGATGTTAGAGCT</td>
 <td style="text-align: right;">18.07</td>
+<td style="text-align: left;">2025-03-10</td>
 </tr>
 <tr>
 <td style="text-align: left;">…</td>
@@ -612,6 +618,7 @@ and the default parameters included with the package generate specimens like the
 <td style="text-align: right;">…</td>
 <td style="text-align: left;">…</td>
 <td style="text-align: right;">…</td>
+<td style="text-align: left;">…</td>
 </tr>
 </tbody>
 </table>
@@ -730,10 +737,26 @@ performed_by,aa1942,,,
 3,0.08,10.58,0.06,0.04
 4,10.19,0.08,0.05,0.09
 </code></pre>
+<p>To make simulated data more realistic:</p>
+<ol>
+<li>
+<p>Responses for both mutated and unmutated specimens decrease over time
+    depending on the value of the degradation parameter
+    to simulate the effects of processing delay.</p>
+</li>
+<li>
+<p>If the <code>oops</code> parameter is given a value greater than zero,
+    one experimenter is chosen at random
+    and all of their response values scaled up by this amount
+    to simulate operator error.</p>
+</li>
+<li>
 <p>A "raw" assay file is also created by taking the clean ones
-and introducing zero or more deliberate formatting errors
-to simulate the kind of data that laboratories commonly produce.
-Finally,
+    and introducing zero or more deliberate formatting errors
+    to simulate the kind of data that laboratories commonly produce.</p>
+</li>
+</ol>
+<p>Finally,
 a SQLite database file is created that stores the people, specimens, and assay summary information
 in tables with the obvious names and columns.</p>
 <h2 id="for-users">For Users</h2>
@@ -835,6 +858,7 @@ $ snailz convert --kind assays --input tmp/assays.json --output tmp
 </ul>
 </li>
 <li><code>specimens.json</code><ul>
+<li><code>end_date</code>: end date for specimen collection</li>
 <li><code>length</code>: genome length in characters</li>
 <li><code>max_mass</code>: maximum specimen mass</li>
 <li><code>min_mass</code>: minimum specimen mass</li>
@@ -842,16 +866,18 @@ $ snailz convert --kind assays --input tmp/assays.json --output tmp
 <li><code>mutations</code>: number of mutations to introduce</li>
 <li><code>number</code>: number of specimens to create</li>
 <li><code>seed</code>: RNG seed</li>
+<li><code>start_date</code>: start date for specimen collection</li>
 </ul>
 </li>
 <li><code>assays.json</code><ul>
 <li><code>baseline</code>: assay response for unmutated specimens</li>
-<li><code>end_date</code>: date of final assay</li>
+<li><code>delay</code>: maximum days between specimen collection and assay</li>
+<li><code>degrade</code>: rate at which sample responses decrease per day after first day (0-1)</li>
 <li><code>mutant</code>: assay response for mutated specimens</li>
 <li><code>noise</code>: noise to add to control cells</li>
+<li><code>oops</code>: scaling factor for operator error</li>
 <li><code>plate_size</code>: width and height of assay plate</li>
 <li><code>seed</code>: RNG seed</li>
-<li><code>start_date</code>: date of first assay</li>
 </ul>
 </li>
 </ul>
@@ -891,6 +917,7 @@ $ snailz convert --kind assays --input tmp/assays.json --output tmp
 <li><code>y</code>: Y coordinate of collection cell (integer)</li>
 <li><code>genome</code>: base sequence (text)</li>
 <li><code>mass</code>: snail mass (real)</li>
+<li><code>collected_on</code>: date when specimen was collected (date)</li>
 </ul>
 </li>
 <li><code>specimens.json</code>: specimen data in JSON format.</li>

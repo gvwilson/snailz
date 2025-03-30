@@ -236,21 +236,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="AssayParams">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#snailz.assays.AssayParams.validate_date_range" class="md-nav__link">
-    <span class="md-ellipsis">
-      validate_date_range
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -556,21 +541,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="AssayParams">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#snailz.assays.AssayParams.validate_date_range" class="md-nav__link">
-    <span class="md-ellipsis">
-      validate_date_range
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -702,12 +672,13 @@
         <p>Parameters for assay generation.</p>
 <ul>
 <li>baseline: Baseline reading value (must be positive)</li>
-<li>end_date: End date for assay generation</li>
+<li>degrade: Rate at which sample responses decrease per day after first day (0-1)</li>
+<li>delay: Maximum number of days between specimen collection and assay (must be positive)</li>
 <li>mutant: Mutant reading value (must be positive)</li>
 <li>noise: Noise level for readings (must be positive)</li>
+<li>oops: Factor to multiply response values by for one random person (0 means no adjustment)</li>
 <li>plate_size: Size of assay plate (must be positive)</li>
 <li>seed: Random seed for reproducibility</li>
-<li>start_date: Start date for assay generation (must not be after end_date)</li>
 </ul>
 
 
@@ -740,37 +711,27 @@
 <span class="normal">38</span>
 <span class="normal">39</span>
 <span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AssayParams</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">41</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AssayParams</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parameters for assay generation.</span>
 
 <span class="sd">    - baseline: Baseline reading value (must be positive)</span>
-<span class="sd">    - end_date: End date for assay generation</span>
+<span class="sd">    - degrade: Rate at which sample responses decrease per day after first day (0-1)</span>
+<span class="sd">    - delay: Maximum number of days between specimen collection and assay (must be positive)</span>
 <span class="sd">    - mutant: Mutant reading value (must be positive)</span>
 <span class="sd">    - noise: Noise level for readings (must be positive)</span>
+<span class="sd">    - oops: Factor to multiply response values by for one random person (0 means no adjustment)</span>
 <span class="sd">    - plate_size: Size of assay plate (must be positive)</span>
 <span class="sd">    - seed: Random seed for reproducibility</span>
-<span class="sd">    - start_date: Start date for assay generation (must not be after end_date)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">baseline</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">end_date</span><span class="p">:</span> <span class="n">date</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+    <span class="n">degrade</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">delay</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">mutant</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">noise</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">oops</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">plate_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
-    <span class="n">start_date</span><span class="p">:</span> <span class="n">date</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
-
-    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">validate_date_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate that start_date is not after end_date.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_date</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_date</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;start date must be less than or equal to end date&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span>
 
     <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="s2">&quot;forbid&quot;</span><span class="p">}</span>
 </code></pre></div></td></tr></table></div>
@@ -787,39 +748,6 @@
 
 
 
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="snailz.assays.AssayParams.validate_date_range" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">validate_date_range</span><span class="p">()</span></code>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Validate that start_date is not after end_date.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>src/snailz/assays.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">validate_date_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate that start_date is not after end_date.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_date</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_date</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;start date must be less than or equal to end date&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="bp">self</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
 
 
 
@@ -863,7 +791,12 @@
 
               <details class="quote">
                 <summary>Source code in <code>src/snailz/assays.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 49</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
 <span class="normal"> 50</span>
 <span class="normal"> 51</span>
 <span class="normal"> 52</span>
@@ -922,12 +855,7 @@
 <span class="normal">105</span>
 <span class="normal">106</span>
 <span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Assay</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">108</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Assay</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A single assay.</span>
 
 <span class="sd">    - performed: date assay was performed</span>
@@ -1190,7 +1118,12 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/assays.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 67</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
 <span class="normal"> 68</span>
 <span class="normal"> 69</span>
 <span class="normal"> 70</span>
@@ -1231,12 +1164,7 @@
 <span class="normal">105</span>
 <span class="normal">106</span>
 <span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">108</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a CSV string representation of the assay data.</span>
 
 <span class="sd">    Parameters:</span>
@@ -1327,7 +1255,12 @@
 
               <details class="quote">
                 <summary>Source code in <code>src/snailz/assays.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">116</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
 <span class="normal">117</span>
 <span class="normal">118</span>
 <span class="normal">119</span>
@@ -1356,12 +1289,7 @@
 <span class="normal">142</span>
 <span class="normal">143</span>
 <span class="normal">144</span>
-<span class="normal">145</span>
-<span class="normal">146</span>
-<span class="normal">147</span>
-<span class="normal">148</span>
-<span class="normal">149</span>
-<span class="normal">150</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllAssays</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">145</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllAssays</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Keep track of generated assays.</span>
 
 <span class="sd">    - items: actual assays</span>
@@ -1508,7 +1436,12 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/assays.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">126</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
 <span class="normal">127</span>
 <span class="normal">128</span>
 <span class="normal">129</span>
@@ -1527,12 +1460,7 @@
 <span class="normal">142</span>
 <span class="normal">143</span>
 <span class="normal">144</span>
-<span class="normal">145</span>
-<span class="normal">146</span>
-<span class="normal">147</span>
-<span class="normal">148</span>
-<span class="normal">149</span>
-<span class="normal">150</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">145</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a CSV string representation of the assay summary data.</span>
 
 <span class="sd">    Returns:</span>
@@ -1674,7 +1602,12 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/assays.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">153</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
 <span class="normal">154</span>
 <span class="normal">155</span>
 <span class="normal">156</span>
@@ -1750,7 +1683,19 @@
 <span class="normal">226</span>
 <span class="normal">227</span>
 <span class="normal">228</span>
-<span class="normal">229</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">assays_generate</span><span class="p">(</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">assays_generate</span><span class="p">(</span>
     <span class="n">params</span><span class="p">:</span> <span class="n">AssayParams</span><span class="p">,</span> <span class="n">people</span><span class="p">:</span> <span class="n">AllPersons</span><span class="p">,</span> <span class="n">specimens</span><span class="p">:</span> <span class="n">AllSpecimens</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AllAssays</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate an assay for each specimen.</span>
@@ -1763,7 +1708,6 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Assays object containing generated assays and parameters</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">days_delta</span> <span class="o">=</span> <span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">end_date</span> <span class="o">-</span> <span class="n">params</span><span class="o">.</span><span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">days</span> <span class="o">+</span> <span class="mi">1</span>
     <span class="n">individuals</span> <span class="o">=</span> <span class="n">specimens</span><span class="o">.</span><span class="n">individuals</span>
     <span class="n">susc_locus</span> <span class="o">=</span> <span class="n">specimens</span><span class="o">.</span><span class="n">susceptible_locus</span>
     <span class="n">susc_base</span> <span class="o">=</span> <span class="n">specimens</span><span class="o">.</span><span class="n">susceptible_base</span>
@@ -1771,9 +1715,16 @@
 
     <span class="n">gen</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">UniqueIdGenerator</span><span class="p">(</span><span class="s2">&quot;assays&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">999999</span><span class="p">)</span><span class="si">:</span><span class="s2">06d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
+    <span class="c1"># If oops factor is greater than 0, select one person randomly to have their values adjusted</span>
+    <span class="n">oops_person_id</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">params</span><span class="o">.</span><span class="n">oops</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">oops_person</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">people</span><span class="o">.</span><span class="n">individuals</span><span class="p">)</span>
+        <span class="n">oops_person_id</span> <span class="o">=</span> <span class="n">oops_person</span><span class="o">.</span><span class="n">ident</span>
+
     <span class="k">for</span> <span class="n">individual</span> <span class="ow">in</span> <span class="n">individuals</span><span class="p">:</span>
-        <span class="n">assay_date</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">start_date</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span>
-            <span class="n">days</span><span class="o">=</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">days_delta</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># Set assay date to specimen collection date plus a random number of days (0 to delay)</span>
+        <span class="n">assay_date</span> <span class="o">=</span> <span class="n">individual</span><span class="o">.</span><span class="n">collected_on</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span>
+            <span class="n">days</span><span class="o">=</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">delay</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="n">assay_id</span> <span class="o">=</span> <span class="n">gen</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
 
@@ -1785,6 +1736,17 @@
                 <span class="n">treatment_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">]))</span>
             <span class="n">treatments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">treatment_row</span><span class="p">)</span>
 
+        <span class="c1"># Calculate degradation factor based on days since collection</span>
+        <span class="n">days_since_collection</span> <span class="o">=</span> <span class="p">(</span><span class="n">assay_date</span> <span class="o">-</span> <span class="n">individual</span><span class="o">.</span><span class="n">collected_on</span><span class="p">)</span><span class="o">.</span><span class="n">days</span>
+        <span class="n">degradation_days</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
+            <span class="mi">0</span><span class="p">,</span> <span class="n">days_since_collection</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="p">)</span>  <span class="c1"># No degradation on first day</span>
+        <span class="n">degradation_factor</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">degrade</span> <span class="o">*</span> <span class="n">degradation_days</span><span class="p">))</span>
+
+        <span class="c1"># Randomly select a person to perform the assay</span>
+        <span class="n">person</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">people</span><span class="o">.</span><span class="n">individuals</span><span class="p">)</span>
+        <span class="n">person_id</span> <span class="o">=</span> <span class="n">person</span><span class="o">.</span><span class="n">ident</span>
+
         <span class="c1"># Generate readings based on treatments and susceptibility</span>
         <span class="n">readings</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">is_susceptible</span> <span class="o">=</span> <span class="n">individual</span><span class="o">.</span><span class="n">genome</span><span class="p">[</span><span class="n">susc_locus</span><span class="p">]</span> <span class="o">==</span> <span class="n">susc_base</span>
@@ -1793,26 +1755,26 @@
             <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">plate_size</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">treatments</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;C&quot;</span><span class="p">:</span>
                     <span class="c1"># Control cells have values uniformly distributed between 0 and noise</span>
-                    <span class="n">reading_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">noise</span><span class="p">))</span>
-                <span class="k">elif</span> <span class="n">is_susceptible</span><span class="p">:</span>
-                    <span class="c1"># Susceptible specimens (with susceptible base at susceptible locus)</span>
-                    <span class="c1"># Base mutant value plus noise scaled by mutant/baseline ratio</span>
-                    <span class="n">scaled_noise</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span>
-                        <span class="n">params</span><span class="o">.</span><span class="n">noise</span> <span class="o">*</span> <span class="n">params</span><span class="o">.</span><span class="n">mutant</span> <span class="o">/</span> <span class="n">params</span><span class="o">.</span><span class="n">baseline</span><span class="p">,</span> <span class="n">utils</span><span class="o">.</span><span class="n">PRECISION</span>
-                    <span class="p">)</span>
-                    <span class="n">reading_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">mutant</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">scaled_noise</span><span class="p">))</span>
+                    <span class="c1"># Controls are not affected by degradation or oops factor</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">noise</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="c1"># Non-susceptible specimens</span>
-                    <span class="c1"># Base baseline value plus uniform noise</span>
-                    <span class="n">reading_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                        <span class="n">params</span><span class="o">.</span><span class="n">baseline</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">noise</span><span class="p">)</span>
-                    <span class="p">)</span>
-            <span class="c1"># Handle limited precision.</span>
-            <span class="n">reading_row</span> <span class="o">=</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">utils</span><span class="o">.</span><span class="n">PRECISION</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">reading_row</span><span class="p">]</span>
-            <span class="n">readings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reading_row</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">is_susceptible</span><span class="p">:</span>
+                        <span class="c1"># Susceptible specimens</span>
+                        <span class="n">noise</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">noise</span> <span class="o">*</span> <span class="n">params</span><span class="o">.</span><span class="n">mutant</span> <span class="o">/</span> <span class="n">params</span><span class="o">.</span><span class="n">baseline</span>
+                        <span class="n">base_value</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">mutant</span> <span class="o">*</span> <span class="n">degradation_factor</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># Non-susceptible specimens</span>
+                        <span class="n">noise</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">noise</span>
+                        <span class="n">base_value</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">baseline</span> <span class="o">*</span> <span class="n">degradation_factor</span>
 
-        <span class="c1"># Randomly select a person to perform the assay</span>
-        <span class="n">person</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">people</span><span class="o">.</span><span class="n">individuals</span><span class="p">)</span>
+                    <span class="c1"># Calculate value and adjust for oops</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">base_value</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noise</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">params</span><span class="o">.</span><span class="n">oops</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">person_id</span> <span class="o">==</span> <span class="n">oops_person_id</span><span class="p">:</span>
+                        <span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">params</span><span class="o">.</span><span class="n">oops</span><span class="p">)</span>
+
+                <span class="n">reading_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">utils</span><span class="o">.</span><span class="n">PRECISION</span><span class="p">))</span>
+
+            <span class="n">readings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reading_row</span><span class="p">)</span>
 
         <span class="c1"># Create the assay record</span>
         <span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -1820,7 +1782,7 @@
                 <span class="n">performed</span><span class="o">=</span><span class="n">assay_date</span><span class="p">,</span>
                 <span class="n">ident</span><span class="o">=</span><span class="n">assay_id</span><span class="p">,</span>
                 <span class="n">specimen_id</span><span class="o">=</span><span class="n">individual</span><span class="o">.</span><span class="n">ident</span><span class="p">,</span>
-                <span class="n">person_id</span><span class="o">=</span><span class="n">person</span><span class="o">.</span><span class="n">ident</span><span class="p">,</span>
+                <span class="n">person_id</span><span class="o">=</span><span class="n">person_id</span><span class="p">,</span>
                 <span class="n">readings</span><span class="o">=</span><span class="n">readings</span><span class="p">,</span>
                 <span class="n">treatments</span><span class="o">=</span><span class="n">treatments</span><span class="p">,</span>
             <span class="p">)</span>
@@ -1849,19 +1811,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/assays.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">232</span>
-<span class="normal">233</span>
-<span class="normal">234</span>
-<span class="normal">235</span>
-<span class="normal">236</span>
-<span class="normal">237</span>
-<span class="normal">238</span>
-<span class="normal">239</span>
-<span class="normal">240</span>
-<span class="normal">241</span>
-<span class="normal">242</span>
-<span class="normal">243</span>
-<span class="normal">244</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">244</span>
 <span class="normal">245</span>
 <span class="normal">246</span>
 <span class="normal">247</span>
@@ -1881,7 +1831,19 @@
 <span class="normal">261</span>
 <span class="normal">262</span>
 <span class="normal">263</span>
-<span class="normal">264</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">assays_to_csv</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">assays_to_csv</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Write assays to standard output or files.&quot;&quot;&quot;</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="s2">&quot;assays&quot;</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">AllAssays</span><span class="p">)</span>
 

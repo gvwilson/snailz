@@ -87,8 +87,6 @@ If the well contains a control, the assay value is a small (positive) amount of 
 If the well contains genetic material from a specimen that *doesn't* have the significant mutation,
 the assay value is some intermediate value with added noise,
 while the assay value for a specimen with the significant mutation is a larger value (also with noise).
-(Responses for both mutated and unmutated specimens will decrease over time
-depending on the value of the degradation parameter.)
 All assay data is saved in a single JSON file;
 a summary of all assays is saved as CSV like this:
 
@@ -128,9 +126,21 @@ performed_by,aa1942,,,
 4,10.19,0.08,0.05,0.09
 ```
 
-A "raw" assay file is also created by taking the clean ones
-and introducing zero or more deliberate formatting errors
-to simulate the kind of data that laboratories commonly produce.
+To make simulated data more realistic:
+
+1.  Responses for both mutated and unmutated specimens decrease over time
+    depending on the value of the degradation parameter
+    to simulate the effects of processing delay.
+
+1.  If the `oops` parameter is given a value greater than zero,
+    one experimenter is chosen at random
+    and all of their response values scaled up by this amount
+    to simulate operator error.
+
+1.  A "raw" assay file is also created by taking the clean ones
+    and introducing zero or more deliberate formatting errors
+    to simulate the kind of data that laboratories commonly produce.
+
 Finally,
 a SQLite database file is created that stores the people, specimens, and assay summary information
 in tables with the obvious names and columns.
@@ -219,6 +229,7 @@ $ snailz convert --kind assays --input tmp/assays.json --output tmp
     -   `degrade`: rate at which sample responses decrease per day after first day (0-1)
     -   `mutant`: assay response for mutated specimens
     -   `noise`: noise to add to control cells
+    -   `oops`: scaling factor for operator error
     -   `plate_size`: width and height of assay plate
     -   `seed`: RNG seed
 
