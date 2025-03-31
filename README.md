@@ -183,7 +183,7 @@ $ snailz init --output params
 $ snailz all --params params --output tmp
 ```
 
-To generate individual data files:
+To generate or update individual files:
 
 ```
 # Create a grid JSON file in ./tmp/grid.json and a CSV file in ./tmp/grid.csv
@@ -201,6 +201,9 @@ $ snailz convert --kind specimens --input tmp/specimens.json --output tmp/specim
 # Create assay JSON and CSV files in ./tmp/assays.json, ./tmp/assays.csv, and ./tmp/assays/*.csv
 $ snailz assays --params params/assays.json --specimens tmp/specimens.json --people tmp/people.json --output tmp/assays.json
 $ snailz convert --kind assays --input tmp/assays.json --output tmp
+
+# Create SQLite database in ./tmp/snailz.db
+$ snailz database --assays tmp/assays.csv --people tmp/people.csv --specimens tmp/specimens.csv --output tmp/snailz.db
 ```
 
 ## Parameters and Workflow
