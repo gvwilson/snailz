@@ -257,15 +257,16 @@ Note: there are no parameters for assay file mangling.
     -   This file is a matrix of values with no column IDs or row IDs.
 -   `grid.json`: grid data as JSON.
 -   `people.csv`: CSV file describing experimental staff members.
-    -   `ident`: person identifier (text)
-    -   `personal`: personal name (text)
-    -   `family`: family name (text)
+    -   `ident`: person identifier (text).
+    -   `personal`: personal name (text).
+    -   `family`: family name (text).
 -   `people.json`: staff member data in JSON format.
 -   `specimens.csv`: CSV file containing details of snail specimens.
-    -   `ident`: specimen identifier (text)
-    -   `x`: X coordinate of collection cell (integer)
-    -   `y`: Y coordinate of collection cell (integer)
-    -   `genome`: base sequence (text)
-    -   `mass`: snail mass (real)
-    -   `collected_on`: date when specimen was collected (date)
+    -   `ident`: specimen identifier (text).
+    -   `x`: X coordinate of collection cell (integer).
+    -   `y`: Y coordinate of collection cell (integer).
+    -   `genome`: base sequence (text).
+    -   `mass`: snail mass (real).
+    -   `collected_on`: date when specimen was collected (date).
+    -   'territory': a simple estimate of the snail's territory (real).
 -   `specimens.json`: specimen data in JSON format.
