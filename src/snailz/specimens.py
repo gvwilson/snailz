@@ -15,29 +15,29 @@ BASES = "ACGT"
 
 
 class SpecimenParams(BaseModel):
-    """Parameters for specimen generation.
+    """Parameters for specimen generation."""
 
-    - end_date: End date for specimen collection
-    - length: Length of specimen genomes (must be positive)
-    - max_mass: Maximum mass for specimens (must be positive)
-    - min_mass: Minimum mass for specimens (must be positive and less than max_mass)
-    - mut_scale: Scale factor for mutation effect
-    - mutations: Number of mutations in specimens (must be between 0 and length)
-    - number: Number of specimens to generate (must be positive)
-    - seed: Random seed for reproducibility
-    - start_date: Start date for specimen collection
-    - end_date: End date for specimen collection
-    """
-
-    end_date: date = Field()
-    length: int = Field(gt=0)
-    max_mass: float = Field(gt=0)
-    min_mass: float = Field(gt=0)
-    mut_scale: float = Field()
-    mutations: int = Field(ge=0)
-    number: int = Field(gt=0)
-    seed: int = Field()
-    start_date: date = Field()
+    end_date: date = Field(description="End date for specimen collection")
+    length: int = Field(
+        gt=0, description="Length of specimen genomes (must be positive)"
+    )
+    max_mass: float = Field(
+        gt=0, description="Maximum mass for specimens (must be positive)"
+    )
+    min_mass: float = Field(
+        gt=0,
+        description="Minimum mass for specimens (must be positive and less than max_mass)",
+    )
+    mut_scale: float = Field(ge=0, description="Scale factor for mutation effect")
+    mutations: int = Field(
+        ge=0,
+        description="Number of mutations in specimens (must be between 0 and length)",
+    )
+    number: int = Field(
+        gt=0, description="Number of specimens to generate (must be positive)"
+    )
+    seed: int = Field(ge=0, description="Random seed for reproducibility")
+    start_date: date = Field(description="Start date for specimen collection")
 
     model_config = {"extra": "forbid"}
 
@@ -54,66 +54,42 @@ class SpecimenParams(BaseModel):
 
 
 class Point(BaseModel):
-    """A 2D point with x and y coordinates.
+    """A 2D point with x and y coordinates."""
 
-    - x: X coordinate in grid
-    - y: Y coordinate in grid
-    """
-
-    x: int | None = None
-    y: int | None = None
+    x: int | None = Field(default=None, description="x coordinate")
+    y: int | None = Field(default=None, description="y coordinate")
 
 
 class Specimen(BaseModel):
-    """A single specimen with unique identifier, genome, mass, site location, and collection date.
+    """A single specimen."""
 
-    - ident: unique identifier
-    - collected_on: date when specimen was collected
-    - genome: bases in genome
-    - mass: snail mass in grams
-    - site: grid location where specimen was collected
-    - territory: share of the grid that belongs to this specimen
-    """
-
-    ident: str
-    collected_on: date
-    genome: str
-    mass: float
-    site: Point
-    territory: float = Field(default=0.0)
+    ident: str = Field(description="unique identifier")
+    collected_on: date = Field(description="date when specimen was collected")
+    genome: str = Field(description="bases in genome")
+    mass: float = Field(gt=0, description="snail mass in grams")
+    site: Point = Field(description="grid location where specimen was collected")
+    territory: float = Field(
+        default=0.0, description="share of the grid that belongs to this specimen"
+    )
 
 
 class AllSpecimens(BaseModel):
-    """A set of generated specimens.
+    """A set of generated specimens."""
 
-    - individuals: list of individual specimens
-    - loci: locations where mutations can occur
-    - params: parameters used to generate this data
-    - reference: unmutated genome
-    - susceptible_base: mutant base that induces mass changes
-    - susceptible_locus: location of mass change mutation
-    """
-
-    individuals: list[Specimen]
-    loci: list[int]
-    params: SpecimenParams
-    reference: str
-    susceptible_base: str
-    susceptible_locus: int
+    individuals: list[Specimen] = Field(description="list of individual specimens")
+    loci: list[int] = Field(description="locations where mutations can occur")
+    params: SpecimenParams = Field(description="parameters used to generate this data")
+    reference: str = Field(description="unmutated genome")
+    susceptible_base: str = Field(description="mutant base that induces mass changes")
+    susceptible_locus: int = Field(ge=0, description="location of mass change mutation")
 
     def to_csv(self) -> str:
         """Return a CSV string representation of the specimens data.
 
         Returns:
-            A CSV-formatted string containing specimen data with fields:
-            - ident: specimen identifier
-            - x: X coordinate in grid
-            - y: Y coordinate in grid
-            - genome: bases in genome
-            - mass: snail mass in grams
-            - collected_on: date when specimen was collected
-            - territory: share of grid that belongs to this specimen
+            A CSV-formatted string with people data (without parameters)
         """
+
         output = io.StringIO()
         writer = utils.csv_writer(output)
         writer.writerow(

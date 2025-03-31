@@ -10,16 +10,15 @@ from . import utils
 
 
 class PeopleParams(BaseModel):
-    """Parameters for people generation.
+    """Parameters for people generation."""
 
-    - locale: Locale code for generating names (must be supported by Faker)
-    - number: Number of people to generate (must be positive)
-    - seed: Random seed for reproducibility
-    """
-
-    locale: str = Field()
-    number: int = Field(gt=0)
-    seed: int = Field()
+    locale: str = Field(
+        description="Locale code for generating names (must be supported by Faker)"
+    )
+    number: int = Field(
+        gt=0, description="Number of people to generate (must be positive)"
+    )
+    seed: int = Field(ge=0, description="Random seed for reproducibility")
 
     model_config = {"extra": "forbid"}
 
@@ -32,27 +31,18 @@ class PeopleParams(BaseModel):
 
 
 class Person(BaseModel):
-    """A single person.
+    """A single person."""
 
-    - family: family name
-    - ident: unique identifier
-    - personal: personal name
-    """
-
-    family: str
-    ident: str
-    personal: str
+    family: str = Field(description="family name")
+    ident: str = Field(description="unique identifier")
+    personal: str = Field(description="personal name")
 
 
 class AllPersons(BaseModel):
-    """A set of generated people.
+    """A set of generated people."""
 
-    - individuals: list of people
-    - params: parameters used to generate this data
-    """
-
-    individuals: list[Person]
-    params: PeopleParams
+    individuals: list[Person] = Field(description="list of people")
+    params: PeopleParams = Field(description="parameters used to generate data")
 
     def to_csv(self) -> str:
         """Return a CSV string representation of the people data.

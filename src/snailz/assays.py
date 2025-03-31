@@ -17,47 +17,43 @@ ASSAYS_SUBDIR = "assays"
 
 
 class AssayParams(BaseModel):
-    """Parameters for assay generation.
+    """Parameters for assay generation."""
 
-    - baseline: Baseline reading value (must be positive)
-    - degrade: Rate at which sample responses decrease per day after first day (0-1)
-    - delay: Maximum number of days between specimen collection and assay (must be positive)
-    - mutant: Mutant reading value (must be positive)
-    - noise: Noise level for readings (must be positive)
-    - oops: Factor to multiply response values by for one random person (0 means no adjustment)
-    - plate_size: Size of assay plate (must be positive)
-    - seed: Random seed for reproducibility
-    """
-
-    baseline: float = Field(gt=0)
-    degrade: float = Field(ge=0, le=1)
-    delay: int = Field(gt=0)
-    mutant: float = Field(gt=0)
-    noise: float = Field(gt=0)
-    oops: float = Field(ge=0)
-    plate_size: int = Field(gt=0)
-    seed: int = Field()
+    baseline: float = Field(
+        gt=0, description="Baseline reading value (must be positive)"
+    )
+    degrade: float = Field(
+        ge=0,
+        le=1,
+        description="Rate at which sample responses decrease per day after first day (0-1)",
+    )
+    delay: int = Field(
+        gt=0,
+        description="Maximum number of days between specimen collection and assay (must be positive)",
+    )
+    mutant: float = Field(gt=0, description="Mutant reading value (must be positive)")
+    noise: float = Field(
+        gt=0, description="Noise level for readings (must be positive)"
+    )
+    oops: float = Field(
+        ge=0,
+        description="Factor to multiply response values by for one random person (0 means no adjustment)",
+    )
+    plate_size: int = Field(gt=0, description="Size of assay plate (must be positive)")
+    seed: int = Field(ge=0, description="Random seed for reproducibility")
 
     model_config = {"extra": "forbid"}
 
 
 class Assay(BaseModel):
-    """A single assay.
+    """A single assay."""
 
-    - performed: date assay was performed
-    - ident: unique identifier
-    - specimen_id: which specimen
-    - person_id: who did the assay
-    - readings: grid of assay readings
-    - treatments: grid of samples or controls
-    """
-
-    performed: date
-    ident: str
-    specimen_id: str
-    person_id: str
-    readings: list[list[float]]
-    treatments: list[list[str]]
+    performed: date = Field(description="date assay was performed")
+    ident: str = Field(description="unique identifier")
+    specimen_id: str = Field(description="which specimen")
+    person_id: str = Field(description="who did the assay")
+    readings: list[list[float]] = Field(description="grid of assay readings")
+    treatments: list[list[str]] = Field(description="grid of samples or controls")
 
     def to_csv(self, data_type: str) -> str:
         """Return a CSV string representation of the assay data.
@@ -66,17 +62,7 @@ class Assay(BaseModel):
             data_type: Type of data to output, either "readings" or "treatments"
 
         Returns:
-            A CSV-formatted string with the assay data in the format:
-            id,<assay_id>
-            specimen,<specimen_id>
-            performed,<performed_date>
-            performed_by,<person_id>
-            ,A,B,C,...
-            1,<data>,<data>,...
-            2,<data>,<data>,...
-            ...
-
-            The CSV output uses Unix line endings (LF).
+            A CSV-formatted string with the assay data.
 
         Raises:
             ValueError: If data_type is not "readings" or "treatments"
@@ -109,27 +95,18 @@ class Assay(BaseModel):
 
 
 class AllAssays(BaseModel):
-    """Keep track of generated assays.
+    """Keep track of generated assays."""
 
-    - items: actual assays
-    - params: parameters used in generation
-    """
-
-    items: list[Assay]
-    params: AssayParams
+    items: list[Assay] = Field(description="actual assays")
+    params: AssayParams = Field(description="parameters used in generation")
 
     def to_csv(self) -> str:
         """Return a CSV string representation of the assay summary data.
 
         Returns:
-            A CSV-formatted string containing a summary of all assays with fields:
-            - ident: assay identifier
-            - specimen_id: specimen identifier
-            - performed: date the assay was performed
-            - performed_by: person identifier
-
-            The CSV output uses Unix line endings (LF).
+            A CSV-formatted string containing a summary of all assays
         """
+
         output = io.StringIO()
         writer = utils.csv_writer(output)
         writer.writerow(["ident", "specimen_id", "performed", "performed_by"])

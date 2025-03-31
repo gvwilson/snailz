@@ -27,18 +27,11 @@ from . import utils
 
 
 class GridParams(BaseModel):
-    """Parameters for grid generation.
+    """Parameters for grid generation."""
 
-    This class validates the parameters used for grid generation with the following fields:
-
-    - depth: The maximum value for grid cells (must be positive)
-    - seed: Random seed for reproducibility
-    - size: Grid size (size × size, must be positive)
-    """
-
-    depth: int = Field(gt=0)
-    seed: int = Field()
-    size: int = Field(gt=0)
+    depth: int = Field(gt=0, description="Maximum value for grid cells")
+    seed: int = Field(ge=0, description="Random seed")
+    size: int = Field(gt=0, description="Grid size")
 
     model_config = {"extra": "forbid"}
 
@@ -46,15 +39,14 @@ class GridParams(BaseModel):
 class Grid(BaseModel):
     """Keep track of generated grid."""
 
-    grid: list[list[int]]
-    params: GridParams
+    grid: list[list[int]] = Field(description="Grid cells")
+    params: GridParams = Field(description="Parameters used in grid generation")
 
     def to_csv(self) -> str:
         """Return a CSV string representation of the grid data.
 
         Returns:
-            A CSV-formatted string containing the grid values without a header row,
-            using Unix line endings (LF).
+            A CSV-formatted string containing the grid values without a header row.
         """
         output = io.StringIO(newline="\n")
         writer = utils.csv_writer(output)

@@ -21,6 +21,7 @@ home = "https://github.com/gvwilson/snailz"
 dev = [
   "build",
   "doit",
+  "griffe-fieldz",
   "markdown-include",
   "mkdocs-material",
   "mkdocstrings[python]",

@@ -7,6 +7,8 @@ plugins:
     handlers:
       python:
         options:
+          extensions:
+          - griffe_fieldz
           members_order: source
           filters: []
 
