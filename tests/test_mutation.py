@@ -13,10 +13,10 @@ from snailz.specimens import (
     SpecimenParams,
     AllSpecimens,
     Specimen,
-    Point,
     mutate_masses,
     mutate_mass,
 )
+from snailz.utils import Point
 
 
 @pytest.fixture
@@ -32,6 +32,7 @@ def test_mutate_mass_no_effect_on_zero_cells(specimens):
     grid = Grid(
         grid=[[0 for _ in range(size)] for _ in range(size)],
         params=DEFAULT_GRID_PARAMS,
+        start=Point(x=size // 2, y=size // 2),
     )
     original_masses = [ind.mass for ind in specimens.individuals]
 
@@ -61,6 +62,7 @@ def test_mutate_mass_effect_with_susceptible_genomes(specimens):
     grid = Grid(
         grid=[[1 for _ in range(size)] for _ in range(size)],
         params=params,
+        start=Point(x=size // 2, y=size // 2),
     )
 
     # Make a copy of the original masses
@@ -138,7 +140,9 @@ def test_mutate_mass_with_variable_grid_values():
     for cell_value in range(num_specimens):
         specimen_index = cell_value
         test_grid = Grid(
-            grid=[[cell_value]], params={"size": 1, "depth": 8, "seed": 123}
+            grid=[[cell_value]],
+            params={"size": 1, "depth": 8, "seed": 123},
+            start=Point(x=0, y=0),
         )
         original_mass = specimens.individuals[specimen_index].mass
 

@@ -3,7 +3,7 @@
 To create a grid using invasion percolation:
 
 1.  Generate an NxN grid of random numbers.
-2.  Mark the center cell as "filled" by negating its value.
+2.  Mark a cell near the center as filled by negating its value.
 3.  On each iteration:
     1.  Find the lowest-valued cell adjacent to the filled region.
     2.  Fill that in by negating its value.
@@ -24,6 +24,7 @@ import random
 from pydantic import BaseModel, Field
 
 from . import utils
+from .utils import Point
 
 
 class GridParams(BaseModel):
@@ -41,6 +42,7 @@ class Grid(BaseModel):
 
     grid: list[list[int]] = Field(description="Grid cells")
     params: GridParams = Field(description="Parameters used in grid generation")
+    start: Point = Field(description="Starting point for invasion percolation")
 
     def to_csv(self) -> str:
         """Return a CSV string representation of the grid data.
@@ -62,11 +64,16 @@ def grid_generate(params: GridParams) -> Grid:
         params: GridParams object containing depth, seed, size
 
     Returns:
-        Grid object containing the generated grid and parameters
+        Grid object containing the generated grid, parameters, and starting point
     """
+    center = params.size // 2
+    quarter = params.size // 4
+    start_x = random.randint(center - quarter, center + quarter)
+    start_y = random.randint(center - quarter, center + quarter)
+    start = Point(x=start_x, y=start_y)
     invperc = Invperc(params.depth, params.size)
-    invperc.fill()
-    return Grid(grid=invperc.cells, params=params)
+    invperc.fill(start_x, start_y)
+    return Grid(grid=invperc.cells, params=params, start=start)
 
 
 class Invperc:
@@ -87,22 +94,6 @@ class Invperc:
             self._cells.append(col)
         self._candidates = {}
 
-    def __str__(self) -> str:
-        """Convert to printable string representation.
-
-        Returns:
-            A string representation of the grid with '.' for unfilled cells
-            and 'x' for filled cells, with each row on a separate line
-        """
-        rows = []
-        for y in range(self._size - 1, -1, -1):
-            rows.append(
-                "".join(
-                    "." if self._cells[x][y] == 0 else "x" for x in range(self._size)
-                )
-            )
-        return "\n".join(rows)
-
     @property
     def cells(self) -> list[list[int]]:
         """Get the grid cell values.
@@ -112,15 +103,19 @@ class Invperc:
         """
         return self._cells
 
-    def fill(self) -> None:
+    def fill(self, start_x: int, start_y: int) -> None:
         """Fill the grid one cell at a time using invasion percolation.
 
-        Starts at the center and fills outward, choosing lowest-valued adjacent cells,
-        until reaching the border of the grid. After filling, inverts cell values.
+        Starts at the specified coordinates and fills outward,
+        choosing lowest-valued adjacent cells, until reaching the
+        border of the grid.  After filling, inverts cell values.
+
+        Parameters:
+            start_x: X-coordinate where filling starts
+            start_y: Y-coordinate where filling starts
         """
-        x, y = self._size // 2, self._size // 2
-        self._cells[x][y] = -self._cells[x][y]
-        self.add_candidates(x, y)
+        self._cells[start_x][start_y] = -self._cells[start_x][start_y]
+        self.add_candidates(start_x, start_y)
         while True:
             x, y = self.choose_cell()
             self._cells[x][y] = -self._cells[x][y]

@@ -10,7 +10,13 @@ from click.testing import CliRunner
 from snailz.clui import convert
 from snailz.defaults import DEFAULT_GRID_PARAMS
 from snailz.grid import Grid
-from snailz.utils import load_data, report_result, serialize_values, validate_date
+from snailz.utils import (
+    load_data,
+    report_result,
+    serialize_values,
+    validate_date,
+    Point,
+)
 
 
 class ValueClass(BaseModel):
@@ -127,13 +133,18 @@ def test_convert_command_integration(fs):
     grid_data = Grid(
         grid=[[0, 1, 2], [3, 4, 5], [6, 7, 8]],
         params=DEFAULT_GRID_PARAMS,
+        start=Point(x=1, y=1),
     )
 
     grid_file = "/test_grid.json"
     fs.create_file(
         grid_file,
         contents=json.dumps(
-            {"grid": grid_data.grid, "params": grid_data.params},
+            {
+                "grid": grid_data.grid,
+                "params": grid_data.params,
+                "start": grid_data.start,
+            },
             default=serialize_values,
         ),
     )

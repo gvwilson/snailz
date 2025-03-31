@@ -8,7 +8,8 @@ import random
 from pydantic import ValidationError
 
 from snailz.defaults import DEFAULT_GRID_PARAMS
-from snailz.grid import grid_generate, Invperc, Grid, GridParams
+from snailz.grid import Grid, GridParams, grid_generate
+from snailz.utils import Point
 
 from utils import check_params_stored
 
@@ -123,40 +124,27 @@ def test_grid_has_filled_border_cell(size):
 
 
 @pytest.mark.parametrize("size", [3, 5, 10])
-def test_grid_center_always_filled(size):
-    """Test that the center cell is always filled."""
+def test_grid_start_point_filled(size):
+    """Test that the start point is always filled."""
     params = DEFAULT_GRID_PARAMS.model_copy(update={"size": size})
     result = grid_generate(params)
-    center_x = center_y = size // 2
-    assert result.grid[center_x][center_y] > 0
 
+    # Check that start point is recorded
+    assert result.start.x is not None
+    assert result.start.y is not None
 
-def test_invperc_string_representation():
-    """Test the string representation of the Invperc class."""
-    invperc = Invperc(5, 3)
-    invperc._cells = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
-
-    # Set a few specific cells as filled (non-zero)
-    # Important: looking at the __str__ implementation, rows are rendered in reverse order
-    # and '.' is unfilled (0), 'x' is filled (non-zero)
-    invperc._cells[0][0] = 0  # bottom left: unfilled
-    invperc._cells[1][0] = 2  # bottom middle: filled
-    invperc._cells[2][0] = 0  # bottom right: unfilled
-    invperc._cells[0][1] = 0  # middle left: unfilled
-    invperc._cells[1][1] = 3  # center: filled
-    invperc._cells[2][1] = 0  # middle right: unfilled
-    invperc._cells[0][2] = 0  # top left: unfilled
-    invperc._cells[1][2] = 0  # top middle: unfilled
-    invperc._cells[2][2] = 1  # top right: filled
-
-    # Generate string representation
-    assert str(invperc) == "..x\n.x.\n.x."
+    # Check that start point is filled
+    assert result.grid[result.start.x][result.start.y] > 0
 
 
 def test_grid_to_csv():
     """Test grid to_csv method creates CSV representation."""
     grid_data = [[0, 3, 0], [2, 0, 1], [0, 4, 0]]
-    grid = Grid(grid=grid_data, params={"size": 3, "depth": 4, "seed": 12345})
+    grid = Grid(
+        grid=grid_data,
+        params={"size": 3, "depth": 4, "seed": 12345},
+        start=Point(x=1, y=1),
+    )
 
     csv_content = grid.to_csv()
     rows = list(csv.reader(io.StringIO(csv_content)))

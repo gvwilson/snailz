@@ -8,11 +8,18 @@ import sys
 from pathlib import Path
 from typing import Any, Callable, TextIO, Type
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 # Decimal places in floating-point values.
 PRECISION = 2
+
+
+class Point(BaseModel):
+    """A 2D point with x and y coordinates."""
+
+    x: int | None = Field(default=None, description="x coordinate")
+    y: int | None = Field(default=None, description="y coordinate")
 
 
 class UniqueIdGenerator:

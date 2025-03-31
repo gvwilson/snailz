@@ -25,7 +25,7 @@ from snailz.grid import Grid, GridParams
 from snailz.people import AllPersons
 from snailz.specimens import AllSpecimens
 from snailz.assays import AllAssays, Assay, ASSAYS_SUBDIR
-from snailz.utils import serialize_values
+from snailz.utils import Point, serialize_values
 
 
 @pytest.fixture
@@ -59,6 +59,7 @@ def grid_file(fs):
     grid_data = Grid(
         grid=[[0, 1, 2], [3, 4, 5], [6, 7, 8]],
         params=grid_params,
+        start=Point(x=1, y=1),
     )
     filename = "/test_grid.json"
     fs.create_file(

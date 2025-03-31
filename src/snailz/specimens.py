@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from . import utils
 from .grid import Grid
+from .utils import Point
 
 # Bases.
 BASES = "ACGT"
@@ -51,13 +52,6 @@ class SpecimenParams(BaseModel):
         if self.end_date < self.start_date:
             raise ValueError("end_date must be greater than or equal to start_date")
         return self
-
-
-class Point(BaseModel):
-    """A 2D point with x and y coordinates."""
-
-    x: int | None = Field(default=None, description="x coordinate")
-    y: int | None = Field(default=None, description="y coordinate")
 
 
 class Specimen(BaseModel):

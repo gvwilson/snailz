@@ -450,15 +450,15 @@ def test_assay_oops_factor(people):
     for i, assay in enumerate(result_with_oops.items):
         for row in range(params.plate_size):
             for col in range(params.plate_size):
-                if (
-                    assay.treatments[row][col] == "S"
-                ):  # Only check sample cells, not controls
+                # Only check sample cells, not controls
+                if assay.treatments[row][col] == "S":
                     with_oops = assay.readings[row][col]
                     without_oops = result_without_oops.items[i].readings[row][col]
                     # The value with oops should be approximately (1 + oops) times the value without oops
                     # Using a larger tolerance due to randomness in the test
                     assert abs(with_oops / without_oops - (1 + params.oops)) < 0.05
-                else:  # Control cells
+                # Control cells
+                else:
                     # Control cells should be the same regardless of oops factor
                     with_oops = assay.readings[row][col]
                     without_oops = result_without_oops.items[i].readings[row][col]

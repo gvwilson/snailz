@@ -133,6 +133,7 @@ def test_specimens_mutate_when_grid_provided():
     all_cells_grid = Grid(
         grid=[[1 for x in range(11)] for y in range(11)],
         params=grid_params,
+        start=Point(x=5, y=5),
     )
 
     # Create a specimen with known properties
