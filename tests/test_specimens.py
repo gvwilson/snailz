@@ -127,9 +127,9 @@ def test_specimens_to_csv(output_specimens):
 def test_specimens_mutate_when_grid_provided():
     """Test that specimens are mutated when a grid is provided."""
     # Create a grid where all cells have a value to ensure mutation
-    grid_params = GridParams(depth=8, seed=12345, size=3)
+    grid_params = GridParams(depth=8, seed=12345, size=11)
     all_cells_grid = Grid(
-        grid=[[1, 1, 1], [1, 1, 1], [1, 1, 1]],  # All cells have non-zero values
+        grid=[[1 for x in range(11)] for y in range(11)],
         params=grid_params,
     )
 

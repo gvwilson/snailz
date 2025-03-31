@@ -206,13 +206,12 @@ def mutate_masses(
     else:
         individuals = [specimens.individuals[specific_index]]
 
-    for i in individuals:
-        x = random.randrange(grid_size)
-        y = random.randrange(grid_size)
-        i.site.x = x
-        i.site.y = y
-        if grid.grid[x][y] > 0 and i.genome[susc_locus] == susc_base:
-            i.mass = mutate_mass(i.mass, mut_scale, grid.grid[x][y])
+    locations = _make_locations(grid_size, len(individuals))
+    for (indiv, (x, y)) in zip(individuals, locations):
+        indiv.site.x = x
+        indiv.site.y = y
+        if grid.grid[x][y] > 0 and indiv.genome[susc_locus] == susc_base:
+            indiv.mass = mutate_mass(indiv.mass, mut_scale, grid.grid[x][y])
 
 
 def mutate_mass(original: float, mut_scale: float, cell_value: int) -> float:
@@ -291,6 +290,25 @@ def _make_idents(count: int) -> list[str]:
         "specimens", lambda: f"{prefix}{''.join(random.choices(chars, k=4))}"
     )
     return [gen.next() for _ in range(count)]
+
+
+def _make_locations(size: int, num: int) -> list[tuple[int, int]]:
+    """Generate non-adjacent locations for specimens or fail."""
+    available = {(x, y) for x in range(size) for y in range(size)}
+    chosen = set()
+    for i in range(num):
+        if not available:
+            utils.fail(f"failed to select {num} points on iteration {i}")
+        point = random.choice(list(available))
+        chosen.add(point)
+        for x in range(point[0] - 1, point[0] + 2):
+            if (x < 0) or (x >= size):
+                continue
+            for y in range(point[1] - 1, point[1] + 2):
+                if (y < 0) or (y >= size):
+                    continue
+                available.discard((x, y))
+    return list(chosen)
 
 
 def _make_loci(params: SpecimenParams) -> list[int]:

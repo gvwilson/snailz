@@ -56,10 +56,11 @@ def test_mutate_mass_no_effect_on_zero_cells(specimens):
 
 def test_mutate_mass_effect_with_susceptible_genomes(specimens):
     """Test that mutations occur only with non-zero cells and susceptible genomes."""
-    # Create a grid with all cells = 1
+    size = 11
+    params = DEFAULT_GRID_PARAMS.model_copy(update={"size": size})
     grid = Grid(
-        grid=[[1 for _ in range(5)] for _ in range(5)],
-        params=DEFAULT_GRID_PARAMS,
+        grid=[[1 for _ in range(size)] for _ in range(size)],
+        params=params,
     )
 
     # Make a copy of the original masses
@@ -84,8 +85,8 @@ def test_mutate_mass_effect_with_susceptible_genomes(specimens):
     # Verify only susceptible genomes have changed but all sites are recorded
     for i, individual in enumerate(specimens.individuals):
         # All individuals should have site coordinates
-        assert 0 <= individual.site.x < 5
-        assert 0 <= individual.site.y < 5
+        assert 0 <= individual.site.x < size
+        assert 0 <= individual.site.y < size
 
         # Only susceptible individuals should have changed mass
         if i % 2 == 0:
