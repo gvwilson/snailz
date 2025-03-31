@@ -30,9 +30,9 @@ js5678,Jane,Smith"""
 @pytest.fixture
 def specimens_csv(fs):
     """A specimens CSV file."""
-    content = """ident,x,y,genome,mass,collected_on
-AB1234,1,2,ACGT,1.5,2025-03-10
-CD5678,3,4,CGTA,2.5,2025-03-15"""
+    content = """ident,x,y,genome,mass,collected_on,territory
+AB1234,1,2,ACGT,1.5,2025-03-10,2.5
+CD5678,3,4,CGTA,2.5,2025-03-15,3.7"""
     path = "/specimens.csv"
     fs.create_file(path, contents=content)
     return path

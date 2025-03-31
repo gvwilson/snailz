@@ -67,18 +67,20 @@ class Point(BaseModel):
 class Specimen(BaseModel):
     """A single specimen with unique identifier, genome, mass, site location, and collection date.
 
-    - genome: bases in genome
     - ident: unique identifier
+    - collected_on: date when specimen was collected
+    - genome: bases in genome
     - mass: snail mass in grams
     - site: grid location where specimen was collected
-    - collected_on: date when specimen was collected
+    - territory: share of the grid that belongs to this specimen
     """
 
-    genome: str
     ident: str
+    collected_on: date
+    genome: str
     mass: float
     site: Point
-    collected_on: date
+    territory: float = Field(default=0.0)
 
 
 class AllSpecimens(BaseModel):
@@ -110,10 +112,13 @@ class AllSpecimens(BaseModel):
             - genome: bases in genome
             - mass: snail mass in grams
             - collected_on: date when specimen was collected
+            - territory: share of grid that belongs to this specimen
         """
         output = io.StringIO()
         writer = utils.csv_writer(output)
-        writer.writerow(["ident", "x", "y", "genome", "mass", "collected_on"])
+        writer.writerow(
+            ["ident", "x", "y", "genome", "mass", "collected_on", "territory"]
+        )
         for indiv in self.individuals:
             writer.writerow(
                 [
@@ -123,6 +128,7 @@ class AllSpecimens(BaseModel):
                     indiv.genome,
                     indiv.mass,
                     indiv.collected_on,
+                    indiv.territory,
                 ]
             )
         return output.getvalue()
@@ -172,8 +178,33 @@ def specimens_generate(
 
     if grid is not None:
         mutate_masses(grid, result, params.mut_scale)
+        calculate_ranges(grid.params.size, result)
 
     return result
+
+
+def calculate_ranges(size: int, specimens: AllSpecimens) -> None:
+    """Calculate the territory of each specimen."""
+    # Allocate points to specimens.
+    belong = {}
+    for x in range(size):
+        for y in range(size):
+            for indiv in specimens.individuals:
+                assert indiv.site.x is not None
+                assert indiv.site.y is not None
+                dist = (x - indiv.site.x) ** 2 + (y - indiv.site.y) ** 2
+                if ((x, y) not in belong) or (dist < belong[(x, y)]["dist"]):
+                    belong[(x, y)] = {"dist": dist, "indiv": {indiv.ident}}
+                elif dist == belong[(x, y)]["dist"]:
+                    belong[(x, y)]["indiv"].add(indiv.ident)
+
+    # Add up area per individual
+    for indiv in specimens.individuals:
+        indiv.territory = 0.0
+        for b in belong.values():
+            if indiv.ident in b["indiv"]:
+                indiv.territory += 1 / len(b["indiv"])
+        indiv.territory = round(indiv.territory, utils.PRECISION)
 
 
 def mutate_masses(
@@ -207,7 +238,7 @@ def mutate_masses(
         individuals = [specimens.individuals[specific_index]]
 
     locations = _make_locations(grid_size, len(individuals))
-    for (indiv, (x, y)) in zip(individuals, locations):
+    for indiv, (x, y) in zip(individuals, locations):
         indiv.site.x = x
         indiv.site.y = y
         if grid.grid[x][y] > 0 and indiv.genome[susc_locus] == susc_base:

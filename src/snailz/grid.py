@@ -36,9 +36,9 @@ class GridParams(BaseModel):
     - size: Grid size (size × size, must be positive)
     """
 
-    depth: int = Field(gt=0, description="The maximum value for grid cells")
-    seed: int = Field(description="Random seed for reproducibility")
-    size: int = Field(gt=0, description="Grid size (size × size)")
+    depth: int = Field(gt=0)
+    seed: int = Field()
+    size: int = Field(gt=0)
 
     model_config = {"extra": "forbid"}
 

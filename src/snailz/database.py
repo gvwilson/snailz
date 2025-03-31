@@ -30,15 +30,16 @@ PEOPLE_INSERT = "insert into people values (?, ?, ?)"
 SPECIMENS_CREATE = """
 create table specimens (
     ident text primary key,
-    x integer,
-    y integer,
+    x integer real not null,
+    y integer real not null,
     genome text,
     mass real,
-    collected_on text
+    collected_on text,
+    territory real not null
 )
 """
-SPECIMENS_HEADER = ["ident", "x", "y", "genome", "mass", "collected_on"]
-SPECIMENS_INSERT = "insert into specimens values (?, ?, ?, ?, ?, ?)"
+SPECIMENS_HEADER = ["ident", "x", "y", "genome", "mass", "collected_on", "territory"]
+SPECIMENS_INSERT = "insert into specimens values (?, ?, ?, ?, ?, ?, ?)"
 
 
 def make_database(

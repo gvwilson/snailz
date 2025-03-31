@@ -81,6 +81,7 @@ def output_specimens():
             mass=1.5,
             site=Point(x=1, y=2),
             collected_on=date(2025, 3, 10),
+            territory=2.5,
         ),
         Specimen(
             genome="TGCA",
@@ -88,6 +89,7 @@ def output_specimens():
             mass=1.8,
             site=Point(x=3, y=4),
             collected_on=date(2025, 3, 15),
+            territory=3.7,
         ),
     ]
 
@@ -119,9 +121,9 @@ def test_specimens_to_csv(output_specimens):
     rows = list(csv.reader(io.StringIO(csv_content)))
 
     assert len(rows) == 3  # Header + 2 specimens
-    assert rows[0] == ["ident", "x", "y", "genome", "mass", "collected_on"]
-    assert rows[1] == ["AB1234", "1", "2", "ACGT", "1.5", "2025-03-10"]
-    assert rows[2] == ["AB5678", "3", "4", "TGCA", "1.8", "2025-03-15"]
+    assert rows[0] == ["ident", "x", "y", "genome", "mass", "collected_on", "territory"]
+    assert rows[1] == ["AB1234", "1", "2", "ACGT", "1.5", "2025-03-10", "2.5"]
+    assert rows[2] == ["AB5678", "3", "4", "TGCA", "1.8", "2025-03-15", "3.7"]
 
 
 def test_specimens_mutate_when_grid_provided():
@@ -140,6 +142,7 @@ def test_specimens_mutate_when_grid_provided():
         mass=10.0,
         site=Point(x=None, y=None),
         collected_on=date(2025, 3, 10),
+        territory=0.0,
     )
 
     specimen_params = SpecimenParams(

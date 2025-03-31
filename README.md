@@ -54,16 +54,20 @@ Individual genomes are created by mutating a reference genome at several randoml
 One combination of locus and single-nucleotide polymorphism are considered "significant":
 if a snail has that mutation at that locus *and* is collected from a polluted sample site,
 its mass is increased by an amount that depends on how polluted the site is.
+The snail's territory is then calculated by counting the number of grid cells
+that are closer to it than to any other snail;
+if a cell is equidistant from two or more snails,
+its area is divided equally among them.
 Once again the results are saved as both JSON and CSV,
 and the default parameters included with the package generate specimens like these:
 
-| ident  |  x |  y | genome          | mass  | collected_on |
-| :----- | -: | -: | :-------------- | ----: | :----------- |
-| AZ5PXJ |  6 |  8 | GACGATGTTAGAGCT | 22.95 | 2025-03-12   |
-| AZP8M5 |  9 |  0 | ACGGATGTTAGAGCT | 20.00 | 2025-03-07   |
-| AZJMU7 |  1 |  6 | CTAGATGTTAGAGCT | 23.41 | 2025-03-15   |
-| AZGH04 |  0 |  7 | AGGGATGTTAGAGCT | 18.07 | 2025-03-10   |
-| …      |  … |  … | …               | …     | …            |
+| ident  |  x |  y | genome          | mass  | collected_on | territory |
+| :----- | -: | -: | :-------------- | ----: | :----------- | :-------- |
+| AZ5PXJ |  6 |  8 | GACGATGTTAGAGCT | 22.95 | 2025-03-12   | 9.0       |
+| AZP8M5 |  9 |  0 | ACGGATGTTAGAGCT | 20.00 | 2025-03-07   | 7.0       |
+| AZJMU7 |  1 |  6 | CTAGATGTTAGAGCT | 23.41 | 2025-03-15   | 22.33     |
+| AZGH04 |  0 |  7 | AGGGATGTTAGAGCT | 18.07 | 2025-03-10   | 8.83      |
+| …      |  … |  … | …               | …     | …            | …         |
 
 `snailz` uses Python's [faker](https://faker.readthedocs.io/) module
 to generate a set of laboratory staff with personal and family names,
