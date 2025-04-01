@@ -83,7 +83,6 @@ def output_specimens():
             mass=1.5,
             site=Point(x=1, y=2),
             collected_on=date(2025, 3, 10),
-            territory=2.5,
         ),
         Specimen(
             genome="TGCA",
@@ -91,7 +90,6 @@ def output_specimens():
             mass=1.8,
             site=Point(x=3, y=4),
             collected_on=date(2025, 3, 15),
-            territory=3.7,
         ),
     ]
 
@@ -123,9 +121,9 @@ def test_specimens_to_csv(output_specimens):
     rows = list(csv.reader(io.StringIO(csv_content)))
 
     assert len(rows) == 3  # Header + 2 specimens
-    assert rows[0] == ["ident", "x", "y", "genome", "mass", "collected_on", "territory"]
-    assert rows[1] == ["AB1234", "1", "2", "ACGT", "1.5", "2025-03-10", "2.5"]
-    assert rows[2] == ["AB5678", "3", "4", "TGCA", "1.8", "2025-03-15", "3.7"]
+    assert rows[0] == ["ident", "x", "y", "genome", "mass", "collected_on"]
+    assert rows[1] == ["AB1234", "1", "2", "ACGT", "1.5", "2025-03-10"]
+    assert rows[2] == ["AB5678", "3", "4", "TGCA", "1.8", "2025-03-15"]
 
 
 def test_specimens_mass_adjusted_when_grid_provided():
@@ -145,7 +143,6 @@ def test_specimens_mass_adjusted_when_grid_provided():
         mass=10.0,  # Initial mass
         site=Point(x=None, y=None),
         collected_on=date(2025, 3, 10),
-        territory=0.0,
     )
 
     specimen_params = SpecimenParams(
@@ -174,15 +171,15 @@ def test_specimens_mass_adjusted_when_grid_provided():
 
     # Record the original mass
     original_mass = specimen.mass
-    
+
     # Place specimen on grid and adjust mass
     _place_specimens_on_grid(all_cells_grid, specimens_obj)
     _adjust_masses_by_location(all_cells_grid, specimens_obj, 0.5)
-    
+
     # Check coordinates were assigned
     assert specimen.site.x is not None
     assert specimen.site.y is not None
-    
+
     # Check if mass was adjusted (every cell in grid has value 1)
     assert specimen.mass > original_mass, "Specimen mass should be adjusted"
 
@@ -210,8 +207,12 @@ def test_specimens_mass_adjusted_when_grid_provided():
     for ind in result.individuals:
         assert ind.site.x is not None
         assert ind.site.y is not None
-        assert 0 <= ind.site.x < len(all_cells_grid.grid), "Site x should be within grid bounds"
-        assert 0 <= ind.site.y < len(all_cells_grid.grid), "Site y should be within grid bounds"
+        assert 0 <= ind.site.x < len(all_cells_grid.grid), (
+            "Site x should be within grid bounds"
+        )
+        assert 0 <= ind.site.y < len(all_cells_grid.grid), (
+            "Site y should be within grid bounds"
+        )
 
     # Verify masses are set initially based on susceptibility
     # and then adjusted based on location
@@ -225,7 +226,9 @@ def test_specimens_mass_adjusted_when_grid_provided():
             non_susceptible_specimens.append(ind)
 
     # We should have at least susceptible specimens
-    assert len(susceptible_specimens) > 0, "Should have at least one susceptible specimen"
+    assert len(susceptible_specimens) > 0, (
+        "Should have at least one susceptible specimen"
+    )
     # With random generation, we might not get non-susceptible specimens in every test run
 
     # All susceptible specimens in polluted areas should have higher masses
@@ -236,7 +239,9 @@ def test_specimens_mass_adjusted_when_grid_provided():
             # For our test grid, all cells have value 1
             # With mut_scale=0.5, mass should be 1.5x the original
             midpoint = (params.max_mass + params.min_mass) / 2
-            assert ind.mass >= midpoint * 1.5, "Susceptible specimen mass should be adjusted upward"
+            assert ind.mass >= midpoint * 1.5, (
+                "Susceptible specimen mass should be adjusted upward"
+            )
 
 
 def test_specimens_initial_masses_based_on_susceptibility():
@@ -273,11 +278,15 @@ def test_specimens_initial_masses_based_on_susceptibility():
     if susceptible_specimens and non_susceptible_specimens:
         # Susceptible specimens should have higher masses
         for ind in susceptible_specimens:
-            assert ind.mass >= midpoint, "Susceptible specimens should have higher initial masses"
+            assert ind.mass >= midpoint, (
+                "Susceptible specimens should have higher initial masses"
+            )
 
         # Non-susceptible specimens should have lower masses
         for ind in non_susceptible_specimens:
-            assert ind.mass <= midpoint, "Non-susceptible specimens should have lower initial masses"
+            assert ind.mass <= midpoint, (
+                "Non-susceptible specimens should have lower initial masses"
+            )
 
 
 @pytest.fixture
@@ -367,7 +376,6 @@ def test_mass_adjustment_with_susceptible_genomes(mutation_specimens):
                 assert individual.mass == pytest.approx(expected_mass)
 
 
-
 def test_mass_adjustment_with_variable_grid_values():
     """Test that cell values affect mass adjustment magnitude."""
     # Create controlled specimens with predictable masses
@@ -379,7 +387,11 @@ def test_mass_adjustment_with_variable_grid_values():
     identifiers = ["AB1234", "AB5678", "AB90CD", "ABEF12", "AB3456"]
     individuals = [
         Specimen(
-            genome=g, mass=m, site=Point(x=0, y=0), ident=i, collected_on=date(2025, 3, 10)
+            genome=g,
+            mass=m,
+            site=Point(x=0, y=0),
+            ident=i,
+            collected_on=date(2025, 3, 10),
         )
         for g, m, i in zip(genomes, masses.copy(), identifiers)
     ]
@@ -436,4 +448,3 @@ def test_mass_adjustment_with_variable_grid_values():
             )
         else:
             assert specimens.individuals[specimen_index].mass == original_mass
-

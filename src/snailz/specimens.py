@@ -69,9 +69,6 @@ class Specimen(BaseModel):
     genome: str = Field(description="bases in genome")
     mass: float = Field(gt=0, description="snail mass in grams")
     site: Point = Field(description="grid location where specimen was collected")
-    territory: float = Field(
-        default=0.0, description="share of the grid that belongs to this specimen"
-    )
 
 
 class AllSpecimens(BaseModel):
@@ -93,9 +90,7 @@ class AllSpecimens(BaseModel):
 
         output = io.StringIO()
         writer = utils.csv_writer(output)
-        writer.writerow(
-            ["ident", "x", "y", "genome", "mass", "collected_on", "territory"]
-        )
+        writer.writerow(["ident", "x", "y", "genome", "mass", "collected_on"])
         for indiv in self.individuals:
             writer.writerow(
                 [
@@ -105,7 +100,6 @@ class AllSpecimens(BaseModel):
                     indiv.genome,
                     indiv.mass,
                     indiv.collected_on,
-                    indiv.territory,
                 ]
             )
         return output.getvalue()
@@ -160,7 +154,6 @@ def specimens_generate(
     if grid is not None:
         _place_specimens_on_grid(grid, result)
         _adjust_masses_by_location(grid, result, params.mut_scale)
-        _calculate_ranges(grid.params.size, result)
 
     return result
 
@@ -192,34 +185,12 @@ def _adjust_masses_by_location(
         individuals = [specimens.individuals[specific_index]]
 
     for indiv in individuals:
-        assert indiv.site.x is not None and indiv.site.y is not None, "Specimens must be placed on grid first"
+        assert indiv.site.x is not None and indiv.site.y is not None, (
+            "Specimens must be placed on grid first"
+        )
         x, y = indiv.site.x, indiv.site.y
         if grid.grid[x][y] > 0 and indiv.genome[susc_locus] == susc_base:
             indiv.mass = _mutate_mass(indiv.mass, mut_scale, grid.grid[x][y])
-
-
-def _calculate_ranges(size: int, specimens: AllSpecimens) -> None:
-    """Calculate the territory of each specimen."""
-    # Allocate points to specimens.
-    belong = {}
-    for x in range(size):
-        for y in range(size):
-            for indiv in specimens.individuals:
-                assert indiv.site.x is not None
-                assert indiv.site.y is not None
-                dist = (x - indiv.site.x) ** 2 + (y - indiv.site.y) ** 2
-                if ((x, y) not in belong) or (dist < belong[(x, y)]["dist"]):
-                    belong[(x, y)] = {"dist": dist, "indiv": {indiv.ident}}
-                elif dist == belong[(x, y)]["dist"]:
-                    belong[(x, y)]["indiv"].add(indiv.ident)
-
-    # Add up area per individual
-    for indiv in specimens.individuals:
-        indiv.territory = 0.0
-        for b in belong.values():
-            if indiv.ident in b["indiv"]:
-                indiv.territory += 1 / len(b["indiv"])
-        indiv.territory = round(indiv.territory, utils.PRECISION)
 
 
 def _choose_one(values: list[int]) -> int:
@@ -332,16 +303,10 @@ def _make_initial_masses(
     for genome in genomes:
         if genome[susceptible_locus] == susceptible_base:
             # Susceptible specimens get higher mass range
-            mass = round(
-                random.uniform(midpoint, params.max_mass),
-                utils.PRECISION
-            )
+            mass = round(random.uniform(midpoint, params.max_mass), utils.PRECISION)
         else:
             # Non-susceptible specimens get lower mass range
-            mass = round(
-                random.uniform(params.min_mass, midpoint),
-                utils.PRECISION
-            )
+            mass = round(random.uniform(params.min_mass, midpoint), utils.PRECISION)
         masses.append(mass)
 
     return masses
@@ -400,7 +365,7 @@ def _make_reference_genome(params: SpecimenParams) -> str:
     return "".join(random.choices(BASES, k=params.length))
 
 
-def _mutate_mass(original: float, mut_scale: float, cell_value: int) -> float:
+def _mutate_mass(original: float, mut_scale: float, cell_value: float) -> float:
     """Mutate a single specimen's mass.
 
     Parameters:
