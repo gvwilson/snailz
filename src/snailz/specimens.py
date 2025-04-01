@@ -1,4 +1,11 @@
-"""Generate snail specimens."""
+"""Generate snail specimens.
+
+This module handles the generation of snail specimens with the following process:
+1. Generate genomes with random mutations
+2. Assign initial masses based on whether they have the significant mutation
+3. Place specimens randomly on the grid (no two snails in the same cell)
+4. Adjust masses based on whether their location is polluted or not
+"""
 
 import io
 import random
@@ -111,9 +118,13 @@ def specimens_generate(
 
     Each genome is a string of bases of the same length. One locus is
     randomly chosen as "significant", and a specific mutation there
-    predisposes the snail to mass changes. Other mutations are added
-    randomly at other loci.  Specimen masses are only mutated if a
-    grid is provided.
+    predisposes the snail to mass changes.
+
+    The process follows these steps:
+    1. Generate genomes with random mutations
+    2. Assign initial masses based on whether they have the significant mutation
+    3. Place specimens randomly on the grid (no two snails in the same cell)
+    4. Adjust masses based on location if a grid is provided
 
     Parameters:
         params: SpecimenParams object
@@ -128,9 +139,9 @@ def specimens_generate(
     susc_loc = _choose_one(loci)
     susc_base = reference[susc_loc]
     genomes = [_make_genome(reference, loci) for i in range(params.number)]
-    masses = _make_masses(params, genomes, susc_loc, susc_base)
     identifiers = _make_idents(params.number)
     collection_dates = _make_collection_dates(params)
+    masses = _make_initial_masses(params, genomes, susc_loc, susc_base)
 
     individuals = [
         Specimen(genome=g, mass=m, site=Point(), ident=i, collected_on=d)
@@ -147,13 +158,47 @@ def specimens_generate(
     )
 
     if grid is not None:
-        mutate_masses(grid, result, params.mut_scale)
-        calculate_ranges(grid.params.size, result)
+        _place_specimens_on_grid(grid, result)
+        _adjust_masses_by_location(grid, result, params.mut_scale)
+        _calculate_ranges(grid.params.size, result)
 
     return result
 
 
-def calculate_ranges(size: int, specimens: AllSpecimens) -> None:
+def _adjust_masses_by_location(
+    grid: Grid,
+    specimens: AllSpecimens,
+    mut_scale: float,
+    specific_index: int | None = None,
+) -> None:
+    """Adjust mass based on grid values and genetic susceptibility.
+
+    For each specimen, if the cell value is non-zero and the genome is
+    susceptible, modify the mass. Specimens must already have site
+    coordinates assigned by _place_specimens_on_grid().
+
+    Parameters:
+        grid: A Grid object containing pollution values
+        specimens: An AllSpecimens object with individuals to potentially adjust
+        mut_scale: Scaling factor for mutation effect
+        specific_index: Optional index to adjust only a specific specimen
+    """
+    susc_locus = specimens.susceptible_locus
+    susc_base = specimens.susceptible_base
+
+    if specific_index is None:
+        individuals = specimens.individuals
+    else:
+        individuals = [specimens.individuals[specific_index]]
+
+    for indiv in individuals:
+        assert indiv.site.x is not None and indiv.site.y is not None, "Specimens must be placed on grid first"
+        x, y = indiv.site.x, indiv.site.y
+        if grid.grid[x][y] > 0 and indiv.genome[susc_locus] == susc_base:
+            indiv.mass = _mutate_mass(indiv.mass, mut_scale, grid.grid[x][y])
+
+
+def _calculate_ranges(size: int, specimens: AllSpecimens) -> None:
     """Calculate the territory of each specimen."""
     # Allocate points to specimens.
     belong = {}
@@ -175,58 +220,6 @@ def calculate_ranges(size: int, specimens: AllSpecimens) -> None:
             if indiv.ident in b["indiv"]:
                 indiv.territory += 1 / len(b["indiv"])
         indiv.territory = round(indiv.territory, utils.PRECISION)
-
-
-def mutate_masses(
-    grid: Grid,
-    specimens: AllSpecimens,
-    mut_scale: float,
-    specific_index: int | None = None,
-) -> None:
-    """Mutate mass based on grid values and genetic susceptibility.
-
-    For each specimen, choose a random cell from the grid and modify
-    the mass if the cell's value is non-zero and the genome is
-    susceptible. Records the chosen site coordinates for each specimen
-    regardless of whether mutation occurs.  Modifies specimen masses
-    in-place for susceptible individuals; updates site coordinates for
-    all individuals.
-
-    Parameters:
-        grid: A Grid object containing pollution values
-        specimens: A AllSpecimens object with individuals to potentially mutate
-        mut_scale: Scaling factor for mutation effect
-        specific_index: Optional index to mutate only a specific specimen
-    """
-    grid_size = len(grid.grid)
-    susc_locus = specimens.susceptible_locus
-    susc_base = specimens.susceptible_base
-
-    if specific_index is None:
-        individuals = specimens.individuals
-    else:
-        individuals = [specimens.individuals[specific_index]]
-
-    locations = _make_locations(grid_size, len(individuals))
-    for indiv, (x, y) in zip(individuals, locations):
-        indiv.site.x = x
-        indiv.site.y = y
-        if grid.grid[x][y] > 0 and indiv.genome[susc_locus] == susc_base:
-            indiv.mass = mutate_mass(indiv.mass, mut_scale, grid.grid[x][y])
-
-
-def mutate_mass(original: float, mut_scale: float, cell_value: int) -> float:
-    """Mutate a single specimen's mass.
-
-    Parameters:
-        original: The original mass value
-        mut_scale: Scaling factor for mutation effect
-        cell_value: The grid cell value affecting the mutation
-
-    Returns:
-        The mutated mass value, rounded to PRECISION decimal places
-    """
-    return round(original * (1 + (mut_scale * cell_value)), utils.PRECISION)
 
 
 def _choose_one(values: list[int]) -> int:
@@ -253,6 +246,23 @@ def _choose_other(values: str, exclude: str) -> str:
     """
     candidates = list(sorted(set(values) - set(exclude)))
     return candidates[random.randrange(len(candidates))]
+
+
+def _make_collection_dates(params: SpecimenParams) -> list[date]:
+    """Generate random collection dates for specimens.
+
+    Parameters:
+        params: SpecimenParams with start_date, end_date, and number attributes
+
+    Returns:
+        List of randomly generated collection dates between start_date and end_date
+    """
+    start_ordinal = params.start_date.toordinal()
+    end_ordinal = params.end_date.toordinal()
+    return [
+        date.fromordinal(random.randint(start_ordinal, end_ordinal))
+        for _ in range(params.number)
+    ]
 
 
 def _make_genome(reference: str, loci: list[int]) -> str:
@@ -293,23 +303,77 @@ def _make_idents(count: int) -> list[str]:
     return [gen.next() for _ in range(count)]
 
 
+def _make_initial_masses(
+    params: SpecimenParams,
+    genomes: list[str],
+    susceptible_locus: int,
+    susceptible_base: str,
+) -> list[float]:
+    """Generate initial masses for specimens based on significant mutation.
+
+    Specimens with the susceptible base at the susceptible locus are given
+    a higher initial mass range compared to non-susceptible specimens.
+
+    Parameters:
+        params: SpecimenParams with min_mass and max_mass attributes
+        genomes: List of genome strings
+        susceptible_locus: Position that determines susceptibility
+        susceptible_base: Base that makes a specimen susceptible
+
+    Returns:
+        List of generated mass values between min_mass and max_mass,
+        rounded to PRECISION decimal places
+    """
+    # Calculate mass range midpoint
+    midpoint = (params.max_mass + params.min_mass) / 2
+
+    # Create masses based on susceptibility
+    masses = []
+    for genome in genomes:
+        if genome[susceptible_locus] == susceptible_base:
+            # Susceptible specimens get higher mass range
+            mass = round(
+                random.uniform(midpoint, params.max_mass),
+                utils.PRECISION
+            )
+        else:
+            # Non-susceptible specimens get lower mass range
+            mass = round(
+                random.uniform(params.min_mass, midpoint),
+                utils.PRECISION
+            )
+        masses.append(mass)
+
+    return masses
+
+
 def _make_locations(size: int, num: int) -> list[tuple[int, int]]:
-    """Generate non-adjacent locations for specimens or fail."""
-    available = {(x, y) for x in range(size) for y in range(size)}
-    chosen = set()
-    for i in range(num):
-        if not available:
-            utils.fail(f"failed to select {num} points on iteration {i}")
-        point = random.choice(list(available))
-        chosen.add(point)
-        for x in range(point[0] - 1, point[0] + 2):
-            if (x < 0) or (x >= size):
-                continue
-            for y in range(point[1] - 1, point[1] + 2):
-                if (y < 0) or (y >= size):
-                    continue
-                available.discard((x, y))
-    return list(chosen)
+    """Generate non-overlapping locations for specimens.
+
+    Selects random locations from the grid, ensuring no two specimens
+    are placed in the same cell. This implements the requirement that
+    no two snails may be placed in the same cell.
+
+    Parameters:
+        size: Size of the grid (assuming square grid)
+        num: Number of locations to generate
+
+    Returns:
+        List of (x, y) coordinate tuples
+
+    Raises:
+        ValueError: If there are not enough cells to place all specimens
+    """
+    if num > size * size:
+        utils.fail(f"Cannot place {num} specimens on a {size}x{size} grid")
+
+    # Create all possible grid locations
+    all_locations = [(x, y) for x in range(size) for y in range(size)]
+
+    # Select locations randomly without replacement
+    chosen_locations = random.sample(all_locations, num)
+
+    return chosen_locations
 
 
 def _make_loci(params: SpecimenParams) -> list[int]:
@@ -324,47 +388,6 @@ def _make_loci(params: SpecimenParams) -> list[int]:
     return random.sample(list(range(params.length)), params.mutations)
 
 
-def _make_masses(
-    params: SpecimenParams,
-    genomes: list[str],
-    susceptible_locus: int,
-    susceptible_base: str,
-) -> list[float]:
-    """Generate random masses for specimens.
-
-    Parameters:
-        params: SpecimenParams with min_mass and max_mass attributes
-        genomes: List of genome strings
-        susceptible_locus: Position that determines susceptibility
-        susceptible_base: Base that makes a specimen susceptible
-
-    Returns:
-        List of randomly generated mass values between min_mass and max_mass,
-        rounded to PRECISION decimal places
-    """
-    return [
-        round(random.uniform(params.min_mass, params.max_mass), utils.PRECISION)
-        for _ in genomes
-    ]
-
-
-def _make_collection_dates(params: SpecimenParams) -> list[date]:
-    """Generate random collection dates for specimens.
-
-    Parameters:
-        params: SpecimenParams with start_date, end_date, and number attributes
-
-    Returns:
-        List of randomly generated collection dates between start_date and end_date
-    """
-    start_ordinal = params.start_date.toordinal()
-    end_ordinal = params.end_date.toordinal()
-    return [
-        date.fromordinal(random.randint(start_ordinal, end_ordinal))
-        for _ in range(params.number)
-    ]
-
-
 def _make_reference_genome(params: SpecimenParams) -> str:
     """Make a random reference genome.
 
@@ -375,3 +398,37 @@ def _make_reference_genome(params: SpecimenParams) -> str:
         A randomly generated genome string of the specified length
     """
     return "".join(random.choices(BASES, k=params.length))
+
+
+def _mutate_mass(original: float, mut_scale: float, cell_value: int) -> float:
+    """Mutate a single specimen's mass.
+
+    Parameters:
+        original: The original mass value
+        mut_scale: Scaling factor for mutation effect
+        cell_value: The grid cell value affecting the mutation
+
+    Returns:
+        The mutated mass value, rounded to PRECISION decimal places
+    """
+    return round(original * (1 + (mut_scale * cell_value)), utils.PRECISION)
+
+
+def _place_specimens_on_grid(
+    grid: Grid,
+    specimens: AllSpecimens,
+) -> None:
+    """Place specimens randomly on the grid, ensuring no two share the same cell.
+
+    Updates the site coordinates for each specimen.
+
+    Parameters:
+        grid: A Grid object containing pollution values
+        specimens: An AllSpecimens object with individuals to place on the grid
+    """
+    grid_size = len(grid.grid)
+    locations = _make_locations(grid_size, len(specimens.individuals))
+
+    for indiv, (x, y) in zip(specimens.individuals, locations):
+        indiv.site.x = x
+        indiv.site.y = y

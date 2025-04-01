@@ -50,8 +50,11 @@ the grid coordinates where it was collected,
 and a collection date.
 Individual genomes are created by mutating a reference genome at several randomly-selected loci.
 One combination of locus and single-nucleotide polymorphism are considered "significant":
-if a snail has that mutation at that locus *and* is collected from a polluted sample site,
-its mass is increased by an amount that depends on how polluted the site is.
+snails with this mutation are given a higher initial mass range.
+After initial masses are assigned,
+specimens are placed randomly on the grid with no two snails in the same cell.
+If a snail has the significant mutation *and* is collected from a polluted sample site,
+its mass is further increased by an amount that depends on how polluted the site is.
 The snail's territory is then calculated by counting the number of grid cells
 that are closer to it than to any other snail;
 if a cell is equidistant from two or more snails,
