@@ -57,7 +57,7 @@ def grid_file(fs):
     """Create a test grid data file and return its path."""
     grid_params = GridParams(depth=3, seed=12345, size=3)
     grid_data = Grid(
-        grid=[[0, 1, 2], [3, 4, 5], [6, 7, 8]],
+        grid=[[0.0, 1.0, 2.0], [3.0, 4.0, 5.0], [6.0, 7.0, 8.0]],
         params=grid_params,
         start=Point(x=1, y=1),
     )
@@ -309,9 +309,9 @@ def test_convert_grid_stdout(runner, fs, grid_file):
     """Test converting grid data to CSV and writing to stdout."""
     result = runner.invoke(convert, ["--input", grid_file, "--kind", "grid"])
     assert result.exit_code == 0
-    assert "0,1,2" in result.output
-    assert "3,4,5" in result.output
-    assert "6,7,8" in result.output
+    assert "0.0,1.0,2.0" in result.output
+    assert "3.0,4.0,5.0" in result.output
+    assert "6.0,7.0,8.0" in result.output
 
 
 def test_convert_grid_file(runner, fs, grid_file):
@@ -326,9 +326,9 @@ def test_convert_grid_file(runner, fs, grid_file):
 
     with open(output_file, "r") as f:
         content = f.read()
-        assert "0,1,2" in content
-        assert "3,4,5" in content
-        assert "6,7,8" in content
+        assert "0.0,1.0,2.0" in content
+        assert "3.0,4.0,5.0" in content
+        assert "6.0,7.0,8.0" in content
 
 
 def test_convert_invalid_kind(runner, fs, grid_file):
