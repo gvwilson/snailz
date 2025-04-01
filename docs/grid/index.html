@@ -748,9 +748,9 @@
 <li>Generate an NxN grid of random numbers.</li>
 <li>Mark a cell near the center as filled by negating its value.</li>
 <li>On each iteration:<ol>
-<li>Find the lowest-valued cell adjacent to the filled region.</li>
+<li>Find the highest-valued cell adjacent to the filled region.</li>
 <li>Fill that in by negating its value.</li>
-<li>If several cells tie for lowest value, pick one at random.</li>
+<li>If several cells tie for highest value, pick one at random.</li>
 </ol>
 </li>
 <li>Stop when the filled region hits the edge of the grid.</li>
@@ -1297,7 +1297,7 @@ positive numbers show the original value of filled cells.</p>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fill the grid one cell at a time using invasion percolation.</span>
 
 <span class="sd">        Starts at the specified coordinates and fills outward,</span>
-<span class="sd">        choosing lowest-valued adjacent cells, until reaching the</span>
+<span class="sd">        choosing highest-valued adjacent cells, until reaching the</span>
 <span class="sd">        border of the grid.  After filling, inverts cell values.</span>
 
 <span class="sd">        Parameters:</span>
@@ -1363,19 +1363,19 @@ positive numbers show the original value of filled cells.</p>
 <span class="sd">            A tuple (x, y) of coordinates for the next cell to fill</span>
 
 <span class="sd">        Note:</span>
-<span class="sd">            Chooses the lowest-valued cell adjacent to already filled cells.</span>
-<span class="sd">            If multiple cells tie for the lowest value, picks one at random.</span>
+<span class="sd">            Chooses the highest-valued cell adjacent to already filled cells.</span>
+<span class="sd">            If multiple cells tie for the highest value, picks one at random.</span>
 <span class="sd">            Updates the candidate set after selecting a cell.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">min_key</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_candidates</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">available</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_candidates</span><span class="p">[</span><span class="n">min_key</span><span class="p">]))</span>
+        <span class="n">max_key</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_candidates</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">available</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_candidates</span><span class="p">[</span><span class="n">max_key</span><span class="p">]))</span>
         <span class="n">i</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">available</span><span class="p">))</span>
         <span class="n">choice</span> <span class="o">=</span> <span class="n">available</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         <span class="k">del</span> <span class="n">available</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">available</span><span class="p">:</span>
-            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_candidates</span><span class="p">[</span><span class="n">min_key</span><span class="p">]</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_candidates</span><span class="p">[</span><span class="n">max_key</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_candidates</span><span class="p">[</span><span class="n">min_key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">available</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_candidates</span><span class="p">[</span><span class="n">max_key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">available</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_candidates</span><span class="p">(</span><span class="o">*</span><span class="n">choice</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">choice</span>
 
@@ -1560,7 +1560,7 @@ positive numbers show the original value of filled cells.</p>
 
         <p>Fill the grid one cell at a time using invasion percolation.</p>
 <p>Starts at the specified coordinates and fills outward,
-choosing lowest-valued adjacent cells, until reaching the
+choosing highest-valued adjacent cells, until reaching the
 border of the grid.  After filling, inverts cell values.</p>
 
 
@@ -1635,7 +1635,7 @@ border of the grid.  After filling, inverts cell values.</p>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill the grid one cell at a time using invasion percolation.</span>
 
 <span class="sd">    Starts at the specified coordinates and fills outward,</span>
-<span class="sd">    choosing lowest-valued adjacent cells, until reaching the</span>
+<span class="sd">    choosing highest-valued adjacent cells, until reaching the</span>
 <span class="sd">    border of the grid.  After filling, inverts cell values.</span>
 
 <span class="sd">    Parameters:</span>
@@ -1940,8 +1940,8 @@ or if the cell is already filled (negative value)</p>
 
 <details class="note" open>
   <summary>Note</summary>
-  <p>Chooses the lowest-valued cell adjacent to already filled cells.
-If multiple cells tie for the lowest value, picks one at random.
+  <p>Chooses the highest-valued cell adjacent to already filled cells.
+If multiple cells tie for the highest value, picks one at random.
 Updates the candidate set after selecting a cell.</p>
 </details>
 
@@ -1975,19 +1975,19 @@ Updates the candidate set after selecting a cell.</p>
 <span class="sd">        A tuple (x, y) of coordinates for the next cell to fill</span>
 
 <span class="sd">    Note:</span>
-<span class="sd">        Chooses the lowest-valued cell adjacent to already filled cells.</span>
-<span class="sd">        If multiple cells tie for the lowest value, picks one at random.</span>
+<span class="sd">        Chooses the highest-valued cell adjacent to already filled cells.</span>
+<span class="sd">        If multiple cells tie for the highest value, picks one at random.</span>
 <span class="sd">        Updates the candidate set after selecting a cell.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">min_key</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_candidates</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-    <span class="n">available</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_candidates</span><span class="p">[</span><span class="n">min_key</span><span class="p">]))</span>
+    <span class="n">max_key</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_candidates</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">available</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_candidates</span><span class="p">[</span><span class="n">max_key</span><span class="p">]))</span>
     <span class="n">i</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">available</span><span class="p">))</span>
     <span class="n">choice</span> <span class="o">=</span> <span class="n">available</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
     <span class="k">del</span> <span class="n">available</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">available</span><span class="p">:</span>
-        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_candidates</span><span class="p">[</span><span class="n">min_key</span><span class="p">]</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_candidates</span><span class="p">[</span><span class="n">max_key</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_candidates</span><span class="p">[</span><span class="n">min_key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">available</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_candidates</span><span class="p">[</span><span class="n">max_key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">available</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">add_candidates</span><span class="p">(</span><span class="o">*</span><span class="n">choice</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">choice</span>
 </code></pre></div></td></tr></table></div>

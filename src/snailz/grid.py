@@ -5,9 +5,9 @@ To create a grid using invasion percolation:
 1.  Generate an NxN grid of random numbers.
 2.  Mark a cell near the center as filled by negating its value.
 3.  On each iteration:
-    1.  Find the lowest-valued cell adjacent to the filled region.
+    1.  Find the highest-valued cell adjacent to the filled region.
     2.  Fill that in by negating its value.
-    3.  If several cells tie for lowest value, pick one at random.
+    3.  If several cells tie for highest value, pick one at random.
 4.  Stop when the filled region hits the edge of the grid.
 
 Instead of repeatedly searching for cells adjacent to the filled
@@ -107,7 +107,7 @@ class Invperc:
         """Fill the grid one cell at a time using invasion percolation.
 
         Starts at the specified coordinates and fills outward,
-        choosing lowest-valued adjacent cells, until reaching the
+        choosing highest-valued adjacent cells, until reaching the
         border of the grid.  After filling, inverts cell values.
 
         Parameters:
@@ -173,19 +173,19 @@ class Invperc:
             A tuple (x, y) of coordinates for the next cell to fill
 
         Note:
-            Chooses the lowest-valued cell adjacent to already filled cells.
-            If multiple cells tie for the lowest value, picks one at random.
+            Chooses the highest-valued cell adjacent to already filled cells.
+            If multiple cells tie for the highest value, picks one at random.
             Updates the candidate set after selecting a cell.
         """
-        min_key = min(self._candidates.keys())
-        available = list(sorted(self._candidates[min_key]))
+        max_key = max(self._candidates.keys())
+        available = list(sorted(self._candidates[max_key]))
         i = random.randrange(len(available))
         choice = available[i]
         del available[i]
         if not available:
-            del self._candidates[min_key]
+            del self._candidates[max_key]
         else:
-            self._candidates[min_key] = set(available)
+            self._candidates[max_key] = set(available)
         self.add_candidates(*choice)
         return choice
 
