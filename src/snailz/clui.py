@@ -6,7 +6,7 @@ import random
 import click
 
 from .grids import grids_generate
-from .models import AllData, AllParams
+from .params import AllData, AllParams
 from .persons import persons_generate
 from .utils import display, fail, report
 

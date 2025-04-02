@@ -1,6 +1,9 @@
 """Snailz utilities."""
 
+import csv
+import io
 import sys
+
 
 # Maximum tries to generate a unique ID.
 UNIQUE_ID_LIMIT = 10_000
@@ -62,3 +65,14 @@ def report(verbose, msg):
     """Report if verbosity turned on."""
     if verbose:
         print(msg)
+
+
+def to_csv(rows, fields, f_make_row):
+    """Generic converter from list of models to CSV string."""
+
+    output = io.StringIO()
+    writer = csv.writer(output, lineterminator="\n")
+    writer.writerow(fields)
+    for r in rows:
+        writer.writerow(f_make_row(r))
+    return output.getvalue()

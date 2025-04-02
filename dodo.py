@@ -18,11 +18,9 @@ VERBOSITY = 2
 DIRS_TO_TIDY = ["build", "dist", "*.egg-info"]
 
 # Directories and files.
-PARAMS_DIR = Path("params")
-PARAMS_FILE = PARAMS_DIR / "default_params.json"
-DATA_DIR = Path("data")
-PEOPLE_JSON = DATA_DIR / "people.json"
-PEOPLE_CSV = DATA_DIR / "people.csv"
+TMP_DIR = Path("tmp")
+PARAMS_JSON = TMP_DIR / "params.json"
+DATA_JSON = TMP_DIR / "data.json"
 
 
 def task_data():
@@ -30,8 +28,8 @@ def task_data():
 
     return {
         "actions": [
-            f"mkdir -p {DATA_DIR}",
-            f"snailz data --params {PARAMS_FILE} --output {DATA_DIR}",
+            f"mkdir -p {TMP_DIR}",
+            f"snailz data --params {PARAMS_JSON} --output {DATA_JSON}",
         ],
         "verbosity": VERBOSITY,
         "uptodate": [False],
@@ -107,8 +105,8 @@ def task_params():
 
     return {
         "actions": [
-            f"mkdir -p {PARAMS_DIR}",
-            f"snailz params --output {PARAMS_FILE}",
+            f"mkdir -p {TMP_DIR}",
+            f"snailz params --output {PARAMS_JSON}",
         ],
         "verbosity": VERBOSITY,
         "uptodate": [False],

@@ -14,8 +14,7 @@ wheels/
 *.db
 
 # Temporary files
-data/
-params/
+tmp/
 
 # Editor backup files
 *~
