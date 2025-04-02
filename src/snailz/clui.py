@@ -1,11 +1,13 @@
 """Command-line interface for snailz."""
 
 import json
+import random
 
 import click
 
-from .models import AllParams
-from . import utils
+from .models import AllData, AllParams
+from .persons import persons_generate
+from .utils import display, fail, report
 
 
 @click.group()
@@ -14,7 +16,7 @@ from . import utils
 def cli(ctx, verbose):
     """Entry point for command-line interface."""
     ctx.ensure_object(dict)
-    ctx.obj["VERBOSE"] = verbose
+    ctx.obj["verbose"] = verbose
 
 
 @cli.command()
@@ -24,12 +26,24 @@ def cli(ctx, verbose):
     type=click.Path(exists=True),
     help="Path to parameters file",
 )
-@click.option(
-    "--output", required=True, type=click.Path(), help="Path to output directory"
-)
+@click.option("--output", type=click.Path(), help="Path to output directory")
 @click.pass_context
 def data(ctx, params, output):
-    """Process data using parameters file and save to the output directory."""
+    """Generate and save data using provided parameters."""
+    verbose = ctx.obj["verbose"]
+    try:
+        with open(params, "r") as reader:
+            parameters = AllParams.model_validate(json.load(reader))
+            random.seed(parameters.seed)
+            persons = persons_generate(parameters.person)
+            data = AllData(
+                params=parameters,
+                persons=persons,
+            )
+            display(output, str(data))
+            report(verbose, f"wrote data file {output}")
+    except OSError as exc:
+        fail(str(exc))
 
 
 @cli.command()
@@ -39,15 +53,15 @@ def data(ctx, params, output):
 @click.pass_context
 def params(ctx, output):
     """Generate parameters and save to the specified output directory."""
-    verbose = ctx.obj["VERBOSE"]
+    verbose = ctx.obj["verbose"]
     params = AllParams()
     as_json = json.dumps(params.model_dump(), indent=4)
     try:
         with open(output, "w") as writer:
             writer.write(as_json)
-            utils.report(verbose, f"wrote parameter file {output}")
+            report(verbose, f"wrote parameter file {output}")
     except OSError as exc:
-        utils.fail(str(exc))
+        fail(str(exc))
 
 
 if __name__ == "__main__":

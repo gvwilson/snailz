@@ -34,8 +34,7 @@ class Person(BaseModel):
 class PersonList(BaseModel):
     """A set of generated people."""
 
-    individuals: list[Person] = Field(description="all people")
-    params: PersonParams = Field(description="parameters used")
+    persons: list[Person] = Field(description="all persons")
 
     def to_csv(self):
         """Create a CSV representation of the people data.
@@ -44,7 +43,7 @@ class PersonList(BaseModel):
             A CSV-formatted string with people data.
         """
         return _to_csv(
-            self.individuals,
+            self.persons,
             ["ident", "personal", "family"],
             lambda person: [person.ident, person.personal, person.family],
         )
@@ -60,6 +59,13 @@ class AllParams(BaseModel):
     person: PersonParams = Field(
         default=PersonParams(), description="parameters for people generation"
     )
+
+
+class AllData(BaseModel):
+    """Represent all generated data combined."""
+
+    params: AllParams = Field(description="all parameters")
+    persons: PersonList = Field(description="all persons")
 
 
 # ----------------------------------------------------------------------
