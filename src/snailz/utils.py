@@ -5,6 +5,9 @@ import io
 import sys
 
 
+# Floating point precision.
+PRECISION = 2
+
 # Maximum tries to generate a unique ID.
 UNIQUE_ID_LIMIT = 10_000
 

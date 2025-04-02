@@ -23,19 +23,6 @@ PARAMS_JSON = TMP_DIR / "params.json"
 DATA_JSON = TMP_DIR / "data.json"
 
 
-def task_data():
-    """Rebuild all data."""
-
-    return {
-        "actions": [
-            f"mkdir -p {TMP_DIR}",
-            f"snailz data --params {PARAMS_JSON} --output {DATA_JSON}",
-        ],
-        "verbosity": VERBOSITY,
-        "uptodate": [False],
-    }
-
-
 def task_build():
     """Build the Python package."""
 
@@ -57,6 +44,19 @@ def task_coverage():
         "actions": [
             "python -m coverage run -m pytest tests",
             "python -m coverage report --show-missing",
+        ],
+        "verbosity": VERBOSITY,
+        "uptodate": [False],
+    }
+
+
+def task_data():
+    """Rebuild all data."""
+
+    return {
+        "actions": [
+            f"mkdir -p {TMP_DIR}",
+            f"snailz data --params {PARAMS_JSON} --output {DATA_JSON} --csvdir {TMP_DIR}",
         ],
         "verbosity": VERBOSITY,
         "uptodate": [False],

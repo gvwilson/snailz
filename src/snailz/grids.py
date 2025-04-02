@@ -72,15 +72,15 @@ def _make_grid(params, ident):
 
     cells = [[0.0 for _ in range(params.size)] for _ in range(params.size)]
     center = params.size // 2
-    cells[center][center] = random.uniform(params.limit / 2, params.limit)
+    cells[center][center] = _make_value(params.limit)
 
     radial_groups = _make_radial_groups(params.size)
     for inv_dist in sorted(radial_groups.keys()):
         points = radial_groups[inv_dist]
         temp = []
-        for (x, y) in points:
-            temp.append((x, y, _make_value(cells, x, y, params.limit, inv_dist)))
-        for (x, y, val) in temp:
+        for x, y in points:
+            temp.append((x, y, _make_value(params.limit * inv_dist)))
+        for x, y, val in temp:
             cells[x][y] = val
 
     return Grid(ident=ident, size=params.size, cells=cells)
@@ -99,8 +99,7 @@ def _make_radial_groups(size):
     return groups
 
 
-def _make_value(cells, x, y, limit, inv_dist):
-    """Generate a single cell value."""
+def _make_value(upper):
+    """Make a rounded random value in [upper/2, upper]."""
 
-    cutoff = limit * inv_dist
-    return random.uniform(cutoff / 2, cutoff)
+    return round(random.uniform(upper / 2, upper), utils.PRECISION)

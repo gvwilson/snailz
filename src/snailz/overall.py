@@ -1,6 +1,5 @@
 """Represent snailz parameters."""
 
-
 from pydantic import BaseModel, Field
 
 from .grids import GridParams, GridList
