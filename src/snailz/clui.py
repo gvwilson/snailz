@@ -5,6 +5,7 @@ import random
 
 import click
 
+from .grids import grids_generate
 from .models import AllData, AllParams
 from .persons import persons_generate
 from .utils import display, fail, report
@@ -26,7 +27,7 @@ def cli(ctx, verbose):
     type=click.Path(exists=True),
     help="Path to parameters file",
 )
-@click.option("--output", type=click.Path(), help="Path to output directory")
+@click.option("--output", type=click.Path(), help="Path to output file")
 @click.pass_context
 def data(ctx, params, output):
     """Generate and save data using provided parameters."""
@@ -35,9 +36,11 @@ def data(ctx, params, output):
         with open(params, "r") as reader:
             parameters = AllParams.model_validate(json.load(reader))
             random.seed(parameters.seed)
+            grids = grids_generate(parameters.grid)
             persons = persons_generate(parameters.person)
             data = AllData(
                 params=parameters,
+                grids=grids,
                 persons=persons,
             )
             display(output, str(data))
@@ -48,7 +51,7 @@ def data(ctx, params, output):
 
 @cli.command()
 @click.option(
-    "--output", required=True, type=click.Path(), help="Path to output directory"
+    "--output", required=True, type=click.Path(), help="Path to output file"
 )
 @click.pass_context
 def params(ctx, output):

@@ -6,6 +6,49 @@ import io
 from faker import config as faker_config
 from pydantic import BaseModel, Field, field_validator
 
+# ----------------------------------------------------------------------
+
+class GridParams(BaseModel):
+    """Parameters for grid generation."""
+
+    number: int = Field(default=3, gt=0, description="Number of grids")
+    size: int = Field(default=15, gt=0, description="Grid size")
+
+    model_config = {"extra": "forbid"}
+
+
+class Grid(BaseModel):
+    """A single grid."""
+
+    ident: str = Field(description="grid identifier")
+    cells: list[list] = Field(description="grid cells")
+    size: int = Field(description="grid size")
+
+    model_config = {"extra": "forbid"}
+
+    def to_csv(self):
+        """Create a CSV representation of a single grid.
+
+        Returns:
+            A CSV-formatted string with grid cells.
+        """
+        output = io.StringIO()
+        for y in range(self.size - 1, -1, -1):
+            temp = [f"{self.cells[x][y]}" for x in range(size)]
+            print(",".join(temp), file=output)
+        return output.getvalue()
+
+
+class GridList(BaseModel):
+    """A set of generated grids."""
+
+    model_config = {"extra": "forbid"}
+
+    grids: list[Grid] = Field(description="all grids")
+
+
+# ----------------------------------------------------------------------
+
 
 class PersonParams(BaseModel):
     """Parameters for people generation."""
@@ -30,11 +73,15 @@ class Person(BaseModel):
     family: str = Field(description="family name")
     personal: str = Field(description="personal name")
 
+    model_config = {"extra": "forbid"}
+
 
 class PersonList(BaseModel):
     """A set of generated people."""
 
     persons: list[Person] = Field(description="all persons")
+
+    model_config = {"extra": "forbid"}
 
     def to_csv(self):
         """Create a CSV representation of the people data.
@@ -56,9 +103,14 @@ class AllParams(BaseModel):
     """Represent all parameters combined."""
 
     seed: int = Field(default=7493418, ge=0, description="RNG seed")
+    grid: GridParams = Field(
+        default=GridParams(), description="parameters for grid generation"
+    )
     person: PersonParams = Field(
         default=PersonParams(), description="parameters for people generation"
     )
+
+    model_config = {"extra": "forbid"}
 
 
 class AllData(BaseModel):
@@ -66,6 +118,9 @@ class AllData(BaseModel):
 
     params: AllParams = Field(description="all parameters")
     persons: PersonList = Field(description="all persons")
+    grids: GridList = Field(description="all grids")
+
+    model_config = {"extra": "forbid"}
 
 
 # ----------------------------------------------------------------------
