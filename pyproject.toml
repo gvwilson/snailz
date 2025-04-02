@@ -23,6 +23,7 @@ dev = [
   "doit",
   "griffe-fieldz",
   "markdown-include",
+  "mkdocs-click",
   "mkdocs-material",
   "mkdocstrings[python]",
   "pyfakefs",

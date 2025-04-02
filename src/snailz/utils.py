@@ -3,6 +3,7 @@
 import csv
 import io
 import sys
+from typing import Callable
 
 
 # Floating point precision.
@@ -15,7 +16,7 @@ UNIQUE_ID_LIMIT = 10_000
 class UniqueIdGenerator:
     """Generate unique IDs using provided function."""
 
-    def __init__(self, name, func, limit=UNIQUE_ID_LIMIT):
+    def __init__(self, name: str, func: Callable, limit: int = UNIQUE_ID_LIMIT) -> None:
         """Initialize.
 
         Parameters:
@@ -28,7 +29,7 @@ class UniqueIdGenerator:
         self._limit = limit
         self._seen = set()
 
-    def next(self, *args):
+    def next(self, *args: object) -> str:
         """Get next unique ID.
 
         Parameters:
@@ -49,29 +50,52 @@ class UniqueIdGenerator:
         raise RuntimeError(f"failed to find unique ID for {self._name}")
 
 
-def display(stream, text):
-    """Write to a file or to stdout."""
-    if not stream:
+def display(filepath: str | None, text: str) -> None:
+    """Write to a file or to stdout.
+
+    Parameters:
+        filepath: Output filepath or None for stdout
+        text: what to write
+    """
+    if not filepath:
         print(text)
     else:
-        with open(stream, "w") as writer:
+        with open(filepath, "w") as writer:
             writer.write(text)
 
 
-def fail(msg):
-    """Report failure and exit."""
+def fail(msg: str) -> None:
+    """Report failure and exit.
+
+    Parameters:
+        msg: Error message to display
+    """
     print(msg, file=sys.stderr)
     sys.exit(1)
 
 
-def report(verbose, msg):
-    """Report if verbosity turned on."""
+def report(verbose: bool, msg: str) -> None:
+    """Report if verbosity turned on.
+
+    Parameters:
+        verbose: Is display on or off?
+        msg: Message to display
+    """
     if verbose:
         print(msg)
 
 
-def to_csv(rows, fields, f_make_row):
-    """Generic converter from list of models to CSV string."""
+def to_csv(rows: list, fields: list, f_make_row: Callable) -> str:
+    """Generic converter from list of models to CSV string.
+
+    Parameters:
+        rows: List of rows to convert.
+        fields: List of names of columns.
+        f_make_row: Function that converts a row to text.
+
+    Returns:
+        CSV representation of data.
+    """
 
     output = io.StringIO()
     writer = csv.writer(output, lineterminator="\n")

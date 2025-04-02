@@ -42,7 +42,7 @@ class PersonList(BaseModel):
 
     model_config = {"extra": "forbid"}
 
-    def to_csv(self):
+    def to_csv(self) -> str:
         """Create a CSV representation of the people data.
 
         Returns:
@@ -55,8 +55,15 @@ class PersonList(BaseModel):
         )
 
 
-def persons_generate(parameters):
-    """Generate random persons."""
+def persons_generate(parameters: PersonParams) -> PersonList:
+    """Generate random persons.
+
+    Parameters:
+        parameters: Data generation parameters.
+
+    Returns:
+        Data model including all persons.
+    """
     fake = faker.Faker(parameters.locale)
     fake.seed_instance(random.randint(0, 1_000_000))
     gen = utils.UniqueIdGenerator("person", _person_id_generator)
@@ -76,8 +83,16 @@ def persons_generate(parameters):
     return PersonList(persons=persons)
 
 
-def _person_id_generator(family, personal):
-    """Generate unique ID for a person (CCNNNN)."""
+def _person_id_generator(family: str, personal: str) -> str:
+    """Generate unique ID for a person.
+
+    Parameters:
+        family: Person's family name.
+        personal: Person's personal name.
+
+    Returns:
+        Candidate identifier 'CCNNNN'.
+    """
     f = family[0].lower()
     p = personal[0].lower()
     num = random.randint(0, 9999)

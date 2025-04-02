@@ -29,7 +29,7 @@ class Grid(BaseModel):
 
     model_config = {"extra": "forbid"}
 
-    def to_csv(self):
+    def to_csv(self) -> str:
         """Create a CSV representation of a single grid.
 
         Returns:
@@ -50,8 +50,15 @@ class GridList(BaseModel):
     grids: list[Grid] = Field(description="all grids")
 
 
-def grids_generate(parameters):
-    """Generate random grids."""
+def grids_generate(parameters: GridParams) -> GridList:
+    """Generate random grids.
+
+    Parameters:
+        parameters: Data generation parameters.
+
+    Returns:
+        Data model including all grids.
+    """
 
     gen = utils.UniqueIdGenerator("grid", _grid_id_generator)
     grids = []
@@ -60,15 +67,27 @@ def grids_generate(parameters):
     return GridList(grids=grids)
 
 
-def _grid_id_generator():
-    """Generate unique ID for a grid (CNNN)."""
+def _grid_id_generator() -> str:
+    """Generate unique ID for a grid.
+
+    Returns:
+        Candidate ID 'gNNN'.
+    """
 
     num = random.randint(0, 999)
     return f"G{num:03d}"
 
 
-def _make_grid(params, ident):
-    """Create a grid of specified size and fill with random values."""
+def _make_grid(params: GridParams, ident: str) -> Grid:
+    """Create a grid of specified size and fill with random values.
+
+    Parameters:
+        params: Data generation parameters.
+        ident: Unique ID for this grid
+
+    Returns:
+        A single grid.
+    """
 
     cells = [[0.0 for _ in range(params.size)] for _ in range(params.size)]
     center = params.size // 2
@@ -86,8 +105,15 @@ def _make_grid(params, ident):
     return Grid(ident=ident, size=params.size, cells=cells)
 
 
-def _make_radial_groups(size):
-    """Group points by distance from center."""
+def _make_radial_groups(size: int) -> dict:
+    """Group points by distance from center.
+
+    Parameters:
+        size: Grid size.
+
+    Returns:
+        Dictionary of inverse distance to set of points.
+    """
     groups = defaultdict(set)
     center = size // 2
     for x in range(size):
@@ -99,7 +125,14 @@ def _make_radial_groups(size):
     return groups
 
 
-def _make_value(upper):
-    """Make a rounded random value in [upper/2, upper]."""
+def _make_value(upper: float) -> float:
+    """Make a rounded random value in [upper/2, upper].
+
+    Parameters:
+        upper: Largest allowed value.
+
+    Returns:
+        Rounded random value.
+    """
 
     return round(random.uniform(upper / 2, upper), utils.PRECISION)
