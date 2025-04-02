@@ -972,7 +972,7 @@
         <span class="k">return</span> <span class="n">utils</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">persons</span><span class="p">,</span>
             <span class="p">[</span><span class="s2">&quot;ident&quot;</span><span class="p">,</span> <span class="s2">&quot;personal&quot;</span><span class="p">,</span> <span class="s2">&quot;family&quot;</span><span class="p">],</span>
-            <span class="k">lambda</span> <span class="n">person</span><span class="p">:</span> <span class="p">[</span><span class="n">person</span><span class="o">.</span><span class="n">ident</span><span class="p">,</span> <span class="n">person</span><span class="o">.</span><span class="n">personal</span><span class="p">,</span> <span class="n">person</span><span class="o">.</span><span class="n">family</span><span class="p">],</span>
+            <span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">ident</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">personal</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">family</span><span class="p">],</span>
         <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -1047,7 +1047,7 @@
     <span class="k">return</span> <span class="n">utils</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">persons</span><span class="p">,</span>
         <span class="p">[</span><span class="s2">&quot;ident&quot;</span><span class="p">,</span> <span class="s2">&quot;personal&quot;</span><span class="p">,</span> <span class="s2">&quot;family&quot;</span><span class="p">],</span>
-        <span class="k">lambda</span> <span class="n">person</span><span class="p">:</span> <span class="p">[</span><span class="n">person</span><span class="o">.</span><span class="n">ident</span><span class="p">,</span> <span class="n">person</span><span class="o">.</span><span class="n">personal</span><span class="p">,</span> <span class="n">person</span><span class="o">.</span><span class="n">family</span><span class="p">],</span>
+        <span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">ident</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">personal</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">family</span><span class="p">],</span>
     <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -1068,7 +1068,7 @@
 
 
 <h2 id="snailz.persons.persons_generate" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">persons_generate</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">persons_generate</span><span class="p">(</span><span class="n">params</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1091,7 +1091,7 @@
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>parameters</code>
+                <code>params</code>
             </td>
             <td>
                   <code><a class="autorefs autorefs-internal" title="PersonParams (snailz.persons.PersonParams)" href="#snailz.persons.PersonParams">PersonParams</a></code>
@@ -1159,20 +1159,20 @@
 <span class="normal">80</span>
 <span class="normal">81</span>
 <span class="normal">82</span>
-<span class="normal">83</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">persons_generate</span><span class="p">(</span><span class="n">parameters</span><span class="p">:</span> <span class="n">PersonParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PersonList</span><span class="p">:</span>
+<span class="normal">83</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">persons_generate</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">PersonParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PersonList</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate random persons.</span>
 
 <span class="sd">    Parameters:</span>
-<span class="sd">        parameters: Data generation parameters.</span>
+<span class="sd">        params: Data generation parameters.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Data model including all persons.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">fake</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">Faker</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">locale</span><span class="p">)</span>
+    <span class="n">fake</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">Faker</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">locale</span><span class="p">)</span>
     <span class="n">fake</span><span class="o">.</span><span class="n">seed_instance</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1_000_000</span><span class="p">))</span>
     <span class="n">gen</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">UniqueIdGenerator</span><span class="p">(</span><span class="s2">&quot;person&quot;</span><span class="p">,</span> <span class="n">_person_id_generator</span><span class="p">)</span>
     <span class="n">persons</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">number</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">number</span><span class="p">):</span>
         <span class="n">f</span> <span class="o">=</span> <span class="n">fake</span><span class="o">.</span><span class="n">last_name</span><span class="p">()</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">fake</span><span class="o">.</span><span class="n">first_name</span><span class="p">()</span>
         <span class="n">i</span> <span class="o">=</span> <span class="n">gen</span><span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>

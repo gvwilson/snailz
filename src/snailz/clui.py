@@ -1,14 +1,17 @@
 """Command-line interface for snailz."""
 
+from datetime import date
 import json
 from pathlib import Path
 import random
 
 import click
+from pydantic import BaseModel
 
 from .grids import grids_generate
 from .overall import AllData, AllParams
 from .persons import persons_generate
+from .specimens import specimens_generate
 from .utils import display, fail, report
 
 
@@ -40,10 +43,12 @@ def data(ctx, csvdir, params, output):
             random.seed(parameters.seed)
             grids = grids_generate(parameters.grid)
             persons = persons_generate(parameters.person)
+            specimens = specimens_generate(parameters.specimen, "G000", 5)  # FIXME
             data = AllData(
                 params=parameters,
                 grids=grids,
                 persons=persons,
+                specimens=specimens,
             )
             display(output, str(data))
             report(verbose, f"wrote data file {output}")
@@ -61,7 +66,7 @@ def params(ctx, output):
     """Generate parameters and save to the specified output directory."""
     verbose = ctx.obj["verbose"]
     params = AllParams()
-    as_json = json.dumps(params.model_dump(), indent=4)
+    as_json = json.dumps(params.model_dump(), indent=4, default=_serialize_json)
     try:
         with open(output, "w") as writer:
             writer.write(as_json)
@@ -83,6 +88,25 @@ def _create_csv(csv_dir, data):
     for grid in data.grids.grids:
         with open(grids_dir / f"{grid.ident}.csv", "w") as writer:
             writer.write(grid.to_csv())
+
+
+def _serialize_json(obj: object) -> str | dict:
+    """Custom JSON serializer for JSON conversion.
+
+    Parameters:
+        obj: The object to serialize
+
+    Returns:
+        String representation of date objects or dict for Pydantic models
+
+    Raises:
+        TypeError: If the object type is not supported for serialization
+    """
+    if isinstance(obj, date):
+        return obj.isoformat()
+    if isinstance(obj, BaseModel):
+        return obj.model_dump()
+    raise TypeError(f"Type {type(obj)} not serializable")
 
 
 if __name__ == "__main__":

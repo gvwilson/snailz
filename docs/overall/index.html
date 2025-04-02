@@ -563,6 +563,22 @@
                   <code>PersonParams(locale=&#39;et_EE&#39;, number=5)</code>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>specimen</code>
+            </td>
+            <td>
+                  <code><span title="snailz.specimens.SpecimenParams">SpecimenParams</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>parameters for specimen generation</p>
+              </div>
+            </td>
+            <td>
+                  <code>SpecimenParams(length=20, max_mass=10.0, num_mutations=5, start_date=datetime.date(2024, 3, 1), end_date=datetime.date(2024, 4, 30))</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -574,8 +590,7 @@
 
               <details class="quote">
                 <summary>Source code in <code>src/snailz/overall.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 9</span>
-<span class="normal">10</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">10</span>
 <span class="normal">11</span>
 <span class="normal">12</span>
 <span class="normal">13</span>
@@ -585,7 +600,11 @@
 <span class="normal">17</span>
 <span class="normal">18</span>
 <span class="normal">19</span>
-<span class="normal">20</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllParams</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllParams</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represent all parameters combined.&quot;&quot;&quot;</span>
 
     <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">7493418</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;RNG seed&quot;</span><span class="p">)</span>
@@ -594,6 +613,9 @@
     <span class="p">)</span>
     <span class="n">person</span><span class="p">:</span> <span class="n">PersonParams</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="n">PersonParams</span><span class="p">(),</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;parameters for people generation&quot;</span>
+    <span class="p">)</span>
+    <span class="n">specimen</span><span class="p">:</span> <span class="n">SpecimenParams</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">SpecimenParams</span><span class="p">(),</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;parameters for specimen generation&quot;</span>
     <span class="p">)</span>
 
     <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="s2">&quot;forbid&quot;</span><span class="p">}</span>
@@ -698,6 +720,22 @@
                 <em>required</em>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>specimens</code>
+            </td>
+            <td>
+                  <code><span title="snailz.specimens.SpecimenList">SpecimenList</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>all specimens</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -709,19 +747,21 @@
 
               <details class="quote">
                 <summary>Source code in <code>src/snailz/overall.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">27</span>
 <span class="normal">28</span>
 <span class="normal">29</span>
-<span class="normal">30</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllData</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllData</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represent all generated data combined.&quot;&quot;&quot;</span>
 
     <span class="n">params</span><span class="p">:</span> <span class="n">AllParams</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;all parameters&quot;</span><span class="p">)</span>
     <span class="n">persons</span><span class="p">:</span> <span class="n">PersonList</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;all persons&quot;</span><span class="p">)</span>
     <span class="n">grids</span><span class="p">:</span> <span class="n">GridList</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;all grids&quot;</span><span class="p">)</span>
+    <span class="n">specimens</span><span class="p">:</span> <span class="n">SpecimenList</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;all specimens&quot;</span><span class="p">)</span>
 
     <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="s2">&quot;forbid&quot;</span><span class="p">}</span>
 </code></pre></div></td></tr></table></div>

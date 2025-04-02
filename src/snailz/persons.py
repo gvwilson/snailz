@@ -51,24 +51,24 @@ class PersonList(BaseModel):
         return utils.to_csv(
             self.persons,
             ["ident", "personal", "family"],
-            lambda person: [person.ident, person.personal, person.family],
+            lambda p: [p.ident, p.personal, p.family],
         )
 
 
-def persons_generate(parameters: PersonParams) -> PersonList:
+def persons_generate(params: PersonParams) -> PersonList:
     """Generate random persons.
 
     Parameters:
-        parameters: Data generation parameters.
+        params: Data generation parameters.
 
     Returns:
         Data model including all persons.
     """
-    fake = faker.Faker(parameters.locale)
+    fake = faker.Faker(params.locale)
     fake.seed_instance(random.randint(0, 1_000_000))
     gen = utils.UniqueIdGenerator("person", _person_id_generator)
     persons = []
-    for _ in range(parameters.number):
+    for _ in range(params.number):
         f = fake.last_name()
         p = fake.first_name()
         i = gen.next(f, p)

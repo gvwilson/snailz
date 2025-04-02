@@ -1063,7 +1063,7 @@
 
 
 <h2 id="snailz.grids.grids_generate" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">grids_generate</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">grids_generate</span><span class="p">(</span><span class="n">params</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1086,7 +1086,7 @@
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>parameters</code>
+                <code>params</code>
             </td>
             <td>
                   <code><a class="autorefs autorefs-internal" title="GridParams (snailz.grids.GridParams)" href="#snailz.grids.GridParams">GridParams</a></code>
@@ -1143,11 +1143,11 @@
 <span class="normal">64</span>
 <span class="normal">65</span>
 <span class="normal">66</span>
-<span class="normal">67</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">grids_generate</span><span class="p">(</span><span class="n">parameters</span><span class="p">:</span> <span class="n">GridParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GridList</span><span class="p">:</span>
+<span class="normal">67</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">grids_generate</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">GridParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GridList</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate random grids.</span>
 
 <span class="sd">    Parameters:</span>
-<span class="sd">        parameters: Data generation parameters.</span>
+<span class="sd">        params: Data generation parameters.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Data model including all grids.</span>
@@ -1155,8 +1155,8 @@
 
     <span class="n">gen</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">UniqueIdGenerator</span><span class="p">(</span><span class="s2">&quot;grid&quot;</span><span class="p">,</span> <span class="n">_grid_id_generator</span><span class="p">)</span>
     <span class="n">grids</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">number</span><span class="p">):</span>
-        <span class="n">grids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_make_grid</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">gen</span><span class="o">.</span><span class="n">next</span><span class="p">()))</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">number</span><span class="p">):</span>
+        <span class="n">grids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_make_grid</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">gen</span><span class="o">.</span><span class="n">next</span><span class="p">()))</span>
     <span class="k">return</span> <span class="n">GridList</span><span class="p">(</span><span class="n">grids</span><span class="o">=</span><span class="n">grids</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>

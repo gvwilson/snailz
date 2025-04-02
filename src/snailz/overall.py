@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 
 from .grids import GridParams, GridList
 from .persons import PersonParams, PersonList
+from .specimens import SpecimenParams, SpecimenList
 
 
 class AllParams(BaseModel):
@@ -16,6 +17,9 @@ class AllParams(BaseModel):
     person: PersonParams = Field(
         default=PersonParams(), description="parameters for people generation"
     )
+    specimen: SpecimenParams = Field(
+        default=SpecimenParams(), description="parameters for specimen generation"
+    )
 
     model_config = {"extra": "forbid"}
 
@@ -26,5 +30,6 @@ class AllData(BaseModel):
     params: AllParams = Field(description="all parameters")
     persons: PersonList = Field(description="all persons")
     grids: GridList = Field(description="all grids")
+    specimens: SpecimenList = Field(description="all specimens")
 
     model_config = {"extra": "forbid"}

@@ -50,11 +50,11 @@ class GridList(BaseModel):
     grids: list[Grid] = Field(description="all grids")
 
 
-def grids_generate(parameters: GridParams) -> GridList:
+def grids_generate(params: GridParams) -> GridList:
     """Generate random grids.
 
     Parameters:
-        parameters: Data generation parameters.
+        params: Data generation parameters.
 
     Returns:
         Data model including all grids.
@@ -62,8 +62,8 @@ def grids_generate(parameters: GridParams) -> GridList:
 
     gen = utils.UniqueIdGenerator("grid", _grid_id_generator)
     grids = []
-    for _ in range(parameters.number):
-        grids.append(_make_grid(parameters, gen.next()))
+    for _ in range(params.number):
+        grids.append(_make_grid(params, gen.next()))
     return GridList(grids=grids)
 
 
