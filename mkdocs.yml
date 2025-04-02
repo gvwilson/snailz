@@ -1,0 +1,24 @@
+site_name: "Snailz Docs"
+docs_dir: pages
+site_dir: docs
+
+plugins:
+- mkdocstrings:
+    handlers:
+      python:
+        options:
+          extensions:
+          - griffe_fieldz
+          members_order: source
+          filters: []
+
+theme:
+  name: "material"
+
+markdown_extensions:
+- markdown_include.include:
+    base_path: docs
+- footnotes
+
+exclude_docs: >
+  *~

@@ -1,0 +1,21 @@
+# Python files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+.coverage
+
+# Virtual environments
+.venv
+
+# Database files
+*.db
+
+# Temporary files
+tmp/
+
+# Editor backup files
+*~
+*.bkp
