@@ -64,10 +64,10 @@ def display(filepath: str | None, data: BaseModel | str) -> None:
         filepath: Output filepath or None for stdout
         text: what to write
     """
-    if isinstance(data, BaseModel):
-        text = json.dumps(data.model_dump(), indent=2, default=_serialize_json)
-    else:
+    if isinstance(data, str):
         text = data
+    else:
+        text = json.dumps(data, indent=2, default=_serialize_json)
 
     if not filepath:
         print(text)
