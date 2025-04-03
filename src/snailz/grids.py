@@ -10,12 +10,19 @@ from pydantic import BaseModel, Field
 from . import utils
 
 
+class Point(BaseModel):
+    """A 2D point with x and y coordinates."""
+
+    x: int = Field(ge=0, description="x coordinate")
+    y: int = Field(ge=0, description="y coordinate")
+
+
 class GridParams(BaseModel):
     """Parameters for grid generation."""
 
     limit: float = Field(default=10.0, gt=0.0, description="Maximum pollution level")
     number: int = Field(default=3, gt=0, description="Number of grids")
-    size: int = Field(default=15, gt=0, description="Grid size")
+    size: int = Field(default=utils.DEFAULT_GRID_SIZE, gt=0, description="Grid size")
 
     model_config = {"extra": "forbid"}
 

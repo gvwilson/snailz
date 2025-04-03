@@ -1,9 +1,13 @@
 """Snailz utilities."""
 
 import csv
+from datetime import date
 import io
+import json
 import sys
 from typing import Callable
+
+from pydantic import BaseModel, Field
 
 
 # Floating point precision.
@@ -11,6 +15,9 @@ PRECISION = 2
 
 # Maximum tries to generate a unique ID.
 UNIQUE_ID_LIMIT = 10_000
+
+# Default grid size.
+DEFAULT_GRID_SIZE = 15
 
 
 class UniqueIdGenerator:
@@ -50,13 +57,18 @@ class UniqueIdGenerator:
         raise RuntimeError(f"failed to find unique ID for {self._name}")
 
 
-def display(filepath: str | None, text: str) -> None:
+def display(filepath: str | None, data: BaseModel | str) -> None:
     """Write to a file or to stdout.
 
     Parameters:
         filepath: Output filepath or None for stdout
         text: what to write
     """
+    if isinstance(data, BaseModel):
+        text = json.dumps(data.model_dump(), indent=2, default=_serialize_json)
+    else:
+        text = data
+
     if not filepath:
         print(text)
     else:
@@ -103,3 +115,22 @@ def to_csv(rows: list, fields: list, f_make_row: Callable) -> str:
     for r in rows:
         writer.writerow(f_make_row(r))
     return output.getvalue()
+
+
+def _serialize_json(obj: object) -> str | dict:
+    """Custom JSON serializer for JSON conversion.
+
+    Parameters:
+        obj: The object to serialize
+
+    Returns:
+        String representation of date objects or dict for Pydantic models
+
+    Raises:
+        TypeError: If the object type is not supported for serialization
+    """
+    if isinstance(obj, date):
+        return obj.isoformat()
+    if isinstance(obj, BaseModel):
+        return obj.model_dump()
+    raise TypeError(f"Type {type(obj)} not serializable")

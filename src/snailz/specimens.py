@@ -8,6 +8,7 @@ import string
 from pydantic import BaseModel, Field, model_validator
 
 from . import utils
+from .grids import Point
 
 
 # Bases.
@@ -27,6 +28,11 @@ class SpecimenParams(BaseModel):
         default=5,
         ge=0,
         description="Number of mutations in specimens (must be between 0 and length)",
+    )
+    spacing: float = Field(
+        default=utils.DEFAULT_GRID_SIZE / 4.0,
+        ge=0,
+        description="Inter-specimen spacing",
     )
     start_date: date = Field(
         default=date.fromisoformat("2024-03-01"),
@@ -53,7 +59,8 @@ class Specimen(BaseModel):
     ident: str = Field(description="unique identifier")
     collected: date = Field(description="date when specimen was collected")
     genome: str = Field(description="bases in genome")
-    mass: float = Field(gt=0, description="snail mass in grams")
+    location: Point = Field(description="where specimen was collected")
+    mass: float = Field(gt=0, description="specimen mass in grams")
 
 
 class SpecimenList(BaseModel):
@@ -73,16 +80,15 @@ class SpecimenList(BaseModel):
         """
         return utils.to_csv(
             self.specimens,
-            ["ident", "genome", "mass"],
-            lambda s: [s.ident, s.genome, s.mass],
+            ["ident", "genome", "x", "y", "mass"],
+            lambda s: [s.ident, s.genome, s.location.x, s.location.y, s.mass],
         )
 
 
-def specimens_generate(
-    params: SpecimenParams, grid_id: str, number: int
-) -> SpecimenList:
+def specimens_generate(params: SpecimenParams, grid_id: str, grid_size: int) -> SpecimenList:
     """Generate a set of specimens."""
 
+    positions = _place_specimens(grid_size, params.spacing)
     reference = _make_reference_genome(params)
     loci = _make_loci(params)
     susc_locus = random.choices(loci, k=1)[0]
@@ -94,7 +100,8 @@ def specimens_generate(
         susc_base=susc_base,
         susc_locus=susc_locus,
         specimens=[
-            _make_specimen(params, reference, loci, gen, grid_id) for i in range(number)
+            _make_specimen(params, reference, loci, gen, positions[i], grid_id)
+            for i in range(len(positions))
         ],
     )
 
@@ -108,7 +115,7 @@ def _make_loci(params: SpecimenParams) -> list[int]:
     Returns:
         A list of unique randomly selected positions that can be mutated
     """
-    return random.sample(list(range(params.length)), params.num_mutations)
+    return list(sorted(random.sample(list(range(params.length)), params.num_mutations)))
 
 
 def _make_reference_genome(params: SpecimenParams) -> str:
@@ -128,6 +135,7 @@ def _make_specimen(
     reference: str,
     loci: list,
     gen: utils.UniqueIdGenerator,
+    location: Point,
     grid_id: str,
 ) -> Specimen:
     """Make a single specimen."""
@@ -146,6 +154,7 @@ def _make_specimen(
         ident=gen.next(grid_id),
         collected=collected,
         genome=genome,
+        location=location,
         mass=random.uniform(params.max_mass / 4.0, params.max_mass)
     )
 
@@ -154,7 +163,7 @@ def _calculate_span(size: int, coord: int, span: int) -> range:
     return range(max(0, coord - span), 1 + min(size, coord + span))
 
 
-def _place_specimens(size: int, spacing: float) -> list:
+def _place_specimens(size: int, spacing: float) -> list[Point]:
     """Generate locations for specimens.
 
     - Initialize a set of all possible (x, y) points.
@@ -172,7 +181,7 @@ def _place_specimens(size: int, spacing: float) -> list:
         for x in _calculate_span(size, loc[0], span):
             for y in _calculate_span(size, loc[1], span):
                 available.discard((x, y))
-    return result
+    return [Point(x=r[0], y=r[1]) for r in result]
 
 
 def _specimen_id_generator(grid_id: str) -> str:
