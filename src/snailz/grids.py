@@ -116,7 +116,7 @@ def _make_grid(
 
     Parameters:
         params: Data generation parameters.
-        ident: Unique ID for this grid
+        ident_gen: Unique ID generator for this grid
 
     Returns:
         A single grid.

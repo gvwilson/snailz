@@ -62,7 +62,7 @@ def display(filepath: str | None, data: BaseModel | str) -> None:
 
     Parameters:
         filepath: Output filepath or None for stdout
-        text: what to write
+        data: what to write
     """
     if isinstance(data, str):
         text = data

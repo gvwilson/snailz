@@ -1,6 +1,5 @@
 """Test person generation."""
 
-from pathlib import Path
 import pytest
 
 from snailz.persons import PersonParams, Person, PersonList, persons_generate
@@ -24,9 +23,5 @@ def test_convert_persons_to_csv():
         ]
     )
     result = fixture.to_csv()
-    expected = "\n".join([
-        "ident,personal,family",
-        "abc,A,BC",
-        "def,D,EF"
-    ]) + "\n"
+    expected = "\n".join(["ident,personal,family", "abc,A,BC", "def,D,EF"]) + "\n"
     assert result == expected

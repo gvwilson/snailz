@@ -33,11 +33,11 @@ def test_display_to_file(fs):
     display(json_path, DummyModel(top=1, middle=date(1970, 1, 1), bottom="two"))
     assert json_path.exists()
     expected = [
-        '{',
+        "{",
         '  "top": 1,',
         '  "middle": "1970-01-01",',
         '  "bottom": "two"',
-        '}'
+        "}",
     ]
     assert json_path.read_text() == "\n".join(expected)
 
@@ -85,7 +85,9 @@ def test_report_with_verbosity_on(capsys):
 def test_to_csv_generic_conversion():
     rows = [[1, 2], [3, 4]]
     fields = ["left", "right"]
+
     def func(r):
         return r
+
     result = to_csv(rows, fields, func)
     assert result == "left,right\n1,2\n3,4\n"

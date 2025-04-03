@@ -66,8 +66,8 @@ class SpecimenList(BaseModel):
         """
         return utils.to_csv(
             self.specimens,
-            ["ident", "genome", "x", "y", "mass"],
-            lambda s: [s.ident, s.genome, s.location.x, s.location.y, s.mass],
+            ["ident", "grid", "collected", "genome", "x", "y", "mass"],
+            lambda s: [s.ident, s.grid_id, s.collected.isoformat(), s.genome, s.location.x, s.location.y, s.mass],
         )
 
 
