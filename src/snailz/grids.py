@@ -1,6 +1,7 @@
 """Generate random grids."""
 
 from collections import defaultdict
+from datetime import date, timedelta
 import io
 import math
 import random
@@ -23,6 +24,13 @@ class GridParams(BaseModel):
     limit: float = Field(default=10.0, gt=0.0, description="Maximum pollution level")
     number: int = Field(default=3, gt=0, description="Number of grids")
     size: int = Field(default=utils.DEFAULT_GRID_SIZE, gt=0, description="Grid size")
+    start_date: date = Field(
+        default=date.fromisoformat("2024-03-01"),
+        description="Start date for specimen collection",
+    )
+    max_interval: int = Field(
+        gt=0, default=7, description="Maximum interval between samples"
+    )
 
     model_config = {"extra": "forbid"}
 
@@ -31,8 +39,16 @@ class Grid(BaseModel):
     """A single grid."""
 
     ident: str = Field(description="grid identifier")
-    cells: list[list] = Field(description="grid cells")
     size: int = Field(description="grid size")
+    start_date: date = Field(
+        default=date.fromisoformat("2024-03-01"),
+        description="Start date for specimen collection",
+    )
+    end_date: date = Field(
+        default=date.fromisoformat("2024-04-30"),
+        description="End date for specimen collection",
+    )
+    cells: list[list] = Field(description="grid cells")
 
     model_config = {"extra": "forbid"}
 
@@ -52,9 +68,9 @@ class Grid(BaseModel):
 class GridList(BaseModel):
     """A set of generated grids."""
 
-    model_config = {"extra": "forbid"}
-
     grids: list[Grid] = Field(description="all grids")
+
+    model_config = {"extra": "forbid"}
 
 
 def grids_generate(params: GridParams) -> GridList:
@@ -68,9 +84,14 @@ def grids_generate(params: GridParams) -> GridList:
     """
 
     gen = utils.UniqueIdGenerator("grid", _grid_id_generator)
+    current_date = params.start_date
     grids = []
     for _ in range(params.number):
-        grids.append(_make_grid(params, gen.next()))
+        next_date = current_date + timedelta(
+            days=random.randint(1, params.max_interval)
+        )
+        grids.append(_make_grid(params, gen, current_date, next_date))
+        current_date = next_date + timedelta(days=1)
     return GridList(grids=grids)
 
 
@@ -85,7 +106,12 @@ def _grid_id_generator() -> str:
     return f"G{num:03d}"
 
 
-def _make_grid(params: GridParams, ident: str) -> Grid:
+def _make_grid(
+    params: GridParams,
+    ident_gen: utils.UniqueIdGenerator,
+    start_date: date,
+    end_date: date,
+) -> Grid:
     """Create a grid of specified size and fill with random values.
 
     Parameters:
@@ -96,6 +122,18 @@ def _make_grid(params: GridParams, ident: str) -> Grid:
         A single grid.
     """
 
+    cells = _make_cells(params)
+    return Grid(
+        ident=ident_gen.next(),
+        size=params.size,
+        cells=cells,
+        start_date=start_date,
+        end_date=end_date,
+    )
+
+
+def _make_cells(params: GridParams) -> list[list[float]]:
+    """Make grid of random values."""
     cells = [[0.0 for _ in range(params.size)] for _ in range(params.size)]
     center = params.size // 2
     cells[center][center] = _make_value(params.limit)
@@ -109,7 +147,7 @@ def _make_grid(params: GridParams, ident: str) -> Grid:
         for x, y, val in temp:
             cells[x][y] = val
 
-    return Grid(ident=ident, size=params.size, cells=cells)
+    return cells
 
 
 def _make_radial_groups(size: int) -> dict:

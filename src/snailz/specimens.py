@@ -5,10 +5,10 @@ import math
 import random
 import string
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field
 
 from . import utils
-from .grids import Point
+from .grids import Point, Grid, GridList
 
 
 # Bases.
@@ -34,29 +34,15 @@ class SpecimenParams(BaseModel):
         ge=0,
         description="Inter-specimen spacing",
     )
-    start_date: date = Field(
-        default=date.fromisoformat("2024-03-01"),
-        description="Start date for specimen collection",
-    )
-    end_date: date = Field(
-        default=date.fromisoformat("2024-04-30"),
-        description="End date for specimen collection",
-    )
 
     model_config = {"extra": "forbid"}
-
-    @model_validator(mode="after")
-    def validate_fields(self):
-        """Validate requirements on fields."""
-        if self.end_date < self.start_date:
-            raise ValueError("end_date must be greater than or equal to start_date")
-        return self
 
 
 class Specimen(BaseModel):
     """A single specimen."""
 
     ident: str = Field(description="unique identifier")
+    grid_id: str = Field(description="grid identifier")
     collected: date = Field(description="date when specimen was collected")
     genome: str = Field(description="bases in genome")
     location: Point = Field(description="where specimen was collected")
@@ -85,24 +71,26 @@ class SpecimenList(BaseModel):
         )
 
 
-def specimens_generate(params: SpecimenParams, grid_id: str, grid_size: int) -> SpecimenList:
+def specimens_generate(params: SpecimenParams, grids: GridList) -> SpecimenList:
     """Generate a set of specimens."""
 
-    positions = _place_specimens(grid_size, params.spacing)
     reference = _make_reference_genome(params)
     loci = _make_loci(params)
     susc_locus = random.choices(loci, k=1)[0]
     susc_base = reference[susc_locus]
     gen = utils.UniqueIdGenerator("specimen", _specimen_id_generator)
+
+    specimens = []
+    for grid in grids.grids:
+        positions = _place_specimens(grid.size, params.spacing)
+        for pos in positions:
+            specimens.append(_make_specimen(params, grid, reference, loci, gen, pos))
     return SpecimenList(
         loci=loci,
         reference=reference,
         susc_base=susc_base,
         susc_locus=susc_locus,
-        specimens=[
-            _make_specimen(params, reference, loci, gen, positions[i], grid_id)
-            for i in range(len(positions))
-        ],
+        specimens=specimens,
     )
 
 
@@ -132,30 +120,31 @@ def _make_reference_genome(params: SpecimenParams) -> str:
 
 def _make_specimen(
     params: SpecimenParams,
+    grid: Grid,
     reference: str,
     loci: list,
     gen: utils.UniqueIdGenerator,
     location: Point,
-    grid_id: str,
 ) -> Specimen:
     """Make a single specimen."""
     genome = list(reference)
     num_mutations = random.randint(1, len(loci))
+    collected = date.fromordinal(
+        random.randint(grid.start_date.toordinal(), grid.end_date.toordinal())
+    )
+
     for loc in random.sample(range(len(loci)), num_mutations):
         candidates = list(sorted(set(BASES) - set(reference[loc])))
         genome[loc] = candidates[random.randrange(len(candidates))]
     genome = "".join(genome)
 
-    start_ord = params.start_date.toordinal()
-    end_ord = params.end_date.toordinal()
-    collected = date.fromordinal(random.randint(start_ord, end_ord))
-
     return Specimen(
-        ident=gen.next(grid_id),
+        ident=gen.next(),
+        grid_id=grid.ident,
         collected=collected,
         genome=genome,
         location=location,
-        mass=random.uniform(params.max_mass / 4.0, params.max_mass)
+        mass=random.uniform(params.max_mass / 4.0, params.max_mass),
     )
 
 
@@ -184,5 +173,5 @@ def _place_specimens(size: int, spacing: float) -> list[Point]:
     return [Point(x=r[0], y=r[1]) for r in result]
 
 
-def _specimen_id_generator(grid_id: str) -> str:
-    return f"{grid_id}-{''.join(random.choices(string.ascii_uppercase, k=6))}"
+def _specimen_id_generator() -> str:
+    return "".join(random.choices(string.ascii_uppercase, k=6))

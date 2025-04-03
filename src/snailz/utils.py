@@ -7,7 +7,7 @@ import json
 import sys
 from typing import Callable
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 # Floating point precision.

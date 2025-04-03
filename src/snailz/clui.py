@@ -1,12 +1,10 @@
 """Command-line interface for snailz."""
 
-from datetime import date
 import json
 from pathlib import Path
 import random
 
 import click
-from pydantic import BaseModel
 
 from .grids import grids_generate
 from .overall import AllData, AllParams
@@ -43,7 +41,7 @@ def data(ctx, csvdir, params, output):
             random.seed(parameters.seed)
             grids = grids_generate(parameters.grid)
             persons = persons_generate(parameters.person)
-            specimens = specimens_generate(parameters.specimen, "G000", parameters.grid.size)
+            specimens = specimens_generate(parameters.specimen, grids)
             data = AllData(
                 params=parameters,
                 grids=grids,
