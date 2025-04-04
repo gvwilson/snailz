@@ -43,9 +43,9 @@ class Specimen(BaseModel):
 
     ident: str = Field(description="unique identifier")
     grid_id: str = Field(description="grid identifier")
+    location: Point = Field(description="where specimen was collected")
     collected: date = Field(description="date when specimen was collected")
     genome: str = Field(description="bases in genome")
-    location: Point = Field(description="where specimen was collected")
     mass: float = Field(gt=0, description="specimen mass in grams")
 
 

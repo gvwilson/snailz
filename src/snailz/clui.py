@@ -6,6 +6,7 @@ import random
 
 import click
 
+from .database import database_generate
 from .grids import grids_generate
 from .overall import AllData, AllParams
 from .persons import persons_generate
@@ -51,7 +52,13 @@ def data(ctx, csvdir, params, output):
             display(output, data)
             report(verbose, f"wrote data file {output}")
             if csvdir is not None:
-                _create_csv(Path(csvdir), data)
+                csv_dir_path = Path(csvdir)
+                _create_csv(csv_dir_path, data)
+                database_generate(
+                    csv_dir_path / "people.csv",
+                    csv_dir_path / "specimens.csv",
+                    csv_dir_path / "snailz.db",
+                )
                 report(verbose, f"wrote CSV to {output}")
     except OSError as exc:
         fail(str(exc))
