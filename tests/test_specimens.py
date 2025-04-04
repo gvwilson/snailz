@@ -7,7 +7,7 @@ from snailz.specimens import SpecimenParams, SpecimenList, Specimen, specimens_g
 
 
 def test_generate_specimens_correct_length():
-    size = 3
+    size = 1
     num = 5
     temp = [
         Grid(
@@ -54,9 +54,9 @@ def test_convert_specimens_to_csv():
     expected = (
         "\n".join(
             [
-                "ident,grid,collected,genome,x,y,mass",
-                "S01,G01,2023-07-05,ACGT,1,1,0.1",
-                "S03,G03,2024-07-05,TGCA,3,3,0.3",
+                "ident,grid,x,y,collected,genome,mass",
+                "S01,G01,1,1,2023-07-05,ACGT,0.1",
+                "S03,G03,3,3,2024-07-05,TGCA,0.3",
             ]
         )
         + "\n"
