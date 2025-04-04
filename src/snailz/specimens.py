@@ -67,7 +67,15 @@ class SpecimenList(BaseModel):
         return utils.to_csv(
             self.specimens,
             ["ident", "grid", "x", "y", "collected", "genome", "mass"],
-            lambda s: [s.ident, s.grid_id, s.location.x, s.location.y, s.collected.isoformat(), s.genome, s.mass],
+            lambda s: [
+                s.ident,
+                s.grid_id,
+                s.location.x,
+                s.location.y,
+                s.collected.isoformat(),
+                s.genome,
+                s.mass,
+            ],
         )
 
 
@@ -144,7 +152,7 @@ def _make_specimen(
         collected=collected,
         genome=genome,
         location=location,
-        mass=random.uniform(params.max_mass / 4.0, params.max_mass),
+        mass=round(random.uniform(params.max_mass / 4.0, params.max_mass), utils.PRECISION),
     )
 
 

@@ -4,15 +4,27 @@ import csv
 import sqlite3
 from pathlib import Path
 
-PEOPLE_CREATE = """
-create table people (
+
+ASSAYS_CREATE = """
+create table assays (
     ident text primary key,
-    personal text,
-    family text
+    specimen text not null,
+    person text not null,
+    performed text
 )
 """
-PEOPLE_HEADER = ["ident", "personal", "family"]
-PEOPLE_INSERT = f"insert into people values ({', '.join('?' * len(PEOPLE_HEADER))})"
+ASSAYS_HEADER = ["ident", "specimen", "person", "performed"]
+ASSAYS_INSERT = f"insert into assays values ({', '.join('?' * len(ASSAYS_HEADER))})"
+
+PERSONS_CREATE = """
+create table persons (
+    ident text primary key,
+    personal text not null,
+    family text not null
+)
+"""
+PERSONS_HEADER = ["ident", "personal", "family"]
+PERSONS_INSERT = f"insert into persons values ({', '.join('?' * len(PERSONS_HEADER))})"
 
 SPECIMENS_CREATE = """
 create table specimens (
@@ -26,18 +38,21 @@ create table specimens (
 )
 """
 SPECIMENS_HEADER = ["ident", "grid", "x", "y", "collected", "genome", "mass"]
-SPECIMENS_INSERT = f"insert into specimens values ({', '.join('?' * len(SPECIMENS_HEADER))})"
+SPECIMENS_INSERT = (
+    f"insert into specimens values ({', '.join('?' * len(SPECIMENS_HEADER))})"
+)
 
 
 def database_generate(
-    people: Path | str,
+    assays: Path | str,
+    persons: Path | str,
     specimens: Path | str,
     output: Path | str | None = None,
 ) -> sqlite3.Connection | None:
     """Create a SQLite database from CSV files.
 
     Parameters:
-        people: Path to people CSV file
+        persons: Path to persons CSV file
         specimens: Path to specimens CSV file
         output: Path to database file to create or None for in-memory database
 
@@ -53,7 +68,8 @@ def database_generate(
     cursor = conn.cursor()
 
     for filepath, header, create, insert in (
-        (people, PEOPLE_HEADER, PEOPLE_CREATE, PEOPLE_INSERT),
+        (assays, ASSAYS_HEADER, ASSAYS_CREATE, ASSAYS_INSERT),
+        (persons, PERSONS_HEADER, PERSONS_CREATE, PERSONS_INSERT),
         (specimens, SPECIMENS_HEADER, SPECIMENS_CREATE, SPECIMENS_INSERT),
     ):
         with open(filepath, "r") as stream:

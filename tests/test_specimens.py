@@ -48,14 +48,17 @@ def test_convert_specimens_to_csv():
                 location=Point(x=3, y=3),
                 mass=0.3,
             ),
-        ]
+        ],
     )
     result = fixture.to_csv()
-    expected = "\n".join(
-        [
-            "ident,grid,collected,genome,x,y,mass",
-            "S01,G01,2023-07-05,ACGT,1,1,0.1",
-            "S03,G03,2024-07-05,TGCA,3,3,0.3",
-        ]
-    ) + "\n"
+    expected = (
+        "\n".join(
+            [
+                "ident,grid,collected,genome,x,y,mass",
+                "S01,G01,2023-07-05,ACGT,1,1,0.1",
+                "S03,G03,2024-07-05,TGCA,3,3,0.3",
+            ]
+        )
+        + "\n"
+    )
     assert result == expected
