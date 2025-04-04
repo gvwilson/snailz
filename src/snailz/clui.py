@@ -85,6 +85,9 @@ def _create_csv(csv_dir, data):
         with open(grids_dir / f"{grid.ident}.csv", "w") as writer:
             writer.write(grid.to_csv())
 
+    with open(csv_dir / "specimens.csv", "w") as writer:
+        writer.write(data.specimens.to_csv())
+
 
 if __name__ == "__main__":
     cli(obj={})
