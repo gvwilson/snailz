@@ -31,3 +31,9 @@ $ snailz params --output params
 # Generate all output files in ./data directory
 $ snailz data --params params --output data
 ```
+
+## Colophon
+
+Snail logo by [sunar.ko][snail-logo].
+
+[snail-logo]: https://www.vecteezy.com/vector-art/7319786-snails-logo-vector-on-white-background
