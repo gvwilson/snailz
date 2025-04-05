@@ -155,7 +155,16 @@ def _make_assay(
     degradation = _calc_degradation(params, specimen.collected, performed)
     readings = [
         [
-            _make_reading(params, specimen, locus, base, treatments[col][row], degradation, row, col)
+            _make_reading(
+                params,
+                specimen,
+                locus,
+                base,
+                treatments[col][row],
+                degradation,
+                row,
+                col,
+            )
             for row in range(params.plate_size)
         ]
         for col in range(params.plate_size)
@@ -203,7 +212,4 @@ def _make_treatments(params: AssayParams) -> list[list[str]]:
     half = size_sq // 2
     available = list(("S" * half) + ("C" * (size_sq - half)))
     random.shuffle(available)
-    return [
-        [available[row + col * size] for row in range(size)]
-        for col in range(size)
-    ]
+    return [[available[row + col * size] for row in range(size)] for col in range(size)]

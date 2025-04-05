@@ -1,9 +1,7 @@
 """Generate random grids."""
 
-from collections import defaultdict
 from datetime import date, timedelta
 import io
-import math
 import random
 
 from pydantic import BaseModel, Field

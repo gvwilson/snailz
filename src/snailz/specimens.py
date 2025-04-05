@@ -152,7 +152,9 @@ def _make_specimen(
         collected=collected,
         genome=genome,
         location=location,
-        mass=round(random.uniform(params.max_mass / 4.0, params.max_mass), utils.PRECISION),
+        mass=round(
+            random.uniform(params.max_mass / 4.0, params.max_mass), utils.PRECISION
+        ),
     )
 
 

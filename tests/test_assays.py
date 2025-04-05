@@ -38,7 +38,7 @@ SPECIMENS = AllSpecimens(
             location=Point(x=3, y=3),
             mass=0.3,
         ),
-    ]
+    ],
 )
 
 
