@@ -29,7 +29,7 @@ PERSONS_INSERT = f"insert into persons values ({', '.join('?' * len(PERSONS_HEAD
 SPECIMENS_CREATE = """
 create table specimens (
     ident text primary key,
-    grid text not null,
+    survey text not null,
     x integer real not null,
     y integer real not null,
     collected text not null,
@@ -37,7 +37,7 @@ create table specimens (
     mass real not null
 )
 """
-SPECIMENS_HEADER = ["ident", "grid", "x", "y", "collected", "genome", "mass"]
+SPECIMENS_HEADER = ["ident", "survey", "x", "y", "collected", "genome", "mass"]
 SPECIMENS_INSERT = (
     f"insert into specimens values ({', '.join('?' * len(SPECIMENS_HEADER))})"
 )

@@ -8,7 +8,7 @@ import click
 
 from .assays import assays_generate
 from .database import database_generate
-from .grids import grids_generate
+from .surveys import surveys_generate
 from .overall import AllData, AllParams
 from .persons import persons_generate
 from .specimens import specimens_generate
@@ -41,13 +41,13 @@ def data(ctx, csvdir, params, output):
         with open(params, "r") as reader:
             parameters = AllParams.model_validate(json.load(reader))
             random.seed(parameters.seed)
-            grids = grids_generate(parameters.grid)
+            surveys = surveys_generate(parameters.survey)
             persons = persons_generate(parameters.person)
-            specimens = specimens_generate(parameters.specimen, grids)
+            specimens = specimens_generate(parameters.specimen, surveys)
             assays = assays_generate(parameters.assay, persons, specimens)
             data = AllData(
                 assays=assays,
-                grids=grids,
+                surveys=surveys,
                 params=parameters,
                 persons=persons,
                 specimens=specimens,
@@ -96,11 +96,11 @@ def _create_csv(csv_dir, data):
             with open(assays_dir / f"{assay.ident}_{which}.csv", "w") as writer:
                 writer.write(assay.to_csv(which))
 
-    grids_dir = csv_dir / "grids"
-    grids_dir.mkdir(exist_ok=True)
-    for grid in data.grids.items:
-        with open(grids_dir / f"{grid.ident}.csv", "w") as writer:
-            writer.write(grid.to_csv())
+    surveys_dir = csv_dir / "surveys"
+    surveys_dir.mkdir(exist_ok=True)
+    for survey in data.surveys.items:
+        with open(surveys_dir / f"{survey.ident}.csv", "w") as writer:
+            writer.write(survey.to_csv())
 
     with open(csv_dir / "people.csv", "w") as writer:
         writer.write(data.persons.to_csv())

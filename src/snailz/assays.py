@@ -5,7 +5,7 @@ from datetime import date, timedelta
 import io
 import random
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from .persons import AllPersons
 from .specimens import Specimen, AllSpecimens
@@ -39,6 +39,13 @@ class AssayParams(BaseModel):
 
     model_config = {"extra": "forbid"}
 
+    @model_validator(mode="after")
+    def validate_fields(self):
+        """Validate requirements on fields."""
+        if self.mutant < self.baseline:
+            raise ValueError("mutant value must be greater than baseline")
+        return self
+
 
 class Assay(BaseModel):
     """A single assay."""
@@ -47,8 +54,8 @@ class Assay(BaseModel):
     specimen: str = Field(description="which specimen")
     person: str = Field(description="who did the assay")
     performed: date = Field(description="date assay was performed")
-    readings: list[list[float]] = Field(description="grid of assay readings")
-    treatments: list[list[str]] = Field(description="grid of samples or controls")
+    readings: list[list[float]] = Field(description="survey of assay readings")
+    treatments: list[list[str]] = Field(description="survey of samples or controls")
 
     def to_csv(self, kind: str) -> str:
         """Return a CSV string representation of the assay data.

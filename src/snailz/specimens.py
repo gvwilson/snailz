@@ -8,7 +8,7 @@ import string
 from pydantic import BaseModel, Field
 
 from . import utils
-from .grids import Point, Grid, AllGrids
+from .surveys import Point, Survey, AllSurveys
 
 
 # Bases.
@@ -30,7 +30,7 @@ class SpecimenParams(BaseModel):
         description="Number of mutations in specimens (must be between 0 and length)",
     )
     spacing: float = Field(
-        default=utils.DEFAULT_GRID_SIZE / 4.0,
+        default=utils.DEFAULT_SURVEY_SIZE / 4.0,
         ge=0,
         description="Inter-specimen spacing",
     )
@@ -42,7 +42,7 @@ class Specimen(BaseModel):
     """A single specimen."""
 
     ident: str = Field(description="unique identifier")
-    grid_id: str = Field(description="grid identifier")
+    survey_id: str = Field(description="survey identifier")
     location: Point = Field(description="where specimen was collected")
     collected: date = Field(description="date when specimen was collected")
     genome: str = Field(description="bases in genome")
@@ -66,10 +66,10 @@ class AllSpecimens(BaseModel):
         """
         return utils.to_csv(
             self.items,
-            ["ident", "grid", "x", "y", "collected", "genome", "mass"],
+            ["ident", "survey", "x", "y", "collected", "genome", "mass"],
             lambda s: [
                 s.ident,
-                s.grid_id,
+                s.survey_id,
                 s.location.x,
                 s.location.y,
                 s.collected.isoformat(),
@@ -79,7 +79,7 @@ class AllSpecimens(BaseModel):
         )
 
 
-def specimens_generate(params: SpecimenParams, grids: AllGrids) -> AllSpecimens:
+def specimens_generate(params: SpecimenParams, surveys: AllSurveys) -> AllSpecimens:
     """Generate a set of specimens."""
 
     reference = _make_reference_genome(params)
@@ -89,10 +89,10 @@ def specimens_generate(params: SpecimenParams, grids: AllGrids) -> AllSpecimens:
     gen = utils.UniqueIdGenerator("specimen", _specimen_id_generator)
 
     items = []
-    for grid in grids.items:
-        positions = _place_specimens(grid.size, params.spacing)
+    for survey in surveys.items:
+        positions = _place_specimens(survey.size, params.spacing)
         for pos in positions:
-            items.append(_make_specimen(params, grid, reference, loci, gen, pos))
+            items.append(_make_specimen(params, survey, reference, loci, gen, pos))
     return AllSpecimens(
         loci=loci,
         reference=reference,
@@ -128,7 +128,7 @@ def _make_reference_genome(params: SpecimenParams) -> str:
 
 def _make_specimen(
     params: SpecimenParams,
-    grid: Grid,
+    survey: Survey,
     reference: str,
     loci: list,
     gen: utils.UniqueIdGenerator,
@@ -138,7 +138,7 @@ def _make_specimen(
     genome = list(reference)
     num_mutations = random.randint(1, len(loci))
     collected = date.fromordinal(
-        random.randint(grid.start_date.toordinal(), grid.end_date.toordinal())
+        random.randint(survey.start_date.toordinal(), survey.end_date.toordinal())
     )
 
     for loc in random.sample(range(len(loci)), num_mutations):
@@ -148,7 +148,7 @@ def _make_specimen(
 
     return Specimen(
         ident=gen.next(),
-        grid_id=grid.ident,
+        survey_id=survey.ident,
         collected=collected,
         genome=genome,
         location=location,

@@ -16,8 +16,8 @@ PRECISION = 2
 # Maximum tries to generate a unique ID.
 UNIQUE_ID_LIMIT = 10_000
 
-# Default grid size.
-DEFAULT_GRID_SIZE = 15
+# Default survey grid size.
+DEFAULT_SURVEY_SIZE = 15
 
 
 class UniqueIdGenerator:

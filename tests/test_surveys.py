@@ -1,37 +1,37 @@
-"""Test grid generation."""
+"""Test survey generation."""
 
 from datetime import timedelta
 
-from snailz.grids import GridParams, Grid, grids_generate
+from snailz.surveys import SurveyParams, Survey, surveys_generate
 
 
-def test_generate_grids_correct_length():
-    params = GridParams()
-    grids = grids_generate(params)
-    assert len(grids.items) == params.number
-    for g in grids.items:
+def test_generate_surveys_correct_length():
+    params = SurveyParams()
+    surveys = surveys_generate(params)
+    assert len(surveys.items) == params.number
+    for g in surveys.items:
         assert len(g.cells) == params.size
         assert all(len(r) == params.size for r in g.cells)
 
 
-def test_generate_grids_correct_dates():
-    params = GridParams()
+def test_generate_surveys_correct_dates():
+    params = SurveyParams()
     max_date = (
         params.start_date
         + timedelta(days=params.number - 1)
         + timedelta(days=params.number * params.max_interval)
     )
-    grids = grids_generate(params)
-    for g in grids.items:
+    surveys = surveys_generate(params)
+    for g in surveys.items:
         assert params.start_date <= g.start_date
         assert g.start_date <= g.end_date
         assert g.end_date <= max_date
 
 
-def test_convert_grid_to_csv():
+def test_convert_survey_to_csv():
     size = 3
-    params = GridParams().model_copy(update={"size": size})
-    fixture = Grid(
+    params = SurveyParams().model_copy(update={"size": size})
+    fixture = Survey(
         ident="G000",
         size=size,
         start_date=params.start_date,

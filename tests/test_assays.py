@@ -4,7 +4,7 @@ from datetime import date
 import pytest
 
 from snailz.assays import AssayParams, Assay, AllAssays, assays_generate
-from snailz.grids import Point
+from snailz.surveys import Point
 from snailz.persons import Person, AllPersons
 from snailz.specimens import Specimen, AllSpecimens
 
@@ -24,7 +24,7 @@ SPECIMENS = AllSpecimens(
     items=[
         Specimen(
             ident="S01",
-            grid_id="G01",
+            survey_id="G01",
             collected=date(2023, 7, 5),
             genome="ACGT",
             location=Point(x=1, y=1),
@@ -32,7 +32,7 @@ SPECIMENS = AllSpecimens(
         ),
         Specimen(
             ident="S03",
-            grid_id="G03",
+            survey_id="G03",
             collected=date(2024, 7, 5),
             genome="TGCA",
             location=Point(x=3, y=3),
