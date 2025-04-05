@@ -19,6 +19,13 @@ UNIQUE_ID_LIMIT = 10_000
 # Default survey grid size.
 DEFAULT_SURVEY_SIZE = 15
 
+# File paths
+ASSAYS_CSV = "assays.csv"
+ASSAYS_DIR = "assays"
+PERSONS_CSV = "persons.csv"
+SPECIMENS_CSV = "specimens.csv"
+SURVEYS_DIR = "surveys"
+
 
 class UniqueIdGenerator:
     """Generate unique IDs using provided function."""

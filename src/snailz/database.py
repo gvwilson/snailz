@@ -4,6 +4,8 @@ import csv
 import sqlite3
 from pathlib import Path
 
+from . import utils
+
 
 ASSAYS_CREATE = """
 create table assays (
@@ -43,34 +45,28 @@ SPECIMENS_INSERT = (
 )
 
 
-def database_generate(
-    assays: Path | str,
-    persons: Path | str,
-    specimens: Path | str,
-    output: Path | str | None = None,
-) -> sqlite3.Connection | None:
+def database_generate(root: Path, db_file: str | None) -> sqlite3.Connection | None:
     """Create a SQLite database from CSV files.
 
     Parameters:
-        persons: Path to persons CSV file
-        specimens: Path to specimens CSV file
-        output: Path to database file to create or None for in-memory database
+        root: Path to directory containing CSV files.
+        db_file: Filename for database file or None.
 
     Returns:
         sqlite3.Connection: Database connection if database is in-memory or None otherwise
     """
-    if output is None:
+    if db_file is None:
         conn = sqlite3.connect(":memory:")
     else:
-        Path(output).unlink(missing_ok=True)
-        conn = sqlite3.connect(output)
+        db_path = root / db_file
+        Path(db_path).unlink(missing_ok=True)
+        conn = sqlite3.connect(db_path)
 
     cursor = conn.cursor()
-
     for filepath, header, create, insert in (
-        (assays, ASSAYS_HEADER, ASSAYS_CREATE, ASSAYS_INSERT),
-        (persons, PERSONS_HEADER, PERSONS_CREATE, PERSONS_INSERT),
-        (specimens, SPECIMENS_HEADER, SPECIMENS_CREATE, SPECIMENS_INSERT),
+        (root / utils.ASSAYS_CSV, ASSAYS_HEADER, ASSAYS_CREATE, ASSAYS_INSERT),
+        (root / utils.PERSONS_CSV, PERSONS_HEADER, PERSONS_CREATE, PERSONS_INSERT),
+        (root / utils.SPECIMENS_CSV, SPECIMENS_HEADER, SPECIMENS_CREATE, SPECIMENS_INSERT),
     ):
         with open(filepath, "r") as stream:
             data = [row for row in csv.reader(stream)]
@@ -80,7 +76,7 @@ def database_generate(
 
     conn.commit()
 
-    if output is None:
+    if db_file is None:
         return conn
     else:
         conn.close()
