@@ -1,6 +1,6 @@
 # Snailz
 
-<img src="https://raw.githubusercontent.com/gvwilson/sz/main/img/snail-logo.svg" alt="snail logo" width="200px">
+<img src="https://raw.githubusercontent.com/gvwilson/sz/main/pages/img/snail-logo.svg" alt="snail logo" width="200px">
 
 These synthetic data generators model a study of snails in the Pacific Northwest
 that are growing to unusual size as a result of exposure to pollution.

@@ -307,6 +307,24 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#snailz.database._import_assay_files" class="md-nav__link">
+    <span class="md-ellipsis">
+      _import_assay_files
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snailz.database._import_single_files" class="md-nav__link">
+    <span class="md-ellipsis">
+      _import_single_files
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -511,6 +529,24 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#snailz.database._import_assay_files" class="md-nav__link">
+    <span class="md-ellipsis">
+      _import_assay_files
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snailz.database._import_single_files" class="md-nav__link">
+    <span class="md-ellipsis">
+      _import_single_files
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -560,7 +596,7 @@
 
 
 <h2 id="snailz.database.database_generate" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">database_generate</span><span class="p">(</span><span class="n">assays</span><span class="p">,</span> <span class="n">persons</span><span class="p">,</span> <span class="n">specimens</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">database_generate</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">db_file</span><span class="p">)</span></code>
 
 </h2>
 
@@ -583,14 +619,14 @@
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>persons</code>
+                <code>root</code>
             </td>
             <td>
-                  <code><span title="pathlib.Path">Path</span> | <span title="str">str</span></code>
+                  <code><span title="pathlib.Path">Path</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Path to persons CSV file</p>
+                <p>Path to directory containing CSV files.</p>
               </div>
             </td>
             <td>
@@ -599,34 +635,18 @@
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>specimens</code>
+                <code>db_file</code>
             </td>
             <td>
-                  <code><span title="pathlib.Path">Path</span> | <span title="str">str</span></code>
+                  <code><span title="str">str</span> | None</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Path to specimens CSV file</p>
+                <p>Filename for database file or None.</p>
               </div>
             </td>
             <td>
                 <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>output</code>
-            </td>
-            <td>
-                  <code><span title="pathlib.Path">Path</span> | <span title="str">str</span> | None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Path to database file to create or None for in-memory database</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
             </td>
           </tr>
       </tbody>
@@ -658,89 +678,211 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/database.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">database_generate</span><span class="p">(</span>
-    <span class="n">assays</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">persons</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">specimens</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">output</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Connection</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">database_generate</span><span class="p">(</span><span class="n">root</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">db_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Connection</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a SQLite database from CSV files.</span>
 
 <span class="sd">    Parameters:</span>
-<span class="sd">        persons: Path to persons CSV file</span>
-<span class="sd">        specimens: Path to specimens CSV file</span>
-<span class="sd">        output: Path to database file to create or None for in-memory database</span>
+<span class="sd">        root: Path to directory containing CSV files.</span>
+<span class="sd">        db_file: Filename for database file or None.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        sqlite3.Connection: Database connection if database is in-memory or None otherwise</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">output</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">db_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;:memory:&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">Path</span><span class="p">(</span><span class="n">output</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">missing_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        <span class="n">db_path</span> <span class="o">=</span> <span class="n">root</span> <span class="o">/</span> <span class="n">db_file</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">db_path</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">missing_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db_path</span><span class="p">)</span>
 
     <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
 
+    <span class="n">_import_single_files</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">cursor</span><span class="p">)</span>
+    <span class="n">_import_assay_files</span><span class="p">(</span>
+        <span class="n">root</span><span class="p">,</span>
+        <span class="n">cursor</span><span class="p">,</span>
+        <span class="s2">&quot;*_treatments.csv&quot;</span><span class="p">,</span>
+        <span class="n">TREATMENTS_CREATE</span><span class="p">,</span>
+        <span class="n">TREATMENTS_INSERT</span><span class="p">,</span>
+        <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">_import_assay_files</span><span class="p">(</span>
+        <span class="n">root</span><span class="p">,</span>
+        <span class="n">cursor</span><span class="p">,</span>
+        <span class="s2">&quot;*_readings.csv&quot;</span><span class="p">,</span>
+        <span class="n">READINGS_CREATE</span><span class="p">,</span>
+        <span class="n">READINGS_INSERT</span><span class="p">,</span>
+        <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">db_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">conn</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">None</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="snailz.database._import_assay_files" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">_import_assay_files</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">create</span><span class="p">,</span> <span class="n">insert</span><span class="p">,</span> <span class="n">convert</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Import data from all clean assay files.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/snailz/database.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_import_assay_files</span><span class="p">(</span>
+    <span class="n">root</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">cursor</span><span class="p">:</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Cursor</span><span class="p">,</span>
+    <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">create</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">insert</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">convert</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Import data from all clean assay files.&quot;&quot;&quot;</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">create</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="p">(</span><span class="n">root</span> <span class="o">/</span> <span class="n">utils</span><span class="o">.</span><span class="n">ASSAYS_DIR</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">pattern</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+            <span class="n">rows</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">stream</span><span class="p">)]</span>
+            <span class="k">assert</span> <span class="n">rows</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;id&quot;</span>
+            <span class="n">ident</span> <span class="o">=</span> <span class="n">rows</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">[</span><span class="mi">5</span><span class="p">:]]</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+                    <span class="n">temp</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ident</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">chr</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">j</span><span class="p">),</span> <span class="n">convert</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span>
+            <span class="n">cursor</span><span class="o">.</span><span class="n">executemany</span><span class="p">(</span><span class="n">insert</span><span class="p">,</span> <span class="n">temp</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="snailz.database._import_single_files" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">_import_single_files</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">cursor</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Import single CSV files into database.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/snailz/database.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_import_single_files</span><span class="p">(</span><span class="n">root</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">cursor</span><span class="p">:</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Cursor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Import single CSV files into database.&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">filepath</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">create</span><span class="p">,</span> <span class="n">insert</span> <span class="ow">in</span> <span class="p">(</span>
-        <span class="p">(</span><span class="n">assays</span><span class="p">,</span> <span class="n">ASSAYS_HEADER</span><span class="p">,</span> <span class="n">ASSAYS_CREATE</span><span class="p">,</span> <span class="n">ASSAYS_INSERT</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">persons</span><span class="p">,</span> <span class="n">PERSONS_HEADER</span><span class="p">,</span> <span class="n">PERSONS_CREATE</span><span class="p">,</span> <span class="n">PERSONS_INSERT</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">specimens</span><span class="p">,</span> <span class="n">SPECIMENS_HEADER</span><span class="p">,</span> <span class="n">SPECIMENS_CREATE</span><span class="p">,</span> <span class="n">SPECIMENS_INSERT</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">root</span> <span class="o">/</span> <span class="n">utils</span><span class="o">.</span><span class="n">ASSAYS_CSV</span><span class="p">,</span> <span class="n">ASSAYS_HEADER</span><span class="p">,</span> <span class="n">ASSAYS_CREATE</span><span class="p">,</span> <span class="n">ASSAYS_INSERT</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">root</span> <span class="o">/</span> <span class="n">utils</span><span class="o">.</span><span class="n">PERSONS_CSV</span><span class="p">,</span> <span class="n">PERSONS_HEADER</span><span class="p">,</span> <span class="n">PERSONS_CREATE</span><span class="p">,</span> <span class="n">PERSONS_INSERT</span><span class="p">),</span>
+        <span class="p">(</span>
+            <span class="n">root</span> <span class="o">/</span> <span class="n">utils</span><span class="o">.</span><span class="n">SPECIMENS_CSV</span><span class="p">,</span>
+            <span class="n">SPECIMENS_HEADER</span><span class="p">,</span>
+            <span class="n">SPECIMENS_CREATE</span><span class="p">,</span>
+            <span class="n">SPECIMENS_INSERT</span><span class="p">,</span>
+        <span class="p">),</span>
     <span class="p">):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">stream</span><span class="p">)]</span>
             <span class="k">assert</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">header</span>
             <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">create</span><span class="p">)</span>
             <span class="n">cursor</span><span class="o">.</span><span class="n">executemany</span><span class="p">(</span><span class="n">insert</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
-
-    <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
-
-    <span class="k">if</span> <span class="n">output</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">conn</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="k">return</span> <span class="kc">None</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
