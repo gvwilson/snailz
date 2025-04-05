@@ -3,25 +3,25 @@
 from datetime import date
 import pytest
 
-from snailz.assays import AssayParams, Assay, AssayList, assays_generate
+from snailz.assays import AssayParams, Assay, AllAssays, assays_generate
 from snailz.grids import Point
-from snailz.persons import Person, PersonList
-from snailz.specimens import Specimen, SpecimenList
+from snailz.persons import Person, AllPersons
+from snailz.specimens import Specimen, AllSpecimens
 
 
-PERSONS = PersonList(
-    persons=[
+PERSONS = AllPersons(
+    items=[
         Person(ident="abc", family="BC", personal="A"),
         Person(ident="def", family="EF", personal="D"),
     ]
 )
 
-SPECIMENS = SpecimenList(
+SPECIMENS = AllSpecimens(
     loci=[1],
     reference="AAAA",
     susc_base="C",
     susc_locus=0,
-    specimens=[
+    items=[
         Specimen(
             ident="S01",
             grid_id="G01",
@@ -44,17 +44,17 @@ SPECIMENS = SpecimenList(
 
 def test_generate_assays_correct_length_and_reference_ids():
     assays = assays_generate(AssayParams(), PERSONS, SPECIMENS)
-    assert len(assays.assays) == 2
-    for a, s in zip(assays.assays, SPECIMENS.specimens):
+    assert len(assays.items) == 2
+    for a, s in zip(assays.items, SPECIMENS.items):
         assert a.specimen == s.ident
-    person_ids = {p.ident for p in PERSONS.persons}
-    assert all(a.person in person_ids for a in assays.assays)
+    person_ids = {p.ident for p in PERSONS.items}
+    assert all(a.person in person_ids for a in assays.items)
 
 
 def test_assay_csv_fails_for_unknown_kind():
     assays = assays_generate(AssayParams(), PERSONS, SPECIMENS)
     with pytest.raises(ValueError):
-        assays.assays[0].to_csv("nope")
+        assays.items[0].to_csv("nope")
 
 
 def test_convert_assays_to_csv():
@@ -66,8 +66,8 @@ def test_convert_assays_to_csv():
         readings=[[1.0, 2.0], [3.0, 4.0]],
         treatments=[["C", "S"], ["C", "S"]],
     )
-    fixture = AssayList(
-        assays=[
+    fixture = AllAssays(
+        items=[
             first,
             Assay(
                 ident="a02",

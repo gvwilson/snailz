@@ -2,8 +2,8 @@
 
 from datetime import date
 
-from snailz.grids import Point, Grid, GridList
-from snailz.specimens import SpecimenParams, SpecimenList, Specimen, specimens_generate
+from snailz.grids import Point, Grid, AllGrids
+from snailz.specimens import SpecimenParams, AllSpecimens, Specimen, specimens_generate
 
 
 def test_generate_specimens_correct_length():
@@ -19,19 +19,19 @@ def test_generate_specimens_correct_length():
         )
         for i in range(num)
     ]
-    grids = GridList(grids=temp)
+    grids = AllGrids(items=temp)
     params = SpecimenParams()
     specimens = specimens_generate(params, grids)
-    assert len(specimens.specimens) == num
+    assert len(specimens.items) == num
 
 
 def test_convert_specimens_to_csv():
-    fixture = SpecimenList(
+    fixture = AllSpecimens(
         loci=[1],
         reference="AAAA",
         susc_base="C",
         susc_locus=0,
-        specimens=[
+        items=[
             Specimen(
                 ident="S01",
                 grid_id="G01",

@@ -8,7 +8,7 @@ import string
 from pydantic import BaseModel, Field
 
 from . import utils
-from .grids import Point, Grid, GridList
+from .grids import Point, Grid, AllGrids
 
 
 # Bases.
@@ -49,14 +49,14 @@ class Specimen(BaseModel):
     mass: float = Field(gt=0, description="specimen mass in grams")
 
 
-class SpecimenList(BaseModel):
+class AllSpecimens(BaseModel):
     """A set of generated specimens."""
 
     loci: list[int] = Field(description="locations where mutations can occur")
     reference: str = Field(description="unmutated genome")
     susc_base: str = Field(description="mutant base that induces mass changes")
     susc_locus: int = Field(ge=0, description="location of mass change mutation")
-    specimens: list[Specimen] = Field(description="list of individual specimens")
+    items: list[Specimen] = Field(description="list of individual specimens")
 
     def to_csv(self) -> str:
         """Return a CSV string representation of the specimen data.
@@ -65,7 +65,7 @@ class SpecimenList(BaseModel):
             A CSV-formatted string with people data (without parameters)
         """
         return utils.to_csv(
-            self.specimens,
+            self.items,
             ["ident", "grid", "x", "y", "collected", "genome", "mass"],
             lambda s: [
                 s.ident,
@@ -79,7 +79,7 @@ class SpecimenList(BaseModel):
         )
 
 
-def specimens_generate(params: SpecimenParams, grids: GridList) -> SpecimenList:
+def specimens_generate(params: SpecimenParams, grids: AllGrids) -> AllSpecimens:
     """Generate a set of specimens."""
 
     reference = _make_reference_genome(params)
@@ -88,17 +88,17 @@ def specimens_generate(params: SpecimenParams, grids: GridList) -> SpecimenList:
     susc_base = reference[susc_locus]
     gen = utils.UniqueIdGenerator("specimen", _specimen_id_generator)
 
-    specimens = []
-    for grid in grids.grids:
+    items = []
+    for grid in grids.items:
         positions = _place_specimens(grid.size, params.spacing)
         for pos in positions:
-            specimens.append(_make_specimen(params, grid, reference, loci, gen, pos))
-    return SpecimenList(
+            items.append(_make_specimen(params, grid, reference, loci, gen, pos))
+    return AllSpecimens(
         loci=loci,
         reference=reference,
         susc_base=susc_base,
         susc_locus=susc_locus,
-        specimens=specimens,
+        items=items,
     )
 
 

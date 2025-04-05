@@ -35,10 +35,10 @@ class Person(BaseModel):
     model_config = {"extra": "forbid"}
 
 
-class PersonList(BaseModel):
+class AllPersons(BaseModel):
     """A set of generated people."""
 
-    persons: list[Person] = Field(description="all persons")
+    items: list[Person] = Field(description="all persons")
 
     model_config = {"extra": "forbid"}
 
@@ -49,13 +49,13 @@ class PersonList(BaseModel):
             A CSV-formatted string with people data.
         """
         return utils.to_csv(
-            self.persons,
+            self.items,
             ["ident", "personal", "family"],
             lambda p: [p.ident, p.personal, p.family],
         )
 
 
-def persons_generate(params: PersonParams) -> PersonList:
+def persons_generate(params: PersonParams) -> AllPersons:
     """Generate random persons.
 
     Parameters:
@@ -67,12 +67,12 @@ def persons_generate(params: PersonParams) -> PersonList:
     fake = faker.Faker(params.locale)
     fake.seed_instance(random.randint(0, 1_000_000))
     gen = utils.UniqueIdGenerator("person", _person_id_generator)
-    persons = []
+    items = []
     for _ in range(params.number):
         f = fake.last_name()
         p = fake.first_name()
         i = gen.next(f, p)
-        persons.append(
+        items.append(
             Person(
                 ident=i,
                 family=f,
@@ -80,7 +80,7 @@ def persons_generate(params: PersonParams) -> PersonList:
             )
         )
 
-    return PersonList(persons=persons)
+    return AllPersons(items=items)
 
 
 def _person_id_generator(family: str, personal: str) -> str:

@@ -2,10 +2,10 @@
 
 from pydantic import BaseModel, Field
 
-from .assays import AssayParams, AssayList
-from .grids import GridParams, GridList
-from .persons import PersonParams, PersonList
-from .specimens import SpecimenParams, SpecimenList
+from .assays import AssayParams, AllAssays
+from .grids import GridParams, AllGrids
+from .persons import PersonParams, AllPersons
+from .specimens import SpecimenParams, AllSpecimens
 
 
 class AllParams(BaseModel):
@@ -32,9 +32,9 @@ class AllData(BaseModel):
     """Represent all generated data combined."""
 
     params: AllParams = Field(description="all parameters")
-    assays: AssayList = Field(description="all assays")
-    grids: GridList = Field(description="all grids")
-    persons: PersonList = Field(description="all persons")
-    specimens: SpecimenList = Field(description="all specimens")
+    assays: AllAssays = Field(description="all assays")
+    grids: AllGrids = Field(description="all grids")
+    persons: AllPersons = Field(description="all persons")
+    specimens: AllSpecimens = Field(description="all specimens")
 
     model_config = {"extra": "forbid"}

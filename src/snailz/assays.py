@@ -7,8 +7,8 @@ import random
 
 from pydantic import BaseModel, Field
 
-from .persons import PersonList
-from .specimens import Specimen, SpecimenList
+from .persons import AllPersons
+from .specimens import Specimen, AllSpecimens
 from . import utils
 
 
@@ -93,10 +93,10 @@ class Assay(BaseModel):
         return output.getvalue()
 
 
-class AssayList(BaseModel):
+class AllAssays(BaseModel):
     """All generated assays."""
 
-    assays: list[Assay] = Field(description="actual assays")
+    items: list[Assay] = Field(description="actual assays")
 
     def to_csv(self) -> str:
         """Return a CSV string representation of the assay summary data.
@@ -105,15 +105,15 @@ class AssayList(BaseModel):
             A CSV-formatted string containing a summary of all assays
         """
         return utils.to_csv(
-            self.assays,
+            self.items,
             ["ident", "specimen", "person", "performed"],
             lambda r: [r.ident, r.specimen, r.person, r.performed.isoformat()],
         )
 
 
 def assays_generate(
-    params: AssayParams, persons: PersonList, specimens: SpecimenList
-) -> AssayList:
+    params: AssayParams, persons: AllPersons, specimens: AllSpecimens
+) -> AllAssays:
     """Generate an assay for each specimen.
 
     Parameters:
@@ -124,14 +124,16 @@ def assays_generate(
     Returns:
         Assay list object
     """
-    assays = []
+    locus = specimens.susc_locus
+    base = specimens.susc_base
+    items = []
     gen = utils.UniqueIdGenerator("assays", lambda: f"{random.randint(0, 999999):06d}")
-    for s in specimens.specimens:
+    for s in specimens.items:
         performed = s.collected + timedelta(days=random.randint(0, params.delay))
         ident = gen.next()
-        person = random.choice(persons.persons)
-        treatments, readings = _make_assay(params, specimens, s, performed)
-        assays.append(
+        person = random.choice(persons.items)
+        treatments, readings = _make_assay(params, locus, base, s, performed)
+        items.append(
             Assay(
                 ident=ident,
                 performed=performed,
@@ -142,18 +144,18 @@ def assays_generate(
             )
         )
 
-    return AssayList(assays=assays)
+    return AllAssays(items=items)
 
 
 def _make_assay(
-    params: AssayParams, specimens: SpecimenList, s: Specimen, performed: date
+    params: AssayParams, locus: int, base: str, specimen: Specimen, performed: date
 ) -> tuple[list[list[str]], list[list[float]]]:
     """Make a single assay."""
     treatments = _make_treatments(params)
-    degradation = _calc_degradation(params, s.collected, performed)
+    degradation = _calc_degradation(params, specimen.collected, performed)
     readings = [
         [
-            _make_reading(params, s, _is_susceptible(specimens, s), treatments[col][row], degradation, row, col)
+            _make_reading(params, specimen, locus, base, treatments[col][row], degradation, row, col)
             for row in range(params.plate_size)
         ]
         for col in range(params.plate_size)
@@ -166,15 +168,11 @@ def _calc_degradation(params: AssayParams, collected: date, assayed: date) -> fl
     return max(0.0, 1.0 - (params.degrade * (assayed - collected).days))
 
 
-def _is_susceptible(specimens: SpecimenList, s: Specimen) -> bool:
-    """Is this specimen susceptible to mutation effects?"""
-    return s.genome[specimens.susc_locus] == specimens.susc_base
-
-
 def _make_reading(
     params: AssayParams,
     specimen: Specimen,
-    susceptible: bool,
+    locus: int,
+    base: str,
     treatment: str,
     degradation: float,
     row: int,
@@ -187,7 +185,7 @@ def _make_reading(
         return round(random.uniform(0, params.noise), utils.PRECISION)
 
     # Treatment
-    if susceptible:
+    if specimen.genome[locus] == base:
         noise = params.noise * params.mutant / params.baseline
         base_value = params.mutant * degradation
     else:

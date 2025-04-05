@@ -65,15 +65,15 @@ class Grid(BaseModel):
         return output.getvalue()
 
 
-class GridList(BaseModel):
+class AllGrids(BaseModel):
     """A set of generated grids."""
 
-    grids: list[Grid] = Field(description="all grids")
+    items: list[Grid] = Field(description="all grids")
 
     model_config = {"extra": "forbid"}
 
 
-def grids_generate(params: GridParams) -> GridList:
+def grids_generate(params: GridParams) -> AllGrids:
     """Generate random grids.
 
     Parameters:
@@ -85,14 +85,14 @@ def grids_generate(params: GridParams) -> GridList:
 
     gen = utils.UniqueIdGenerator("grid", _grid_id_generator)
     current_date = params.start_date
-    grids = []
+    items = []
     for _ in range(params.number):
         next_date = current_date + timedelta(
             days=random.randint(1, params.max_interval)
         )
-        grids.append(_make_grid(params, gen, current_date, next_date))
+        items.append(_make_grid(params, gen, current_date, next_date))
         current_date = next_date + timedelta(days=1)
-    return GridList(grids=grids)
+    return AllGrids(items=items)
 
 
 def _grid_id_generator() -> str:

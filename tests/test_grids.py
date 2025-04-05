@@ -8,8 +8,8 @@ from snailz.grids import GridParams, Grid, grids_generate
 def test_generate_grids_correct_length():
     params = GridParams()
     grids = grids_generate(params)
-    assert len(grids.grids) == params.number
-    for g in grids.grids:
+    assert len(grids.items) == params.number
+    for g in grids.items:
         assert len(g.cells) == params.size
         assert all(len(r) == params.size for r in g.cells)
 
@@ -22,7 +22,7 @@ def test_generate_grids_correct_dates():
         + timedelta(days=params.number * params.max_interval)
     )
     grids = grids_generate(params)
-    for g in grids.grids:
+    for g in grids.items:
         assert params.start_date <= g.start_date
         assert g.start_date <= g.end_date
         assert g.end_date <= max_date

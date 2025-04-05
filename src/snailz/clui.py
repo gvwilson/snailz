@@ -91,14 +91,14 @@ def _create_csv(csv_dir, data):
         writer.write(data.assays.to_csv())
     assays_dir = csv_dir / "assays"
     assays_dir.mkdir(exist_ok=True)
-    for assay in data.assays.assays:
+    for assay in data.assays.items:
         for which in ["readings", "treatments"]:
             with open(assays_dir / f"{assay.ident}_{which}.csv", "w") as writer:
                 writer.write(assay.to_csv(which))
 
     grids_dir = csv_dir / "grids"
     grids_dir.mkdir(exist_ok=True)
-    for grid in data.grids.grids:
+    for grid in data.grids.items:
         with open(grids_dir / f"{grid.ident}.csv", "w") as writer:
             writer.write(grid.to_csv())
 
