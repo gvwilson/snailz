@@ -11,6 +11,9 @@ from pydantic import BaseModel, Field
 from . import utils
 
 
+MOVES = [[-1, 0], [1, 0], [0, -1], [0, 1]]
+
+
 class Point(BaseModel):
     """A 2D point with x and y coordinates."""
 
@@ -21,7 +24,6 @@ class Point(BaseModel):
 class GridParams(BaseModel):
     """Parameters for grid generation."""
 
-    limit: float = Field(default=10.0, gt=0.0, description="Maximum pollution level")
     number: int = Field(default=3, gt=0, description="Number of grids")
     size: int = Field(default=utils.DEFAULT_GRID_SIZE, gt=0, description="Grid size")
     start_date: date = Field(
@@ -48,7 +50,7 @@ class Grid(BaseModel):
         default=date.fromisoformat("2024-04-30"),
         description="End date for specimen collection",
     )
-    cells: list[list] = Field(description="grid cells")
+    cells: list[list[int]] = Field(description="grid cells")
 
     model_config = {"extra": "forbid"}
 
@@ -132,52 +134,19 @@ def _make_grid(
     )
 
 
-def _make_cells(params: GridParams) -> list[list[float]]:
+def _make_cells(params: GridParams) -> list[list[int]]:
     """Make grid of random values."""
-    cells = [[0.0 for _ in range(params.size)] for _ in range(params.size)]
-    center = params.size // 2
-    cells[center][center] = _make_value(params.limit)
+    size = params.size
+    size_1 = size - 1
+    center = size // 2
 
-    radial_groups = _make_radial_groups(params.size)
-    for inv_dist in sorted(radial_groups.keys()):
-        points = radial_groups[inv_dist]
-        temp = []
-        for x, y in points:
-            temp.append((x, y, _make_value(params.limit * inv_dist)))
-        for x, y, val in temp:
-            cells[x][y] = val
+    cells = [[0 for _ in range(size)] for _ in range(size)]
+    x, y = center, center
+    cells[x][y] = 1
+    while (x != 0) and (x != size_1) and (y != 0) and (y != size_1):
+        cells[x][y] += 1
+        m = random.choice(MOVES)
+        x += m[0]
+        y += m[1]
 
     return cells
-
-
-def _make_radial_groups(size: int) -> dict:
-    """Group points by distance from center.
-
-    Parameters:
-        size: Grid size.
-
-    Returns:
-        Dictionary of inverse distance to set of points.
-    """
-    groups = defaultdict(set)
-    center = size // 2
-    for x in range(size):
-        for y in range(size):
-            if (x == center) and (y == center):
-                continue
-            inv_dist = center - math.sqrt((x - center) ** 2 + (y - center) ** 2) / size
-            groups[inv_dist].add((x, y))
-    return groups
-
-
-def _make_value(upper: float) -> float:
-    """Make a rounded random value in [upper/2, upper].
-
-    Parameters:
-        upper: Largest allowed value.
-
-    Returns:
-        Rounded random value.
-    """
-
-    return round(random.uniform(upper / 2, upper), utils.PRECISION)
