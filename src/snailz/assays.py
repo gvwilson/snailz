@@ -152,8 +152,6 @@ def assays_generate(
         person = random.choice(persons.items)
         treatments = _make_treatments(params)
         readings = _make_readings(params, spec, susc(spec), performed, treatments)
-        print("TREATMENTS", treatments)
-        print("READINGS", readings)
         items.append(
             Assay(
                 ident=gen.next(),

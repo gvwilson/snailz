@@ -9,7 +9,7 @@
       
       
       
-        <link rel="prev" href="../license/">
+        <link rel="prev" href="../mangle/">
       
       
         <link rel="next" href="../persons/">
@@ -178,6 +178,28 @@
   
   
     <li class="md-nav__item">
+      <a href="../assays/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assays
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../clui/" class="md-nav__link">
         
   
@@ -222,12 +244,34 @@
   
   
     <li class="md-nav__item">
-      <a href="../grids/" class="md-nav__link">
+      <a href="../database/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Grids
+    Database
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../grid/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grid
     
   </span>
   
@@ -250,6 +294,28 @@
   
   <span class="md-ellipsis">
     MIT License
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mangle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Mangle
     
   </span>
   
@@ -359,6 +425,28 @@
   
   <span class="md-ellipsis">
     Persons
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../surveys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Surveys
     
   </span>
   
@@ -533,18 +621,34 @@
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>grid</code>
+                <code>assay</code>
             </td>
             <td>
-                  <code><a class="autorefs autorefs-internal" title="GridParams (snailz.grids.GridParams)" href="../grids/#snailz.grids.GridParams">GridParams</a></code>
+                  <code><a class="autorefs autorefs-internal" title="AssayParams (snailz.assays.AssayParams)" href="../assays/#snailz.assays.AssayParams">AssayParams</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>parameters for grid generation</p>
+                <p>parameters for assay generation</p>
               </div>
             </td>
             <td>
-                  <code>GridParams(limit=10.0, number=3, size=15, start_date=datetime.date(2024, 3, 1), max_interval=7)</code>
+                  <code>AssayParams(baseline=1.0, degrade=0.05, delay=5, mutant=10.0, noise=0.1, plate_size=4)</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>survey</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="SurveyParams (snailz.surveys.SurveyParams)" href="../surveys/#snailz.surveys.SurveyParams">SurveyParams</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>parameters for survey generation</p>
+              </div>
+            </td>
+            <td>
+                  <code>SurveyParams(number=3, size=15, start_date=datetime.date(2024, 3, 1), max_interval=7)</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -590,8 +694,7 @@
 
               <details class="quote">
                 <summary>Source code in <code>src/snailz/overall.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">10</span>
-<span class="normal">11</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">11</span>
 <span class="normal">12</span>
 <span class="normal">13</span>
 <span class="normal">14</span>
@@ -604,12 +707,19 @@
 <span class="normal">21</span>
 <span class="normal">22</span>
 <span class="normal">23</span>
-<span class="normal">24</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllParams</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllParams</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represent all parameters combined.&quot;&quot;&quot;</span>
 
     <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">7493418</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;RNG seed&quot;</span><span class="p">)</span>
-    <span class="n">grid</span><span class="p">:</span> <span class="n">GridParams</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="n">GridParams</span><span class="p">(),</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;parameters for grid generation&quot;</span>
+    <span class="n">assay</span><span class="p">:</span> <span class="n">AssayParams</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">AssayParams</span><span class="p">(),</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;parameters for assay generation&quot;</span>
+    <span class="p">)</span>
+    <span class="n">survey</span><span class="p">:</span> <span class="n">SurveyParams</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">SurveyParams</span><span class="p">(),</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;parameters for survey generation&quot;</span>
     <span class="p">)</span>
     <span class="n">person</span><span class="p">:</span> <span class="n">PersonParams</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="n">PersonParams</span><span class="p">(),</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;parameters for people generation&quot;</span>
@@ -690,10 +800,42 @@
           </tr>
           <tr class="doc-section-item">
             <td>
+                <code>assays</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="AllAssays (snailz.assays.AllAssays)" href="../assays/#snailz.assays.AllAssays">AllAssays</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>all assays</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>surveys</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="AllSurveys (snailz.surveys.AllSurveys)" href="../surveys/#snailz.surveys.AllSurveys">AllSurveys</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>all surveys</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
                 <code>persons</code>
             </td>
             <td>
-                  <code><a class="autorefs autorefs-internal" title="PersonList (snailz.persons.PersonList)" href="../persons/#snailz.persons.PersonList">PersonList</a></code>
+                  <code><a class="autorefs autorefs-internal" title="AllPersons (snailz.persons.AllPersons)" href="../persons/#snailz.persons.AllPersons">AllPersons</a></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -706,26 +848,10 @@
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>grids</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="GridList (snailz.grids.GridList)" href="../grids/#snailz.grids.GridList">GridList</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>all grids</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
                 <code>specimens</code>
             </td>
             <td>
-                  <code><span title="snailz.specimens.SpecimenList">SpecimenList</span></code>
+                  <code><span title="snailz.specimens.AllSpecimens">AllSpecimens</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -747,21 +873,23 @@
 
               <details class="quote">
                 <summary>Source code in <code>src/snailz/overall.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">31</span>
 <span class="normal">32</span>
 <span class="normal">33</span>
 <span class="normal">34</span>
-<span class="normal">35</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllData</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllData</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represent all generated data combined.&quot;&quot;&quot;</span>
 
     <span class="n">params</span><span class="p">:</span> <span class="n">AllParams</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;all parameters&quot;</span><span class="p">)</span>
-    <span class="n">persons</span><span class="p">:</span> <span class="n">PersonList</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;all persons&quot;</span><span class="p">)</span>
-    <span class="n">grids</span><span class="p">:</span> <span class="n">GridList</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;all grids&quot;</span><span class="p">)</span>
-    <span class="n">specimens</span><span class="p">:</span> <span class="n">SpecimenList</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;all specimens&quot;</span><span class="p">)</span>
+    <span class="n">assays</span><span class="p">:</span> <span class="n">AllAssays</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;all assays&quot;</span><span class="p">)</span>
+    <span class="n">surveys</span><span class="p">:</span> <span class="n">AllSurveys</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;all surveys&quot;</span><span class="p">)</span>
+    <span class="n">persons</span><span class="p">:</span> <span class="n">AllPersons</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;all persons&quot;</span><span class="p">)</span>
+    <span class="n">specimens</span><span class="p">:</span> <span class="n">AllSpecimens</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;all specimens&quot;</span><span class="p">)</span>
 
     <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="s2">&quot;forbid&quot;</span><span class="p">}</span>
 </code></pre></div></td></tr></table></div>

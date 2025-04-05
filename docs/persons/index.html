@@ -12,7 +12,7 @@
         <link rel="prev" href="../overall/">
       
       
-        <link rel="next" href="../utils/">
+        <link rel="next" href="../surveys/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -178,6 +178,28 @@
   
   
     <li class="md-nav__item">
+      <a href="../assays/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assays
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../clui/" class="md-nav__link">
         
   
@@ -222,12 +244,34 @@
   
   
     <li class="md-nav__item">
-      <a href="../grids/" class="md-nav__link">
+      <a href="../database/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Grids
+    Database
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../grid/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grid
     
   </span>
   
@@ -250,6 +294,28 @@
   
   <span class="md-ellipsis">
     MIT License
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mangle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Mangle
     
   </span>
   
@@ -376,17 +442,17 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#snailz.persons.PersonList" class="md-nav__link">
+  <a href="#snailz.persons.AllPersons" class="md-nav__link">
     <span class="md-ellipsis">
-      PersonList
+      AllPersons
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="PersonList">
+    <nav class="md-nav" aria-label="AllPersons">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#snailz.persons.PersonList.to_csv" class="md-nav__link">
+  <a href="#snailz.persons.AllPersons.to_csv" class="md-nav__link">
     <span class="md-ellipsis">
       to_csv
     </span>
@@ -421,6 +487,28 @@
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../surveys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Surveys
+    
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -514,17 +602,17 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#snailz.persons.PersonList" class="md-nav__link">
+  <a href="#snailz.persons.AllPersons" class="md-nav__link">
     <span class="md-ellipsis">
-      PersonList
+      AllPersons
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="PersonList">
+    <nav class="md-nav" aria-label="AllPersons">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#snailz.persons.PersonList.to_csv" class="md-nav__link">
+  <a href="#snailz.persons.AllPersons.to_csv" class="md-nav__link">
     <span class="md-ellipsis">
       to_csv
     </span>
@@ -886,8 +974,8 @@
 
 
 
-<h2 id="snailz.persons.PersonList" class="doc doc-heading">
-            <code>PersonList</code>
+<h2 id="snailz.persons.AllPersons" class="doc doc-heading">
+            <code>AllPersons</code>
 
 
 </h2>
@@ -914,7 +1002,7 @@
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>persons</code>
+                <code>items</code>
             </td>
             <td>
                   <code><span title="list">list</span>[<a class="autorefs autorefs-internal" title="Person (snailz.persons.Person)" href="#snailz.persons.Person">Person</a>]</code>
@@ -956,10 +1044,10 @@
 <span class="normal">52</span>
 <span class="normal">53</span>
 <span class="normal">54</span>
-<span class="normal">55</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">PersonList</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">55</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllPersons</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A set of generated people.&quot;&quot;&quot;</span>
 
-    <span class="n">persons</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Person</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;all persons&quot;</span><span class="p">)</span>
+    <span class="n">items</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Person</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;all persons&quot;</span><span class="p">)</span>
 
     <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="s2">&quot;forbid&quot;</span><span class="p">}</span>
 
@@ -970,7 +1058,7 @@
 <span class="sd">            A CSV-formatted string with people data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">utils</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">persons</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">,</span>
             <span class="p">[</span><span class="s2">&quot;ident&quot;</span><span class="p">,</span> <span class="s2">&quot;personal&quot;</span><span class="p">,</span> <span class="s2">&quot;family&quot;</span><span class="p">],</span>
             <span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">ident</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">personal</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">family</span><span class="p">],</span>
         <span class="p">)</span>
@@ -992,7 +1080,7 @@
 <div class="doc doc-object doc-function">
 
 
-<h3 id="snailz.persons.PersonList.to_csv" class="doc doc-heading">
+<h3 id="snailz.persons.AllPersons.to_csv" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">to_csv</span><span class="p">()</span></code>
 
 </h3>
@@ -1045,7 +1133,7 @@
 <span class="sd">        A CSV-formatted string with people data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">utils</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">persons</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">,</span>
         <span class="p">[</span><span class="s2">&quot;ident&quot;</span><span class="p">,</span> <span class="s2">&quot;personal&quot;</span><span class="p">,</span> <span class="s2">&quot;family&quot;</span><span class="p">],</span>
         <span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">ident</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">personal</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">family</span><span class="p">],</span>
     <span class="p">)</span>
@@ -1120,7 +1208,7 @@
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><a class="autorefs autorefs-internal" title="PersonList (snailz.persons.PersonList)" href="#snailz.persons.PersonList">PersonList</a></code>
+                  <code><a class="autorefs autorefs-internal" title="AllPersons (snailz.persons.AllPersons)" href="#snailz.persons.AllPersons">AllPersons</a></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1159,7 +1247,7 @@
 <span class="normal">80</span>
 <span class="normal">81</span>
 <span class="normal">82</span>
-<span class="normal">83</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">persons_generate</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">PersonParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PersonList</span><span class="p">:</span>
+<span class="normal">83</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">persons_generate</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">PersonParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AllPersons</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate random persons.</span>
 
 <span class="sd">    Parameters:</span>
@@ -1171,12 +1259,12 @@
     <span class="n">fake</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">Faker</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">locale</span><span class="p">)</span>
     <span class="n">fake</span><span class="o">.</span><span class="n">seed_instance</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1_000_000</span><span class="p">))</span>
     <span class="n">gen</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">UniqueIdGenerator</span><span class="p">(</span><span class="s2">&quot;person&quot;</span><span class="p">,</span> <span class="n">_person_id_generator</span><span class="p">)</span>
-    <span class="n">persons</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">number</span><span class="p">):</span>
         <span class="n">f</span> <span class="o">=</span> <span class="n">fake</span><span class="o">.</span><span class="n">last_name</span><span class="p">()</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">fake</span><span class="o">.</span><span class="n">first_name</span><span class="p">()</span>
         <span class="n">i</span> <span class="o">=</span> <span class="n">gen</span><span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
-        <span class="n">persons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="n">Person</span><span class="p">(</span>
                 <span class="n">ident</span><span class="o">=</span><span class="n">i</span><span class="p">,</span>
                 <span class="n">family</span><span class="o">=</span><span class="n">f</span><span class="p">,</span>
@@ -1184,7 +1272,7 @@
             <span class="p">)</span>
         <span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">PersonList</span><span class="p">(</span><span class="n">persons</span><span class="o">=</span><span class="n">persons</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">AllPersons</span><span class="p">(</span><span class="n">items</span><span class="o">=</span><span class="n">items</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
