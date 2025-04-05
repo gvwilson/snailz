@@ -5,7 +5,9 @@ import pytest
 from snailz.grid import Grid
 
 
-@pytest.mark.parametrize("i", [(-1, 0), (0, -1), (5, 0), (0, 5), "oops", (), (0.1, 0), (0, 0.1)])
+@pytest.mark.parametrize(
+    "i", [(-1, 0), (0, -1), (5, 0), (0, 5), "oops", (), (0.1, 0), (0, 0.1)]
+)
 def test_grid_indices(i):
     grid = Grid[int](width=3, height=3, default=0)
     with pytest.raises((IndexError, KeyError)):

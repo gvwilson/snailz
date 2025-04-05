@@ -26,7 +26,7 @@ SPECIMENS_1 = AllSpecimens(
             location=Point(x=1, y=1),
             mass=0.1,
         ),
-    ]
+    ],
 )
 
 PERSONS_2 = AllPersons(
@@ -77,7 +77,9 @@ def test_assay_parameter_validation():
 
 def test_assay_explicit_treatments_and_readings():
     treatments = Grid[str](width=2, height=2, default="", data=[["C", "S"], ["C", "S"]])
-    readings = Grid[float](width=2, height=2, default=0.0, data=[[1.0, 2.0], [3.0, 4.0]])
+    readings = Grid[float](
+        width=2, height=2, default=0.0, data=[[1.0, 2.0], [3.0, 4.0]]
+    )
     assay = Assay(
         ident="a01",
         specimen="s01",
@@ -117,16 +119,24 @@ def test_convert_assays_to_csv():
         specimen="s01",
         person="p01",
         performed=date(2021, 7, 1),
-        treatments=Grid[str](width=2, height=2, default="", data=[["C", "S"], ["C", "S"]]),
-        readings=Grid[float](width=2, height=2, default=0.0, data=[[1.0, 2.0], [3.0, 4.0]]),
+        treatments=Grid[str](
+            width=2, height=2, default="", data=[["C", "S"], ["C", "S"]]
+        ),
+        readings=Grid[float](
+            width=2, height=2, default=0.0, data=[[1.0, 2.0], [3.0, 4.0]]
+        ),
     )
     second = Assay(
         ident="a02",
         specimen="s02",
         person="p02",
         performed=date(2021, 7, 11),
-        treatments=Grid[str](width=2, height=2, default="", data=[["C", "C"], ["S", "S"]]),
-        readings=Grid[float](width=2, height=2, default=0.0, data=[[10.0, 20.0], [30.0, 40.0]])
+        treatments=Grid[str](
+            width=2, height=2, default="", data=[["C", "C"], ["S", "S"]]
+        ),
+        readings=Grid[float](
+            width=2, height=2, default=0.0, data=[[10.0, 20.0], [30.0, 40.0]]
+        ),
     )
     fixture = AllAssays(items=[first, second])
     expected = [
@@ -170,18 +180,28 @@ def test_assay_reading_value_susceptible(seed):
             if assay.treatments[x, y] == "C":
                 assert 0.0 <= assay.readings[x, y] <= params.noise
             else:
-                assert params.mutant <= assay.readings[x, y] <= params.mutant + params.noise
+                assert (
+                    params.mutant
+                    <= assay.readings[x, y]
+                    <= params.mutant + params.noise
+                )
 
 
 @pytest.mark.parametrize("seed", [127891, 457129, 9924, 527411, 931866])
 def test_assay_reading_value_not_susceptible(seed):
     random.seed(seed)
     params = AssayParams().model_copy(update={"plate_size": 2, "degrade": 0.0})
-    assays = assays_generate(params, PERSONS_1, SPECIMENS_1.model_copy(update={"susc_base": "C"}))
+    assays = assays_generate(
+        params, PERSONS_1, SPECIMENS_1.model_copy(update={"susc_base": "C"})
+    )
     assay = assays.items[0]
     for x in range(2):
         for y in range(2):
             if assay.treatments[x, y] == "C":
                 assert 0.0 <= assay.readings[x, y] <= params.noise
             else:
-                assert params.baseline <= assay.readings[x, y] <= params.baseline + params.noise
+                assert (
+                    params.baseline
+                    <= assay.readings[x, y]
+                    <= params.baseline + params.noise
+                )

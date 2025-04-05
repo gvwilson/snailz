@@ -14,7 +14,9 @@ class SurveyParams(BaseModel):
     """Parameters for survey generation."""
 
     number: int = Field(default=3, gt=0, description="Number of surveys")
-    size: int = Field(default=utils.DEFAULT_SURVEY_SIZE, gt=0, description="Survey size")
+    size: int = Field(
+        default=utils.DEFAULT_SURVEY_SIZE, gt=0, description="Survey size"
+    )
     start_date: date = Field(
         default=date.fromisoformat("2024-03-01"),
         description="Start date for specimen collection",

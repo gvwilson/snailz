@@ -38,7 +38,9 @@ class AssayParams(BaseModel):
         default=0.1, ge=0.0, description="Noise level for readings (must be positive)"
     )
     plate_size: int = Field(
-        default=DEFAULT_PLATE_SIZE, gt=0, description="Size of assay plate (must be positive)"
+        default=DEFAULT_PLATE_SIZE,
+        gt=0,
+        description="Size of assay plate (must be positive)",
     )
 
     model_config = {"extra": "forbid"}
@@ -142,8 +144,10 @@ def assays_generate(
     Returns:
         Assay list object
     """
+
     def susc(s):
         return s.genome[specimens.susc_locus] == specimens.susc_base
+
     gen = utils.UniqueIdGenerator("assays", lambda: f"{random.randint(0, 999999):06d}")
 
     items = []
@@ -176,7 +180,7 @@ def _make_readings(
     specimen: Specimen,
     susceptible: bool,
     performed: date,
-    treatments: Grid[str]
+    treatments: Grid[str],
 ) -> Grid[float]:
     """Make a single assay."""
     degradation = _calc_degradation(params, specimen.collected, performed)
@@ -189,7 +193,9 @@ def _make_readings(
                 base_value = params.mutant * degradation
             else:
                 base_value = params.baseline * degradation
-            readings[x, y] = round(base_value + random.uniform(0.0, params.noise), utils.PRECISION)
+            readings[x, y] = round(
+                base_value + random.uniform(0.0, params.noise), utils.PRECISION
+            )
 
     return readings
 
@@ -197,7 +203,7 @@ def _make_readings(
 def _make_treatments(params: AssayParams) -> Grid[str]:
     """Generate random treatments."""
     size = params.plate_size
-    size_sq = size ** 2
+    size_sq = size**2
     half = size_sq // 2
     available = list(("S" * half) + ("C" * (size_sq - half)))
     random.shuffle(available)
