@@ -19,11 +19,11 @@ DEFAULT_PLATE_SIZE = 4
 class AssayParams(BaseModel):
     """Parameters for assay generation."""
 
-    baseline: float = Field(default=1.0, gt=0, description="Baseline reading value")
+    baseline: float = Field(default=1.0, ge=0.0, description="Baseline reading value")
     degrade: float = Field(
         default=0.05,
-        ge=0,
-        le=1,
+        ge=0.0,
+        le=1.0,
         description="Rate at which sample responses decrease per day after first day (0..1)",
     )
     delay: int = Field(
@@ -32,10 +32,10 @@ class AssayParams(BaseModel):
         description="Maximum number of days between specimen collection and assay",
     )
     mutant: float = Field(
-        default=10.0, gt=0, description="Mutant reading value (must be positive)"
+        default=10.0, gt=0.0, description="Mutant reading value (must be positive)"
     )
     noise: float = Field(
-        default=0.1, gt=0, description="Noise level for readings (must be positive)"
+        default=0.1, ge=0.0, description="Noise level for readings (must be positive)"
     )
     plate_size: int = Field(
         default=DEFAULT_PLATE_SIZE, gt=0, description="Size of assay plate (must be positive)"
@@ -58,10 +58,14 @@ class Assay(BaseModel):
     specimen: str = Field(description="which specimen")
     person: str = Field(description="who did the assay")
     performed: date = Field(description="date assay was performed")
-    readings: Grid[float] | None = Field(default=None, description="assay readings")
-    treatments: Grid[str] | None = Field(default=None, description="samples or controls")
+    readings: Grid[float] = Field(description="assay readings")
+    treatments: Grid[str] = Field(description="samples or controls")
 
     model_config = {"extra": "forbid"}
+
+    @model_validator(mode="after")
+    def show_fields(self):
+        return self
 
     def to_csv(self, kind: str) -> str:
         """Return a CSV string representation of the assay data.
@@ -138,19 +142,21 @@ def assays_generate(
     Returns:
         Assay list object
     """
-    locus = specimens.susc_locus
-    base = specimens.susc_base
-    items = []
+    def susc(s):
+        return s.genome[specimens.susc_locus] == specimens.susc_base
     gen = utils.UniqueIdGenerator("assays", lambda: f"{random.randint(0, 999999):06d}")
+
+    items = []
     for spec in specimens.items:
         performed = spec.collected + timedelta(days=random.randint(0, params.delay))
-        ident = gen.next()
         person = random.choice(persons.items)
         treatments = _make_treatments(params)
-        readings = _make_assay(params, locus, base, spec, performed, treatments)
+        readings = _make_readings(params, spec, susc(spec), performed, treatments)
+        print("TREATMENTS", treatments)
+        print("READINGS", readings)
         items.append(
             Assay(
-                ident=ident,
+                ident=gen.next(),
                 performed=performed,
                 specimen=spec.ident,
                 person=person.ident,
@@ -158,19 +164,8 @@ def assays_generate(
                 readings=readings,
             )
         )
+
     return AllAssays(items=items)
-
-
-def _make_assay(
-    params: AssayParams, locus: int, base: str, specimen: Specimen, performed: date, treatments: Grid[str]
-) -> Grid[float]:
-    """Make a single assay."""
-    degradation = _calc_degradation(params, specimen.collected, performed)
-    readings = Grid(width=params.plate_size, height=params.plate_size, default=0.0)
-    for x in range(params.plate_size):
-        for y in range(params.plate_size):
-            readings[x, y] = _make_reading(params, specimen, locus, base, treatments[x, y], degradation)
-    return readings
 
 
 def _calc_degradation(params: AssayParams, collected: date, assayed: date) -> float:
@@ -178,41 +173,38 @@ def _calc_degradation(params: AssayParams, collected: date, assayed: date) -> fl
     return max(0.0, 1.0 - (params.degrade * (assayed - collected).days))
 
 
-def _make_reading(
+def _make_readings(
     params: AssayParams,
     specimen: Specimen,
-    locus: int,
-    base: str,
-    treatment: str,
-    degradation: float,
-) -> float:
-    """Generate readings based on treatments and susceptibility."""
+    susceptible: bool,
+    performed: date,
+    treatments: Grid[str]
+) -> Grid[float]:
+    """Make a single assay."""
+    degradation = _calc_degradation(params, specimen.collected, performed)
+    readings = Grid(width=params.plate_size, height=params.plate_size, default=0.0)
+    for x in range(params.plate_size):
+        for y in range(params.plate_size):
+            if treatments[x, y] == "C":
+                base_value = 0.0
+            elif susceptible:
+                base_value = params.mutant * degradation
+            else:
+                base_value = params.baseline * degradation
+            readings[x, y] = round(base_value + random.uniform(0.0, params.noise), utils.PRECISION)
 
-    # Control
-    if treatment == "C":
-        return round(random.uniform(0, params.noise), utils.PRECISION)
-
-    # Treatment
-    if specimen.genome[locus] == base:
-        noise = params.noise * params.mutant / params.baseline
-        base_value = params.mutant * degradation
-    else:
-        noise = params.noise
-        base_value = params.baseline * degradation
-
-    # Final value
-    return round(base_value + random.uniform(0, noise), utils.PRECISION)
+    return readings
 
 
 def _make_treatments(params: AssayParams) -> Grid[str]:
     """Generate random treatments."""
     size = params.plate_size
-    size_sq = size**2
+    size_sq = size ** 2
     half = size_sq // 2
     available = list(("S" * half) + ("C" * (size_sq - half)))
     random.shuffle(available)
     treatments = Grid(width=size, height=size, default="")
     for x in range(size):
         for y in range(size):
-            treatments[x, y] = available[x * size + y]
+            treatments[x, y] = available.pop()
     return treatments

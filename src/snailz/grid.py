@@ -24,7 +24,8 @@ class Grid(BaseModel, Generic[T]):
 
     @model_validator(mode="after")
     def initialize_grid(self):
-        self.data = [[self.default for _ in range(self.height)] for _ in range(self.width)]
+        if self.data is None:
+            self.data = [[self.default for _ in range(self.height)] for _ in range(self.width)]
         return self
     
     def __getitem__(self, key: tuple[int, int]) -> T:
