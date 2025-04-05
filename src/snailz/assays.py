@@ -7,9 +7,13 @@ import random
 
 from pydantic import BaseModel, Field, model_validator
 
+from .grid import Grid
 from .persons import AllPersons
 from .specimens import Specimen, AllSpecimens
 from . import utils
+
+
+DEFAULT_PLATE_SIZE = 4
 
 
 class AssayParams(BaseModel):
@@ -34,7 +38,7 @@ class AssayParams(BaseModel):
         default=0.1, gt=0, description="Noise level for readings (must be positive)"
     )
     plate_size: int = Field(
-        default=4, gt=0, description="Size of assay plate (must be positive)"
+        default=DEFAULT_PLATE_SIZE, gt=0, description="Size of assay plate (must be positive)"
     )
 
     model_config = {"extra": "forbid"}
@@ -54,8 +58,10 @@ class Assay(BaseModel):
     specimen: str = Field(description="which specimen")
     person: str = Field(description="who did the assay")
     performed: date = Field(description="date assay was performed")
-    readings: list[list[float]] = Field(description="survey of assay readings")
-    treatments: list[list[str]] = Field(description="survey of samples or controls")
+    readings: Grid[float] | None = Field(default=None, description="assay readings")
+    treatments: Grid[str] | None = Field(default=None, description="samples or controls")
+
+    model_config = {"extra": "forbid"}
 
     def to_csv(self, kind: str) -> str:
         """Return a CSV string representation of the assay data.
@@ -74,10 +80,10 @@ class Assay(BaseModel):
 
         # Get the appropriate data based on data_type
         data = self.readings if kind == "readings" else self.treatments
+        assert isinstance(data, Grid)
 
         # Generate column headers (A, B, C, etc.) and calculate metadata padding
-        plate_size = len(data)
-        column_headers = [""] + [chr(ord("A") + i) for i in range(plate_size)]
+        column_headers = [""] + [chr(ord("A") + i) for i in range(data.width)]
         max_columns = len(column_headers)
         padding = [""] * (max_columns - 2)
 
@@ -94,8 +100,9 @@ class Assay(BaseModel):
         for row in pre:
             writer.writerow(row)
 
-        for i, row in enumerate(data, 1):
-            writer.writerow([i] + row)
+        for i, y in enumerate(range(data.height - 1, -1, -1)):
+            row = [i + 1] + [data[x, y] for x in range(data.width)]
+            writer.writerow(row)
 
         return output.getvalue()
 
@@ -135,48 +142,35 @@ def assays_generate(
     base = specimens.susc_base
     items = []
     gen = utils.UniqueIdGenerator("assays", lambda: f"{random.randint(0, 999999):06d}")
-    for s in specimens.items:
-        performed = s.collected + timedelta(days=random.randint(0, params.delay))
+    for spec in specimens.items:
+        performed = spec.collected + timedelta(days=random.randint(0, params.delay))
         ident = gen.next()
         person = random.choice(persons.items)
-        treatments, readings = _make_assay(params, locus, base, s, performed)
+        treatments = _make_treatments(params)
+        readings = _make_assay(params, locus, base, spec, performed, treatments)
         items.append(
             Assay(
                 ident=ident,
                 performed=performed,
-                specimen=s.ident,
+                specimen=spec.ident,
                 person=person.ident,
-                readings=readings,
                 treatments=treatments,
+                readings=readings,
             )
         )
-
     return AllAssays(items=items)
 
 
 def _make_assay(
-    params: AssayParams, locus: int, base: str, specimen: Specimen, performed: date
-) -> tuple[list[list[str]], list[list[float]]]:
+    params: AssayParams, locus: int, base: str, specimen: Specimen, performed: date, treatments: Grid[str]
+) -> Grid[float]:
     """Make a single assay."""
-    treatments = _make_treatments(params)
     degradation = _calc_degradation(params, specimen.collected, performed)
-    readings = [
-        [
-            _make_reading(
-                params,
-                specimen,
-                locus,
-                base,
-                treatments[col][row],
-                degradation,
-                row,
-                col,
-            )
-            for row in range(params.plate_size)
-        ]
-        for col in range(params.plate_size)
-    ]
-    return treatments, readings
+    readings = Grid(width=params.plate_size, height=params.plate_size, default=0.0)
+    for x in range(params.plate_size):
+        for y in range(params.plate_size):
+            readings[x, y] = _make_reading(params, specimen, locus, base, treatments[x, y], degradation)
+    return readings
 
 
 def _calc_degradation(params: AssayParams, collected: date, assayed: date) -> float:
@@ -191,8 +185,6 @@ def _make_reading(
     base: str,
     treatment: str,
     degradation: float,
-    row: int,
-    col: int,
 ) -> float:
     """Generate readings based on treatments and susceptibility."""
 
@@ -212,11 +204,15 @@ def _make_reading(
     return round(base_value + random.uniform(0, noise), utils.PRECISION)
 
 
-def _make_treatments(params: AssayParams) -> list[list[str]]:
+def _make_treatments(params: AssayParams) -> Grid[str]:
     """Generate random treatments."""
     size = params.plate_size
     size_sq = size**2
     half = size_sq // 2
     available = list(("S" * half) + ("C" * (size_sq - half)))
     random.shuffle(available)
-    return [[available[row + col * size] for row in range(size)] for col in range(size)]
+    treatments = Grid(width=size, height=size, default="")
+    for x in range(size):
+        for y in range(size):
+            treatments[x, y] = available[x * size + y]
+    return treatments

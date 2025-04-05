@@ -4,7 +4,7 @@ from datetime import date
 import pytest
 
 from snailz.assays import AssayParams, Assay, AllAssays, assays_generate
-from snailz.surveys import Point
+from snailz.grid import Grid, Point
 from snailz.persons import Person, AllPersons
 from snailz.specimens import Specimen, AllSpecimens
 
@@ -42,6 +42,28 @@ SPECIMENS = AllSpecimens(
 )
 
 
+def fill_assay(assay, size, treatments, readings):
+    assay.treatments = Grid(width=size, height=size, default="")
+    assay.readings = Grid(width=size, height=size, default=0.0)
+    for x in range(assay.treatments.width):
+        for y in range(assay.treatments.height):
+            assay.treatments[x, y] = treatments[x][y]
+            assay.readings[x, y] = readings[x][y]
+
+
+def test_assay_parameter_validation():
+    original = AssayParams()
+    with pytest.raises(ValueError):
+        AssayParams(
+            baseline=original.baseline,
+            degrade=original.degrade,
+            delay=original.delay,
+            mutant=original.baseline / 2.0,
+            noise=original.noise,
+            plate_size=original.plate_size,
+        )
+
+
 def test_generate_assays_correct_length_and_reference_ids():
     assays = assays_generate(AssayParams(), PERSONS, SPECIMENS)
     assert len(assays.items) == 2
@@ -63,22 +85,16 @@ def test_convert_assays_to_csv():
         specimen="s01",
         person="p01",
         performed=date(2021, 7, 1),
-        readings=[[1.0, 2.0], [3.0, 4.0]],
-        treatments=[["C", "S"], ["C", "S"]],
     )
-    fixture = AllAssays(
-        items=[
-            first,
-            Assay(
-                ident="a02",
-                specimen="s02",
-                person="p02",
-                performed=date(2021, 7, 11),
-                readings=[[10.0, 20.0], [30.0, 40.0]],
-                treatments=[["S", "S"], ["C", "C"]],
-            ),
-        ]
+    fill_assay(first, 2, [["C", "S"], ["C", "S"]], [[1.0, 2.0], [3.0, 4.0]])
+    second = Assay(
+        ident="a02",
+        specimen="s02",
+        person="p02",
+        performed=date(2021, 7, 11),
     )
+    fill_assay(second, 2, [["C", "C"], ["S", "S"]], [[10.0, 20.0], [30.0, 40.0]])
+    fixture = AllAssays(items=[first, second])
     expected = [
         "ident,specimen,person,performed",
         "a01,s01,p01,2021-07-01",
@@ -86,24 +102,24 @@ def test_convert_assays_to_csv():
     ]
     assert fixture.to_csv() == "\n".join(expected) + "\n"
 
-    readings = [
-        "id,a01,",
-        "specimen,s01,",
-        "date,2021-07-01,",
-        "by,p01,",
-        ",A,B",
-        "1,1.0,2.0",
-        "2,3.0,4.0",
-    ]
-    assert first.to_csv("readings") == "\n".join(readings) + "\n"
-
     treatments = [
         "id,a01,",
         "specimen,s01,",
         "date,2021-07-01,",
         "by,p01,",
         ",A,B",
-        "1,C,S",
-        "2,C,S",
+        "1,S,S",
+        "2,C,C",
     ]
     assert first.to_csv("treatments") == "\n".join(treatments) + "\n"
+
+    readings = [
+        "id,a01,",
+        "specimen,s01,",
+        "date,2021-07-01,",
+        "by,p01,",
+        ",A,B",
+        "1,2.0,4.0",
+        "2,1.0,3.0",
+    ]
+    assert first.to_csv("readings") == "\n".join(readings) + "\n"

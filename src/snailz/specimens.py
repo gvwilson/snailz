@@ -8,7 +8,8 @@ import string
 from pydantic import BaseModel, Field
 
 from . import utils
-from .surveys import Point, Survey, AllSurveys
+from .grid import Point
+from .surveys import Survey, AllSurveys
 
 
 # Bases.

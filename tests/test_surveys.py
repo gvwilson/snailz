@@ -9,9 +9,7 @@ def test_generate_surveys_correct_length():
     params = SurveyParams()
     surveys = surveys_generate(params)
     assert len(surveys.items) == params.number
-    for g in surveys.items:
-        assert len(g.cells) == params.size
-        assert all(len(r) == params.size for r in g.cells)
+    assert all(s.size == params.size for s in surveys.items)
 
 
 def test_generate_surveys_correct_dates():
@@ -22,10 +20,10 @@ def test_generate_surveys_correct_dates():
         + timedelta(days=params.number * params.max_interval)
     )
     surveys = surveys_generate(params)
-    for g in surveys.items:
-        assert params.start_date <= g.start_date
-        assert g.start_date <= g.end_date
-        assert g.end_date <= max_date
+    for s in surveys.items:
+        assert params.start_date <= s.start_date
+        assert s.start_date <= s.end_date
+        assert s.end_date <= max_date
 
 
 def test_convert_survey_to_csv():
@@ -36,7 +34,9 @@ def test_convert_survey_to_csv():
         size=size,
         start_date=params.start_date,
         end_date=params.start_date,
-        cells=[list(range(size)) for _ in range(size)],
     )
+    for y in range(size - 1, -1, -1):
+        for x in range(size):
+            fixture.cells[x, y] = y
     result = fixture.to_csv()
     assert result == "2,2,2\n1,1,1\n0,0,0\n"

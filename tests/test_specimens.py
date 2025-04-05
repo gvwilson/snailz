@@ -2,7 +2,8 @@
 
 from datetime import date
 
-from snailz.surveys import Point, Survey, AllSurveys
+from snailz.grid import Point
+from snailz.surveys import Survey, AllSurveys
 from snailz.specimens import SpecimenParams, AllSpecimens, Specimen, specimens_generate
 
 
@@ -15,7 +16,6 @@ def test_generate_specimens_correct_length():
             size=size,
             start_date=date(2024, 1, 1),
             end_date=date(2024, 1, 31),
-            cells=[list(range(size)) for _ in range(size)],
         )
         for i in range(num)
     ]

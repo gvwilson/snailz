@@ -4,19 +4,10 @@ from datetime import date, timedelta
 import io
 import random
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
+from .grid import Grid
 from . import utils
-
-
-MOVES = [[-1, 0], [1, 0], [0, -1], [0, 1]]
-
-
-class Point(BaseModel):
-    """A 2D point with x and y coordinates."""
-
-    x: int = Field(ge=0, description="x coordinate")
-    y: int = Field(ge=0, description="y coordinate")
 
 
 class SurveyParams(BaseModel):
@@ -48,9 +39,29 @@ class Survey(BaseModel):
         default=date.fromisoformat("2024-04-30"),
         description="End date for specimen collection",
     )
-    cells: list[list[int]] = Field(description="survey cells")
+    cells: Grid[int] | None = Field(default=None, description="survey cells")
 
     model_config = {"extra": "forbid"}
+
+    @model_validator(mode="after")
+    def initialize_grid(self):
+        self.cells = Grid(width=self.size, height=self.size, default=0)
+        self.fill_cells()
+        return self
+
+    def fill_cells(self) -> None:
+        """Fill survey grid with fractal of random values."""
+        assert isinstance(self.cells, Grid)
+        size_1 = self.size - 1
+        center = self.size // 2
+        moves = [[-1, 0], [1, 0], [0, -1], [0, 1]]
+        x, y = center, center
+        self.cells[x, y] = 1
+        while (x != 0) and (x != size_1) and (y != 0) and (y != size_1):
+            self.cells[x, y] += 1
+            m = random.choice(moves)
+            x += m[0]
+            y += m[1]
 
     def to_csv(self) -> str:
         """Create a CSV representation of a single survey.
@@ -58,9 +69,10 @@ class Survey(BaseModel):
         Returns:
             A CSV-formatted string with survey cells.
         """
+        assert isinstance(self.cells, Grid)
         output = io.StringIO()
         for y in range(self.size - 1, -1, -1):
-            temp = [f"{self.cells[x][y]}" for x in range(self.size)]
+            temp = [f"{self.cells[x, y]}" for x in range(self.size)]
             print(",".join(temp), file=output)
         return output.getvalue()
 
@@ -90,8 +102,16 @@ def surveys_generate(params: SurveyParams) -> AllSurveys:
         next_date = current_date + timedelta(
             days=random.randint(1, params.max_interval)
         )
-        items.append(_make_survey(params, gen, current_date, next_date))
+        items.append(
+            Survey(
+                ident=gen.next(),
+                size=params.size,
+                start_date=current_date,
+                end_date=next_date,
+            )
+        )
         current_date = next_date + timedelta(days=1)
+
     return AllSurveys(items=items)
 
 
@@ -104,47 +124,3 @@ def _survey_id_generator() -> str:
 
     num = random.randint(0, 999)
     return f"S{num:03d}"
-
-
-def _make_survey(
-    params: SurveyParams,
-    ident_gen: utils.UniqueIdGenerator,
-    start_date: date,
-    end_date: date,
-) -> Survey:
-    """Create a survey of specified size and fill with random values.
-
-    Parameters:
-        params: Data generation parameters.
-        ident_gen: Unique ID generator for this survey
-
-    Returns:
-        A single survey.
-    """
-
-    cells = _make_cells(params)
-    return Survey(
-        ident=ident_gen.next(),
-        size=params.size,
-        cells=cells,
-        start_date=start_date,
-        end_date=end_date,
-    )
-
-
-def _make_cells(params: SurveyParams) -> list[list[int]]:
-    """Make survey of random values."""
-    size = params.size
-    size_1 = size - 1
-    center = size // 2
-
-    cells = [[0 for _ in range(size)] for _ in range(size)]
-    x, y = center, center
-    cells[x][y] = 1
-    while (x != 0) and (x != size_1) and (y != 0) and (y != size_1):
-        cells[x][y] += 1
-        m = random.choice(MOVES)
-        x += m[0]
-        y += m[1]
-
-    return cells
