@@ -293,6 +293,30 @@ whose structure is shown below.
   <img src="https://raw.githubusercontent.com/gvwilson/snailz/main/pages/img/schema.svg" alt="database schema">
 </div>
 
+### Data File Structure
+
+```
+data
+├── params.json
+├── data.json
+├── persons.csv
+├── surveys
+│   ├── S165.csv
+│   ├── S410.csv
+│   └── …
+├── specimens.csv
+├── assays.csv
+├── assays
+│   ├── 037356_raw.csv
+│   ├── 037356_readings.csv
+│   ├── 037356_treatments.csv
+│   ├── 092025_raw.csv
+│   ├── 092025_readings.csv
+│   ├── 092025_treatments.csv
+│   └── …
+└── snailz.db
+```
+
 ## Colophon
 
 `snailz` was inspired by the [Palmer Penguins][penguins] dataset
@@ -301,7 +325,27 @@ about his book [*Telling Stories with Data*][telling-stories].
 
 The snail logo was created by [sunar.ko][snail-logo].
 
+My thanks to everyone who built the tools this project relies on, including:
+
+-   [`click`][click] for building the command-line interface.
+-   [`doit`][doit] to run commands.
+-   [`mkdocs`][mkdocs] for documentation.
+-   [`pydantic`][pydantic] for storing and validating data (including parameters).
+-   [`pytest`][pytest], [`pyfakefs`][pyfakefs], and [`faker`][faker] for testing.
+-   [`ruff`][ruff] and [`pyright`][pyright] for checking the code.
+-   [`uv`][uv] for managing packages and the virtual environment.
+
 [alexander-rohan]: https://rohanalexander.com/
+[click]: https://click.palletsprojects.com/
+[doit]: https://pydoit.org/
+[faker]: https://faker.readthedocs.io/
+[mkdocs]: https://www.mkdocs.org/
 [penguins]: https://allisonhorst.github.io/palmerpenguins/
+[pydantic]: https://docs.pydantic.dev/
+[pyfakefs]: https://pypi.org/project/pyfakefs/
+[pyright]: https://pypi.org/project/pyright/
+[pytest]: https://docs.pytest.org/
+[ruff]: https://docs.astral.sh/ruff/
 [snail-logo]: https://www.vecteezy.com/vector-art/7319786-snails-logo-vector-on-white-background
 [telling-stories]: https://tellingstorieswithdata.com/
+[uv]: https://docs.astral.sh/uv/

@@ -278,6 +278,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#data-file-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data File Structure
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -335,6 +344,28 @@
   
   <span class="md-ellipsis">
     cli
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="conduct/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Code of Conduct
     
   </span>
   
@@ -636,6 +667,15 @@
   <a href="#database" class="md-nav__link">
     <span class="md-ellipsis">
       Database
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-file-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data File Structure
     </span>
   </a>
   
@@ -1243,18 +1283,45 @@ These files are provided so that people can learn how to deal with messy real-wo
 a SQLite database called <code>snailz.db</code>,
 whose structure is shown below.</p>
 <div align="center">
-<<<<<<< HEAD
   <img src="https://raw.githubusercontent.com/gvwilson/snailz/main/pages/img/schema.svg" alt="database schema">
-=======
-  <img src="https://raw.githubusercontent.com/gvwilson/sz/main/pages/img/schema.svg" alt="database schema">
->>>>>>> 83f3791eee94f473c4c1384012a6fa1239cc4749
 </div>
 
+<h3 id="data-file-structure">Data File Structure</h3>
+<pre><code>data
+├── params.json
+├── data.json
+├── persons.csv
+├── surveys
+│   ├── S165.csv
+│   ├── S410.csv
+│   └── …
+├── specimens.csv
+├── assays.csv
+├── assays
+│   ├── 037356_raw.csv
+│   ├── 037356_readings.csv
+│   ├── 037356_treatments.csv
+│   ├── 092025_raw.csv
+│   ├── 092025_readings.csv
+│   ├── 092025_treatments.csv
+│   └── …
+└── snailz.db
+</code></pre>
 <h2 id="colophon">Colophon</h2>
 <p><code>snailz</code> was inspired by the <a href="https://allisonhorst.github.io/palmerpenguins/">Palmer Penguins</a> dataset
 and by conversations with <a href="https://rohanalexander.com/">Rohan Alexander</a>
 about his book <a href="https://tellingstorieswithdata.com/"><em>Telling Stories with Data</em></a>.</p>
 <p>The snail logo was created by <a href="https://www.vecteezy.com/vector-art/7319786-snails-logo-vector-on-white-background">sunar.ko</a>.</p>
+<p>My thanks to everyone who built the tools this project relies on, including:</p>
+<ul>
+<li><a href="https://click.palletsprojects.com/"><code>click</code></a> for building the command-line interface.</li>
+<li><a href="https://pydoit.org/"><code>doit</code></a> to run commands.</li>
+<li><a href="https://www.mkdocs.org/"><code>mkdocs</code></a> for documentation.</li>
+<li><a href="https://docs.pydantic.dev/"><code>pydantic</code></a> for storing and validating data (including parameters).</li>
+<li><a href="https://docs.pytest.org/"><code>pytest</code></a>, <a href="https://pypi.org/project/pyfakefs/"><code>pyfakefs</code></a>, and <a href="https://faker.readthedocs.io/"><code>faker</code></a> for testing.</li>
+<li><a href="https://docs.astral.sh/ruff/"><code>ruff</code></a> and <a href="https://pypi.org/project/pyright/"><code>pyright</code></a> for checking the code.</li>
+<li><a href="https://docs.astral.sh/uv/"><code>uv</code></a> for managing packages and the virtual environment.</li>
+</ul>
 
 
 

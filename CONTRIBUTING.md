@@ -1,14 +1,23 @@
 # Contributing
 
 Contributions are very welcome.
-Please file issues or submit pull requests in our GitHub repository.
-All contributors will be acknowledged, but must abide by our Code of Conduct.
+Please file issues or submit pull requests in [our GitHub repository][repo].
+All contributors will be acknowledged, but must abide by our [Code of Conduct][conduct].
 
-## Please
+## Guidelines
 
--   [Open an issue][repo] *before* creating a pull request
+-   [Open an issue][repo-issues] *before* creating a pull request
     so that other contributors can give feedback before you do a lot of work.
--   Use [Conventional Commits][conventional].
+    Please use these labels:
+    - `please-add`: a feature request
+    - `please-cleanup`: request to clean up or refactor
+    - `please-fix`: a bug report
+-   Use [Conventional Commits][conventional] style for commits
+    and for the titles of [pull requests][repo-pulls].
+    Please use these labels:
+    - `is-cleanup`: a refactoring (should refer to `please-cleanup` issue)
+    - `is-feature`: a new feature (should refer to `please-add` issue)
+    - `is-fix`: a bug fix (should refer to `is-fix` issue)
 
 ## Setup
 
@@ -44,7 +53,10 @@ Alternatively:
 
 ## Publishing
 
-Use `twine upload --verbose -u __token__ -p pypi-your-access-token dist/*`.
+Use `twine upload --verbose -u __token__ -p your-pypi-access-token dist/*`.
 
+[conduct]: https://gvwilson.github.io/snailz/conduct/
 [conventional]: https://www.conventionalcommits.org/
-[repo]: https://github.com/gvwilson/sz
+[repo]: https://github.com/gvwilson/snailz/
+[repo-issues]: https://github.com/gvwilson/snailz/issues/
+[repo-pulls]: https://github.com/gvwilson/snailz/pulls/

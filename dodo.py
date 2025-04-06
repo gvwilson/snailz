@@ -113,6 +113,18 @@ def task_params():
     }
 
 
+def task_serve():
+    """Serve documentation using MkDocs."""
+
+    return {
+        "actions": [
+            "mkdocs serve",
+        ],
+        "verbosity": VERBOSITY,
+        "uptodate": [False],
+    }
+
+
 def task_test():
     """Run tests."""
     return {

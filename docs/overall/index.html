@@ -224,6 +224,28 @@
   
   
     <li class="md-nav__item">
+      <a href="../conduct/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Code of Conduct
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../contributing/" class="md-nav__link">
         
   
@@ -406,6 +428,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#snailz.overall.all_generate" class="md-nav__link">
+    <span class="md-ellipsis">
+      all_generate
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -526,6 +557,15 @@
   <a href="#snailz.overall.AllData" class="md-nav__link">
     <span class="md-ellipsis">
       AllData
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snailz.overall.all_generate" class="md-nav__link">
+    <span class="md-ellipsis">
+      all_generate
     </span>
   </a>
   
@@ -917,6 +957,53 @@
 
 </div>
 
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="snailz.overall.all_generate" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">all_generate</span><span class="p">(</span><span class="n">params</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Generate and save all data.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/snailz/overall.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">all_generate</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">AllParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AllData</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate and save all data.&quot;&quot;&quot;</span>
+    <span class="n">surveys</span> <span class="o">=</span> <span class="n">surveys_generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">survey</span><span class="p">)</span>
+    <span class="n">persons</span> <span class="o">=</span> <span class="n">persons_generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">person</span><span class="p">)</span>
+    <span class="n">specimens</span> <span class="o">=</span> <span class="n">specimens_generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">specimen</span><span class="p">,</span> <span class="n">surveys</span><span class="p">)</span>
+    <span class="n">assays</span> <span class="o">=</span> <span class="n">assays_generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">assay</span><span class="p">,</span> <span class="n">persons</span><span class="p">,</span> <span class="n">specimens</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">AllData</span><span class="p">(</span>
+        <span class="n">assays</span><span class="o">=</span><span class="n">assays</span><span class="p">,</span>
+        <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+        <span class="n">persons</span><span class="o">=</span><span class="n">persons</span><span class="p">,</span>
+        <span class="n">specimens</span><span class="o">=</span><span class="n">specimens</span><span class="p">,</span>
+        <span class="n">surveys</span><span class="o">=</span><span class="n">surveys</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
 
 
 

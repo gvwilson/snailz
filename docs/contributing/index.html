@@ -9,7 +9,7 @@
       
       
       
-        <link rel="prev" href="../clui/">
+        <link rel="prev" href="../conduct/">
       
       
         <link rel="next" href="../database/">
@@ -221,6 +221,28 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../conduct/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Code of Conduct
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -274,9 +296,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#please" class="md-nav__link">
+  <a href="#guidelines" class="md-nav__link">
     <span class="md-ellipsis">
-      Please
+      Guidelines
     </span>
   </a>
   
@@ -520,9 +542,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#please" class="md-nav__link">
+  <a href="#guidelines" class="md-nav__link">
     <span class="md-ellipsis">
-      Please
+      Guidelines
     </span>
   </a>
   
@@ -573,17 +595,30 @@
 
 <h1 id="contributing">Contributing</h1>
 <p>Contributions are very welcome.
-Please file issues or submit pull requests in our GitHub repository.
-All contributors will be acknowledged, but must abide by our Code of Conduct.</p>
-<h2 id="please">Please</h2>
+Please file issues or submit pull requests in <a href="https://github.com/gvwilson/snailz/">our GitHub repository</a>.
+All contributors will be acknowledged, but must abide by our <a href="https://gvwilson.github.io/snailz/conduct/">Code of Conduct</a>.</p>
+<h2 id="guidelines">Guidelines</h2>
 <ul>
-<li><a href="https://github.com/gvwilson/sz">Open an issue</a> <em>before</em> creating a pull request
-    so that other contributors can give feedback before you do a lot of work.</li>
-<li>Use <a href="https://www.conventionalcommits.org/">Conventional Commits</a>.</li>
+<li><a href="https://github.com/gvwilson/snailz/issues/">Open an issue</a> <em>before</em> creating a pull request
+    so that other contributors can give feedback before you do a lot of work.
+    Please use these labels:<ul>
+<li><code>please-add</code>: a feature request</li>
+<li><code>please-cleanup</code>: request to clean up or refactor</li>
+<li><code>please-fix</code>: a bug report</li>
+</ul>
+</li>
+<li>Use <a href="https://www.conventionalcommits.org/">Conventional Commits</a> style for commits
+    and for the titles of <a href="https://github.com/gvwilson/snailz/pulls/">pull requests</a>.
+    Please use these labels:<ul>
+<li><code>is-cleanup</code>: a refactoring (should refer to <code>please-cleanup</code> issue)</li>
+<li><code>is-feature</code>: a new feature (should refer to <code>please-add</code> issue)</li>
+<li><code>is-fix</code>: a bug fix (should refer to <code>is-fix</code> issue)</li>
+</ul>
+</li>
 </ul>
 <h2 id="setup">Setup</h2>
 <ol>
-<li>Fork or clone <a href="https://github.com/gvwilson/sz">the repository</a>.</li>
+<li>Fork or clone <a href="https://github.com/gvwilson/snailz/">the repository</a>.</li>
 <li>`uv sync --extra dev" to install an editable version of this package
     along with all its dependencies (including developer dependencies).</li>
 <li>Use <code>uv run <em>COMMAND</em></code> to run commands
@@ -643,7 +678,7 @@ All contributors will be acknowledged, but must abide by our Code of Conduct.</p
 </tbody>
 </table>
 <h2 id="publishing">Publishing</h2>
-<p>Use <code>twine upload --verbose -u __token__ -p pypi-your-access-token dist/*</code>.</p>
+<p>Use <code>twine upload --verbose -u __token__ -p your-pypi-access-token dist/*</code>.</p>
 
 
 
