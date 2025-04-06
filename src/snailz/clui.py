@@ -8,6 +8,7 @@ import shutil
 import click
 
 from .database import database_generate
+from .images import images_generate
 from .mangle import mangle_assays
 from .overall import AllParams, all_generate
 from . import utils
@@ -33,11 +34,14 @@ def data(csvdir, params, output):
         parameters = AllParams.model_validate(json.load(open(params, "r")))
         random.seed(parameters.seed)
         data = all_generate(parameters)
-        utils.display(output, data)
         if csvdir is not None:
             csv_dir_path = Path(csvdir)
             _create_csv(csv_dir_path, data)
             database_generate(csv_dir_path, "snailz.db")
+            image_dir = csv_dir_path / utils.ASSAYS_DIR
+            all_images = images_generate(parameters.assay, data.assays)
+            for ident, image in all_images.items():
+                image.save(image_dir / f"{ident}.png")
     except OSError as exc:
         utils.fail(str(exc))
 
@@ -48,7 +52,8 @@ def params(output):
     """Generate and save parameters."""
     try:
         params = AllParams()
-        utils.display(output, params)
+        with open(output, "w") as writer:
+            writer.write(json.dumps(params, indent=2, default=utils.serialize_json))
     except OSError as exc:
         utils.fail(str(exc))
 

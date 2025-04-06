@@ -3,7 +3,6 @@
 import csv
 from datetime import date
 import io
-import json
 import sys
 from typing import Callable
 
@@ -64,25 +63,6 @@ class UniqueIdGenerator:
         raise RuntimeError(f"failed to find unique ID for {self._name}")
 
 
-def display(filepath: str | None, data: BaseModel | str) -> None:
-    """Write to a file or to stdout.
-
-    Parameters:
-        filepath: Output filepath or None for stdout
-        data: what to write
-    """
-    if isinstance(data, str):
-        text = data
-    else:
-        text = json.dumps(data, indent=2, default=_serialize_json)
-
-    if not filepath:
-        print(text)
-    else:
-        with open(filepath, "w") as writer:
-            writer.write(text)
-
-
 def fail(msg: str) -> None:
     """Report failure and exit.
 
@@ -104,6 +84,25 @@ def report(verbose: bool, msg: str) -> None:
         print(msg)
 
 
+def serialize_json(obj: object) -> str | dict:
+    """Custom JSON serializer for JSON conversion.
+
+    Parameters:
+        obj: The object to serialize
+
+    Returns:
+        String representation of date objects or dict for Pydantic models
+
+    Raises:
+        TypeError: If the object type is not supported for serialization
+    """
+    if isinstance(obj, date):
+        return obj.isoformat()
+    if isinstance(obj, BaseModel):
+        return obj.model_dump()
+    raise TypeError(f"Type {type(obj)} not serializable")
+
+
 def to_csv(rows: list, fields: list, f_make_row: Callable) -> str:
     """Generic converter from list of models to CSV string.
 
@@ -122,22 +121,3 @@ def to_csv(rows: list, fields: list, f_make_row: Callable) -> str:
     for r in rows:
         writer.writerow(f_make_row(r))
     return output.getvalue()
-
-
-def _serialize_json(obj: object) -> str | dict:
-    """Custom JSON serializer for JSON conversion.
-
-    Parameters:
-        obj: The object to serialize
-
-    Returns:
-        String representation of date objects or dict for Pydantic models
-
-    Raises:
-        TypeError: If the object type is not supported for serialization
-    """
-    if isinstance(obj, date):
-        return obj.isoformat()
-    if isinstance(obj, BaseModel):
-        return obj.model_dump()
-    raise TypeError(f"Type {type(obj)} not serializable")
