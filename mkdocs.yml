@@ -2,6 +2,9 @@ site_name: "Snailz Docs"
 docs_dir: pages
 site_dir: docs
 
+extra_css:
+- css/snailz.css
+
 plugins:
 - mkdocstrings:
     handlers:
@@ -16,6 +19,7 @@ theme:
   name: "material"
 
 markdown_extensions:
+- def_list
 - markdown_include.include:
     base_path: docs
 - mkdocs-click
