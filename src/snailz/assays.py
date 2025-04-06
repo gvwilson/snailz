@@ -42,6 +42,12 @@ class AssayParams(BaseModel):
         gt=0,
         description="Size of assay plate (must be positive)",
     )
+    image_noise: int = Field(
+        default=32,
+        ge=0,
+        le=255,
+        description="Plate image noise (grayscale 0-255)",
+    )
 
     model_config = {"extra": "forbid"}
 

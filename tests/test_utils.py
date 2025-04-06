@@ -1,18 +1,37 @@
 """Test utilities."""
 
-from datetime import date
-from pathlib import Path
+from datetime import date, timedelta
 import pytest
 
 from pydantic import BaseModel
 
-from snailz.utils import UniqueIdGenerator, display, to_csv, fail, report
+from snailz.utils import UniqueIdGenerator, fail, json_dump, report, to_csv
 
 
 class DummyModel(BaseModel):
     top: int
     middle: date
     bottom: str
+
+
+def test_json_dump_of_special_types():
+    fixture = {"key": DummyModel(top=1, middle=date(2025, 1, 1), bottom="text")}
+    actual = json_dump(fixture)
+    expected = [
+        "{",
+        '  "key": {',
+        '    "top": 1,',
+        '    "middle": "2025-01-01",',
+        '    "bottom": "text"',
+        '  }',
+        '}',
+    ]
+    assert actual == "\n".join(expected)
+
+
+def test_json_dump_fails_for_unknown_type():
+    with pytest.raises(TypeError):
+        json_dump(timedelta(days=1))
 
 
 def test_unique_id_generator_produces_unique_ids():
@@ -26,37 +45,6 @@ def test_unique_id_generator_fails_at_limit():
     with pytest.raises(RuntimeError):
         for _ in range(3):
             gen.next()
-
-
-def test_display_to_file(fs):
-    json_path = Path("/test.json")
-    display(json_path, DummyModel(top=1, middle=date(1970, 1, 1), bottom="two"))
-    assert json_path.exists()
-    expected = [
-        "{",
-        '  "top": 1,',
-        '  "middle": "1970-01-01",',
-        '  "bottom": "two"',
-        "}",
-    ]
-    assert json_path.read_text() == "\n".join(expected)
-
-    str_path = Path("/test.txt")
-    str_text = "some text"
-    display(str_path, str_text)
-    assert str_path.exists()
-    assert str_path.read_text() == str_text
-
-
-def test_display_to_stdout(capsys):
-    display(None, "some text")
-    captured = capsys.readouterr()
-    assert captured.out == "some text\n"
-
-
-def test_display_fails_for_invalid_data():
-    with pytest.raises(TypeError):
-        display(None, {"key": Exception("error")})
 
 
 def test_fail_prints_message(capsys):

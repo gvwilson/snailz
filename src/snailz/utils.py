@@ -3,6 +3,7 @@
 import csv
 from datetime import date
 import io
+import json
 import sys
 from typing import Callable
 
@@ -73,6 +74,11 @@ def fail(msg: str) -> None:
     sys.exit(1)
 
 
+def json_dump(obj: BaseModel) -> str:
+    """Dump as JSON with appropriate settings."""
+    return json.dumps(obj, indent=2, default=_serialize_json)
+
+
 def report(verbose: bool, msg: str) -> None:
     """Report if verbosity turned on.
 
@@ -82,25 +88,6 @@ def report(verbose: bool, msg: str) -> None:
     """
     if verbose:
         print(msg)
-
-
-def serialize_json(obj: object) -> str | dict:
-    """Custom JSON serializer for JSON conversion.
-
-    Parameters:
-        obj: The object to serialize
-
-    Returns:
-        String representation of date objects or dict for Pydantic models
-
-    Raises:
-        TypeError: If the object type is not supported for serialization
-    """
-    if isinstance(obj, date):
-        return obj.isoformat()
-    if isinstance(obj, BaseModel):
-        return obj.model_dump()
-    raise TypeError(f"Type {type(obj)} not serializable")
 
 
 def to_csv(rows: list, fields: list, f_make_row: Callable) -> str:
@@ -121,3 +108,22 @@ def to_csv(rows: list, fields: list, f_make_row: Callable) -> str:
     for r in rows:
         writer.writerow(f_make_row(r))
     return output.getvalue()
+
+
+def _serialize_json(obj: object) -> str | dict:
+    """Custom JSON serializer for JSON conversion.
+
+    Parameters:
+        obj: The object to serialize
+
+    Returns:
+        String representation of date objects or dict for Pydantic models
+
+    Raises:
+        TypeError: If the object type is not supported for serialization
+    """
+    if isinstance(obj, date):
+        return obj.isoformat()
+    if isinstance(obj, BaseModel):
+        return obj.model_dump()
+    raise TypeError(f"Type {type(obj)} not serializable")

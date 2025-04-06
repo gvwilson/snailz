@@ -53,7 +53,7 @@ def params(output):
     try:
         params = AllParams()
         with open(output, "w") as writer:
-            writer.write(json.dumps(params, indent=2, default=utils.serialize_json))
+            writer.write(utils.json_dump(params))
     except OSError as exc:
         utils.fail(str(exc))
 

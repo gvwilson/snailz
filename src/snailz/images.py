@@ -13,8 +13,8 @@ BORDER_WIDTH = 16
 WELL_SIZE = 64
 BLACK = 0
 WHITE = 255
-IMG_NOISE = 32
 BLUR_RADIUS = 4
+
 
 def images_generate(params: AssayParams, assays: AllAssays) -> dict[str, PilImage]:
     """Generate image files.
@@ -28,7 +28,7 @@ def images_generate(params: AssayParams, assays: AllAssays) -> dict[str, PilImag
     """
     max_reading = _find_max_reading(assays, params.plate_size)
     scaling = float(math.ceil(max_reading + 1))
-    return {a.ident: _make_image(a, params.plate_size, scaling) for a in assays.items}
+    return {a.ident: _make_image(params, a, scaling) for a in assays.items}
 
 
 def _find_max_reading(assays: AllAssays, p_size: int) -> float:
@@ -49,18 +49,20 @@ def _find_max_reading(assays: AllAssays, p_size: int) -> float:
     return result
 
 
-def _make_image(assay: Assay, p_size: int, scaling: float) -> PilImage:
+def _make_image(params: AssayParams, assay: Assay, scaling: float) -> PilImage:
     """Generate a single image.
 
     Parameters:
+        params: assay parameters
         assay: assay to generate image for
-        p_size: plate size
         scaling: color scaling factor
 
     Returns:
        Image.
     """
     # Create blank image.
+    p_size = params.plate_size
+    img_noise = params.image_noise
     img_size = (p_size * WELL_SIZE) + ((p_size + 1) * BORDER_WIDTH)
     img = Image.new("L", (img_size, img_size), color=BLACK)
 
@@ -75,11 +77,13 @@ def _make_image(assay: Assay, p_size: int, scaling: float) -> PilImage:
     # Add uniform noise (not provided by pillow).
     for x in range(img_size):
         for y in range(img_size):
-            noise = random.randint(-IMG_NOISE, IMG_NOISE)
-            val = max(BLACK, min(WHITE, img.getpixel((x, y)) + noise))
+            noise = random.randint(-img_noise, img_noise)
+            old_val = img.getpixel((x, y))
+            assert isinstance(old_val, int)  # for type checking
+            val = max(BLACK, min(WHITE, old_val + noise))
             img.putpixel((x, y), val)
 
     # Blur.
     img = img.filter(ImageFilter.GaussianBlur(BLUR_RADIUS))
-            
+
     return img
