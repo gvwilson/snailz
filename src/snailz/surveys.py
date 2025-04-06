@@ -65,6 +65,15 @@ class Survey(BaseModel):
             x += m[0]
             y += m[1]
 
+    def max_value(self) -> float:
+        """Maximum cell value in this survey."""
+        assert self.cells is not None  # for type checking
+        result = self.cells[0, 0]
+        for x in range(self.size):
+            for y in range(self.size):
+                result = max(result, self.cells[x, y])
+        return result
+
     def to_csv(self) -> str:
         """Create a CSV representation of a single survey.
 
@@ -85,6 +94,10 @@ class AllSurveys(BaseModel):
     items: list[Survey] = Field(description="all surveys")
 
     model_config = {"extra": "forbid"}
+
+    def max_value(self) -> float:
+        """Maximum cell value of all surveys in this set."""
+        return max(survey.max_value() for survey in self.items)
 
 
 def surveys_generate(params: SurveyParams) -> AllSurveys:

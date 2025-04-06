@@ -4,6 +4,7 @@ import csv
 from datetime import date
 import io
 import json
+import math
 import sys
 from typing import Callable
 
@@ -88,6 +89,23 @@ def report(verbose: bool, msg: str) -> None:
     """
     if verbose:
         print(msg)
+
+
+def sigmoid(x: float) -> float:
+    """Calculate sigmoid curve value for x in 0..1.
+
+    Sigmoid parameters are chosen so that s(0)=0, s(0.5)=0.5, and s(1)=1.
+
+    Parameters:
+        x: input value
+
+    Returns:
+        Sigmoid curve value.
+    """
+    a = 16.0
+    b = 0.5
+    c = -0.0002
+    return 1 / (1 + math.exp(-a * (x - b))) + c
 
 
 def to_csv(rows: list, fields: list, f_make_row: Callable) -> str:

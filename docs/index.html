@@ -997,6 +997,11 @@ The parameters, their meanings, and their properties are:</p>
     that can grow to unusual size.</p>
 </li>
 <li>
+<p>The masses of all snails are scaled up by an amount that depends on
+    how polluted their collection location is.
+    This scaling uses a <a href="https://en.wikipedia.org/wiki/Sigmoid_function">sigmoid function</a> rather than a linear function.</p>
+</li>
+<li>
 <p>The actual readings for mutated and unmutated snails are randomly generated
     by adding uniform noise to <code>assay.baseline</code> and <code>assay.mutant</code>.
     The readings for control wells are just noise.</p>

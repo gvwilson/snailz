@@ -131,6 +131,10 @@ Notes:
     a snail with that mutant base in that location is a mutant
     that can grow to unusual size.
 
+1.  The masses of all snails are scaled up by an amount that depends on
+    how polluted their collection location is.
+    This scaling uses a [sigmoid function][sigmoid] rather than a linear function.
+
 1.  The actual readings for mutated and unmutated snails are randomly generated
     by adding uniform noise to `assay.baseline` and `assay.mutant`.
     The readings for control wells are just noise.
@@ -359,6 +363,7 @@ My thanks to everyone who built the tools this project relies on, including:
 [pyright]: https://pypi.org/project/pyright/
 [pytest]: https://docs.pytest.org/
 [ruff]: https://docs.astral.sh/ruff/
+[sigmoid]: https://en.wikipedia.org/wiki/Sigmoid_function
 [snail-logo]: https://www.vecteezy.com/vector-art/7319786-snails-logo-vector-on-white-background
 [telling-stories]: https://tellingstorieswithdata.com/
 [uv]: https://docs.astral.sh/uv/

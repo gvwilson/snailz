@@ -85,7 +85,15 @@ class AllSpecimens(BaseModel):
 
 
 def specimens_generate(params: SpecimenParams, surveys: AllSurveys) -> AllSpecimens:
-    """Generate a set of specimens."""
+    """Generate a set of specimens.
+
+    Parameters:
+        params: specimen generation parameters
+        surveys: surveys to generate specimens for
+
+    Returns:
+        A set of surveys.
+    """
 
     reference = _make_reference_genome(params)
     loci = _make_loci(params)
@@ -100,10 +108,11 @@ def specimens_generate(params: SpecimenParams, surveys: AllSurveys) -> AllSpecim
         items=[],
     )
 
+    max_value = surveys.max_value()
     for survey in surveys.items:
         positions = _place_specimens(survey.size, params.spacing)
         for pos in positions:
-            specimens.items.append(_make_specimen(params, survey, specimens, gen, pos))
+            specimens.items.append(_make_specimen(params, survey, specimens, gen, pos, max_value))
 
     return specimens
 
@@ -138,23 +147,44 @@ def _make_specimen(
     specimens: AllSpecimens,
     gen: utils.UniqueIdGenerator,
     location: Point,
+    max_value: float,
 ) -> Specimen:
-    """Make a single specimen."""
-    genome = list(specimens.reference)
+    """Make a single specimen.
+
+    Parameters:
+        params: specimen parameters
+        survey: survey this specimen is from
+        specimens: all specimens in this survey
+        gen: unique ID generation function
+        location: grid point where specimen was sampled
+        max_value: maximum pollution value across all surveys
+
+    Returns:
+        A randomly-generated specimen.
+    """
+    # Collection date
     collected = date.fromordinal(
         random.randint(survey.start_date.toordinal(), survey.end_date.toordinal())
     )
 
+    # Mutated genome
+    genome = list(specimens.reference)
     num_mutations = random.randint(1, len(specimens.loci))
     for loc in random.sample(range(len(specimens.loci)), num_mutations):
         candidates = list(sorted(set(BASES) - set(specimens.reference[loc])))
         genome[loc] = candidates[random.randrange(len(candidates))]
     genome = "".join(genome)
 
+    # Mutant status
     is_mutant = genome[specimens.susc_locus] == specimens.susc_base
+
+    # Mass
     mass_scale = params.mut_mass_scale if is_mutant else 1.0
     max_mass = mass_scale * params.max_mass
     mass = round(random.uniform(max_mass / 2.0, max_mass), utils.PRECISION)
+    assert survey.cells is not None  # for type checking
+    pollution_scaling = 1.0 + 2.0 * utils.sigmoid(survey.cells[location.x, location.y] / max_value)
+    mass *= pollution_scaling
 
     return Specimen(
         ident=gen.next(),
@@ -168,6 +198,17 @@ def _make_specimen(
 
 
 def _calculate_span(size: int, coord: int, span: int) -> range:
+    """
+    Calculate axial range of cells close to a center point.
+
+    Parameters:
+        size: grid size
+        coord: X or Y coordinate
+        span: maximum width on either side
+
+    Returns:
+        Endpoint coordinates of span.
+    """
     return range(max(0, coord - span), 1 + min(size, coord + span))
 
 
@@ -177,6 +218,13 @@ def _place_specimens(size: int, spacing: float) -> list[Point]:
     - Initialize a set of all possible (x, y) points.
     - Repeatedly choose one at random and add to the result.
     - Remove all points within a random radius of that point.
+
+    Parameters:
+        size: grid size
+        spacing: inter-specimen spacing parameter
+
+    Returns:
+        A list of specimen locations.
     """
 
     available = {(x, y) for x in range(size) for y in range(size)}
@@ -193,4 +241,9 @@ def _place_specimens(size: int, spacing: float) -> list[Point]:
 
 
 def _specimen_id_generator() -> str:
+    """Specimen ID generation function.
+
+    Returns:
+        Candidate ID for a specimen.
+    """
     return "".join(random.choices(string.ascii_uppercase, k=6))
