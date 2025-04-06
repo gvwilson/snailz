@@ -43,6 +43,8 @@
     
       <link rel="stylesheet" href="assets/_mkdocstrings.css">
     
+      <link rel="stylesheet" href="css/snailz.css">
+    
     <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -204,11 +206,80 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#for-users" class="md-nav__link">
+  <a href="#usage" class="md-nav__link">
     <span class="md-ellipsis">
-      For Users
+      Usage
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-dictionary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Dictionary
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Dictionary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#persons" class="md-nav__link">
+    <span class="md-ellipsis">
+      Persons
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#surveys" class="md-nav__link">
+    <span class="md-ellipsis">
+      Surveys
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#specimens" class="md-nav__link">
+    <span class="md-ellipsis">
+      Specimens
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assays" class="md-nav__link">
+    <span class="md-ellipsis">
+      Assays
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -498,11 +569,80 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#for-users" class="md-nav__link">
+  <a href="#usage" class="md-nav__link">
     <span class="md-ellipsis">
-      For Users
+      Usage
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-dictionary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Dictionary
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Dictionary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#persons" class="md-nav__link">
+    <span class="md-ellipsis">
+      Persons
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#surveys" class="md-nav__link">
+    <span class="md-ellipsis">
+      Surveys
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#specimens" class="md-nav__link">
+    <span class="md-ellipsis">
+      Specimens
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assays" class="md-nav__link">
+    <span class="md-ellipsis">
+      Assays
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -533,9 +673,55 @@
 
 <h1 id="snailz">Snailz</h1>
 <p><img src="https://raw.githubusercontent.com/gvwilson/sz/main/pages/img/snail-logo.svg" alt="snail logo" width="200px"></p>
-<p>These synthetic data generators model a study of snails in the Pacific Northwest
-that are growing to unusual size as a result of exposure to pollution.</p>
-<h2 id="for-users">For Users</h2>
+<p><code>snailz</code> is a synthetic data generator
+that models a study of snails in the Pacific Northwest
+which are growing to unusual size as a result of exposure to pollution.
+The package can generate datasets of varying sizes and with varying statistical properties
+in a fully reproducible way,
+and is intended primarily for classroom use.
+For example,
+an instructor can give each learner a unique dataset to analyze,
+while learners can test their analysis pipelines using datasets they generate themselves.
+<code>snailz</code> can also be used to teach good software development practices:
+it is well structured,
+well tested,
+and uses modern Python tools.</p>
+<blockquote>
+<p><em>The Story</em></p>
+<p>Years ago,
+logging companies dumped toxic waste in a remote region of Vancouver Island.
+As the containers leaked and the pollution spread,
+some of the tree snails in the region began growing unusually large.
+You are collecting and analyzing specimens from affected regions
+to determine if a mutant gene makes snails more susceptible to the pollution.</p>
+</blockquote>
+<p><code>snailz</code> generates four related sets of data:</p>
+<dl>
+<dt><strong>Persons</strong></dt>
+<dd>The scientists conducting the study.
+Persons are included in the dataset to simulate operator bias,
+i.e.,
+the tendency for different people to perform experiments in slightly different ways.</dd>
+<dt><strong>Surveys</strong></dt>
+<dd>The locations where specimens are collected.
+Each survey site is represented as a square grid of pollution readings.</dd>
+<dt><strong>Specimens</strong></dt>
+<dd>The snails collected from the sites.
+The data records where the snail was found,
+the date it was collected,
+its mass,
+and a short fragment of its genome.</dd>
+<dt><strong>Assays</strong></dt>
+<dd>The chemical analysis of the snails' genomes.
+One assay is performed for each snail
+by putting samples of the snail's tissue and samples of an inert control material
+in small wells in a glass plate.
+The wells are then treated with various chemicals and measured photographically.
+Each assay is stored in two files:
+a design file showing which wells contain samples and controls,
+and a readings file with the measured responses.</dd>
+</dl>
+<h2 id="usage">Usage</h2>
 <ol>
 <li><code>pip install snailz</code> (or the equivalent command for your Python environment).</li>
 <li><code>snailz --help</code> to see available commands.</li>
@@ -572,8 +758,499 @@ $ snailz params --output params
 # Generate all output files in ./data directory
 $ snailz data --params params --output data
 </code></pre>
+<h2 id="parameters">Parameters</h2>
+<p><code>snailz</code> reads controlling parameters from a JSON file,
+and can generate a file with default parameter values as a starting point.
+The parameters, their meanings, and their properties are:</p>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th>Name</th>
+<th>Purpose</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>overall</td>
+<td><code>seed</code></td>
+<td>random number generation seed</td>
+<td>7493418</td>
+<td>non-negative integer</td>
+</tr>
+<tr>
+<td><code>assay</code></td>
+<td><code>baseline</code></td>
+<td>assay reading for non-mutant specimens</td>
+<td>1.0</td>
+<td>non-negative real</td>
+</tr>
+<tr>
+<td></td>
+<td><code>degrade</code></td>
+<td>reading degradation per day between sample collection and assay</td>
+<td>0.05</td>
+<td>non-negative real</td>
+</tr>
+<tr>
+<td></td>
+<td><code>delay</code></td>
+<td>maximum days of delay between sample collection and assay</td>
+<td>5</td>
+<td>non-negative integer</td>
+</tr>
+<tr>
+<td></td>
+<td><code>mutant</code></td>
+<td>assay reading for mutant specimens</td>
+<td>10.0</td>
+<td>non-negative real, greater than <code>baseline</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>noise</code></td>
+<td>random noise for readings</td>
+<td>0.1</td>
+<td>non-negative real</td>
+</tr>
+<tr>
+<td></td>
+<td><code>plate_size</code></td>
+<td>number of rows and columns in assay plate</td>
+<td>4</td>
+<td>non-negative integer</td>
+</tr>
+<tr>
+<td><code>survey</code></td>
+<td><code>number</code></td>
+<td>number of survey sites</td>
+<td>3</td>
+<td>non-negative integer</td>
+</tr>
+<tr>
+<td></td>
+<td><code>size</code></td>
+<td>survey grid size</td>
+<td>15</td>
+<td>non-negative integer</td>
+</tr>
+<tr>
+<td></td>
+<td><code>start_date</code></td>
+<td>overall survey start date</td>
+<td>2024-03-01</td>
+<td>ISO date</td>
+</tr>
+<tr>
+<td></td>
+<td><code>max_interval</code></td>
+<td>maximum number of days between specimen samples</td>
+<td>7</td>
+<td>non-negative integer</td>
+</tr>
+<tr>
+<td><code>person</code></td>
+<td><code>locale</code></td>
+<td>locale for random name generation</td>
+<td><code>et_EE</code> (Estonia)</td>
+<td>valid ISO locale</td>
+</tr>
+<tr>
+<td></td>
+<td><code>number</code></td>
+<td>number of persons</td>
+<td>5</td>
+<td>non-negative integer</td>
+</tr>
+<tr>
+<td><code>specimen</code></td>
+<td><code>length</code></td>
+<td>genome length in bases</td>
+<td>20</td>
+<td>non-negative integer</td>
+</tr>
+<tr>
+<td></td>
+<td><code>max_mass</code></td>
+<td>maximum unmutated snail mass</td>
+<td>10.0</td>
+<td>non-negative real</td>
+</tr>
+<tr>
+<td></td>
+<td><code>num_mutations</code></td>
+<td>maximum number of mutations in genome</td>
+<td>5</td>
+<td>non-negative integer</td>
+</tr>
+<tr>
+<td></td>
+<td><code>spacing</code></td>
+<td>space between snail specimens</td>
+<td>3.75</td>
+<td>non-negative real</td>
+</tr>
+</tbody>
+</table>
+<p>Notes:</p>
+<ol>
+<li>
+<p>The actual readings for mutated and unmutated snails are randomly generated
+    by adding uniform noise to <code>assay.baseline</code> and <code>assay.mutant</code>.
+    The readings for control wells are just noise.</p>
+</li>
+<li>
+<p>Reading values for both mutated and unmutated snails are lowered
+    by an amount that depends on the number of days between the sample being collected
+    and the assay being performed.</p>
+</li>
+<li>
+<p>Survey sites are sampled one by one,
+    i.e.,
+    all of the samples from one site are collected before any samples are collected from the next.</p>
+</li>
+<li>
+<p>All snail genomes are the same length,
+    and are generated by mutating the bases at a few randomly-chosen locations.
+    One of those locations and one of the variant bases is selected at random;
+    a snail with that mutant base in that location is a mutant
+    and grows to unusual size.</p>
+</li>
+<li>
+<p>Specimens are spaced apart within the survey grid
+    by an amount that depends on their size;
+    on average,
+    larger specimens have more space around them.</p>
+</li>
+<li>
+<p>The pollution values in survey grids are generated by performing a random walk of the grid,
+    adding one to each cell's value each time it is visited.
+    The random walk starts when the polluted region reaches the boundary of the survey grid.</p>
+</li>
+</ol>
+<h2 id="data-dictionary">Data Dictionary</h2>
+<p>All of the generated data is stored in a single JSON file called <code>data.json</code>.
+It can be read and analyzed directly,
+but it is more realistic to use the data described below.</p>
+<h3 id="persons">Persons</h3>
+<p><code>persons.csv</code> contains information about the scientists performing the study.
+The file looks like this:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">ident</th>
+<th style="text-align: left;">personal</th>
+<th style="text-align: left;">family</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">aa1942</td>
+<td style="text-align: left;">Artur</td>
+<td style="text-align: left;">Aasmäe</td>
+</tr>
+<tr>
+<td style="text-align: left;">kk0085</td>
+<td style="text-align: left;">Katrin</td>
+<td style="text-align: left;">Kool</td>
+</tr>
+<tr>
+<td style="text-align: left;">…</td>
+<td style="text-align: left;">…</td>
+<td style="text-align: left;">…</td>
+</tr>
+</tbody>
+</table>
+<p>and its fields are:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Purpose</th>
+<th>Properties</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ident</code></td>
+<td>identifier</td>
+<td>text, unique, required</td>
+</tr>
+<tr>
+<td><code>personal</code></td>
+<td>personal name</td>
+<td>text, required</td>
+</tr>
+<tr>
+<td><code>family</code></td>
+<td>family name</td>
+<td>text, required</td>
+</tr>
+</tbody>
+</table>
+<h3 id="surveys">Surveys</h3>
+<p>The <code>surveys</code> directory contains one CSV file for each survey site.
+Each file's name has the form <code>S<em>nnn</em>.csv</code> (e.g., <code>S165.csv</code>),
+where <code>S<em>nnn</em></code> is the survey site's unique identifier.
+These CSV files do <em>not</em> have column headers;
+instead, each contains a square integer matrix of pollution readings.
+A typical file is:</p>
+<pre><code>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,1,1,0,0,0,0
+0,0,0,0,0,0,0,0,1,2,1,0,0,0,0
+0,0,0,0,0,0,0,0,2,1,0,0,0,0,0
+0,0,0,0,0,0,0,1,2,0,0,0,0,0,0
+0,0,0,0,0,0,0,1,2,1,0,0,0,0,0
+0,0,0,0,0,0,0,0,1,2,0,0,0,0,0
+0,0,0,0,0,0,0,2,2,1,0,0,0,0,0
+0,0,0,0,0,0,0,1,3,0,0,0,0,0,0
+0,0,0,0,0,0,0,1,3,1,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</code></pre>
+<h3 id="specimens">Specimens</h3>
+<p><code>specimens.csv</code> holds information about individual snails in CSV format (with column headers).
+The file looks like this:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">ident</th>
+<th style="text-align: left;">survey</th>
+<th style="text-align: right;">x</th>
+<th style="text-align: right;">y</th>
+<th style="text-align: left;">collected</th>
+<th style="text-align: left;">genome</th>
+<th style="text-align: right;">mass</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">KHNKDL</td>
+<td style="text-align: left;">S165</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">2024-03-01</td>
+<td style="text-align: left;">GCAACCGGACCGCCGTAAGG</td>
+<td style="text-align: right;">3.82</td>
+</tr>
+<tr>
+<td style="text-align: left;">DZYIPY</td>
+<td style="text-align: left;">S165</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">2024-03-01</td>
+<td style="text-align: left;">TCATACGGACCGCCGTAAGG</td>
+<td style="text-align: right;">3.53</td>
+</tr>
+<tr>
+<td style="text-align: left;">…</td>
+<td style="text-align: left;">…</td>
+<td style="text-align: right;">…</td>
+<td style="text-align: right;">…</td>
+<td style="text-align: left;">…</td>
+<td style="text-align: left;">…</td>
+<td style="text-align: right;">…</td>
+</tr>
+</tbody>
+</table>
+<p>and its fields are:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Purpose</th>
+<th>Properties</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ident</code></td>
+<td>specimen identifier</td>
+<td>text, unique, required</td>
+</tr>
+<tr>
+<td><code>survey</code></td>
+<td>survey identifier</td>
+<td>text, required</td>
+</tr>
+<tr>
+<td><code>x</code></td>
+<td>collection X coordinate within survey grid</td>
+<td>integer, required</td>
+</tr>
+<tr>
+<td><code>y</code></td>
+<td>collection Y coordinate within survey grid</td>
+<td>integer, required</td>
+</tr>
+<tr>
+<td><code>collected</code></td>
+<td>collection date</td>
+<td>ISO date, required</td>
+</tr>
+<tr>
+<td><code>genome</code></td>
+<td>base sequence</td>
+<td>text, required</td>
+</tr>
+<tr>
+<td><code>mass</code></td>
+<td>snail weight in grams</td>
+<td>real, required</td>
+</tr>
+</tbody>
+</table>
+<h3 id="assays">Assays</h3>
+<p>Summary information about all assays is stored in <code>assays.csv</code>.
+The file looks like this:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">ident</th>
+<th style="text-align: left;">specimen</th>
+<th style="text-align: left;">person</th>
+<th style="text-align: left;">performed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">386915</td>
+<td style="text-align: left;">KHNKDL</td>
+<td style="text-align: left;">km3478</td>
+<td style="text-align: left;">2024-03-05</td>
+</tr>
+<tr>
+<td style="text-align: left;">508199</td>
+<td style="text-align: left;">DZYIPY</td>
+<td style="text-align: left;">mt8294</td>
+<td style="text-align: left;">2024-03-01</td>
+</tr>
+<tr>
+<td style="text-align: left;">…</td>
+<td style="text-align: left;">…</td>
+<td style="text-align: left;">…</td>
+<td style="text-align: left;">…</td>
+</tr>
+</tbody>
+</table>
+<p>and its fields are:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Purpose</th>
+<th>Properties</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ident</code></td>
+<td>assay identifier</td>
+<td>text, required</td>
+</tr>
+<tr>
+<td><code>specimen</code></td>
+<td>specimen identifier</td>
+<td>text, required</td>
+</tr>
+<tr>
+<td><code>person</code></td>
+<td>scientist identifier</td>
+<td>text, required</td>
+</tr>
+<tr>
+<td><code>performed</code></td>
+<td>assay date</td>
+<td>ISO date, required</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>assays</code> directory contains two files for each assay:
+a design file <code><em>nnnnnn</em>_treatments.csv</code>
+showing whether specimen samples or control material was placed in each well of the assay plate,
+and a readings file <code><em>nnnnnn</em>_readings.csv</code>
+with the reading from each well.
+Each file contains a multi-line header with metadata followed by
+a table of well values with row and column labels.
+A typical design file is:</p>
+<pre><code>id,037356,,,
+specimen,AMEMRZ,,,
+date,2024-03-11,,,
+by,pv8677,,,
+,A,B,C,D
+1,S,C,C,S
+2,C,C,S,C
+3,S,C,S,S
+4,C,S,C,S
+</code></pre>
+<p>while a typical readings file is:</p>
+<pre><code>id,037356,,,
+specimen,AMEMRZ,,,
+date,2024-03-11,,,
+by,pv8677,,,
+,A,B,C,D
+1,1.09,0.08,0.02,1.1
+2,0.02,0.02,1.0,0.07
+3,1.03,0.03,1.1,1.07
+4,0.09,1.02,0.04,1.01
+</code></pre>
+<p>The first four rows of each file have:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Purpose</th>
+<th>Properties</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>assay identifier</td>
+<td>text, required</td>
+</tr>
+<tr>
+<td><code>specimen</code></td>
+<td>specimen identifier</td>
+<td>text, required</td>
+</tr>
+<tr>
+<td><code>date</code></td>
+<td>assay date</td>
+<td>ISO date, required</td>
+</tr>
+<tr>
+<td><code>by</code></td>
+<td>scientist identifier</td>
+<td>text, required</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>assays</code> directory also contains a third file for each assay called <code><em>nnnnnn</em>_raw.csv</code>.
+Each of these files contains the same data as the assay's readings file,
+but has some deliberate errors:
+header rows may be missing or out of order,
+data may be indented,
+and so on.
+These files are provided so that people can learn how to deal with messy real-world data.</p>
+<h3 id="database">Database</h3>
+<p>All of the data about people, specimens, and assays is also stored in
+a SQLite database called <code>snailz.db</code>,
+whose structure is shown below.</p>
+<div align="center">
+  <img src="https://raw.githubusercontent.com/gvwilson/sz/main/pages/img/schema.svg" alt="database schema">
+</div>
+
 <h2 id="colophon">Colophon</h2>
-<p>Snail logo by <a href="https://www.vecteezy.com/vector-art/7319786-snails-logo-vector-on-white-background">sunar.ko</a>.</p>
+<p><code>snailz</code> was inspired by the <a href="https://allisonhorst.github.io/palmerpenguins/">Palmer Penguins</a> dataset
+and by conversations with <a href="https://rohanalexander.com/">Rohan Alexander</a>
+about his book <a href="https://tellingstorieswithdata.com/"><em>Telling Stories with Data</em></a>.</p>
+<p>The snail logo was created by <a href="https://www.vecteezy.com/vector-art/7319786-snails-logo-vector-on-white-background">sunar.ko</a>.</p>
 
 
 
