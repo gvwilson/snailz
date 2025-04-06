@@ -53,6 +53,7 @@ and uses modern Python tools.
     Each assay is stored in two files:
     a design file showing which wells contain samples and controls,
     and a readings file with the measured responses.
+    The images that the readings are taken from are also stored.
 
 ## Usage
 
@@ -74,11 +75,11 @@ $ source .venv/bin/activate
 # Install snailz and dependencies
 $ uv pip install snailz
 
-# Write default parameter values to ./params/ directory
-$ snailz params --output params
+# Write default parameter values to ./params.json file
+$ snailz params --output params.json
 
 # Generate all output files in ./data directory
-$ snailz data --params params --output data
+$ snailz data --params params.json --output data
 ```
 
 ## Parameters
@@ -96,6 +97,7 @@ The parameters, their meanings, and their properties are:
 | | `mutant` | assay reading for mutant specimens | 10.0 | non-negative real, greater than `baseline` |
 | | `noise` | random noise for readings | 0.1 | non-negative real |
 | | `plate_size` | number of rows and columns in assay plate | 4 | non-negative integer |
+| | `image_noise` | noise to add to assay images | 32 | scale is 0-255 |
 | `survey` | `number` | number of survey sites | 3 | non-negative integer |
 | | `size` | survey grid size | 15 | non-negative integer |
 | | `start_date` | overall survey start date | 2024-03-01 | ISO date |
@@ -231,12 +233,19 @@ and its fields are:
 | `person` | scientist identifier | text, required |
 | `performed` | assay date | ISO date, required |
 
-The `assays` directory contains two files for each assay:
-a design file <code><em>nnnnnn</em>_treatments.csv</code>
-showing whether specimen samples or control material was placed in each well of the assay plate,
-and a readings file <code><em>nnnnnn</em>_readings.csv</code>
-with the reading from each well.
-Each file contains a multi-line header with metadata followed by
+The `assays` directory contains three files for each assay:
+
+1.  a design file <code><em>nnnnnn</em>_treatments.csv</code>
+    showing whether specimen samples or control material was placed in each well of the assay plate;
+
+2.  a readings file <code><em>nnnnnn</em>_readings.csv</code>
+    with the reading from each well;
+    and
+
+3.  an image file <code><em>nnnn</em>.png</code> showing the image that the readings were taken from.
+    (In actuality `snailz` generates the readings first and then the image.)
+
+Each CSV file contains a multi-line header with metadata followed by
 a table of well values with row and column labels.
 A typical design file is:
 
@@ -266,7 +275,7 @@ by,pv8677,,,
 4,0.09,1.02,0.04,1.01
 ```
 
-The first four rows of each file have:
+The first four rows of each file are:
 
 | Field | Purpose | Properties |
 | ----- | ------- | ---------- |
@@ -307,12 +316,14 @@ data
 ├── specimens.csv
 ├── assays.csv
 ├── assays
+│   ├── 037356_treatments.csv
+│   ├── 037356.png
 │   ├── 037356_raw.csv
 │   ├── 037356_readings.csv
-│   ├── 037356_treatments.csv
+│   ├── 092025_treatments.csv
+│   ├── 092025.png
 │   ├── 092025_raw.csv
 │   ├── 092025_readings.csv
-│   ├── 092025_treatments.csv
 │   └── …
 └── snailz.db
 ```
