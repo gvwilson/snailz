@@ -2,10 +2,10 @@
 
 from pydantic import BaseModel, Field
 
-from .assays import AssayParams, AllAssays
-from .surveys import SurveyParams, AllSurveys
-from .persons import PersonParams, AllPersons
-from .specimens import SpecimenParams, AllSpecimens
+from .assays import AssayParams, AllAssays, assays_generate
+from .persons import PersonParams, AllPersons, persons_generate
+from .specimens import SpecimenParams, AllSpecimens, specimens_generate
+from .surveys import SurveyParams, AllSurveys, surveys_generate
 
 
 class AllParams(BaseModel):
@@ -38,3 +38,18 @@ class AllData(BaseModel):
     specimens: AllSpecimens = Field(description="all specimens")
 
     model_config = {"extra": "forbid"}
+
+
+def all_generate(params: AllParams) -> AllData:
+    """Generate and save all data."""
+    surveys = surveys_generate(params.survey)
+    persons = persons_generate(params.person)
+    specimens = specimens_generate(params.specimen, surveys)
+    assays = assays_generate(params.assay, persons, specimens)
+    return AllData(
+        assays=assays,
+        params=params,
+        persons=persons,
+        specimens=specimens,
+        surveys=surveys,
+    )
