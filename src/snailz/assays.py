@@ -19,7 +19,7 @@ DEFAULT_PLATE_SIZE = 4
 class AssayParams(BaseModel):
     """Parameters for assay generation."""
 
-    baseline: float = Field(default=1.0, ge=0.0, description="Baseline reading value")
+    baseline: float = Field(default=2.0, ge=0.0, description="Baseline reading value")
     degrade: float = Field(
         default=0.05,
         ge=0.0,
@@ -32,10 +32,10 @@ class AssayParams(BaseModel):
         description="Maximum number of days between specimen collection and assay",
     )
     mutant: float = Field(
-        default=10.0, gt=0.0, description="Mutant reading value (must be positive)"
+        default=5.0, gt=0.0, description="Mutant reading value (must be positive)"
     )
     noise: float = Field(
-        default=0.1, ge=0.0, description="Noise level for readings (must be positive)"
+        default=0.2, ge=0.0, description="Noise level for readings (must be positive)"
     )
     plate_size: int = Field(
         default=DEFAULT_PLATE_SIZE,
@@ -150,10 +150,6 @@ def assays_generate(
     Returns:
         Assay list object
     """
-
-    def susc(s):
-        return s.genome[specimens.susc_locus] == specimens.susc_base
-
     gen = utils.UniqueIdGenerator("assays", lambda: f"{random.randint(0, 999999):06d}")
 
     items = []
@@ -161,7 +157,7 @@ def assays_generate(
         performed = spec.collected + timedelta(days=random.randint(0, params.delay))
         person = random.choice(persons.items)
         treatments = _make_treatments(params)
-        readings = _make_readings(params, spec, susc(spec), performed, treatments)
+        readings = _make_readings(params, spec, performed, treatments)
         items.append(
             Assay(
                 ident=gen.next(),
@@ -184,7 +180,6 @@ def _calc_degradation(params: AssayParams, collected: date, assayed: date) -> fl
 def _make_readings(
     params: AssayParams,
     specimen: Specimen,
-    susceptible: bool,
     performed: date,
     treatments: Grid[str],
 ) -> Grid[float]:
@@ -195,7 +190,7 @@ def _make_readings(
         for y in range(params.plate_size):
             if treatments[x, y] == "C":
                 base_value = 0.0
-            elif susceptible:
+            elif specimen.is_mutant:
                 base_value = params.mutant * degradation
             else:
                 base_value = params.baseline * degradation

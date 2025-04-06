@@ -23,8 +23,8 @@ def test_json_dump_of_special_types():
         '    "top": 1,',
         '    "middle": "2025-01-01",',
         '    "bottom": "text"',
-        '  }',
-        '}',
+        "  }",
+        "}",
     ]
     assert actual == "\n".join(expected)
 

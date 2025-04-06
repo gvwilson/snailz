@@ -106,6 +106,7 @@ The parameters, their meanings, and their properties are:
 | | `number` | number of persons | 5 | non-negative integer |
 | `specimen` | `length` | genome length in bases | 20 | non-negative integer |
 | | `max_mass` | maximum unmutated snail mass | 10.0 | non-negative real |
+| | `mut_mass_scale` | scaling factor for mutated snails | 2.0 | real greater or equal to 1.0 |
 | | `num_mutations` | maximum number of mutations in genome | 5 | non-negative integer |
 | | `spacing` | space between snail specimens | 3.75 | non-negative real |
 

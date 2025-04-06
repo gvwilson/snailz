@@ -25,6 +25,9 @@ class SpecimenParams(BaseModel):
     max_mass: float = Field(
         default=10.0, gt=0, description="Maximum mass for specimens (must be positive)"
     )
+    mut_mass_scale: float = Field(
+        default=2.0, gt=0, description="Scaling factor for mutant snail mass"
+    )
     num_mutations: int = Field(
         default=5,
         ge=0,
@@ -47,7 +50,8 @@ class Specimen(BaseModel):
     location: Point = Field(description="where specimen was collected")
     collected: date = Field(description="date when specimen was collected")
     genome: str = Field(description="bases in genome")
-    mass: float = Field(gt=0, description="specimen mass in grams")
+    mass: float = Field(default=0.0, ge=0, description="specimen mass in grams")
+    is_mutant: bool = Field(default=False, description="is this specimen a mutant?")
 
 
 class AllSpecimens(BaseModel):
@@ -88,19 +92,20 @@ def specimens_generate(params: SpecimenParams, surveys: AllSurveys) -> AllSpecim
     susc_locus = random.choices(loci, k=1)[0]
     susc_base = reference[susc_locus]
     gen = utils.UniqueIdGenerator("specimen", _specimen_id_generator)
-
-    items = []
-    for survey in surveys.items:
-        positions = _place_specimens(survey.size, params.spacing)
-        for pos in positions:
-            items.append(_make_specimen(params, survey, reference, loci, gen, pos))
-    return AllSpecimens(
+    specimens = AllSpecimens(
         loci=loci,
         reference=reference,
         susc_base=susc_base,
         susc_locus=susc_locus,
-        items=items,
+        items=[],
     )
+
+    for survey in surveys.items:
+        positions = _place_specimens(survey.size, params.spacing)
+        for pos in positions:
+            specimens.items.append(_make_specimen(params, survey, specimens, gen, pos))
+
+    return specimens
 
 
 def _make_loci(params: SpecimenParams) -> list[int]:
@@ -130,22 +135,26 @@ def _make_reference_genome(params: SpecimenParams) -> str:
 def _make_specimen(
     params: SpecimenParams,
     survey: Survey,
-    reference: str,
-    loci: list,
+    specimens: AllSpecimens,
     gen: utils.UniqueIdGenerator,
     location: Point,
 ) -> Specimen:
     """Make a single specimen."""
-    genome = list(reference)
-    num_mutations = random.randint(1, len(loci))
+    genome = list(specimens.reference)
     collected = date.fromordinal(
         random.randint(survey.start_date.toordinal(), survey.end_date.toordinal())
     )
 
-    for loc in random.sample(range(len(loci)), num_mutations):
-        candidates = list(sorted(set(BASES) - set(reference[loc])))
+    num_mutations = random.randint(1, len(specimens.loci))
+    for loc in random.sample(range(len(specimens.loci)), num_mutations):
+        candidates = list(sorted(set(BASES) - set(specimens.reference[loc])))
         genome[loc] = candidates[random.randrange(len(candidates))]
     genome = "".join(genome)
+
+    is_mutant = genome[specimens.susc_locus] == specimens.susc_base
+    mass_scale = params.mut_mass_scale if is_mutant else 1.0
+    max_mass = mass_scale * params.max_mass
+    mass = round(random.uniform(max_mass / 2.0, max_mass), utils.PRECISION)
 
     return Specimen(
         ident=gen.next(),
@@ -153,9 +162,8 @@ def _make_specimen(
         collected=collected,
         genome=genome,
         location=location,
-        mass=round(
-            random.uniform(params.max_mass / 4.0, params.max_mass), utils.PRECISION
-        ),
+        mass=mass,
+        is_mutant=is_mutant,
     )
 
 

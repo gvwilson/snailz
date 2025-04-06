@@ -25,6 +25,7 @@ SPECIMENS_1 = AllSpecimens(
             genome="ACGT",
             location=Point(x=1, y=1),
             mass=0.1,
+            is_mutant=False,
         ),
     ],
 )
@@ -173,7 +174,12 @@ def test_convert_assays_to_csv():
 def test_assay_reading_value_susceptible(seed):
     random.seed(seed)
     params = AssayParams().model_copy(update={"plate_size": 2, "degrade": 0.0})
-    assays = assays_generate(params, PERSONS_1, SPECIMENS_1)
+
+    specimens = SPECIMENS_1.model_copy()
+    specimens.items = [specimens.items[0].model_copy(update={"is_mutant": True})]
+    assert specimens.items[0].is_mutant
+
+    assays = assays_generate(params, PERSONS_1, specimens)
     assay = assays.items[0]
     for x in range(2):
         for y in range(2):
@@ -191,9 +197,12 @@ def test_assay_reading_value_susceptible(seed):
 def test_assay_reading_value_not_susceptible(seed):
     random.seed(seed)
     params = AssayParams().model_copy(update={"plate_size": 2, "degrade": 0.0})
-    assays = assays_generate(
-        params, PERSONS_1, SPECIMENS_1.model_copy(update={"susc_base": "C"})
-    )
+
+    specimens = SPECIMENS_1.model_copy()
+    specimens.items = [specimens.items[0].model_copy(update={"is_mutant": False})]
+    assert not specimens.items[0].is_mutant
+
+    assays = assays_generate(params, PERSONS_1, specimens)
     assay = assays.items[0]
     for x in range(2):
         for y in range(2):
