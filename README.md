@@ -95,9 +95,10 @@ The parameters, their meanings, and their properties are:
 | | `degrade` | reading degradation per day between sample collection and assay | 0.05 | non-negative real |
 | | `delay` | maximum days of delay between sample collection and assay | 5 | non-negative integer |
 | | `mutant` | assay reading for mutant specimens | 10.0 | non-negative real, greater than `baseline` |
-| | `noise` | random noise for readings | 0.1 | non-negative real |
+| | `reading_noise` | random noise for readings | 0.1 | non-negative real |
 | | `plate_size` | number of rows and columns in assay plate | 4 | non-negative integer |
 | | `image_noise` | noise to add to assay images | 32 | scale is 0-255 |
+| | `p_duplicate_assay` | probability of duplicate assay | 0.05 | probability |
 | `survey` | `number` | number of survey sites | 3 | non-negative integer |
 | | `size` | survey grid size | 15 | non-negative integer |
 | | `start_date` | overall survey start date | 2024-03-01 | ISO date |
@@ -105,10 +106,13 @@ The parameters, their meanings, and their properties are:
 | `person` | `locale` | locale for random name generation | `et_EE` (Estonia) | valid ISO locale |
 | | `number` | number of persons | 5 | non-negative integer |
 | `specimen` | `length` | genome length in bases | 20 | non-negative integer |
+| | `start_date` | date of first assay | 2024-03-01 | copied from surveys for convenience |
 | | `max_mass` | maximum unmutated snail mass | 10.0 | non-negative real |
 | | `mut_mass_scale` | scaling factor for mutated snails | 2.0 | real greater or equal to 1.0 |
 | | `num_mutations` | maximum number of mutations in genome | 5 | non-negative integer |
 | | `spacing` | space between snail specimens | 3.75 | non-negative real |
+| | `daily_growth` | percentage increase in mass per day | 0.01 | non-negative real |
+| | `p_missing_location` | probability that sample location is unknown | 0.05 | probability |
 
 Notes:
 

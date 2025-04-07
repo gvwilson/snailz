@@ -22,7 +22,8 @@ class AllParams(BaseModel):
         default=PersonParams(), description="parameters for people generation"
     )
     specimen: SpecimenParams = Field(
-        default=SpecimenParams(), description="parameters for specimen generation"
+        default=SpecimenParams(),
+        description="parameters for specimen generation",
     )
 
     model_config = {"extra": "forbid"}

@@ -35,7 +35,7 @@ class AssayParams(BaseModel):
     mutant: float = Field(
         default=5.0, gt=0.0, description="Mutant reading value (must be positive)"
     )
-    noise: float = Field(
+    reading_noise: float = Field(
         default=0.2, ge=0.0, description="Noise level for readings (must be positive)"
     )
     plate_size: int = Field(
@@ -207,7 +207,7 @@ def _make_readings(
             else:
                 base_value = params.baseline * degradation
             readings[x, y] = round(
-                base_value + random.uniform(0.0, params.noise), utils.PRECISION
+                base_value + random.uniform(0.0, params.reading_noise), utils.PRECISION
             )
 
     return readings

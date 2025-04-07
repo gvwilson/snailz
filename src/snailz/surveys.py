@@ -10,6 +10,10 @@ from .grid import Grid
 from . import utils
 
 
+# Default starting date for surveys
+DEFAULT_START_DATE = date.fromisoformat("2024-03-01")
+
+
 class SurveyParams(BaseModel):
     """Parameters for survey generation."""
 
@@ -18,7 +22,7 @@ class SurveyParams(BaseModel):
         default=utils.DEFAULT_SURVEY_SIZE, gt=0, description="Survey size"
     )
     start_date: date = Field(
-        default=date.fromisoformat("2024-03-01"),
+        default=DEFAULT_START_DATE,
         description="Start date for specimen collection",
     )
     max_interval: int = Field(
@@ -65,8 +69,8 @@ class Survey(BaseModel):
             x += m[0]
             y += m[1]
 
-    def max_value(self) -> float:
-        """Maximum cell value in this survey."""
+    def max_pollution(self) -> float:
+        """Maximum pollution value in this survey."""
         assert self.cells is not None  # for type checking
         result = self.cells[0, 0]
         for x in range(self.size):
@@ -95,9 +99,9 @@ class AllSurveys(BaseModel):
 
     model_config = {"extra": "forbid"}
 
-    def max_value(self) -> float:
+    def max_pollution(self) -> float:
         """Maximum cell value of all surveys in this set."""
-        return max(survey.max_value() for survey in self.items)
+        return max(survey.max_pollution() for survey in self.items)
 
 
 def surveys_generate(params: SurveyParams) -> AllSurveys:

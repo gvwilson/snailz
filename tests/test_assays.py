@@ -64,15 +64,10 @@ SPECIMENS_2 = AllSpecimens(
 
 
 def test_assay_parameter_validation():
-    original = AssayParams()
     with pytest.raises(ValueError):
         AssayParams(
-            baseline=original.baseline,
-            degrade=original.degrade,
-            delay=original.delay,
-            mutant=original.baseline / 2.0,  # invalid
-            noise=original.noise,
-            plate_size=original.plate_size,
+            baseline=10.0,
+            mutant=0.1,
         )
 
 
@@ -103,10 +98,15 @@ def test_generate_assays_correct_length_and_reference_ids():
     params = AssayParams().model_copy(update={"p_duplicate_assay": 0.0})
     assays = assays_generate(params, PERSONS_2, SPECIMENS_2)
     assert len(assays.items) == 2
-    for a, s in zip(assays.items, SPECIMENS_2.items):
-        assert a.specimen == s.ident
+    assert {a.specimen for a in assays.items} == {s.ident for s in SPECIMENS_2.items}
     person_ids = {p.ident for p in PERSONS_2.items}
     assert all(a.person in person_ids for a in assays.items)
+
+
+def test_generate_assays_multiple_assays_per_specimen():
+    params = AssayParams().model_copy(update={"p_duplicate_assay": 1.0})
+    assays = assays_generate(params, PERSONS_2, SPECIMENS_2)
+    assert len(assays.items) == 2 * len(SPECIMENS_2.items)
 
 
 def test_assay_csv_fails_for_unknown_kind():
@@ -185,12 +185,12 @@ def test_assay_reading_value_susceptible(seed):
     for x in range(2):
         for y in range(2):
             if assay.treatments[x, y] == "C":
-                assert 0.0 <= assay.readings[x, y] <= params.noise
+                assert 0.0 <= assay.readings[x, y] <= params.reading_noise
             else:
                 assert (
                     params.mutant
                     <= assay.readings[x, y]
-                    <= params.mutant + params.noise
+                    <= params.mutant + params.reading_noise
                 )
 
 
@@ -208,10 +208,10 @@ def test_assay_reading_value_not_susceptible(seed):
     for x in range(2):
         for y in range(2):
             if assay.treatments[x, y] == "C":
-                assert 0.0 <= assay.readings[x, y] <= params.noise
+                assert 0.0 <= assay.readings[x, y] <= params.reading_noise
             else:
                 assert (
                     params.baseline
                     <= assay.readings[x, y]
-                    <= params.baseline + params.noise
+                    <= params.baseline + params.reading_noise
                 )

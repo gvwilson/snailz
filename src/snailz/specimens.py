@@ -9,7 +9,7 @@ from pydantic import BaseModel, Field
 
 from . import utils
 from .grid import Point
-from .surveys import Survey, AllSurveys
+from .surveys import Survey, AllSurveys, DEFAULT_START_DATE
 
 
 # Bases.
@@ -21,6 +21,10 @@ class SpecimenParams(BaseModel):
 
     length: int = Field(
         default=20, gt=0, description="Length of specimen genomes (must be positive)"
+    )
+    start_date: date = Field(
+        default=DEFAULT_START_DATE,
+        description="Start date for specimen collection",
     )
     max_mass: float = Field(
         default=10.0, gt=0, description="Maximum mass for specimens (must be positive)"
@@ -37,6 +41,11 @@ class SpecimenParams(BaseModel):
         default=utils.DEFAULT_SURVEY_SIZE / 4.0,
         ge=0,
         description="Inter-specimen spacing",
+    )
+    daily_growth: float = Field(
+        default=0.01,
+        ge=0,
+        description="Mass increase per day",
     )
     p_missing_location: float = Field(
         default=0.05, ge=0, description="Probability that location is missing"
@@ -111,13 +120,13 @@ def specimens_generate(params: SpecimenParams, surveys: AllSurveys) -> AllSpecim
         items=[],
     )
 
-    max_value = surveys.max_value()
+    max_pollution = surveys.max_pollution()
     for survey in surveys.items:
         positions = _place_specimens(params, survey.size)
         for pos in positions:
             ident = next(gen)
             specimens.items.append(
-                _make_specimen(params, survey, specimens, ident, pos, max_value)
+                _make_specimen(params, survey, specimens, ident, pos, max_pollution)
             )
 
     return specimens
@@ -153,7 +162,7 @@ def _make_specimen(
     specimens: AllSpecimens,
     ident: str,
     location: Point,
-    max_value: float,
+    max_pollution: float,
 ) -> Specimen:
     """Make a single specimen.
 
@@ -163,7 +172,7 @@ def _make_specimen(
         specimens: all specimens in this survey
         gen: unique ID generation function
         location: grid point where specimen was sampled
-        max_value: maximum pollution value across all surveys
+        max_pollution: maximum pollution value across all surveys
 
     Returns:
         A randomly-generated specimen.
@@ -184,16 +193,20 @@ def _make_specimen(
     # Mutant status
     is_mutant = genome[specimens.susc_locus] == specimens.susc_base
 
-    # Mass
+    # Initial mass
     mass_scale = params.mut_mass_scale if is_mutant else 1.0
     max_mass = mass_scale * params.max_mass
     mass = round(random.uniform(max_mass / 2.0, max_mass), utils.PRECISION)
-    assert survey.cells is not None  # for type checking
+
+    # Growth effects
+    days_passed = (collected - params.start_date).days
+    mass += params.daily_growth * days_passed * mass
 
     # Pollution effects if location known
+    assert survey.cells is not None  # for type checking
     if (location.x >= 0) and (location.y >= 0):
         pollution_scaling = 1.0 + 2.0 * utils.sigmoid(
-            survey.cells[location.x, location.y] / max_value
+            survey.cells[location.x, location.y] / max_pollution
         )
         mass *= pollution_scaling
 
