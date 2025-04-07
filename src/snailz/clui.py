@@ -63,6 +63,10 @@ def _create_csv(csv_dir, data):
     if not csv_dir.is_dir():
         raise ValueError(f"{csv_dir} is not a directory")
 
+    # Machines
+    with open(csv_dir / utils.MACHINES_CSV, "w") as writer:
+        writer.write(data.machines.to_csv())
+
     # Assays
     with open(csv_dir / utils.ASSAYS_CSV, "w") as writer:
         writer.write(data.assays.to_csv())

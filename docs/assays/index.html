@@ -490,6 +490,29 @@
   
   
     <li class="md-nav__item">
+      <a href="../machines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Machines
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../mangle/" class="md-nav__link">
         
   
@@ -1000,7 +1023,7 @@
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>noise</code>
+                <code>reading_noise</code>
             </td>
             <td>
                   <code><span title="float">float</span></code>
@@ -1073,8 +1096,7 @@
 
               <details class="quote">
                 <summary>Source code in <code>src/snailz/assays.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">20</span>
-<span class="normal">21</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">21</span>
 <span class="normal">22</span>
 <span class="normal">23</span>
 <span class="normal">24</span>
@@ -1116,7 +1138,8 @@
 <span class="normal">60</span>
 <span class="normal">61</span>
 <span class="normal">62</span>
-<span class="normal">63</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AssayParams</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">63</span>
+<span class="normal">64</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AssayParams</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parameters for assay generation.&quot;&quot;&quot;</span>
 
     <span class="n">baseline</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Baseline reading value&quot;</span><span class="p">)</span>
@@ -1134,7 +1157,7 @@
     <span class="n">mutant</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">gt</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Mutant reading value (must be positive)&quot;</span>
     <span class="p">)</span>
-    <span class="n">noise</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+    <span class="n">reading_noise</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Noise level for readings (must be positive)&quot;</span>
     <span class="p">)</span>
     <span class="n">plate_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
@@ -1191,12 +1214,12 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/assays.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">58</span>
-<span class="normal">59</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">59</span>
 <span class="normal">60</span>
 <span class="normal">61</span>
 <span class="normal">62</span>
-<span class="normal">63</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+<span class="normal">63</span>
+<span class="normal">64</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">validate_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate requirements on fields.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mutant</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseline</span><span class="p">:</span>
@@ -1296,6 +1319,22 @@
           </tr>
           <tr class="doc-section-item">
             <td>
+                <code>machine</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>machine ID</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
                 <code>performed</code>
             </td>
             <td>
@@ -1353,8 +1392,7 @@
 
               <details class="quote">
                 <summary>Source code in <code>src/snailz/assays.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 66</span>
-<span class="normal"> 67</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 67</span>
 <span class="normal"> 68</span>
 <span class="normal"> 69</span>
 <span class="normal"> 70</span>
@@ -1410,12 +1448,15 @@
 <span class="normal">120</span>
 <span class="normal">121</span>
 <span class="normal">122</span>
-<span class="normal">123</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Assay</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Assay</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A single assay.&quot;&quot;&quot;</span>
 
     <span class="n">ident</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;unique identifier&quot;</span><span class="p">)</span>
     <span class="n">specimen</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;which specimen&quot;</span><span class="p">)</span>
     <span class="n">person</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;who did the assay&quot;</span><span class="p">)</span>
+    <span class="n">machine</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;machine ID&quot;</span><span class="p">)</span>
     <span class="n">performed</span><span class="p">:</span> <span class="n">date</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;date assay was performed&quot;</span><span class="p">)</span>
     <span class="n">readings</span><span class="p">:</span> <span class="n">Grid</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;assay readings&quot;</span><span class="p">)</span>
     <span class="n">treatments</span><span class="p">:</span> <span class="n">Grid</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;samples or controls&quot;</span><span class="p">)</span>
@@ -1576,9 +1617,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/assays.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 82</span>
-<span class="normal"> 83</span>
-<span class="normal"> 84</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 84</span>
 <span class="normal"> 85</span>
 <span class="normal"> 86</span>
 <span class="normal"> 87</span>
@@ -1617,7 +1656,9 @@
 <span class="normal">120</span>
 <span class="normal">121</span>
 <span class="normal">122</span>
-<span class="normal">123</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a CSV string representation of the assay data.</span>
 
 <span class="sd">    Parameters:</span>
@@ -1730,9 +1771,7 @@
 
               <details class="quote">
                 <summary>Source code in <code>src/snailz/assays.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">126</span>
-<span class="normal">127</span>
-<span class="normal">128</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">128</span>
 <span class="normal">129</span>
 <span class="normal">130</span>
 <span class="normal">131</span>
@@ -1745,7 +1784,9 @@
 <span class="normal">138</span>
 <span class="normal">139</span>
 <span class="normal">140</span>
-<span class="normal">141</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllAssays</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllAssays</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;All generated assays.&quot;&quot;&quot;</span>
 
     <span class="n">items</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Assay</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;actual assays&quot;</span><span class="p">)</span>
@@ -1815,9 +1856,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/assays.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">131</span>
-<span class="normal">132</span>
-<span class="normal">133</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">133</span>
 <span class="normal">134</span>
 <span class="normal">135</span>
 <span class="normal">136</span>
@@ -1825,7 +1864,9 @@
 <span class="normal">138</span>
 <span class="normal">139</span>
 <span class="normal">140</span>
-<span class="normal">141</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a CSV string representation of the assay summary data.</span>
 
 <span class="sd">    Returns:</span>
@@ -1855,7 +1896,7 @@
 
 
 <h2 id="snailz.assays.assays_generate" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">assays_generate</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">persons</span><span class="p">,</span> <span class="n">specimens</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">assays_generate</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">persons</span><span class="p">,</span> <span class="n">machines</span><span class="p">,</span> <span class="n">specimens</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1910,6 +1951,22 @@
           </tr>
           <tr class="doc-section-item">
             <td>
+                <code>machines</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="AllMachines (snailz.machines.AllMachines)" href="../machines/#snailz.machines.AllMachines">AllMachines</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>all laboratory equipment</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
                 <code>specimens</code>
             </td>
             <td>
@@ -1953,9 +2010,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/assays.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">144</span>
-<span class="normal">145</span>
-<span class="normal">146</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">146</span>
 <span class="normal">147</span>
 <span class="normal">148</span>
 <span class="normal">149</span>
@@ -1993,14 +2048,26 @@
 <span class="normal">181</span>
 <span class="normal">182</span>
 <span class="normal">183</span>
-<span class="normal">184</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">assays_generate</span><span class="p">(</span>
-    <span class="n">params</span><span class="p">:</span> <span class="n">AssayParams</span><span class="p">,</span> <span class="n">persons</span><span class="p">:</span> <span class="n">AllPersons</span><span class="p">,</span> <span class="n">specimens</span><span class="p">:</span> <span class="n">AllSpecimens</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">assays_generate</span><span class="p">(</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">AssayParams</span><span class="p">,</span>
+    <span class="n">persons</span><span class="p">:</span> <span class="n">AllPersons</span><span class="p">,</span>
+    <span class="n">machines</span><span class="p">:</span> <span class="n">AllMachines</span><span class="p">,</span>
+    <span class="n">specimens</span><span class="p">:</span> <span class="n">AllSpecimens</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AllAssays</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate an assay for each specimen.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        params: assay generation parameters</span>
 <span class="sd">        persons: all staff members</span>
+<span class="sd">        machines: all laboratory equipment</span>
 <span class="sd">        specimens: specimens to generate assays for</span>
 
 <span class="sd">    Returns:</span>
@@ -2018,8 +2085,9 @@
     <span class="k">for</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">subjects</span><span class="p">:</span>
         <span class="n">performed</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">collected</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">delay</span><span class="p">))</span>
         <span class="n">person</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">persons</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
+        <span class="n">machine</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">machines</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
         <span class="n">treatments</span> <span class="o">=</span> <span class="n">_make_treatments</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
-        <span class="n">readings</span> <span class="o">=</span> <span class="n">_make_readings</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">performed</span><span class="p">,</span> <span class="n">treatments</span><span class="p">)</span>
+        <span class="n">readings</span> <span class="o">=</span> <span class="n">_make_readings</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">performed</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">treatments</span><span class="p">)</span>
         <span class="n">ident</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">gen</span><span class="p">)</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ident</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>  <span class="c1"># to satisfy type checking</span>
         <span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -2028,6 +2096,7 @@
                 <span class="n">performed</span><span class="o">=</span><span class="n">performed</span><span class="p">,</span>
                 <span class="n">specimen</span><span class="o">=</span><span class="n">spec</span><span class="o">.</span><span class="n">ident</span><span class="p">,</span>
                 <span class="n">person</span><span class="o">=</span><span class="n">person</span><span class="o">.</span><span class="n">ident</span><span class="p">,</span>
+                <span class="n">machine</span><span class="o">=</span><span class="n">machine</span><span class="o">.</span><span class="n">ident</span><span class="p">,</span>
                 <span class="n">treatments</span><span class="o">=</span><span class="n">treatments</span><span class="p">,</span>
                 <span class="n">readings</span><span class="o">=</span><span class="n">readings</span><span class="p">,</span>
             <span class="p">)</span>
@@ -2056,9 +2125,9 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/assays.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">187</span>
-<span class="normal">188</span>
-<span class="normal">189</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_calc_degradation</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">AssayParams</span><span class="p">,</span> <span class="n">collected</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span> <span class="n">assayed</span><span class="p">:</span> <span class="n">date</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_calc_degradation</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">AssayParams</span><span class="p">,</span> <span class="n">collected</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span> <span class="n">assayed</span><span class="p">:</span> <span class="n">date</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate degradation based on days since collection.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">degrade</span> <span class="o">*</span> <span class="p">(</span><span class="n">assayed</span> <span class="o">-</span> <span class="n">collected</span><span class="p">)</span><span class="o">.</span><span class="n">days</span><span class="p">))</span>
 </code></pre></div></td></tr></table></div>
@@ -2071,7 +2140,7 @@
 
 
 <h2 id="snailz.assays._make_readings" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">_make_readings</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">specimen</span><span class="p">,</span> <span class="n">performed</span><span class="p">,</span> <span class="n">treatments</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">_make_readings</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">specimen</span><span class="p">,</span> <span class="n">performed</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">treatments</span><span class="p">)</span></code>
 
 </h2>
 
@@ -2083,15 +2152,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/assays.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">192</span>
-<span class="normal">193</span>
-<span class="normal">194</span>
-<span class="normal">195</span>
-<span class="normal">196</span>
-<span class="normal">197</span>
-<span class="normal">198</span>
-<span class="normal">199</span>
-<span class="normal">200</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">200</span>
 <span class="normal">201</span>
 <span class="normal">202</span>
 <span class="normal">203</span>
@@ -2104,10 +2165,20 @@
 <span class="normal">210</span>
 <span class="normal">211</span>
 <span class="normal">212</span>
-<span class="normal">213</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_make_readings</span><span class="p">(</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_make_readings</span><span class="p">(</span>
     <span class="n">params</span><span class="p">:</span> <span class="n">AssayParams</span><span class="p">,</span>
     <span class="n">specimen</span><span class="p">:</span> <span class="n">Specimen</span><span class="p">,</span>
     <span class="n">performed</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
+    <span class="n">machine</span><span class="p">:</span> <span class="n">Machine</span><span class="p">,</span>
     <span class="n">treatments</span><span class="p">:</span> <span class="n">Grid</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Grid</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Make a single assay.&quot;&quot;&quot;</span>
@@ -2122,7 +2193,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">base_value</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">baseline</span> <span class="o">*</span> <span class="n">degradation</span>
             <span class="n">readings</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span>
-                <span class="n">base_value</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">noise</span><span class="p">),</span> <span class="n">utils</span><span class="o">.</span><span class="n">PRECISION</span>
+                <span class="n">base_value</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">reading_noise</span><span class="p">),</span> <span class="n">utils</span><span class="o">.</span><span class="n">PRECISION</span>
             <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">readings</span>
@@ -2148,18 +2219,18 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/assays.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">216</span>
-<span class="normal">217</span>
-<span class="normal">218</span>
-<span class="normal">219</span>
-<span class="normal">220</span>
-<span class="normal">221</span>
-<span class="normal">222</span>
-<span class="normal">223</span>
-<span class="normal">224</span>
-<span class="normal">225</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">225</span>
 <span class="normal">226</span>
-<span class="normal">227</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_make_treatments</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">AssayParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Grid</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_make_treatments</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">AssayParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Grid</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate random treatments.&quot;&quot;&quot;</span>
     <span class="n">size</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">plate_size</span>
     <span class="n">size_sq</span> <span class="o">=</span> <span class="n">size</span><span class="o">**</span><span class="mi">2</span>

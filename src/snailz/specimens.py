@@ -79,7 +79,7 @@ class AllSpecimens(BaseModel):
         """Return a CSV string representation of the specimen data.
 
         Returns:
-            A CSV-formatted string with people data (without parameters)
+            A CSV-formatted string.
         """
         return utils.to_csv(
             self.items,
@@ -109,7 +109,7 @@ def specimens_generate(params: SpecimenParams, surveys: AllSurveys) -> AllSpecim
 
     reference = _make_reference_genome(params)
     loci = _make_loci(params)
-    susc_locus = random.choices(loci, k=1)[0]
+    susc_locus = utils.choose_one(loci)
     susc_base = reference[susc_locus]
     gen = utils.unique_id("specimen", _specimen_id_generator)
     specimens = AllSpecimens(
@@ -255,7 +255,7 @@ def _place_specimens(params: SpecimenParams, size: int) -> list[Point]:
     available = {(x, y) for x in range(size) for y in range(size)}
     result = []
     while available:
-        loc = random.choices(list(available), k=1)[0]
+        loc = utils.choose_one(list(available))
         result.append(loc)
         radius = random.uniform(params.spacing / 4, params.spacing)
         span = math.ceil(radius)

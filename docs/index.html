@@ -469,6 +469,29 @@
   
   
     <li class="md-nav__item">
+      <a href="machines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Machines
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="mangle/" class="md-nav__link">
         
   
@@ -976,7 +999,7 @@ The parameters, their meanings, and their properties are:</p>
 </tr>
 <tr>
 <td></td>
-<td><code>noise</code></td>
+<td><code>reading_noise</code></td>
 <td>random noise for readings</td>
 <td>0.1</td>
 <td>non-negative real</td>
@@ -994,6 +1017,13 @@ The parameters, their meanings, and their properties are:</p>
 <td>noise to add to assay images</td>
 <td>32</td>
 <td>scale is 0-255</td>
+</tr>
+<tr>
+<td></td>
+<td><code>p_duplicate_assay</code></td>
+<td>probability of duplicate assay</td>
+<td>0.05</td>
+<td>probability</td>
 </tr>
 <tr>
 <td><code>survey</code></td>
@@ -1046,6 +1076,13 @@ The parameters, their meanings, and their properties are:</p>
 </tr>
 <tr>
 <td></td>
+<td><code>start_date</code></td>
+<td>date of first assay</td>
+<td>2024-03-01</td>
+<td>copied from surveys for convenience</td>
+</tr>
+<tr>
+<td></td>
 <td><code>max_mass</code></td>
 <td>maximum unmutated snail mass</td>
 <td>10.0</td>
@@ -1071,6 +1108,20 @@ The parameters, their meanings, and their properties are:</p>
 <td>space between snail specimens</td>
 <td>3.75</td>
 <td>non-negative real</td>
+</tr>
+<tr>
+<td></td>
+<td><code>daily_growth</code></td>
+<td>percentage increase in mass per day</td>
+<td>0.01</td>
+<td>non-negative real</td>
+</tr>
+<tr>
+<td></td>
+<td><code>p_missing_location</code></td>
+<td>probability that sample location is unknown</td>
+<td>0.05</td>
+<td>probability</td>
 </tr>
 </tbody>
 </table>

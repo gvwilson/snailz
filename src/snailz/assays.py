@@ -9,6 +9,7 @@ import random
 from pydantic import BaseModel, Field, model_validator
 
 from .grid import Grid
+from .machines import Machine, AllMachines
 from .persons import AllPersons
 from .specimens import Specimen, AllSpecimens
 from . import utils
@@ -69,6 +70,7 @@ class Assay(BaseModel):
     ident: str = Field(description="unique identifier")
     specimen: str = Field(description="which specimen")
     person: str = Field(description="who did the assay")
+    machine: str = Field(description="machine ID")
     performed: date = Field(description="date assay was performed")
     readings: Grid[float] = Field(description="assay readings")
     treatments: Grid[str] = Field(description="samples or controls")
@@ -142,13 +144,17 @@ class AllAssays(BaseModel):
 
 
 def assays_generate(
-    params: AssayParams, persons: AllPersons, specimens: AllSpecimens
+    params: AssayParams,
+    persons: AllPersons,
+    machines: AllMachines,
+    specimens: AllSpecimens,
 ) -> AllAssays:
     """Generate an assay for each specimen.
 
     Parameters:
         params: assay generation parameters
         persons: all staff members
+        machines: all laboratory equipment
         specimens: specimens to generate assays for
 
     Returns:
@@ -166,8 +172,9 @@ def assays_generate(
     for spec in subjects:
         performed = spec.collected + timedelta(days=random.randint(0, params.delay))
         person = random.choice(persons.items)
+        machine = random.choice(machines.items)
         treatments = _make_treatments(params)
-        readings = _make_readings(params, spec, performed, treatments)
+        readings = _make_readings(params, spec, performed, machine, treatments)
         ident = next(gen)
         assert isinstance(ident, str)  # to satisfy type checking
         items.append(
@@ -176,6 +183,7 @@ def assays_generate(
                 performed=performed,
                 specimen=spec.ident,
                 person=person.ident,
+                machine=machine.ident,
                 treatments=treatments,
                 readings=readings,
             )
@@ -193,6 +201,7 @@ def _make_readings(
     params: AssayParams,
     specimen: Specimen,
     performed: date,
+    machine: Machine,
     treatments: Grid[str],
 ) -> Grid[float]:
     """Make a single assay."""

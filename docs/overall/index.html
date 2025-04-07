@@ -335,6 +335,29 @@
   
   
     <li class="md-nav__item">
+      <a href="../machines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Machines
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../mangle/" class="md-nav__link">
         
   
@@ -790,6 +813,22 @@
           </tr>
           <tr class="doc-section-item">
             <td>
+                <code>num_machines</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>number of machines</p>
+              </div>
+            </td>
+            <td>
+                  <code>5</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
                 <code>assay</code>
             </td>
             <td>
@@ -801,7 +840,7 @@
               </div>
             </td>
             <td>
-                  <code>AssayParams(baseline=2.0, degrade=0.05, delay=5, mutant=5.0, noise=0.2, plate_size=4, image_noise=32, p_duplicate_assay=0.05)</code>
+                  <code>AssayParams(baseline=2.0, degrade=0.05, delay=5, mutant=5.0, reading_noise=0.2, plate_size=4, image_noise=32, p_duplicate_assay=0.05)</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -863,8 +902,7 @@
 
               <details class="quote">
                 <summary>Source code in <code>src/snailz/overall.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">11</span>
-<span class="normal">12</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">12</span>
 <span class="normal">13</span>
 <span class="normal">14</span>
 <span class="normal">15</span>
@@ -881,10 +919,13 @@
 <span class="normal">26</span>
 <span class="normal">27</span>
 <span class="normal">28</span>
-<span class="normal">29</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllParams</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllParams</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represent all parameters combined.&quot;&quot;&quot;</span>
 
     <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">7493418</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;RNG seed&quot;</span><span class="p">)</span>
+    <span class="n">num_machines</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;number of machines&quot;</span><span class="p">)</span>
     <span class="n">assay</span><span class="p">:</span> <span class="n">AssayParams</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="n">AssayParams</span><span class="p">(),</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;parameters for assay generation&quot;</span>
     <span class="p">)</span>
@@ -955,22 +996,6 @@
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>params</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="AllParams (snailz.overall.AllParams)" href="#snailz.overall.AllParams">AllParams</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>all parameters</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
                 <code>assays</code>
             </td>
             <td>
@@ -987,14 +1012,30 @@
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>surveys</code>
+                <code>machines</code>
             </td>
             <td>
-                  <code><a class="autorefs autorefs-internal" title="AllSurveys (snailz.surveys.AllSurveys)" href="../surveys/#snailz.surveys.AllSurveys">AllSurveys</a></code>
+                  <code><a class="autorefs autorefs-internal" title="AllMachines (snailz.machines.AllMachines)" href="../machines/#snailz.machines.AllMachines">AllMachines</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>all surveys</p>
+                <p>all machines</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>params</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="AllParams (snailz.overall.AllParams)" href="#snailz.overall.AllParams">AllParams</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>all parameters</p>
               </div>
             </td>
             <td>
@@ -1033,6 +1074,22 @@
                 <em>required</em>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>surveys</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="AllSurveys (snailz.surveys.AllSurveys)" href="../surveys/#snailz.surveys.AllSurveys">AllSurveys</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>all surveys</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -1044,23 +1101,25 @@
 
               <details class="quote">
                 <summary>Source code in <code>src/snailz/overall.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">34</span>
 <span class="normal">35</span>
 <span class="normal">36</span>
 <span class="normal">37</span>
 <span class="normal">38</span>
 <span class="normal">39</span>
 <span class="normal">40</span>
-<span class="normal">41</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllData</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllData</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represent all generated data combined.&quot;&quot;&quot;</span>
 
-    <span class="n">params</span><span class="p">:</span> <span class="n">AllParams</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;all parameters&quot;</span><span class="p">)</span>
     <span class="n">assays</span><span class="p">:</span> <span class="n">AllAssays</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;all assays&quot;</span><span class="p">)</span>
-    <span class="n">surveys</span><span class="p">:</span> <span class="n">AllSurveys</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;all surveys&quot;</span><span class="p">)</span>
+    <span class="n">machines</span><span class="p">:</span> <span class="n">AllMachines</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;all machines&quot;</span><span class="p">)</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">AllParams</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;all parameters&quot;</span><span class="p">)</span>
     <span class="n">persons</span><span class="p">:</span> <span class="n">AllPersons</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;all persons&quot;</span><span class="p">)</span>
     <span class="n">specimens</span><span class="p">:</span> <span class="n">AllSpecimens</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;all specimens&quot;</span><span class="p">)</span>
+    <span class="n">surveys</span><span class="p">:</span> <span class="n">AllSurveys</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;all surveys&quot;</span><span class="p">)</span>
 
     <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="s2">&quot;forbid&quot;</span><span class="p">}</span>
 </code></pre></div></td></tr></table></div>
@@ -1103,10 +1162,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/overall.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">47</span>
 <span class="normal">48</span>
 <span class="normal">49</span>
 <span class="normal">50</span>
@@ -1115,14 +1171,27 @@
 <span class="normal">53</span>
 <span class="normal">54</span>
 <span class="normal">55</span>
-<span class="normal">56</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">all_generate</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">AllParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AllData</span><span class="p">:</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">all_generate</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">AllParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AllData</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate and save all data.&quot;&quot;&quot;</span>
+    <span class="n">machines</span> <span class="o">=</span> <span class="n">machines_generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">num_machines</span><span class="p">)</span>
     <span class="n">surveys</span> <span class="o">=</span> <span class="n">surveys_generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">survey</span><span class="p">)</span>
     <span class="n">persons</span> <span class="o">=</span> <span class="n">persons_generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">person</span><span class="p">)</span>
+
     <span class="n">specimens</span> <span class="o">=</span> <span class="n">specimens_generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">specimen</span><span class="p">,</span> <span class="n">surveys</span><span class="p">)</span>
-    <span class="n">assays</span> <span class="o">=</span> <span class="n">assays_generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">assay</span><span class="p">,</span> <span class="n">persons</span><span class="p">,</span> <span class="n">specimens</span><span class="p">)</span>
+
+    <span class="n">assays</span> <span class="o">=</span> <span class="n">assays_generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">assay</span><span class="p">,</span> <span class="n">persons</span><span class="p">,</span> <span class="n">machines</span><span class="p">,</span> <span class="n">specimens</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">AllData</span><span class="p">(</span>
         <span class="n">assays</span><span class="o">=</span><span class="n">assays</span><span class="p">,</span>
+        <span class="n">machines</span><span class="o">=</span><span class="n">machines</span><span class="p">,</span>
         <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
         <span class="n">persons</span><span class="o">=</span><span class="n">persons</span><span class="p">,</span>
         <span class="n">specimens</span><span class="o">=</span><span class="n">specimens</span><span class="p">,</span>

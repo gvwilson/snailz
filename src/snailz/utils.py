@@ -5,6 +5,7 @@ from datetime import date
 import io
 import json
 import math
+import random
 import sys
 from typing import Callable, Generator
 
@@ -23,9 +24,15 @@ DEFAULT_SURVEY_SIZE = 15
 # File paths
 ASSAYS_CSV = "assays.csv"
 ASSAYS_DIR = "assays"
+MACHINES_CSV = "machines.csv"
 PERSONS_CSV = "persons.csv"
 SPECIMENS_CSV = "specimens.csv"
 SURVEYS_DIR = "surveys"
+
+
+def choose_one(items):
+    """Choose one item at random."""
+    return random.choices(items, k=1)[0]
 
 
 def fail(msg: str) -> None:
