@@ -56,6 +56,7 @@ def task_data():
     return {
         "actions": [
             f"mkdir -p {TMP_DIR}",
+            f"snailz params --output {PARAMS_JSON}",
             f"snailz data --params {PARAMS_JSON} --output {DATA_JSON} --csvdir {TMP_DIR}",
         ],
         "verbosity": VERBOSITY,
@@ -94,19 +95,6 @@ def task_lint():
         "actions": [
             "ruff check .",
             "pyright",
-        ],
-        "verbosity": VERBOSITY,
-        "uptodate": [False],
-    }
-
-
-def task_params():
-    """Regenerate parameter files."""
-
-    return {
-        "actions": [
-            f"mkdir -p {TMP_DIR}",
-            f"snailz params --output {PARAMS_JSON}",
         ],
         "verbosity": VERBOSITY,
         "uptodate": [False],
