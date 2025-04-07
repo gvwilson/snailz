@@ -877,12 +877,11 @@ its mass,
 and a short fragment of its genome.</dd>
 <dt><strong>Assays</strong></dt>
 <dd>The chemical analysis of the snails' genomes.
-One assay is performed for each snail
-by putting samples of the snail's tissue into
-some of the small wells in a plastic <a href="https://en.wikipedia.org/wiki/Microplate">microplate</a>,
-while an inert material is placed in other wells as a control.
-The wells are then treated with chemicals and photographed;
-the brightness of each well in the photograph shows how reactive the material was.
+Each assay is performed by putting samples of a snail's tissue
+into some small wells in a plastic <a href="https://en.wikipedia.org/wiki/Microplate">microplate</a>.
+An inert material is placed in other wells as a control;
+the wells are then treated with chemicals and photographed,
+and the brightness of each well shows how reactive the material was.
 Each assay is stored in two files:
 a design file showing which wells contain samples and controls,
 and a readings file with the measured responses.
@@ -1089,7 +1088,7 @@ The parameters, their meanings, and their properties are:</p>
 </li>
 <li>
 <p>Some specimens' grid locations are missing from the final data.
-    Oops.</p>
+    Their XY coordinates are missing in <code>specimens.csv</code> and <code>null</code> in <code>snailz.db</code>.</p>
 </li>
 <li>
 <p>All snail genomes are the same length,
@@ -1104,12 +1103,15 @@ The parameters, their meanings, and their properties are:</p>
     This scaling uses a <a href="https://en.wikipedia.org/wiki/Sigmoid_function">sigmoid function</a> rather than a linear function.</p>
 </li>
 <li>
+<p>A few specimens are assayed twice instead of once.</p>
+</li>
+<li>
 <p>The actual readings for mutated and unmutated snails are randomly generated
     by adding uniform noise to <code>assay.baseline</code> and <code>assay.mutant</code>.
     The readings for control wells are just noise.</p>
 </li>
 <li>
-<p>Reading values for both mutated and unmutated snails are lowered
+<p>Assay readings for both mutated and unmutated snails are lowered
     by an amount that depends on the number of days between the sample being collected
     and the assay being performed.</p>
 </li>
