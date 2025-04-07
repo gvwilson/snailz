@@ -6,7 +6,7 @@ import io
 import json
 import math
 import sys
-from typing import Callable
+from typing import Callable, Generator
 
 from pydantic import BaseModel
 
@@ -26,43 +26,6 @@ ASSAYS_DIR = "assays"
 PERSONS_CSV = "persons.csv"
 SPECIMENS_CSV = "specimens.csv"
 SURVEYS_DIR = "surveys"
-
-
-class UniqueIdGenerator:
-    """Generate unique IDs using provided function."""
-
-    def __init__(self, name: str, func: Callable, limit: int = UNIQUE_ID_LIMIT) -> None:
-        """Initialize.
-
-        Parameters:
-            name: A name for this generator
-            func: Function that creates IDs when called
-            limit: Maximum number of attempts
-        """
-        self._name = name
-        self._func = func
-        self._limit = limit
-        self._seen = set()
-
-    def next(self, *args: object) -> str:
-        """Get next unique ID.
-
-        Parameters:
-            args: Arguments to pass to the ID-generating function
-
-        Returns:
-            A unique identifier that hasn't been returned before
-
-        Raises:
-            RuntimeError: If unable to generate a unique ID within limit attempts
-        """
-        for i in range(self._limit):
-            ident = self._func(*args)
-            if ident in self._seen:
-                continue
-            self._seen.add(ident)
-            return ident
-        raise RuntimeError(f"failed to find unique ID for {self._name}")
 
 
 def fail(msg: str) -> None:
@@ -126,6 +89,56 @@ def to_csv(rows: list, fields: list, f_make_row: Callable) -> str:
     for r in rows:
         writer.writerow(f_make_row(r))
     return output.getvalue()
+
+
+def unique_id(
+    name: str, func: Callable, limit: int = UNIQUE_ID_LIMIT
+) -> Generator[str, tuple | None, None]:
+    """Generate unique IDs.
+
+    Parameters:
+        name: name of this generator
+        func: function to generate next candidate
+        limit: how many tries per ID
+
+    Returns:
+        Unique ID.
+    """
+    gen = _make_unique_id_generator(name, func, limit)
+    next(gen)  # prime the generator
+    return gen
+
+
+def _make_unique_id_generator(
+    name: str, func: Callable, limit: int
+) -> Generator[str, tuple | None, None]:
+    """Create and prime a unique ID generator.
+
+    Parameters:
+        name: name of this generator
+        func: function to generate next candidate
+        limit: how many tries per ID
+
+    Returns:
+        Unique ID.
+    """
+    seen = set()
+    provided = yield ""  # to prime the generator
+    while True:
+        found = False
+        for _ in range(limit):
+            if provided is None:
+                provided = ()
+            temp = func(*provided)
+            assert isinstance(temp, str)
+            if temp in seen:
+                continue
+            seen.add(temp)
+            found = True
+            break
+        if not found:
+            raise RuntimeError(f"{name} unable to find unique ID")
+        provided = yield temp
 
 
 def _serialize_json(obj: object) -> str | dict:

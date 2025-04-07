@@ -110,7 +110,7 @@ def surveys_generate(params: SurveyParams) -> AllSurveys:
         Data model including all surveys.
     """
 
-    gen = utils.UniqueIdGenerator("survey", _survey_id_generator)
+    gen = utils.unique_id("survey", _survey_id_generator)
     current_date = params.start_date
     items = []
     for _ in range(params.number):
@@ -119,7 +119,7 @@ def surveys_generate(params: SurveyParams) -> AllSurveys:
         )
         items.append(
             Survey(
-                ident=gen.next(),
+                ident=next(gen),
                 size=params.size,
                 start_date=current_date,
                 end_date=next_date,

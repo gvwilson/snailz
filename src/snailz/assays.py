@@ -150,7 +150,7 @@ def assays_generate(
     Returns:
         Assay list object
     """
-    gen = utils.UniqueIdGenerator("assays", lambda: f"{random.randint(0, 999999):06d}")
+    gen = utils.unique_id("assays", lambda: f"{random.randint(0, 999999):06d}")
 
     items = []
     for spec in specimens.items:
@@ -158,9 +158,11 @@ def assays_generate(
         person = random.choice(persons.items)
         treatments = _make_treatments(params)
         readings = _make_readings(params, spec, performed, treatments)
+        ident = next(gen)
+        assert isinstance(ident, str)  # to satisfy type checking
         items.append(
             Assay(
-                ident=gen.next(),
+                ident=ident,
                 performed=performed,
                 specimen=spec.ident,
                 person=person.ident,

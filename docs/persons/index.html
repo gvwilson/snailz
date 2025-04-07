@@ -1409,17 +1409,17 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">fake</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">Faker</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">locale</span><span class="p">)</span>
     <span class="n">fake</span><span class="o">.</span><span class="n">seed_instance</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1_000_000</span><span class="p">))</span>
-    <span class="n">gen</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">UniqueIdGenerator</span><span class="p">(</span><span class="s2">&quot;person&quot;</span><span class="p">,</span> <span class="n">_person_id_generator</span><span class="p">)</span>
+    <span class="n">id_gen</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">unique_id</span><span class="p">(</span><span class="s2">&quot;person&quot;</span><span class="p">,</span> <span class="n">_person_id_generator</span><span class="p">)</span>
     <span class="n">items</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">number</span><span class="p">):</span>
-        <span class="n">f</span> <span class="o">=</span> <span class="n">fake</span><span class="o">.</span><span class="n">last_name</span><span class="p">()</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">fake</span><span class="o">.</span><span class="n">first_name</span><span class="p">()</span>
-        <span class="n">i</span> <span class="o">=</span> <span class="n">gen</span><span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+        <span class="n">family</span> <span class="o">=</span> <span class="n">fake</span><span class="o">.</span><span class="n">last_name</span><span class="p">()</span>
+        <span class="n">personal</span> <span class="o">=</span> <span class="n">fake</span><span class="o">.</span><span class="n">first_name</span><span class="p">()</span>
+        <span class="n">ident</span> <span class="o">=</span> <span class="n">id_gen</span><span class="o">.</span><span class="n">send</span><span class="p">((</span><span class="n">family</span><span class="p">,</span> <span class="n">personal</span><span class="p">))</span>
         <span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="n">Person</span><span class="p">(</span>
-                <span class="n">ident</span><span class="o">=</span><span class="n">i</span><span class="p">,</span>
-                <span class="n">family</span><span class="o">=</span><span class="n">f</span><span class="p">,</span>
-                <span class="n">personal</span><span class="o">=</span><span class="n">p</span><span class="p">,</span>
+                <span class="n">ident</span><span class="o">=</span><span class="n">ident</span><span class="p">,</span>
+                <span class="n">family</span><span class="o">=</span><span class="n">family</span><span class="p">,</span>
+                <span class="n">personal</span><span class="o">=</span><span class="n">personal</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="p">)</span>
 

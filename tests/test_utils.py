@@ -5,7 +5,7 @@ import pytest
 
 from pydantic import BaseModel
 
-from snailz.utils import UniqueIdGenerator, fail, json_dump, report, to_csv
+from snailz.utils import fail, json_dump, report, to_csv, unique_id
 
 
 class DummyModel(BaseModel):
@@ -35,16 +35,16 @@ def test_json_dump_fails_for_unknown_type():
 
 
 def test_unique_id_generator_produces_unique_ids():
-    gen = UniqueIdGenerator("test", lambda n: f"x{n}")
-    values = {gen.next(i) for i in range(10)}
+    gen = unique_id("test", lambda n: f"x{n}")
+    values = {gen.send((i,)) for i in range(10)}
     assert len(values) == 10
 
 
 def test_unique_id_generator_fails_at_limit():
-    gen = UniqueIdGenerator("test", lambda: "x", limit=3)
+    gen = unique_id("test", lambda: "x", limit=3)
     with pytest.raises(RuntimeError):
         for _ in range(3):
-            gen.next()
+            gen.send(())
 
 
 def test_fail_prints_message(capsys):

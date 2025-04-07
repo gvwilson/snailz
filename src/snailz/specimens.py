@@ -102,7 +102,7 @@ def specimens_generate(params: SpecimenParams, surveys: AllSurveys) -> AllSpecim
     loci = _make_loci(params)
     susc_locus = random.choices(loci, k=1)[0]
     susc_base = reference[susc_locus]
-    gen = utils.UniqueIdGenerator("specimen", _specimen_id_generator)
+    gen = utils.unique_id("specimen", _specimen_id_generator)
     specimens = AllSpecimens(
         loci=loci,
         reference=reference,
@@ -115,8 +115,9 @@ def specimens_generate(params: SpecimenParams, surveys: AllSurveys) -> AllSpecim
     for survey in surveys.items:
         positions = _place_specimens(params, survey.size)
         for pos in positions:
+            ident = next(gen)
             specimens.items.append(
-                _make_specimen(params, survey, specimens, gen, pos, max_value)
+                _make_specimen(params, survey, specimens, ident, pos, max_value)
             )
 
     return specimens
@@ -150,7 +151,7 @@ def _make_specimen(
     params: SpecimenParams,
     survey: Survey,
     specimens: AllSpecimens,
-    gen: utils.UniqueIdGenerator,
+    ident: str,
     location: Point,
     max_value: float,
 ) -> Specimen:
@@ -197,7 +198,7 @@ def _make_specimen(
         mass *= pollution_scaling
 
     return Specimen(
-        ident=gen.next(),
+        ident=ident,
         survey_id=survey.ident,
         collected=collected,
         genome=genome,

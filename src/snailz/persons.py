@@ -66,17 +66,17 @@ def persons_generate(params: PersonParams) -> AllPersons:
     """
     fake = faker.Faker(params.locale)
     fake.seed_instance(random.randint(0, 1_000_000))
-    gen = utils.UniqueIdGenerator("person", _person_id_generator)
+    id_gen = utils.unique_id("person", _person_id_generator)
     items = []
     for _ in range(params.number):
-        f = fake.last_name()
-        p = fake.first_name()
-        i = gen.next(f, p)
+        family = fake.last_name()
+        personal = fake.first_name()
+        ident = id_gen.send((family, personal))
         items.append(
             Person(
-                ident=i,
-                family=f,
-                personal=p,
+                ident=ident,
+                family=family,
+                personal=personal,
             )
         )
 
