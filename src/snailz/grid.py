@@ -9,8 +9,8 @@ T = TypeVar("T")
 class Point(BaseModel):
     """A 2D point."""
 
-    x: int = Field(ge=0, description="x coordinate")
-    y: int = Field(ge=0, description="y coordinate")
+    x: int = Field(description="x coordinate")
+    y: int = Field(description="y coordinate")
 
 
 class Grid(BaseModel, Generic[T]):
