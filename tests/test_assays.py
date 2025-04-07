@@ -100,7 +100,8 @@ def test_assay_explicit_treatments_and_readings():
 
 
 def test_generate_assays_correct_length_and_reference_ids():
-    assays = assays_generate(AssayParams(), PERSONS_2, SPECIMENS_2)
+    params = AssayParams().model_copy(update={"p_duplicate_assay": 0.0})
+    assays = assays_generate(params, PERSONS_2, SPECIMENS_2)
     assert len(assays.items) == 2
     for a, s in zip(assays.items, SPECIMENS_2.items):
         assert a.specimen == s.ident

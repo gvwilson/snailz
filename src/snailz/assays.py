@@ -3,6 +3,7 @@
 import csv
 from datetime import date, timedelta
 import io
+import math
 import random
 
 from pydantic import BaseModel, Field, model_validator
@@ -47,6 +48,9 @@ class AssayParams(BaseModel):
         ge=0,
         le=255,
         description="Plate image noise (grayscale 0-255)",
+    )
+    p_duplicate_assay: float = Field(
+        default=0.05, ge=0, description="Probably that an assay is repeated"
     )
 
     model_config = {"extra": "forbid"}
@@ -150,10 +154,16 @@ def assays_generate(
     Returns:
         Assay list object
     """
-    gen = utils.unique_id("assays", lambda: f"{random.randint(0, 999999):06d}")
+    # Duplicate a few specimens and randomize order.
+    extra = random.choices(
+        specimens.items, k=math.floor(params.p_duplicate_assay * len(specimens.items))
+    )
+    subjects = specimens.items + extra
+    random.shuffle(subjects)
 
+    gen = utils.unique_id("assays", lambda: f"{random.randint(0, 999999):06d}")
     items = []
-    for spec in specimens.items:
+    for spec in subjects:
         performed = spec.collected + timedelta(days=random.randint(0, params.delay))
         person = random.choice(persons.items)
         treatments = _make_treatments(params)
