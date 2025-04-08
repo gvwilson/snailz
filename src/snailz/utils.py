@@ -24,6 +24,7 @@ DEFAULT_SURVEY_SIZE = 15
 # File paths
 ASSAYS_CSV = "assays.csv"
 ASSAYS_DIR = "assays"
+DATA_JSON = "data.json"
 MACHINES_CSV = "machines.csv"
 PERSONS_CSV = "persons.csv"
 SPECIMENS_CSV = "specimens.csv"
@@ -45,9 +46,9 @@ def fail(msg: str) -> None:
     sys.exit(1)
 
 
-def json_dump(obj: BaseModel) -> str:
+def json_dump(obj: BaseModel, indent: int | None = 2) -> str:
     """Dump as JSON with appropriate settings."""
-    return json.dumps(obj, indent=2, default=_serialize_json)
+    return json.dumps(obj, indent=indent, default=_serialize_json)
 
 
 def report(verbose: bool, msg: str) -> None:

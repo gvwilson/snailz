@@ -20,28 +20,36 @@ def cli():
 
 
 @cli.command()
-@click.option("--csvdir", type=click.Path(), help="Path to CSV directory")
 @click.option(
     "--params",
     required=True,
     type=click.Path(exists=True),
     help="Path to parameters file",
 )
-@click.option("--output", type=click.Path(), help="Path to output file")
-def data(csvdir, params, output):
+@click.option("--output", type=click.Path(), help="Path to output directory")
+def data(params, output):
     """Generate and save data using provided parameters."""
     try:
+        # Generate
         parameters = AllParams.model_validate(json.load(open(params, "r")))
         random.seed(parameters.seed)
         data = AllData.generate(parameters)
-        if csvdir is not None:
-            csv_dir_path = Path(csvdir)
-            _create_csv(csv_dir_path, data)
-            database_generate(csv_dir_path, "snailz.db")
-            image_dir = csv_dir_path / utils.ASSAYS_DIR
-            all_images = images_generate(parameters.assay, data.assays)
-            for ident, image in all_images.items():
-                image.save(image_dir / f"{ident}.png")
+
+        # Save everything in one big blob of JSON
+        out_dir = Path(output)
+        if not out_dir.is_dir():
+            raise ValueError(f"{out_dir} is not a directory")
+        with open(out_dir / utils.DATA_JSON, "w") as writer:
+            writer.write(utils.json_dump(data, indent=None))
+
+        # Save in separate files
+        _create_csv(out_dir, data)
+        database_generate(out_dir, "snailz.db")
+        image_dir = out_dir / utils.ASSAYS_DIR
+        all_images = images_generate(parameters.assay, data.assays)
+        for ident, image in all_images.items():
+            image.save(image_dir / f"{ident}.png")
+
     except OSError as exc:
         utils.fail(str(exc))
 
@@ -58,19 +66,16 @@ def params(output):
         utils.fail(str(exc))
 
 
-def _create_csv(csv_dir, data):
+def _create_csv(out_dir: Path, data: AllData) -> None:
     """Create CSV files from data."""
-    if not csv_dir.is_dir():
-        raise ValueError(f"{csv_dir} is not a directory")
-
     # Machines
-    with open(csv_dir / utils.MACHINES_CSV, "w") as writer:
+    with open(out_dir / utils.MACHINES_CSV, "w") as writer:
         writer.write(data.machines.to_csv())
 
     # Assays
-    with open(csv_dir / utils.ASSAYS_CSV, "w") as writer:
+    with open(out_dir / utils.ASSAYS_CSV, "w") as writer:
         writer.write(data.assays.to_csv())
-    assays_dir = csv_dir / utils.ASSAYS_DIR
+    assays_dir = out_dir / utils.ASSAYS_DIR
     if assays_dir.is_dir():
         shutil.rmtree(assays_dir)
     assays_dir.mkdir(exist_ok=True)
@@ -80,10 +85,10 @@ def _create_csv(csv_dir, data):
                 writer.write(assay.to_csv(which))
 
     # Mangled assays
-    mangle_assays(csv_dir / utils.ASSAYS_DIR, data.persons)
+    mangle_assays(out_dir / utils.ASSAYS_DIR, data.persons)
 
     # Surveys
-    surveys_dir = csv_dir / utils.SURVEYS_DIR
+    surveys_dir = out_dir / utils.SURVEYS_DIR
     if surveys_dir.is_dir():
         shutil.rmtree(surveys_dir)
     surveys_dir.mkdir(exist_ok=True)
@@ -92,11 +97,11 @@ def _create_csv(csv_dir, data):
             writer.write(survey.to_csv())
 
     # Persons
-    with open(csv_dir / utils.PERSONS_CSV, "w") as writer:
+    with open(out_dir / utils.PERSONS_CSV, "w") as writer:
         writer.write(data.persons.to_csv())
 
     # Specimens
-    with open(csv_dir / utils.SPECIMENS_CSV, "w") as writer:
+    with open(out_dir / utils.SPECIMENS_CSV, "w") as writer:
         writer.write(data.specimens.to_csv())
 
 

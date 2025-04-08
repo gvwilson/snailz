@@ -510,17 +510,17 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#snailz.persons.persons_generate" class="md-nav__link">
+          <li class="md-nav__item">
+  <a href="#snailz.persons.AllPersons.generate" class="md-nav__link">
     <span class="md-ellipsis">
-      persons_generate
+      generate
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -794,17 +794,17 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#snailz.persons.persons_generate" class="md-nav__link">
+          <li class="md-nav__item">
+  <a href="#snailz.persons.AllPersons.generate" class="md-nav__link">
     <span class="md-ellipsis">
-      persons_generate
+      generate
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1218,7 +1218,35 @@
 <span class="normal">52</span>
 <span class="normal">53</span>
 <span class="normal">54</span>
-<span class="normal">55</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllPersons</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllPersons</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A set of generated people.&quot;&quot;&quot;</span>
 
     <span class="n">items</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Person</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;all persons&quot;</span><span class="p">)</span>
@@ -1236,6 +1264,34 @@
             <span class="p">[</span><span class="s2">&quot;ident&quot;</span><span class="p">,</span> <span class="s2">&quot;personal&quot;</span><span class="p">,</span> <span class="s2">&quot;family&quot;</span><span class="p">],</span>
             <span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">ident</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">personal</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">family</span><span class="p">],</span>
         <span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">PersonParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;AllPersons&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate random persons.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            params: Data generation parameters.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Data model including all persons.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fake</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">Faker</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">locale</span><span class="p">)</span>
+        <span class="n">fake</span><span class="o">.</span><span class="n">seed_instance</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1_000_000</span><span class="p">))</span>
+        <span class="n">id_gen</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">unique_id</span><span class="p">(</span><span class="s2">&quot;person&quot;</span><span class="p">,</span> <span class="n">_person_id_generator</span><span class="p">)</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">number</span><span class="p">):</span>
+            <span class="n">family</span> <span class="o">=</span> <span class="n">fake</span><span class="o">.</span><span class="n">last_name</span><span class="p">()</span>
+            <span class="n">personal</span> <span class="o">=</span> <span class="n">fake</span><span class="o">.</span><span class="n">first_name</span><span class="p">()</span>
+            <span class="n">ident</span> <span class="o">=</span> <span class="n">id_gen</span><span class="o">.</span><span class="n">send</span><span class="p">((</span><span class="n">family</span><span class="p">,</span> <span class="n">personal</span><span class="p">))</span>
+            <span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">Person</span><span class="p">(</span>
+                    <span class="n">ident</span><span class="o">=</span><span class="n">ident</span><span class="p">,</span>
+                    <span class="n">family</span><span class="o">=</span><span class="n">family</span><span class="p">,</span>
+                    <span class="n">personal</span><span class="o">=</span><span class="n">personal</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">AllPersons</span><span class="p">(</span><span class="n">items</span><span class="o">=</span><span class="n">items</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -1317,22 +1373,17 @@
 
 </div>
 
-
-
-  </div>
-
-    </div>
-
-</div>
-
-
 <div class="doc doc-object doc-function">
 
 
-<h2 id="snailz.persons.persons_generate" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">persons_generate</span><span class="p">(</span><span class="n">params</span><span class="p">)</span></code>
+<h3 id="snailz.persons.AllPersons.generate" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">generate</span><span class="p">(</span><span class="n">params</span><span class="p">)</span></code>
 
-</h2>
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
+  </span>
+
+</h3>
 
 
     <div class="doc doc-contents ">
@@ -1396,7 +1447,8 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/persons.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">58</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">57</span>
+<span class="normal">58</span>
 <span class="normal">59</span>
 <span class="normal">60</span>
 <span class="normal">61</span>
@@ -1421,7 +1473,8 @@
 <span class="normal">80</span>
 <span class="normal">81</span>
 <span class="normal">82</span>
-<span class="normal">83</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">persons_generate</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">PersonParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AllPersons</span><span class="p">:</span>
+<span class="normal">83</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">PersonParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;AllPersons&quot;</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate random persons.</span>
 
 <span class="sd">    Parameters:</span>
@@ -1452,6 +1505,15 @@
     </div>
 
 </div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
 
 <div class="doc doc-object doc-function">
 
