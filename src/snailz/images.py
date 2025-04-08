@@ -9,8 +9,8 @@ from PIL.Image import Image as PilImage  # to satisfy type checking
 from .assays import AssayParams, Assay, AllAssays
 
 # Image parameters.
-BORDER_WIDTH = 16
-WELL_SIZE = 64
+BORDER_WIDTH = 8
+WELL_SIZE = 32
 BLACK = 0
 WHITE = 255
 BLUR_RADIUS = 4

@@ -3,7 +3,7 @@
 from pydantic import BaseModel, Field
 
 from .assays import AssayParams, AllAssays, assays_generate
-from .machines import AllMachines, machines_generate
+from .machines import MachineParams, AllMachines, machines_generate
 from .persons import PersonParams, AllPersons, persons_generate
 from .specimens import SpecimenParams, AllSpecimens, specimens_generate
 from .surveys import SurveyParams, AllSurveys, surveys_generate
@@ -13,7 +13,9 @@ class AllParams(BaseModel):
     """Represent all parameters combined."""
 
     seed: int = Field(default=7493418, ge=0, description="RNG seed")
-    num_machines: int = Field(default=5, gt=0, description="number of machines")
+    machine: MachineParams = Field(
+        default=MachineParams(), description="parameters for machine generation"
+    )
     assay: AssayParams = Field(
         default=AssayParams(), description="parameters for assay generation"
     )
@@ -46,7 +48,7 @@ class AllData(BaseModel):
 
 def all_generate(params: AllParams) -> AllData:
     """Generate and save all data."""
-    machines = machines_generate(params.num_machines)
+    machines = machines_generate(params.machine)
     surveys = surveys_generate(params.survey)
     persons = persons_generate(params.person)
 

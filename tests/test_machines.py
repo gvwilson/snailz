@@ -2,12 +2,13 @@
 
 import pytest
 
-from snailz.machines import Machine, AllMachines, machines_generate
+from snailz.machines import MachineParams, Machine, AllMachines, machines_generate
 
 
 def test_generate_machines_correct_length():
-    machines = machines_generate(3)
-    assert len(machines.items) == 3
+    params = MachineParams()
+    machines = machines_generate(params)
+    assert len(machines.items) == params.number
 
 
 def test_convert_machines_to_csv():

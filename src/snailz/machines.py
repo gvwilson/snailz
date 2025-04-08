@@ -63,8 +63,14 @@ SUFFIX = [
 # Probability of suffix on machine name
 PROB_SUFFIX = 0.7
 
-# Random range of machine reading brightness
-BRIGHTNESS_RANGE = (0.85, 1.15)
+
+class MachineParams(BaseModel):
+    """Parameters for machine generation."""
+
+    number: int = Field(default=5, gt=0, description="Number of machines")
+    variation: float = Field(default=0.15, ge=0, description="Camera variation")
+
+    model_config = {"extra": "forbid"}
 
 
 class Machine(BaseModel):
@@ -93,7 +99,7 @@ class AllMachines(BaseModel):
         )
 
 
-def machines_generate(num: int) -> AllMachines:
+def machines_generate(params: MachineParams) -> AllMachines:
     """Generate laboratory machinery.
 
     Parameters:
@@ -103,14 +109,15 @@ def machines_generate(num: int) -> AllMachines:
         A set of equipment.
     """
     name_gen = utils.unique_id("machine", _machine_name_generator)
+    variation = (1.0 - params.variation, 1.0 + params.variation)
     return AllMachines(
         items=[
             Machine(
                 ident=f"M000{i + 1}",
                 name=next(name_gen),
-                brightness=random.uniform(*BRIGHTNESS_RANGE),
+                brightness=random.uniform(*variation),
             )
-            for i in range(num)
+            for i in range(params.number)
         ]
     )
 
