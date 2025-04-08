@@ -54,33 +54,33 @@ class AllPersons(BaseModel):
             lambda p: [p.ident, p.personal, p.family],
         )
 
+    @staticmethod
+    def generate(params: PersonParams) -> "AllPersons":
+        """Generate random persons.
 
-def persons_generate(params: PersonParams) -> AllPersons:
-    """Generate random persons.
+        Parameters:
+            params: Data generation parameters.
 
-    Parameters:
-        params: Data generation parameters.
-
-    Returns:
-        Data model including all persons.
-    """
-    fake = faker.Faker(params.locale)
-    fake.seed_instance(random.randint(0, 1_000_000))
-    id_gen = utils.unique_id("person", _person_id_generator)
-    items = []
-    for _ in range(params.number):
-        family = fake.last_name()
-        personal = fake.first_name()
-        ident = id_gen.send((family, personal))
-        items.append(
-            Person(
-                ident=ident,
-                family=family,
-                personal=personal,
+        Returns:
+            Data model including all persons.
+        """
+        fake = faker.Faker(params.locale)
+        fake.seed_instance(random.randint(0, 1_000_000))
+        id_gen = utils.unique_id("person", _person_id_generator)
+        items = []
+        for _ in range(params.number):
+            family = fake.last_name()
+            personal = fake.first_name()
+            ident = id_gen.send((family, personal))
+            items.append(
+                Person(
+                    ident=ident,
+                    family=family,
+                    personal=personal,
+                )
             )
-        )
 
-    return AllPersons(items=items)
+        return AllPersons(items=items)
 
 
 def _person_id_generator(family: str, personal: str) -> str:

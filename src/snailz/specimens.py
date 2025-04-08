@@ -95,41 +95,41 @@ class AllSpecimens(BaseModel):
             ],
         )
 
+    @staticmethod
+    def generate(params: SpecimenParams, surveys: AllSurveys) -> "AllSpecimens":
+        """Generate a set of specimens.
 
-def specimens_generate(params: SpecimenParams, surveys: AllSurveys) -> AllSpecimens:
-    """Generate a set of specimens.
+        Parameters:
+            params: specimen generation parameters
+            surveys: surveys to generate specimens for
 
-    Parameters:
-        params: specimen generation parameters
-        surveys: surveys to generate specimens for
+        Returns:
+            A set of surveys.
+        """
 
-    Returns:
-        A set of surveys.
-    """
+        reference = _make_reference_genome(params)
+        loci = _make_loci(params)
+        susc_locus = utils.choose_one(loci)
+        susc_base = reference[susc_locus]
+        gen = utils.unique_id("specimen", _specimen_id_generator)
+        specimens = AllSpecimens(
+            loci=loci,
+            reference=reference,
+            susc_base=susc_base,
+            susc_locus=susc_locus,
+            items=[],
+        )
 
-    reference = _make_reference_genome(params)
-    loci = _make_loci(params)
-    susc_locus = utils.choose_one(loci)
-    susc_base = reference[susc_locus]
-    gen = utils.unique_id("specimen", _specimen_id_generator)
-    specimens = AllSpecimens(
-        loci=loci,
-        reference=reference,
-        susc_base=susc_base,
-        susc_locus=susc_locus,
-        items=[],
-    )
+        max_pollution = surveys.max_pollution()
+        for survey in surveys.items:
+            positions = _place_specimens(params, survey.size)
+            for pos in positions:
+                ident = next(gen)
+                specimens.items.append(
+                    _make_specimen(params, survey, specimens, ident, pos, max_pollution)
+                )
 
-    max_pollution = surveys.max_pollution()
-    for survey in surveys.items:
-        positions = _place_specimens(params, survey.size)
-        for pos in positions:
-            ident = next(gen)
-            specimens.items.append(
-                _make_specimen(params, survey, specimens, ident, pos, max_pollution)
-            )
-
-    return specimens
+        return specimens
 
 
 def _make_loci(params: SpecimenParams) -> list[int]:

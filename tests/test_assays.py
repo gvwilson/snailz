@@ -4,7 +4,7 @@ from datetime import date
 import pytest
 import random
 
-from snailz.assays import AssayParams, Assay, AllAssays, assays_generate
+from snailz.assays import AssayParams, Assay, AllAssays
 from snailz.machines import Machine, AllMachines
 from snailz.grid import Grid, Point
 from snailz.persons import Person, AllPersons
@@ -102,7 +102,7 @@ def test_assay_explicit_treatments_and_readings():
 
 def test_generate_assays_correct_length_and_reference_ids():
     params = AssayParams().model_copy(update={"p_duplicate_assay": 0.0})
-    assays = assays_generate(params, PERSONS_2, MACHINES_1, SPECIMENS_2)
+    assays = AllAssays.generate(params, PERSONS_2, MACHINES_1, SPECIMENS_2)
     assert len(assays.items) == 2
     assert {a.specimen for a in assays.items} == {s.ident for s in SPECIMENS_2.items}
     person_ids = {p.ident for p in PERSONS_2.items}
@@ -111,12 +111,12 @@ def test_generate_assays_correct_length_and_reference_ids():
 
 def test_generate_assays_multiple_assays_per_specimen():
     params = AssayParams().model_copy(update={"p_duplicate_assay": 1.0})
-    assays = assays_generate(params, PERSONS_2, MACHINES_1, SPECIMENS_2)
+    assays = AllAssays.generate(params, PERSONS_2, MACHINES_1, SPECIMENS_2)
     assert len(assays.items) == 2 * len(SPECIMENS_2.items)
 
 
 def test_assay_csv_fails_for_unknown_kind():
-    assays = assays_generate(AssayParams(), PERSONS_2, MACHINES_1, SPECIMENS_2)
+    assays = AllAssays.generate(AssayParams(), PERSONS_2, MACHINES_1, SPECIMENS_2)
     with pytest.raises(ValueError):
         assays.items[0].to_csv("nope")
 
@@ -150,9 +150,9 @@ def test_convert_assays_to_csv():
     )
     fixture = AllAssays(items=[first, second])
     expected = [
-        "ident,specimen,person,performed",
-        "a01,s01,p01,2021-07-01",
-        "a02,s02,p02,2021-07-11",
+        "ident,specimen,person,performed,machine",
+        "a01,s01,p01,2021-07-01,E1234",
+        "a02,s02,p02,2021-07-11,E1234",
     ]
     assert fixture.to_csv() == "\n".join(expected) + "\n"
 
@@ -161,6 +161,7 @@ def test_convert_assays_to_csv():
         "specimen,s01,",
         "date,2021-07-01,",
         "by,p01,",
+        "machine,E1234,",
         ",A,B",
         "1,S,S",
         "2,C,C",
@@ -172,6 +173,7 @@ def test_convert_assays_to_csv():
         "specimen,s01,",
         "date,2021-07-01,",
         "by,p01,",
+        "machine,E1234,",
         ",A,B",
         "1,2.0,4.0",
         "2,1.0,3.0",
@@ -188,7 +190,7 @@ def test_assay_reading_value_susceptible(seed):
     specimens.items = [specimens.items[0].model_copy(update={"is_mutant": True})]
     assert specimens.items[0].is_mutant
 
-    assays = assays_generate(params, PERSONS_1, MACHINES_1, specimens)
+    assays = AllAssays.generate(params, PERSONS_1, MACHINES_1, specimens)
     assay = assays.items[0]
     for x in range(2):
         for y in range(2):
@@ -211,7 +213,7 @@ def test_assay_reading_value_not_susceptible(seed):
     specimens.items = [specimens.items[0].model_copy(update={"is_mutant": False})]
     assert not specimens.items[0].is_mutant
 
-    assays = assays_generate(params, PERSONS_1, MACHINES_1, specimens)
+    assays = AllAssays.generate(params, PERSONS_1, MACHINES_1, specimens)
     assay = assays.items[0]
     for x in range(2):
         for y in range(2):

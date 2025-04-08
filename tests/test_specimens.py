@@ -4,7 +4,7 @@ from datetime import date
 
 from snailz.grid import Point
 from snailz.surveys import Survey, AllSurveys
-from snailz.specimens import SpecimenParams, AllSpecimens, Specimen, specimens_generate
+from snailz.specimens import SpecimenParams, Specimen, AllSpecimens
 
 
 def test_generate_specimens_correct_length():
@@ -21,7 +21,7 @@ def test_generate_specimens_correct_length():
     ]
     surveys = AllSurveys(items=temp)
     params = SpecimenParams()
-    specimens = specimens_generate(params, surveys)
+    specimens = AllSpecimens.generate(params, surveys)
     assert len(specimens.items) == num
 
 

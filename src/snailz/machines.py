@@ -98,28 +98,28 @@ class AllMachines(BaseModel):
             lambda m: [m.ident, m.name],
         )
 
+    @staticmethod
+    def generate(params: MachineParams) -> "AllMachines":
+        """Generate laboratory machinery.
 
-def machines_generate(params: MachineParams) -> AllMachines:
-    """Generate laboratory machinery.
+        Parameters:
+            params: machine generation parameters
 
-    Parameters:
-        params: machine generation parameters
-
-    Returns:
-        A set of equipment.
-    """
-    name_gen = utils.unique_id("machine", _machine_name_generator)
-    variation = (1.0 - params.variation, 1.0 + params.variation)
-    return AllMachines(
-        items=[
-            Machine(
-                ident=f"M000{i + 1}",
-                name=next(name_gen),
-                brightness=random.uniform(*variation),
-            )
-            for i in range(params.number)
-        ]
-    )
+        Returns:
+            A set of equipment.
+        """
+        name_gen = utils.unique_id("machine", _machine_name_generator)
+        variation = (1.0 - params.variation, 1.0 + params.variation)
+        return AllMachines(
+            items=[
+                Machine(
+                    ident=f"M000{i + 1}",
+                    name=next(name_gen),
+                    brightness=random.uniform(*variation),
+                )
+                for i in range(params.number)
+            ]
+        )
 
 
 def _machine_name_generator():

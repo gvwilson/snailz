@@ -103,35 +103,35 @@ class AllSurveys(BaseModel):
         """Maximum cell value of all surveys in this set."""
         return max(survey.max_pollution() for survey in self.items)
 
+    @staticmethod
+    def generate(params: SurveyParams) -> "AllSurveys":
+        """Generate random surveys.
 
-def surveys_generate(params: SurveyParams) -> AllSurveys:
-    """Generate random surveys.
+        Parameters:
+            params: Data generation parameters.
 
-    Parameters:
-        params: Data generation parameters.
+        Returns:
+            Data model including all surveys.
+        """
 
-    Returns:
-        Data model including all surveys.
-    """
-
-    gen = utils.unique_id("survey", _survey_id_generator)
-    current_date = params.start_date
-    items = []
-    for _ in range(params.number):
-        next_date = current_date + timedelta(
-            days=random.randint(1, params.max_interval)
-        )
-        items.append(
-            Survey(
-                ident=next(gen),
-                size=params.size,
-                start_date=current_date,
-                end_date=next_date,
+        gen = utils.unique_id("survey", _survey_id_generator)
+        current_date = params.start_date
+        items = []
+        for _ in range(params.number):
+            next_date = current_date + timedelta(
+                days=random.randint(1, params.max_interval)
             )
-        )
-        current_date = next_date + timedelta(days=1)
+            items.append(
+                Survey(
+                    ident=next(gen),
+                    size=params.size,
+                    start_date=current_date,
+                    end_date=next_date,
+                )
+            )
+            current_date = next_date + timedelta(days=1)
 
-    return AllSurveys(items=items)
+        return AllSurveys(items=items)
 
 
 def _survey_id_generator() -> str:

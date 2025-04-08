@@ -10,7 +10,7 @@ import click
 from .database import database_generate
 from .images import images_generate
 from .mangle import mangle_assays
-from .overall import AllParams, all_generate
+from .overall import AllParams, AllData
 from . import utils
 
 
@@ -33,7 +33,7 @@ def data(csvdir, params, output):
     try:
         parameters = AllParams.model_validate(json.load(open(params, "r")))
         random.seed(parameters.seed)
-        data = all_generate(parameters)
+        data = AllData.generate(parameters)
         if csvdir is not None:
             csv_dir_path = Path(csvdir)
             _create_csv(csv_dir_path, data)

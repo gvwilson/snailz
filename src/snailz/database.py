@@ -29,7 +29,9 @@ create table machines (
 )
 """
 MACHINES_HEADER = ["ident", "name"]
-MACHINES_INSERT = f"insert into machines values ({', '.join('?' * len(MACHINES_HEADER))})"
+MACHINES_INSERT = (
+    f"insert into machines values ({', '.join('?' * len(MACHINES_HEADER))})"
+)
 
 PERSONS_CREATE = """
 create table persons (

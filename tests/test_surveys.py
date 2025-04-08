@@ -2,12 +2,12 @@
 
 from datetime import timedelta
 
-from snailz.surveys import SurveyParams, Survey, surveys_generate
+from snailz.surveys import SurveyParams, Survey, AllSurveys
 
 
 def test_generate_surveys_correct_length():
     params = SurveyParams()
-    surveys = surveys_generate(params)
+    surveys = AllSurveys.generate(params)
     assert len(surveys.items) == params.number
     assert all(s.size == params.size for s in surveys.items)
 
@@ -19,7 +19,7 @@ def test_generate_surveys_correct_dates():
         + timedelta(days=params.number - 1)
         + timedelta(days=params.number * params.max_interval)
     )
-    surveys = surveys_generate(params)
+    surveys = AllSurveys.generate(params)
     for s in surveys.items:
         assert params.start_date <= s.start_date
         assert s.start_date <= s.end_date

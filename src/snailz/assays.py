@@ -140,57 +140,64 @@ class AllAssays(BaseModel):
         return utils.to_csv(
             self.items,
             ["ident", "specimen", "person", "performed", "machine"],
-            lambda r: [r.ident, r.specimen, r.person, r.performed.isoformat(), r.machine],
+            lambda r: [
+                r.ident,
+                r.specimen,
+                r.person,
+                r.performed.isoformat(),
+                r.machine,
+            ],
         )
 
+    @staticmethod
+    def generate(
+        params: AssayParams,
+        persons: AllPersons,
+        machines: AllMachines,
+        specimens: AllSpecimens,
+    ) -> "AllAssays":
+        """Generate an assay for each specimen.
 
-def assays_generate(
-    params: AssayParams,
-    persons: AllPersons,
-    machines: AllMachines,
-    specimens: AllSpecimens,
-) -> AllAssays:
-    """Generate an assay for each specimen.
+        Parameters:
+            params: assay generation parameters
+            persons: all staff members
+            machines: all laboratory equipment
+            specimens: specimens to generate assays for
 
-    Parameters:
-        params: assay generation parameters
-        persons: all staff members
-        machines: all laboratory equipment
-        specimens: specimens to generate assays for
+        Returns:
+            Assay list object
+        """
+        # Duplicate a few specimens and randomize order.
+        extra = random.choices(
+            specimens.items,
+            k=math.floor(params.p_duplicate_assay * len(specimens.items)),
+        )
+        subjects = specimens.items + extra
+        random.shuffle(subjects)
 
-    Returns:
-        Assay list object
-    """
-    # Duplicate a few specimens and randomize order.
-    extra = random.choices(
-        specimens.items, k=math.floor(params.p_duplicate_assay * len(specimens.items))
-    )
-    subjects = specimens.items + extra
-    random.shuffle(subjects)
-
-    gen = utils.unique_id("assays", lambda: f"{random.randint(0, 999999):06d}")
-    items = []
-    for spec in subjects:
-        performed = spec.collected + timedelta(days=random.randint(0, params.delay))
-        person = random.choice(persons.items)
-        machine = random.choice(machines.items)
-        treatments = _make_treatments(params)
-        readings = _make_readings(params, spec, performed, machine, treatments)
-        ident = next(gen)
-        assert isinstance(ident, str)  # to satisfy type checking
-        items.append(
-            Assay(
-                ident=ident,
-                performed=performed,
-                specimen=spec.ident,
-                person=person.ident,
-                machine=machine.ident,
-                treatments=treatments,
-                readings=readings,
+        gen = utils.unique_id("assays", lambda: f"{random.randint(0, 999999):06d}")
+        items = []
+        for spec in subjects:
+            performed = spec.collected + timedelta(days=random.randint(0, params.delay))
+            person = random.choice(persons.items)
+            machine = random.choice(machines.items)
+            treatments = _make_treatments(params)
+            readings = _make_readings(params, spec, performed, machine, treatments)
+            ident = next(gen)
+            assert isinstance(ident, str)  # to satisfy type checking
+            items.append(
+                Assay(
+                    ident=ident,
+                    performed=performed,
+                    specimen=spec.ident,
+                    person=person.ident,
+                    machine=machine.ident,
+                    treatments=treatments,
+                    readings=readings,
+                )
             )
-        )
 
-    return AllAssays(items=items)
+        return AllAssays(items=items)
 
 
 def _calc_degradation(params: AssayParams, collected: date, assayed: date) -> float:

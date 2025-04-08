@@ -1,13 +1,11 @@
 """Test machine generation."""
 
-import pytest
-
-from snailz.machines import MachineParams, Machine, AllMachines, machines_generate
+from snailz.machines import MachineParams, Machine, AllMachines
 
 
 def test_generate_machines_correct_length():
     params = MachineParams()
-    machines = machines_generate(params)
+    machines = AllMachines.generate(params)
     assert len(machines.items) == params.number
 
 

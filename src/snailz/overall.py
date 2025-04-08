@@ -2,11 +2,11 @@
 
 from pydantic import BaseModel, Field
 
-from .assays import AssayParams, AllAssays, assays_generate
-from .machines import MachineParams, AllMachines, machines_generate
-from .persons import PersonParams, AllPersons, persons_generate
-from .specimens import SpecimenParams, AllSpecimens, specimens_generate
-from .surveys import SurveyParams, AllSurveys, surveys_generate
+from .assays import AssayParams, AllAssays
+from .machines import MachineParams, AllMachines
+from .persons import PersonParams, AllPersons
+from .specimens import SpecimenParams, AllSpecimens
+from .surveys import SurveyParams, AllSurveys
 
 
 class AllParams(BaseModel):
@@ -45,22 +45,19 @@ class AllData(BaseModel):
 
     model_config = {"extra": "forbid"}
 
-
-def all_generate(params: AllParams) -> AllData:
-    """Generate and save all data."""
-    machines = machines_generate(params.machine)
-    surveys = surveys_generate(params.survey)
-    persons = persons_generate(params.person)
-
-    specimens = specimens_generate(params.specimen, surveys)
-
-    assays = assays_generate(params.assay, persons, machines, specimens)
-
-    return AllData(
-        assays=assays,
-        machines=machines,
-        params=params,
-        persons=persons,
-        specimens=specimens,
-        surveys=surveys,
-    )
+    @staticmethod
+    def generate(params: AllParams) -> "AllData":
+        """Generate and save all data."""
+        machines = AllMachines.generate(params.machine)
+        surveys = AllSurveys.generate(params.survey)
+        persons = AllPersons.generate(params.person)
+        specimens = AllSpecimens.generate(params.specimen, surveys)
+        assays = AllAssays.generate(params.assay, persons, machines, specimens)
+        return AllData(
+            assays=assays,
+            machines=machines,
+            params=params,
+            persons=persons,
+            specimens=specimens,
+            surveys=surveys,
+        )

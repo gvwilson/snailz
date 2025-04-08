@@ -2,17 +2,17 @@
 
 import pytest
 
-from snailz.persons import PersonParams, Person, AllPersons, persons_generate
+from snailz.persons import PersonParams, Person, AllPersons
 
 
 def test_generate_persons_correct_length():
-    persons = persons_generate(PersonParams(locale="es", number=3))
+    persons = AllPersons.generate(PersonParams(locale="es", number=3))
     assert len(persons.items) == 3
 
 
 def test_generate_persons_fails_for_invalid_locale():
     with pytest.raises(ValueError):
-        persons_generate(PersonParams(locale="nope", number=3))
+        AllPersons.generate(PersonParams(locale="nope", number=3))
 
 
 def test_convert_persons_to_csv():
