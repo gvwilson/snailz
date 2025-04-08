@@ -103,7 +103,7 @@ def machines_generate(params: MachineParams) -> AllMachines:
     """Generate laboratory machinery.
 
     Parameters:
-        num: number of machines
+        params: machine generation parameters
 
     Returns:
         A set of equipment.

@@ -113,6 +113,7 @@ class Assay(BaseModel):
             ["specimen", self.specimen] + padding,
             ["date", self.performed.isoformat()] + padding,
             ["by", self.person] + padding,
+            ["machine", self.machine] + padding,
             column_headers,
         ]
         for row in pre:
@@ -138,8 +139,8 @@ class AllAssays(BaseModel):
         """
         return utils.to_csv(
             self.items,
-            ["ident", "specimen", "person", "performed"],
-            lambda r: [r.ident, r.specimen, r.person, r.performed.isoformat()],
+            ["ident", "specimen", "person", "performed", "machine"],
+            lambda r: [r.ident, r.specimen, r.person, r.performed.isoformat(), r.machine],
         )
 
 

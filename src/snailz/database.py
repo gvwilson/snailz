@@ -14,11 +14,22 @@ create table assays (
     ident text primary key,
     specimen text not null,
     person text not null,
-    performed text
+    performed text,
+    machine text
 )
 """
-ASSAYS_HEADER = ["ident", "specimen", "person", "performed"]
+ASSAYS_HEADER = ["ident", "specimen", "person", "performed", "machine"]
 ASSAYS_INSERT = f"insert into assays values ({', '.join('?' * len(ASSAYS_HEADER))})"
+NUM_ASSAY_HEADER_ROWS = 6
+
+MACHINES_CREATE = """
+create table machines (
+    ident text primary key,
+    name text not null
+)
+"""
+MACHINES_HEADER = ["ident", "name"]
+MACHINES_INSERT = f"insert into machines values ({', '.join('?' * len(MACHINES_HEADER))})"
 
 PERSONS_CREATE = """
 create table persons (
@@ -134,7 +145,7 @@ def _import_assay_files(
             rows = [r for r in csv.reader(stream)]
             assert rows[0][0] == "id"
             ident = rows[0][1]
-            data = [r[1:] for r in rows[5:]]
+            data = [r[1:] for r in rows[NUM_ASSAY_HEADER_ROWS:]]
             temp = []
             for i, row in enumerate(data):
                 for j, val in enumerate(row):
@@ -146,6 +157,7 @@ def _import_single_files(root: Path, cursor: sqlite3.Cursor) -> None:
     """Import single CSV files into database."""
     for filepath, header, create, insert in (
         (root / utils.ASSAYS_CSV, ASSAYS_HEADER, ASSAYS_CREATE, ASSAYS_INSERT),
+        (root / utils.MACHINES_CSV, MACHINES_HEADER, MACHINES_CREATE, MACHINES_INSERT),
         (root / utils.PERSONS_CSV, PERSONS_HEADER, PERSONS_CREATE, PERSONS_INSERT),
         (
             root / utils.SPECIMENS_CSV,

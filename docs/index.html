@@ -243,6 +243,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#machines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Machines
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#surveys" class="md-nav__link">
     <span class="md-ellipsis">
       Surveys
@@ -785,6 +794,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#machines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Machines
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#surveys" class="md-nav__link">
     <span class="md-ellipsis">
       Surveys
@@ -879,26 +897,29 @@ and uses modern Python tools.</p>
 logging companies dumped toxic waste in a remote region of Vancouver Island.
 As the containers leaked and the pollution spread,
 some of the tree snails in the region began growing unusually large.
-You are collecting and analyzing specimens from affected regions
+Your team is now collecting and analyzing specimens from affected regions
 to determine if a mutant gene makes snails more susceptible to the pollution.</p>
 </blockquote>
-<p><code>snailz</code> generates four related sets of data:</p>
+<p><code>snailz</code> generates five related sets of data:</p>
 <dl>
-<dt><strong>Persons</strong></dt>
+<dt>Persons</dt>
 <dd>The scientists conducting the study.
 Persons are included in the dataset to simulate operator bias,
 i.e.,
 the tendency for different people to perform experiments in slightly different ways.</dd>
-<dt><strong>Surveys</strong></dt>
+<dt>Machines</dt>
+<dd>The equipment used to analyze the samples.
+Like persons, they are included to enable simulation of bias.</dd>
+<dt>Surveys</dt>
 <dd>The locations where specimens are collected.
 Each survey site is represented as a square grid of pollution readings.</dd>
-<dt><strong>Specimens</strong></dt>
+<dt>Specimens</dt>
 <dd>The snails collected from the sites.
 The data records where the snail was found,
 the date it was collected,
 its mass,
 and a short fragment of its genome.</dd>
-<dt><strong>Assays</strong></dt>
+<dt>Assays</dt>
 <dd>The chemical analysis of the snails' genomes.
 Each assay is performed by putting samples of a snail's tissue
 into some small wells in a plastic <a href="https://en.wikipedia.org/wiki/Microplate">microplate</a>.
@@ -915,24 +936,6 @@ The images that the readings are taken from are also stored.</dd>
 <li><code>pip install snailz</code> (or the equivalent command for your Python environment).</li>
 <li><code>snailz --help</code> to see available commands.</li>
 </ol>
-<table>
-<thead>
-<tr>
-<th>Command</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>data</td>
-<td>Generate all data files.</td>
-</tr>
-<tr>
-<td>params</td>
-<td>Generate parameter files with default values.</td>
-</tr>
-</tbody>
-</table>
 <p>To generate example data in a fresh directory:</p>
 <pre><code># Create and activate Python virtual environment
 $ uv venv
@@ -1026,31 +1029,17 @@ The parameters, their meanings, and their properties are:</p>
 <td>probability</td>
 </tr>
 <tr>
-<td><code>survey</code></td>
+<td><code>machine</code></td>
+<td><code>variation</code></td>
+<td>systematic variation in readings</td>
+<td>0.05</td>
+<td>percentage</td>
+</tr>
+<tr>
+<td></td>
 <td><code>number</code></td>
-<td>number of survey sites</td>
-<td>3</td>
-<td>non-negative integer</td>
-</tr>
-<tr>
-<td></td>
-<td><code>size</code></td>
-<td>survey grid size</td>
-<td>15</td>
-<td>non-negative integer</td>
-</tr>
-<tr>
-<td></td>
-<td><code>start_date</code></td>
-<td>overall survey start date</td>
-<td>2024-03-01</td>
-<td>ISO date</td>
-</tr>
-<tr>
-<td></td>
-<td><code>max_interval</code></td>
-<td>maximum number of days between specimen samples</td>
-<td>7</td>
+<td>number of machines</td>
+<td>5</td>
 <td>non-negative integer</td>
 </tr>
 <tr>
@@ -1122,6 +1111,34 @@ The parameters, their meanings, and their properties are:</p>
 <td>probability that sample location is unknown</td>
 <td>0.05</td>
 <td>probability</td>
+</tr>
+<tr>
+<td><code>survey</code></td>
+<td><code>number</code></td>
+<td>number of survey sites</td>
+<td>3</td>
+<td>non-negative integer</td>
+</tr>
+<tr>
+<td></td>
+<td><code>size</code></td>
+<td>survey grid size</td>
+<td>15</td>
+<td>non-negative integer</td>
+</tr>
+<tr>
+<td></td>
+<td><code>start_date</code></td>
+<td>overall survey start date</td>
+<td>2024-03-01</td>
+<td>ISO date</td>
+</tr>
+<tr>
+<td></td>
+<td><code>max_interval</code></td>
+<td>maximum number of days between specimen samples</td>
+<td>7</td>
+<td>non-negative integer</td>
 </tr>
 </tbody>
 </table>
@@ -1227,6 +1244,55 @@ The file looks like this:</p>
 </tr>
 </tbody>
 </table>
+<h3 id="machines">Machines</h3>
+<p><code>machines.csv</code> contains information about the machines used in the study.
+The file looks like this:</p>
+<table>
+<thead>
+<tr>
+<th>ident</th>
+<th>name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M0001</td>
+<td>AeroProbe</td>
+</tr>
+<tr>
+<td>M0002</td>
+<td>NanoCounter Plus</td>
+</tr>
+<tr>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
+<p>and its fields are:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Purpose</th>
+<th>Properties</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ident</code></td>
+<td>identifier</td>
+<td>text, unique, required</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>machine name</td>
+<td>text, required</td>
+</tr>
+</tbody>
+</table>
+<p>Note that the systematic variation in readings introduced by different machines
+is <em>not</em> stored in the generated data.</p>
 <h3 id="surveys">Surveys</h3>
 <p>The <code>surveys</code> directory contains one CSV file for each survey site.
 Each file's name has the form <code>S<em>nnn</em>.csv</code> (e.g., <code>S165.csv</code>),
@@ -1430,6 +1496,7 @@ A typical design file is:</p>
 specimen,AMEMRZ,,,
 date,2024-03-11,,,
 by,pv8677,,,
+machine,M0002,,,
 ,A,B,C,D
 1,S,C,C,S
 2,C,C,S,C
@@ -1441,13 +1508,14 @@ by,pv8677,,,
 specimen,AMEMRZ,,,
 date,2024-03-11,,,
 by,pv8677,,,
+machine,M0002,,,
 ,A,B,C,D
 1,1.09,0.08,0.02,1.1
 2,0.02,0.02,1.0,0.07
 3,1.03,0.03,1.1,1.07
 4,0.09,1.02,0.04,1.01
 </code></pre>
-<p>The first four rows of each file are:</p>
+<p>The first five rows of each file are:</p>
 <table>
 <thead>
 <tr>
@@ -1475,11 +1543,16 @@ by,pv8677,,,
 <tr>
 <td><code>by</code></td>
 <td>scientist identifier</td>
-<td>text, required</td>
+<td>text</td>
+</tr>
+<tr>
+<td><code>machine</code></td>
+<td>machine identifier</td>
+<td>text</td>
 </tr>
 </tbody>
 </table>
-<p>The <code>assays</code> directory also contains a third file for each assay called <code><em>nnnnnn</em>_raw.csv</code>.
+<p>The <code>assays</code> directory also contains files called <code><em>nnnnnn</em>_raw.csv</code>.
 Each of these files contains the same data as the assay's readings file,
 but has some deliberate errors:
 header rows may be missing or out of order,
@@ -1499,6 +1572,7 @@ whose structure is shown below.</p>
 ├── params.json
 ├── data.json
 ├── persons.csv
+├── machines.csv
 ├── surveys
 │   ├── S165.csv
 │   ├── S410.csv

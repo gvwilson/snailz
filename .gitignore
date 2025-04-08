@@ -13,8 +13,8 @@ wheels/
 # Database files
 *.db
 
-# Temporary files
-tmp/
+# Sample data files
+data/
 
 # Editor backup files
 *~

@@ -21,29 +21,33 @@ and uses modern Python tools.
 > logging companies dumped toxic waste in a remote region of Vancouver Island.
 > As the containers leaked and the pollution spread,
 > some of the tree snails in the region began growing unusually large.
-> You are collecting and analyzing specimens from affected regions
+> Your team is now collecting and analyzing specimens from affected regions
 > to determine if a mutant gene makes snails more susceptible to the pollution.
 
-`snailz` generates four related sets of data:
+`snailz` generates five related sets of data:
 
-**Persons**
+Persons
 :   The scientists conducting the study.
     Persons are included in the dataset to simulate operator bias,
     i.e.,
     the tendency for different people to perform experiments in slightly different ways.
 
-**Surveys**
+Machines
+:   The equipment used to analyze the samples.
+    Like persons, they are included to enable simulation of bias.
+
+Surveys
 :   The locations where specimens are collected.
     Each survey site is represented as a square grid of pollution readings.
 
-**Specimens**
+Specimens
 :   The snails collected from the sites.
     The data records where the snail was found,
     the date it was collected,
     its mass,
     and a short fragment of its genome.
 
-**Assays**
+Assays
 :   The chemical analysis of the snails' genomes.
     Each assay is performed by putting samples of a snail's tissue
     into some small wells in a plastic [microplate][microplate].
@@ -59,11 +63,6 @@ and uses modern Python tools.
 
 1.  `pip install snailz` (or the equivalent command for your Python environment).
 1.  `snailz --help` to see available commands.
-
-| Command   | Action |
-| --------- | ------ |
-| data      | Generate all data files. |
-| params    | Generate parameter files with default values. |
 
 To generate example data in a fresh directory:
 
@@ -99,10 +98,8 @@ The parameters, their meanings, and their properties are:
 | | `plate_size` | number of rows and columns in assay plate | 4 | non-negative integer |
 | | `image_noise` | noise to add to assay images | 32 | scale is 0-255 |
 | | `p_duplicate_assay` | probability of duplicate assay | 0.05 | probability |
-| `survey` | `number` | number of survey sites | 3 | non-negative integer |
-| | `size` | survey grid size | 15 | non-negative integer |
-| | `start_date` | overall survey start date | 2024-03-01 | ISO date |
-| | `max_interval` | maximum number of days between specimen samples | 7 | non-negative integer |
+| `machine` | `variation` | systematic variation in readings | 0.05 | percentage |
+| | `number` | number of machines | 5 | non-negative integer |
 | `person` | `locale` | locale for random name generation | `et_EE` (Estonia) | valid ISO locale |
 | | `number` | number of persons | 5 | non-negative integer |
 | `specimen` | `length` | genome length in bases | 20 | non-negative integer |
@@ -113,6 +110,10 @@ The parameters, their meanings, and their properties are:
 | | `spacing` | space between snail specimens | 3.75 | non-negative real |
 | | `daily_growth` | percentage increase in mass per day | 0.01 | non-negative real |
 | | `p_missing_location` | probability that sample location is unknown | 0.05 | probability |
+| `survey` | `number` | number of survey sites | 3 | non-negative integer |
+| | `size` | survey grid size | 15 | non-negative integer |
+| | `start_date` | overall survey start date | 2024-03-01 | ISO date |
+| | `max_interval` | maximum number of days between specimen samples | 7 | non-negative integer |
 
 Notes:
 
@@ -171,6 +172,28 @@ and its fields are:
 | `ident` | identifier | text, unique, required |
 | `personal` | personal name | text, required |
 | `family` | family name | text, required |
+
+### Machines
+
+`machines.csv` contains information about the machines used in the study.
+The file looks like this:
+
+| ident | name |
+| ----- | ---- |
+| M0001 | AeroProbe |
+| M0002 | NanoCounter Plus |
+| …     | … |
+
+
+and its fields are:
+
+| Field | Purpose | Properties |
+| ----- | ------- | ---------- |
+| `ident` | identifier | text, unique, required |
+| `name` | machine name | text, required |
+
+Note that the systematic variation in readings introduced by different machines
+is *not* stored in the generated data.
 
 ### Surveys
 
@@ -263,6 +286,7 @@ id,037356,,,
 specimen,AMEMRZ,,,
 date,2024-03-11,,,
 by,pv8677,,,
+machine,M0002,,,
 ,A,B,C,D
 1,S,C,C,S
 2,C,C,S,C
@@ -277,6 +301,7 @@ id,037356,,,
 specimen,AMEMRZ,,,
 date,2024-03-11,,,
 by,pv8677,,,
+machine,M0002,,,
 ,A,B,C,D
 1,1.09,0.08,0.02,1.1
 2,0.02,0.02,1.0,0.07
@@ -284,16 +309,17 @@ by,pv8677,,,
 4,0.09,1.02,0.04,1.01
 ```
 
-The first four rows of each file are:
+The first five rows of each file are:
 
 | Field | Purpose | Properties |
 | ----- | ------- | ---------- |
 | `id`  | assay identifier | text, required |
 | `specimen` | specimen identifier | text, required |
 | `date` | assay date | ISO date, required |
-| `by` | scientist identifier | text, required |
+| `by` | scientist identifier | text |
+| `machine` | machine identifier | text |
 
-The `assays` directory also contains a third file for each assay called <code><em>nnnnnn</em>_raw.csv</code>.
+The `assays` directory also contains files called <code><em>nnnnnn</em>_raw.csv</code>.
 Each of these files contains the same data as the assay's readings file,
 but has some deliberate errors:
 header rows may be missing or out of order,
@@ -318,6 +344,7 @@ data
 ├── params.json
 ├── data.json
 ├── persons.csv
+├── machines.csv
 ├── surveys
 │   ├── S165.csv
 │   ├── S410.csv
