@@ -8,7 +8,7 @@ import zipfile
 import click
 
 from .database import database_generate
-from .overall import AllParams, AllData
+from .scenario import ScenarioParams, ScenarioData
 from . import utils
 
 
@@ -38,10 +38,10 @@ def db(data):
 def data(params, output):
     """Generate and save data using provided parameters."""
     try:
-        parameters = AllParams.model_validate(json.load(open(params, "r")))
+        parameters = ScenarioParams.model_validate(json.load(open(params, "r")))
         random.seed(parameters.seed)
-        data = AllData.generate(parameters)
-        AllData.save(Path(output), data)
+        data = ScenarioData.generate(parameters)
+        ScenarioData.save(Path(output), data)
     except OSError as exc:
         utils.fail(str(exc))
 
@@ -51,7 +51,7 @@ def data(params, output):
 def params(output):
     """Generate and save parameters."""
     try:
-        params = AllParams()
+        params = ScenarioParams()
         with open(output, "w") as writer:
             writer.write(utils.json_dump(params))
     except OSError as exc:

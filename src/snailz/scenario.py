@@ -15,7 +15,7 @@ from .surveys import SurveyParams, AllSurveys
 from . import utils
 
 
-class AllParams(BaseModel):
+class ScenarioParams(BaseModel):
     """Represent all parameters combined."""
 
     seed: int = Field(default=7493418, ge=0, description="RNG seed")
@@ -39,13 +39,13 @@ class AllParams(BaseModel):
     model_config = {"extra": "forbid"}
 
 
-class AllData(BaseModel):
+class ScenarioData(BaseModel):
     """Represent all generated data combined."""
 
     assays: AllAssays = Field(description="all assays")
     images: dict = Field(description="all images")
     machines: AllMachines = Field(description="all machines")
-    params: AllParams = Field(description="all parameters")
+    params: ScenarioParams = Field(description="all parameters")
     persons: AllPersons = Field(description="all persons")
     specimens: AllSpecimens = Field(description="all specimens")
     surveys: AllSurveys = Field(description="all surveys")
@@ -53,7 +53,7 @@ class AllData(BaseModel):
     model_config = {"extra": "forbid"}
 
     @staticmethod
-    def generate(params: AllParams) -> "AllData":
+    def generate(params: ScenarioParams) -> "ScenarioData":
         """Generate data."""
         machines = AllMachines.generate(params.machine)
         surveys = AllSurveys.generate(params.survey)
@@ -61,7 +61,7 @@ class AllData(BaseModel):
         specimens = AllSpecimens.generate(params.specimen, surveys)
         assays = AllAssays.generate(params.assay, persons, machines, specimens)
         images = AllImages.generate(params.assay, assays)
-        return AllData(
+        return ScenarioData(
             assays=assays,
             images=images,
             machines=machines,
@@ -72,7 +72,7 @@ class AllData(BaseModel):
         )
 
     @staticmethod
-    def save(out_dir: Path, data: "AllData") -> None:
+    def save(out_dir: Path, data: "ScenarioData") -> None:
         """Save all data."""
 
         # Preparation
