@@ -16,6 +16,7 @@ from . import utils
 
 
 DEFAULT_PLATE_SIZE = 4
+NUM_ASSAY_HEADER_ROWS = 6
 
 
 class AssayParams(BaseModel):

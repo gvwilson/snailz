@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Callable
 
 from . import utils
+from .assays import NUM_ASSAY_HEADER_ROWS
 
 
 ASSAYS = (
@@ -16,7 +17,6 @@ ASSAYS = (
     ("performed", "text"),
     ("machine", "text"),
 )
-NUM_ASSAY_HEADER_ROWS = 6
 
 MACHINES = (
     ("ident", "text primary key"),
