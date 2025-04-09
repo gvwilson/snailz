@@ -302,9 +302,27 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#db" class="md-nav__link">
+    <span class="md-ellipsis">
+      db
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#params" class="md-nav__link">
     <span class="md-ellipsis">
       params
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zip" class="md-nav__link">
+    <span class="md-ellipsis">
+      zip
     </span>
   </a>
   
@@ -683,9 +701,27 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#db" class="md-nav__link">
+    <span class="md-ellipsis">
+      db
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#params" class="md-nav__link">
     <span class="md-ellipsis">
       params
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zip" class="md-nav__link">
+    <span class="md-ellipsis">
+      zip
     </span>
   </a>
   
@@ -725,6 +761,15 @@
   --output PATH  Path to output directory
   --help         Show this message and exit.
 </code></pre>
+<h2 id="db">db</h2>
+<p>Create SQLite database of generated data.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-text">cli db [OPTIONS]
+</code></pre>
+<p><strong>Options:</strong></p>
+<pre><code class="language-text">  --data PATH  Path to data directory
+  --help       Show this message and exit.
+</code></pre>
 <h2 id="params">params</h2>
 <p>Generate and save parameters.</p>
 <p><strong>Usage:</strong></p>
@@ -732,6 +777,16 @@
 </code></pre>
 <p><strong>Options:</strong></p>
 <pre><code class="language-text">  --output PATH  Path to output file
+  --help         Show this message and exit.
+</code></pre>
+<h2 id="zip">zip</h2>
+<p>Create ZIP archive of generated data.</p>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-text">cli zip [OPTIONS]
+</code></pre>
+<p><strong>Options:</strong></p>
+<pre><code class="language-text">  --data PATH    Path to data directory
+  --output PATH  Path to output ZIP file
   --help         Show this message and exit.
 </code></pre>
 

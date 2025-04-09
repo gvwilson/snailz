@@ -16,6 +16,9 @@ wheels/
 # Sample data files
 data/
 
+# Generated ZIP file
+snailz.zip
+
 # Editor backup files
 *~
 *.bkp

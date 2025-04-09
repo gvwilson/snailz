@@ -19,6 +19,7 @@ DIRS_TO_TIDY = ["build", "dist", "*.egg-info"]
 
 # Directories and files.
 DATA_DIR = Path("data")
+DATA_ZIP = Path("snailz.zip")
 PARAMS_JSON = DATA_DIR / "params.json"
 
 
@@ -58,6 +59,18 @@ def task_data():
             f"mkdir -p {DATA_DIR}",
             f"snailz params --output {PARAMS_JSON}",
             f"snailz data --params {PARAMS_JSON} --output {DATA_DIR}",
+        ],
+        "verbosity": VERBOSITY,
+        "uptodate": [False],
+    }
+
+
+def task_db():
+    """Create database from generated data."""
+
+    return {
+        "actions": [
+            f"snailz db --data {DATA_DIR}",
         ],
         "verbosity": VERBOSITY,
         "uptodate": [False],
@@ -130,6 +143,18 @@ def task_tidy():
     return {
         "actions": [
             _tidy_directories,
+        ],
+        "verbosity": VERBOSITY,
+        "uptodate": [False],
+    }
+
+
+def task_zip():
+    """Create ZIP file from generated data."""
+
+    return {
+        "actions": [
+            f"snailz zip --data {DATA_DIR} --output {DATA_ZIP}",
         ],
         "verbosity": VERBOSITY,
         "uptodate": [False],

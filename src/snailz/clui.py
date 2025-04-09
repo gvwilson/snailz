@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import random
 import shutil
+import zipfile
 
 import click
 
@@ -17,6 +18,16 @@ from . import utils
 @click.group()
 def cli():
     """Entry point for command-line interface."""
+
+
+@cli.command()
+@click.option("--data", type=click.Path(), help="Path to data directory")
+def db(data):
+    """Create SQLite database of generated data."""
+    try:
+        database_generate(Path(data), "snailz.db")
+    except Exception as exc:
+        utils.fail(str(exc))
 
 
 @cli.command()
@@ -42,9 +53,8 @@ def data(params, output):
         with open(out_dir / utils.DATA_JSON, "w") as writer:
             writer.write(utils.json_dump(data, indent=None))
 
-        # Save in separate files
+        # Save everything in separate CSV and PNG files
         _create_csv(out_dir, data)
-        database_generate(out_dir, "snailz.db")
         image_dir = out_dir / utils.ASSAYS_DIR
         all_images = images_generate(parameters.assay, data.assays)
         for ident, image in all_images.items():
@@ -63,6 +73,17 @@ def params(output):
         with open(output, "w") as writer:
             writer.write(utils.json_dump(params))
     except OSError as exc:
+        utils.fail(str(exc))
+
+
+@cli.command()
+@click.option("--data", type=click.Path(), help="Path to data directory")
+@click.option("--output", type=click.Path(), help="Path to output ZIP file")
+def zip(data, output):
+    """Create ZIP archive of generated data."""
+    try:
+        _zip_generate(Path(data), Path(output))
+    except Exception as exc:
         utils.fail(str(exc))
 
 
@@ -103,6 +124,21 @@ def _create_csv(out_dir: Path, data: AllData) -> None:
     # Specimens
     with open(out_dir / utils.SPECIMENS_CSV, "w") as writer:
         writer.write(data.specimens.to_csv())
+
+
+def _zip_generate(data_dir: Path, output_file: Path) -> None:
+    """Create ZIP file of generated data.
+
+    Parameters:
+        data_dir: directory containing generated files
+        output_file: ZIP file to create
+    """
+    sources = []
+    for pattern in ["**/*.csv", "**/*.png"]:
+        sources.extend(data_dir.glob(pattern))
+    with zipfile.ZipFile(output_file, "w", zipfile.ZIP_DEFLATED) as zipper:
+        for src in sources:
+            zipper.write(src, src.relative_to(data_dir))
 
 
 if __name__ == "__main__":
