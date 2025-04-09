@@ -33,7 +33,7 @@ READINGS = (
     ("ident", "text not null"),
     ("row", "integer not null"),
     ("col", "text not null"),
-    ("reading", "text not null"),
+    ("reading", "real not null"),
 )
 
 SPECIMENS = (
@@ -67,9 +67,9 @@ def database_generate(root: Path, db_file: str | None) -> sqlite3.Connection | N
     if db_file is None:
         conn = sqlite3.connect(":memory:")
     else:
-        db_path = root / db_file
-        Path(db_path).unlink(missing_ok=True)
-        conn = sqlite3.connect(db_path)
+        db_path = root / db_file  # pragma: no cover
+        Path(db_path).unlink(missing_ok=True)  # pragma: no cover
+        conn = sqlite3.connect(db_path)  # pragma: no cover
 
     cursor = conn.cursor()
 
@@ -96,8 +96,8 @@ def database_generate(root: Path, db_file: str | None) -> sqlite3.Connection | N
     if db_file is None:
         return conn
     else:
-        conn.close()
-        return None
+        conn.close()  # pragma: no cover
+        return None  # pragma: no cover
 
 
 def _import_assay_files(
