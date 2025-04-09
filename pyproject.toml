@@ -27,6 +27,7 @@ dev = [
   "mkdocs-click",
   "mkdocs-material",
   "mkdocstrings[python]",
+  "polars",
   "pyfakefs",
   "pyright",
   "pytest",
