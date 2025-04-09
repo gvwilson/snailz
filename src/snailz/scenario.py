@@ -53,14 +53,14 @@ class ScenarioData(BaseModel):
     model_config = {"extra": "forbid"}
 
     @staticmethod
-    def generate(params: ScenarioParams) -> "ScenarioData":
+    def generate(params: ScenarioParams, with_images: bool = True) -> "ScenarioData":
         """Generate data."""
         machines = AllMachines.generate(params.machine)
         surveys = AllSurveys.generate(params.survey)
         persons = AllPersons.generate(params.person)
         specimens = AllSpecimens.generate(params.specimen, surveys)
         assays = AllAssays.generate(params.assay, persons, machines, specimens)
-        images = AllImages.generate(params.assay, assays)
+        images = AllImages.generate(params.assay, assays) if with_images else {}
         return ScenarioData(
             assays=assays,
             images=images,
