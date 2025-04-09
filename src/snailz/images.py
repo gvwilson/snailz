@@ -5,6 +5,7 @@ import random
 
 from PIL import Image, ImageDraw, ImageFilter
 from PIL.Image import Image as PilImage  # to satisfy type checking
+from pydantic import BaseModel
 
 from .assays import AssayParams, Assay, AllAssays
 
@@ -16,19 +17,25 @@ WHITE = 255
 BLUR_RADIUS = 4
 
 
-def images_generate(params: AssayParams, assays: AllAssays) -> dict[str, PilImage]:
-    """Generate image files.
+class AllImages(BaseModel):
+    """A set of generated images."""
 
-    Parameters:
-        params: assay generation parameters
-        assays: generated assays
+    model_config = {"arbitrary_types_allowed": True, "extra": "forbid"}
 
-    Returns:
-        A dictionary of assay IDs and generated images.
-    """
-    max_reading = _find_max_reading(assays, params.plate_size)
-    scaling = float(math.ceil(max_reading + 1))
-    return {a.ident: _make_image(params, a, scaling) for a in assays.items}
+    @staticmethod
+    def generate(params: AssayParams, assays: AllAssays) -> dict:
+        """Generate image files.
+
+        Parameters:
+            params: assay generation parameters
+            assays: generated assays
+
+        Returns:
+            A dictionary of assay IDs and generated images.
+        """
+        max_reading = _find_max_reading(assays, params.plate_size)
+        scaling = float(math.ceil(max_reading + 1))
+        return {a.ident: _make_image(params, a, scaling) for a in assays.items}
 
 
 def _find_max_reading(assays: AllAssays, p_size: int) -> float:

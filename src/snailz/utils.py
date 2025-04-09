@@ -9,6 +9,7 @@ import random
 import sys
 from typing import Callable, Generator
 
+from PIL.Image import Image as PilImage
 from pydantic import BaseModel
 
 
@@ -149,14 +150,15 @@ def _make_unique_id_generator(
         provided = yield temp
 
 
-def _serialize_json(obj: object) -> str | dict:
+def _serialize_json(obj: object) -> str | dict | None:
     """Custom JSON serializer for JSON conversion.
 
     Parameters:
         obj: The object to serialize
 
     Returns:
-        String representation of date objects or dict for Pydantic models
+        String representation of date objects or dict for Pydantic models;
+        None for PIL images.
 
     Raises:
         TypeError: If the object type is not supported for serialization
@@ -165,4 +167,6 @@ def _serialize_json(obj: object) -> str | dict:
         return obj.isoformat()
     if isinstance(obj, BaseModel):
         return obj.model_dump()
+    if isinstance(obj, PilImage):
+        return None
     raise TypeError(f"Type {type(obj)} not serializable")
