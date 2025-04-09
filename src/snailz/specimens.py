@@ -196,7 +196,7 @@ def _make_specimen(
     # Initial mass
     mass_scale = params.mut_mass_scale if is_mutant else 1.0
     max_mass = mass_scale * params.max_mass
-    mass = round(random.uniform(max_mass / 2.0, max_mass), utils.PRECISION)
+    mass = random.uniform(max_mass / 2.0, max_mass)
 
     # Growth effects
     days_passed = (collected - params.start_date).days
@@ -216,7 +216,7 @@ def _make_specimen(
         collected=collected,
         genome=genome,
         location=location,
-        mass=mass,
+        mass=round(mass, utils.PRECISION),
         is_mutant=is_mutant,
     )
 

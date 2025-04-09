@@ -9,80 +9,48 @@ from typing import Callable
 from . import utils
 
 
-ASSAYS_CREATE = """
-create table assays (
-    ident text primary key,
-    specimen text not null,
-    person text not null,
-    performed text,
-    machine text
+ASSAYS = (
+    ("ident", "text primary key"),
+    ("specimen", "text not null"),
+    ("person", "text not null"),
+    ("performed", "text"),
+    ("machine", "text"),
 )
-"""
-ASSAYS_HEADER = ["ident", "specimen", "person", "performed", "machine"]
-ASSAYS_INSERT = f"insert into assays values ({', '.join('?' * len(ASSAYS_HEADER))})"
 NUM_ASSAY_HEADER_ROWS = 6
 
-MACHINES_CREATE = """
-create table machines (
-    ident text primary key,
-    name text not null
-)
-"""
-MACHINES_HEADER = ["ident", "name"]
-MACHINES_INSERT = (
-    f"insert into machines values ({', '.join('?' * len(MACHINES_HEADER))})"
+MACHINES = (
+    ("ident", "text primary key"),
+    ("name", "text not null"),
 )
 
-PERSONS_CREATE = """
-create table persons (
-    ident text primary key,
-    personal text not null,
-    family text not null
-)
-"""
-PERSONS_HEADER = ["ident", "personal", "family"]
-PERSONS_INSERT = f"insert into persons values ({', '.join('?' * len(PERSONS_HEADER))})"
-
-READINGS_CREATE = """
-create table readings (
-    ident text not null,
-    row integer not null,
-    col text not null,
-    reading text not null
-)
-"""
-READINGS_HEADER = ["ident", "row", "col", "reading"]
-READINGS_INSERT = (
-    f"insert into readings values ({', '.join('?' * len(READINGS_HEADER))})"
+PERSONS = (
+    ("ident", "text primary key"),
+    ("personal", "text not null"),
+    ("family", "text not null"),
 )
 
-SPECIMENS_CREATE = """
-create table specimens (
-    ident text primary key,
-    survey text not null,
-    x integer real not null,
-    y integer real not null,
-    collected text not null,
-    genome text not null,
-    mass real not null
-)
-"""
-SPECIMENS_HEADER = ["ident", "survey", "x", "y", "collected", "genome", "mass"]
-SPECIMENS_INSERT = (
-    f"insert into specimens values ({', '.join('?' * len(SPECIMENS_HEADER))})"
+READINGS = (
+    ("ident", "text not null"),
+    ("row", "integer not null"),
+    ("col", "text not null"),
+    ("reading", "text not null"),
 )
 
-TREATMENTS_CREATE = """
-create table treatments (
-    ident text not null,
-    row integer not null,
-    col text not null,
-    treatment text not null
+SPECIMENS = (
+    ("ident", "text primary key"),
+    ("survey", "text not null"),
+    ("x", "integer real not null"),
+    ("y", "integer real not null"),
+    ("collected", "text not null"),
+    ("genome", "text not null"),
+    ("mass", "real not null"),
 )
-"""
-TREATMENTS_HEADER = ["ident", "row", "col", "treatment"]
-TREATMENTS_INSERT = (
-    f"insert into treatments values ({', '.join('?' * len(TREATMENTS_HEADER))})"
+
+TREATMENTS = (
+    ("ident", "text not null"),
+    ("row", "integer not null"),
+    ("col", "text not null"),
+    ("treatment", "text not null"),
 )
 
 
@@ -110,16 +78,16 @@ def database_generate(root: Path, db_file: str | None) -> sqlite3.Connection | N
         root,
         cursor,
         "*_treatments.csv",
-        TREATMENTS_CREATE,
-        TREATMENTS_INSERT,
+        _make_create("treatments", TREATMENTS),
+        _make_insert("treatments", TREATMENTS),
         lambda v: v,
     )
     _import_assay_files(
         root,
         cursor,
         "*_readings.csv",
-        READINGS_CREATE,
-        READINGS_INSERT,
+        _make_create("readings", READINGS),
+        _make_insert("readings", READINGS),
         lambda v: float(v),
     )
 
@@ -140,7 +108,16 @@ def _import_assay_files(
     insert: str,
     convert: Callable,
 ) -> None:
-    """Import data from all clean assay files."""
+    """Import data from all clean assay files.
+
+    Parameters:
+        root: path to root directory
+        cursor: database cursor
+        pattern: filename pattern
+        create: SQL table creation statement
+        insert: SQL insertion statement
+        convert: text-to-value conversion function
+    """
     cursor.execute(create)
     for filename in (root / utils.ASSAYS_DIR).glob(pattern):
         with open(filename, "r") as stream:
@@ -156,20 +133,60 @@ def _import_assay_files(
 
 
 def _import_single_files(root: Path, cursor: sqlite3.Cursor) -> None:
-    """Import single CSV files into database."""
-    for filepath, header, create, insert in (
-        (root / utils.ASSAYS_CSV, ASSAYS_HEADER, ASSAYS_CREATE, ASSAYS_INSERT),
-        (root / utils.MACHINES_CSV, MACHINES_HEADER, MACHINES_CREATE, MACHINES_INSERT),
-        (root / utils.PERSONS_CSV, PERSONS_HEADER, PERSONS_CREATE, PERSONS_INSERT),
-        (
-            root / utils.SPECIMENS_CSV,
-            SPECIMENS_HEADER,
-            SPECIMENS_CREATE,
-            SPECIMENS_INSERT,
-        ),
+    """Import single CSV files into database.
+
+    Parameters:
+        root: path to root directory
+        cursor: database cursor
+    """
+    for filename, table, spec in (
+        (utils.ASSAYS_CSV, "assays", ASSAYS),
+        (utils.MACHINES_CSV, "machines", MACHINES),
+        (utils.PERSONS_CSV, "persons", PERSONS),
+        (utils.SPECIMENS_CSV, "specimens", SPECIMENS),
     ):
+        filepath = root / filename
         with open(filepath, "r") as stream:
             data = [row for row in csv.reader(stream)]
-            assert data[0] == header
-            cursor.execute(create)
-            cursor.executemany(insert, data[1:])
+            assert data[0] == _make_header(spec)
+            cursor.execute(_make_create(table, spec))
+            cursor.executemany(_make_insert(table, spec), data[1:])
+
+
+def _make_create(table: str, spec: tuple) -> str:
+    """Generate SQL table creation statement.
+
+    Parameters:
+        table: database table name
+        spec: tuples of (field name, field properties)
+
+    Returns:
+        SQL table creation statement
+    """
+    fields = ", ".join(f"{name} {props}" for name, props in spec)
+    return f"create table {table}({fields})"
+
+
+def _make_header(spec: tuple) -> list[str]:
+    """Generate expected CSV header row.
+
+    Parameters:
+        spec: tuples of (field name, field properties)
+
+    Returns:
+        Expected first row of CSV file.
+    """
+    return [name for name, _ in spec]
+
+
+def _make_insert(table: str, spec: tuple) -> str:
+    """Generate SQL insertion statement.
+
+    Parameters:
+        table: database table name
+        spec: tuples of (field name, field properties)
+
+    Returns:
+        SQL record insertion statement
+    """
+    return f"insert into {table} values ({', '.join('?' * len(spec))})"
