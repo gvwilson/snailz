@@ -37,6 +37,18 @@ def task_build():
     }
 
 
+def task_classify():
+    """Classify assay results."""
+
+    return {
+        "actions": [
+            f"python scripts/classify.py --data {DATA_DIR} --format df",
+        ],
+        "verbosity": VERBOSITY,
+        "uptodate": [False],
+    }
+
+
 def task_coverage():
     """Run tests with coverage."""
 
