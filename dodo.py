@@ -117,8 +117,8 @@ def task_lint():
     }
 
 
-def task_serve():
-    """Serve documentation using MkDocs."""
+def task_site():
+    """Serve documentation website."""
 
     return {
         "actions": [
