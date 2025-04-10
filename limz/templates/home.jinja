@@ -1,0 +1,12 @@
+<html>
+  <head>
+    <title>LIMZ: Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='limz.css')}}">
+  </head>
+  <body>
+    <h1><a href="/">LIMZ</a>: Home</h1>
+    {% with assays=assays %}
+      {% include "assay_table.jinja" %}
+    {% endwith %}
+  </body>
+</html>

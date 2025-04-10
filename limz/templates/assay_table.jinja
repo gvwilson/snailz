@@ -1,0 +1,16 @@
+<table>
+  <tr>
+    {% for h in ["assay ID", "date", "specimen ID", "person ID", "machine ID"] %}
+    <th>{{ h }}</th>
+    {% endfor %}
+  </tr>
+  {% for row in assays %}
+  <tr>
+    <td><a href="/assay/{{ row['ident'] }}">{{ row["ident"] }}</a></td>
+    <td>{{ row["performed"] }}</td>
+    <td>{{ row["specimen"] }}</td>
+    <td><a href="/person/{{ row['person'] }}">{{ row["person"] }}</a></td>
+    <td><a href="/machine/{{ row['machine'] }}">{{ row["machine"] }}</a></td>
+  </tr>
+  {% endfor %}
+</table>

@@ -1,0 +1,13 @@
+<html>
+  <head>
+    <title>LIMZ: Person {{ ident }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='limz.css')}}">
+  </head>
+  <body>
+    <h1><a href="/">LIMZ</a>: Person {{ ident }}</h1>
+    <p>{{ person["personal"] }} {{ person["family"] }}</p>
+    {% with assays=assays %}
+      {% include "assay_table.jinja" %}
+    {% endwith %}
+  </body>
+</html>
