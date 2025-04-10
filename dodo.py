@@ -11,9 +11,6 @@ DOIT_CONFIG = {
     "default_tasks": [],
 }
 
-# How noisy to be.
-VERBOSITY = 2
-
 # Directories and files to clean during the build process.
 DIRS_TO_TIDY = ["build", "dist", "*.egg-info"]
 
@@ -32,8 +29,6 @@ def task_build():
             "twine check dist/*",
         ],
         "task_dep": ["tidy"],
-        "verbosity": VERBOSITY,
-        "uptodate": [False],
     }
 
 
@@ -44,8 +39,6 @@ def task_classify():
         "actions": [
             f"python scripts/classify.py --data {DATA_DIR} --format df",
         ],
-        "verbosity": VERBOSITY,
-        "uptodate": [False],
     }
 
 
@@ -57,8 +50,6 @@ def task_coverage():
             "python -m coverage run -m pytest tests",
             "python -m coverage report --show-missing",
         ],
-        "verbosity": VERBOSITY,
-        "uptodate": [False],
     }
 
 
@@ -72,8 +63,6 @@ def task_data():
             f"snailz params --output {PARAMS_JSON}",
             f"snailz data --params {PARAMS_JSON} --output {DATA_DIR}",
         ],
-        "verbosity": VERBOSITY,
-        "uptodate": [False],
     }
 
 
@@ -84,8 +73,6 @@ def task_db():
         "actions": [
             f"snailz db --data {DATA_DIR}",
         ],
-        "verbosity": VERBOSITY,
-        "uptodate": [False],
     }
 
 
@@ -96,8 +83,6 @@ def task_docs():
         "actions": [
             "mkdocs build",
         ],
-        "verbosity": VERBOSITY,
-        "uptodate": [False],
     }
 
 
@@ -108,8 +93,16 @@ def task_format():
         "actions": [
             "ruff format .",
         ],
-        "verbosity": VERBOSITY,
-        "uptodate": [False],
+    }
+
+
+def task_lims():
+    """Run the LIMS."""
+
+    return {
+        "actions": [
+            f"python lims/app.py {DATA_DIR}",
+        ],
     }
 
 
@@ -121,8 +114,6 @@ def task_lint():
             "ruff check .",
             "pyright",
         ],
-        "verbosity": VERBOSITY,
-        "uptodate": [False],
     }
 
 
@@ -133,8 +124,6 @@ def task_serve():
         "actions": [
             "mkdocs serve",
         ],
-        "verbosity": VERBOSITY,
-        "uptodate": [False],
     }
 
 
@@ -144,8 +133,6 @@ def task_test():
         "actions": [
             "python -m pytest tests",
         ],
-        "verbosity": VERBOSITY,
-        "uptodate": [False],
     }
 
 
@@ -156,8 +143,6 @@ def task_tidy():
         "actions": [
             _tidy_directories,
         ],
-        "verbosity": VERBOSITY,
-        "uptodate": [False],
     }
 
 
@@ -168,8 +153,6 @@ def task_zip():
         "actions": [
             f"snailz zip --data {DATA_DIR} --output {DATA_ZIP}",
         ],
-        "verbosity": VERBOSITY,
-        "uptodate": [False],
     }
 
 
