@@ -1,42 +1,34 @@
-<html>
-  <head>
-    <title>LIMZ: Assay {{ ident }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='limz.css')}}">
-  </head>
-  <body>
-    <h1><a href="/">LIMZ</a>: Assay {{ ident }}</h1>
+<h2>Assay {{ ident }}</h2>
 
-    <h2>Metadata</h2>
-    <table>
-      {% for row in metadata %}
-      <tr>
+<h3>Metadata</h3>
+<table>
+  {% for row in metadata %}
+  <tr>
 	{% for val in row %}
 	<td>{{ val }}</td>
 	{% endfor %}
-      </tr>
-      {% endfor %}
-    </table>
+  </tr>
+  {% endfor %}
+</table>
 
-    <h2>Treatments</h2>
-    <table>
-      {% for row in treatments %}
-      <tr>
+<h3>Treatments</h3>
+<table>
+  {% for row in treatments %}
+  <tr>
 	{% for val in row %}
 	<td>{{ val }}</td>
 	{% endfor %}
-      </tr>
-      {% endfor %}
-    </table>
+  </tr>
+  {% endfor %}
+</table>
 
-    <h2>Readings</h2>
-    <table>
-      {% for row in readings %}
-      <tr>
+<h3>Readings</h3>
+<table>
+  {% for row in readings %}
+  <tr>
 	{% for val in row %}
 	<td>{{ val }}</td>
 	{% endfor %}
-      </tr>
-      {% endfor %}
-    </table>
-  </body>
-</html>
+  </tr>
+  {% endfor %}
+</table>
