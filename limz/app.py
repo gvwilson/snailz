@@ -5,7 +5,7 @@ from pathlib import Path
 import sqlite3
 import sys
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template
 
 
 assert len(sys.argv) == 2, "Usage: python app.py /path/to/data"
@@ -30,14 +30,22 @@ def assay(ident):
     metadata = [r[:2] for r in treatments[:5]]
     treatments = treatments[5:]
     readings = readings[5:]
-    return render_template("assay.jinja", ident=ident, metadata=metadata, treatments=treatments, readings=readings)
+    return render_template(
+        "assay.jinja",
+        ident=ident,
+        metadata=metadata,
+        treatments=treatments,
+        readings=readings,
+    )
 
 
 @app.route("/machine/<ident>")
 def machine(ident):
     conn = _make_connection(app.config)
     machine = conn.execute("select * from machines where ident=?", (ident,)).fetchone()
-    assays = conn.execute("select * from assays where machine=? order by performed", (ident,)).fetchall()
+    assays = conn.execute(
+        "select * from assays where machine=? order by performed", (ident,)
+    ).fetchall()
     return render_template("machine.jinja", ident=ident, machine=machine, assays=assays)
 
 
@@ -45,7 +53,9 @@ def machine(ident):
 def person(ident):
     conn = _make_connection(app.config)
     person = conn.execute("select * from persons where ident=?", (ident,)).fetchone()
-    assays = conn.execute("select * from assays where person=? order by performed", (ident,)).fetchall()
+    assays = conn.execute(
+        "select * from assays where person=? order by performed", (ident,)
+    ).fetchall()
     return render_template("person.jinja", ident=ident, person=person, assays=assays)
 
 

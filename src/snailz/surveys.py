@@ -7,29 +7,8 @@ import random
 from pydantic import BaseModel, Field, model_validator
 
 from .grid import Grid
-from . import utils
-
-
-# Default starting date for surveys
-DEFAULT_START_DATE = date.fromisoformat("2024-03-01")
-
-
-class SurveyParams(BaseModel):
-    """Parameters for survey generation."""
-
-    number: int = Field(default=3, gt=0, description="Number of surveys")
-    size: int = Field(
-        default=utils.DEFAULT_SURVEY_SIZE, gt=0, description="Survey size"
-    )
-    start_date: date = Field(
-        default=DEFAULT_START_DATE,
-        description="Start date for specimen collection",
-    )
-    max_interval: int = Field(
-        gt=0, default=7, description="Maximum interval between samples"
-    )
-
-    model_config = {"extra": "forbid"}
+from .parameters import SurveyParams
+from . import model, utils
 
 
 class Survey(BaseModel):
@@ -118,9 +97,7 @@ class AllSurveys(BaseModel):
         current_date = params.start_date
         items = []
         for _ in range(params.number):
-            next_date = current_date + timedelta(
-                days=random.randint(1, params.max_interval)
-            )
+            next_date = current_date + model.days_to_next_survey(params)
             items.append(
                 Survey(
                     ident=next(gen),

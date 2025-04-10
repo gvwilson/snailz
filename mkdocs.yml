@@ -11,6 +11,8 @@ nav:
   - images.md
   - machines.md
   - mangle.md
+  - model.md
+  - parameters.md
   - scenario.md
   - persons.md
   - surveys.md

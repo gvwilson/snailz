@@ -1,20 +1,19 @@
 """Generate assay images."""
 
 import math
-import random
 
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image, ImageDraw
 from PIL.Image import Image as PilImage  # to satisfy type checking
 from pydantic import BaseModel
 
 from .assays import AssayParams, Assay, AllAssays
 
+from . import model, utils
+
+
 # Image parameters.
 BORDER_WIDTH = 8
 WELL_SIZE = 32
-BLACK = 0
-WHITE = 255
-BLUR_RADIUS = 4
 
 
 class AllImages(BaseModel):
@@ -69,28 +68,16 @@ def _make_image(params: AssayParams, assay: Assay, scaling: float) -> PilImage:
     """
     # Create blank image.
     p_size = params.plate_size
-    img_noise = params.image_noise
     img_size = (p_size * WELL_SIZE) + ((p_size + 1) * BORDER_WIDTH)
-    img = Image.new("L", (img_size, img_size), color=BLACK)
+    img = Image.new("L", (img_size, img_size), color=utils.BLACK)
 
     # Fill with pristine reading values.
     spacing = WELL_SIZE + BORDER_WIDTH
     draw = ImageDraw.Draw(img)
     for ix, x in enumerate(range(BORDER_WIDTH, img_size, spacing)):
         for iy, y in enumerate(range(BORDER_WIDTH, img_size, spacing)):
-            color = math.floor(WHITE * assay.readings[ix, iy] / scaling)
+            color = math.floor(utils.WHITE * assay.readings[ix, iy] / scaling)
             draw.rectangle((x, y, x + WELL_SIZE, y + WELL_SIZE), color)
 
-    # Add uniform noise (not provided by pillow).
-    for x in range(img_size):
-        for y in range(img_size):
-            noise = random.randint(-img_noise, img_noise)
-            old_val = img.getpixel((x, y))
-            assert isinstance(old_val, int)  # for type checking
-            val = max(BLACK, min(WHITE, old_val + noise))
-            img.putpixel((x, y), val)
-
-    # Blur.
-    img = img.filter(ImageFilter.GaussianBlur(BLUR_RADIUS))
-
-    return img
+    # Distort
+    return model.image_noise(params, img, img_size)

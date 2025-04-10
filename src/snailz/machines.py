@@ -4,7 +4,8 @@ import random
 
 from pydantic import BaseModel, Field
 
-from . import utils
+from .parameters import MachineParams
+from . import model, utils
 
 
 PREFIX = [
@@ -64,15 +65,6 @@ SUFFIX = [
 PROB_SUFFIX = 0.7
 
 
-class MachineParams(BaseModel):
-    """Parameters for machine generation."""
-
-    number: int = Field(default=5, gt=0, description="Number of machines")
-    variation: float = Field(default=0.15, ge=0, description="Camera variation")
-
-    model_config = {"extra": "forbid"}
-
-
 class Machine(BaseModel):
     """A piece of experimental machinery."""
 
@@ -109,13 +101,12 @@ class AllMachines(BaseModel):
             A set of equipment.
         """
         name_gen = utils.unique_id("machine", _machine_name_generator)
-        variation = (1.0 - params.variation, 1.0 + params.variation)
         return AllMachines(
             items=[
                 Machine(
                     ident=f"M000{i + 1}",
                     name=next(name_gen),
-                    brightness=random.uniform(*variation),
+                    brightness=model.machine_brightness(params),
                 )
                 for i in range(params.number)
             ]

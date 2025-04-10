@@ -13,6 +13,9 @@ from PIL.Image import Image as PilImage
 from pydantic import BaseModel
 
 
+# Bases.
+BASES = "ACGT"
+
 # Floating point precision.
 PRECISION = 2
 
@@ -21,6 +24,10 @@ UNIQUE_ID_LIMIT = 10_000
 
 # Default survey grid size.
 DEFAULT_SURVEY_SIZE = 15
+
+# Image parameters.
+BLACK = 0
+WHITE = 255
 
 # File paths
 ASSAYS_CSV = "assays.csv"

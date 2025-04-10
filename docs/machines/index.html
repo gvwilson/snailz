@@ -390,15 +390,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#snailz.machines.MachineParams" class="md-nav__link">
-    <span class="md-ellipsis">
-      MachineParams
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#snailz.machines.Machine" class="md-nav__link">
     <span class="md-ellipsis">
       Machine
@@ -471,6 +462,52 @@
   
   <span class="md-ellipsis">
     Mangle
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Model
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Parameters
     
   </span>
   
@@ -728,15 +765,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#snailz.machines.MachineParams" class="md-nav__link">
-    <span class="md-ellipsis">
-      MachineParams
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#snailz.machines.Machine" class="md-nav__link">
     <span class="md-ellipsis">
       Machine
@@ -835,115 +863,6 @@
 
 
 
-<h2 id="snailz.machines.MachineParams" class="doc doc-heading">
-            <code>MachineParams</code>
-
-
-</h2>
-
-
-    <div class="doc doc-contents ">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
-
-
-        <p>Parameters for machine generation.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>number</code>
-            </td>
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Number of machines</p>
-              </div>
-            </td>
-            <td>
-                  <code>5</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>variation</code>
-            </td>
-            <td>
-                  <code><span title="float">float</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Camera variation</p>
-              </div>
-            </td>
-            <td>
-                  <code>0.15</code>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-
-
-
-
-
-              <details class="quote">
-                <summary>Source code in <code>src/snailz/machines.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MachineParams</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parameters for machine generation.&quot;&quot;&quot;</span>
-
-    <span class="n">number</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of machines&quot;</span><span class="p">)</span>
-    <span class="n">variation</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Camera variation&quot;</span><span class="p">)</span>
-
-    <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="s2">&quot;forbid&quot;</span><span class="p">}</span>
-</code></pre></div></td></tr></table></div>
-              </details>
-
-
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
 <h2 id="snailz.machines.Machine" class="doc doc-heading">
             <code>Machine</code>
 
@@ -1029,12 +948,12 @@
 
               <details class="quote">
                 <summary>Source code in <code>src/snailz/machines.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Machine</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Machine</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A piece of experimental machinery.&quot;&quot;&quot;</span>
 
     <span class="n">ident</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;machine ID&quot;</span><span class="p">)</span>
@@ -1120,7 +1039,15 @@
 
               <details class="quote">
                 <summary>Source code in <code>src/snailz/machines.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 84</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
 <span class="normal"> 85</span>
 <span class="normal"> 86</span>
 <span class="normal"> 87</span>
@@ -1149,16 +1076,7 @@
 <span class="normal">110</span>
 <span class="normal">111</span>
 <span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllMachines</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">113</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllMachines</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A set of generated machines.&quot;&quot;&quot;</span>
 
     <span class="n">items</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Machine</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;all machinery&quot;</span><span class="p">)</span>
@@ -1186,13 +1104,12 @@
 <span class="sd">            A set of equipment.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">name_gen</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">unique_id</span><span class="p">(</span><span class="s2">&quot;machine&quot;</span><span class="p">,</span> <span class="n">_machine_name_generator</span><span class="p">)</span>
-        <span class="n">variation</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">params</span><span class="o">.</span><span class="n">variation</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">params</span><span class="o">.</span><span class="n">variation</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">AllMachines</span><span class="p">(</span>
             <span class="n">items</span><span class="o">=</span><span class="p">[</span>
                 <span class="n">Machine</span><span class="p">(</span>
                     <span class="n">ident</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;M000</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                     <span class="n">name</span><span class="o">=</span><span class="nb">next</span><span class="p">(</span><span class="n">name_gen</span><span class="p">),</span>
-                    <span class="n">brightness</span><span class="o">=</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">*</span><span class="n">variation</span><span class="p">),</span>
+                    <span class="n">brightness</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">machine_brightness</span><span class="p">(</span><span class="n">params</span><span class="p">),</span>
                 <span class="p">)</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
             <span class="p">]</span>
@@ -1251,17 +1168,17 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/machines.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">89</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
 <span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span>
-<span class="normal">95</span>
-<span class="normal">96</span>
-<span class="normal">97</span>
-<span class="normal">98</span>
-<span class="normal">99</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">91</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a CSV string representation of the machines.</span>
 
 <span class="sd">    Returns:</span>
@@ -1312,7 +1229,7 @@
                 <code>params</code>
             </td>
             <td>
-                  <code><a class="autorefs autorefs-internal" title="MachineParams (snailz.machines.MachineParams)" href="#snailz.machines.MachineParams">MachineParams</a></code>
+                  <code><a class="autorefs autorefs-internal" title="MachineParams (snailz.parameters.MachineParams)" href="../parameters/#snailz.parameters.MachineParams">MachineParams</a></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1352,7 +1269,15 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/machines.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">101</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
 <span class="normal">102</span>
 <span class="normal">103</span>
 <span class="normal">104</span>
@@ -1364,16 +1289,7 @@
 <span class="normal">110</span>
 <span class="normal">111</span>
 <span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">113</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">MachineParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;AllMachines&quot;</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate laboratory machinery.</span>
 
@@ -1384,13 +1300,12 @@
 <span class="sd">        A set of equipment.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">name_gen</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">unique_id</span><span class="p">(</span><span class="s2">&quot;machine&quot;</span><span class="p">,</span> <span class="n">_machine_name_generator</span><span class="p">)</span>
-    <span class="n">variation</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">params</span><span class="o">.</span><span class="n">variation</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">params</span><span class="o">.</span><span class="n">variation</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">AllMachines</span><span class="p">(</span>
         <span class="n">items</span><span class="o">=</span><span class="p">[</span>
             <span class="n">Machine</span><span class="p">(</span>
                 <span class="n">ident</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;M000</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                 <span class="n">name</span><span class="o">=</span><span class="nb">next</span><span class="p">(</span><span class="n">name_gen</span><span class="p">),</span>
-                <span class="n">brightness</span><span class="o">=</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">*</span><span class="n">variation</span><span class="p">),</span>
+                <span class="n">brightness</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">machine_brightness</span><span class="p">(</span><span class="n">params</span><span class="p">),</span>
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
         <span class="p">]</span>
@@ -1426,12 +1341,12 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/machines.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">125</span>
-<span class="normal">126</span>
-<span class="normal">127</span>
-<span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_machine_name_generator</span><span class="p">():</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_machine_name_generator</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate random name for a machine.&quot;&quot;&quot;</span>
     <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">utils</span><span class="o">.</span><span class="n">choose_one</span><span class="p">(</span><span class="n">PREFIX</span><span class="p">)</span><span class="si">}{</span><span class="n">utils</span><span class="o">.</span><span class="n">choose_one</span><span class="p">(</span><span class="n">MAIN</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">PROB_SUFFIX</span><span class="p">:</span>

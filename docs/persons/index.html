@@ -381,6 +381,52 @@
   
   
     <li class="md-nav__item">
+      <a href="../model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Model
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Parameters
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../scenario/" class="md-nav__link">
         
   
@@ -455,30 +501,6 @@
       persons
     </span>
   </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#snailz.persons.PersonParams" class="md-nav__link">
-    <span class="md-ellipsis">
-      PersonParams
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="PersonParams">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#snailz.persons.PersonParams.validate_fields" class="md-nav__link">
-    <span class="md-ellipsis">
-      validate_fields
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -743,30 +765,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#snailz.persons.PersonParams" class="md-nav__link">
-    <span class="md-ellipsis">
-      PersonParams
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="PersonParams">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#snailz.persons.PersonParams.validate_fields" class="md-nav__link">
-    <span class="md-ellipsis">
-      validate_fields
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#snailz.persons.Person" class="md-nav__link">
     <span class="md-ellipsis">
       Person
@@ -865,162 +863,6 @@
 
 
 
-<h2 id="snailz.persons.PersonParams" class="doc doc-heading">
-            <code>PersonParams</code>
-
-
-</h2>
-
-
-    <div class="doc doc-contents ">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
-
-
-        <p>Parameters for people generation.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>locale</code>
-            </td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Locale for names</p>
-              </div>
-            </td>
-            <td>
-                  <code>&#39;et_EE&#39;</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>number</code>
-            </td>
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Number of people</p>
-              </div>
-            </td>
-            <td>
-                  <code>5</code>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-
-
-
-
-
-              <details class="quote">
-                <summary>Source code in <code>src/snailz/persons.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">PersonParams</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parameters for people generation.&quot;&quot;&quot;</span>
-
-    <span class="n">locale</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;et_EE&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Locale for names&quot;</span><span class="p">)</span>
-    <span class="n">number</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of people&quot;</span><span class="p">)</span>
-
-    <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="s2">&quot;forbid&quot;</span><span class="p">}</span>
-
-    <span class="nd">@field_validator</span><span class="p">(</span><span class="s2">&quot;locale&quot;</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">validate_fields</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate that the locale is available in faker.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">faker</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">AVAILABLE_LOCALES</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown locale </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">v</span>
-</code></pre></div></td></tr></table></div>
-              </details>
-
-
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="snailz.persons.PersonParams.validate_fields" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">validate_fields</span><span class="p">(</span><span class="n">v</span><span class="p">)</span></code>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Validate that the locale is available in faker.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>src/snailz/persons.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@field_validator</span><span class="p">(</span><span class="s2">&quot;locale&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">validate_fields</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate that the locale is available in faker.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">faker</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">AVAILABLE_LOCALES</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown locale </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">v</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
 <h2 id="snailz.persons.Person" class="doc doc-heading">
             <code>Person</code>
 
@@ -1106,14 +948,14 @@
 
               <details class="quote">
                 <summary>Source code in <code>src/snailz/persons.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Person</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Person</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A single person.&quot;&quot;&quot;</span>
 
     <span class="n">ident</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;unique identifier&quot;</span><span class="p">)</span>
@@ -1201,7 +1043,23 @@
 
               <details class="quote">
                 <summary>Source code in <code>src/snailz/persons.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">38</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
 <span class="normal">39</span>
 <span class="normal">40</span>
 <span class="normal">41</span>
@@ -1230,23 +1088,7 @@
 <span class="normal">64</span>
 <span class="normal">65</span>
 <span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllPersons</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">67</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllPersons</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A set of generated people.&quot;&quot;&quot;</span>
 
     <span class="n">items</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Person</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;all persons&quot;</span><span class="p">)</span>
@@ -1346,17 +1188,17 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/persons.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a CSV representation of the people data.</span>
 
 <span class="sd">    Returns:</span>
@@ -1407,7 +1249,7 @@
                 <code>params</code>
             </td>
             <td>
-                  <code><a class="autorefs autorefs-internal" title="PersonParams (snailz.persons.PersonParams)" href="#snailz.persons.PersonParams">PersonParams</a></code>
+                  <code><a class="autorefs autorefs-internal" title="PersonParams (snailz.parameters.PersonParams)" href="../parameters/#snailz.parameters.PersonParams">PersonParams</a></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1447,7 +1289,23 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/persons.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">57</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
 <span class="normal">58</span>
 <span class="normal">59</span>
 <span class="normal">60</span>
@@ -1457,23 +1315,7 @@
 <span class="normal">64</span>
 <span class="normal">65</span>
 <span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">67</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">PersonParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;AllPersons&quot;</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate random persons.</span>
 
@@ -1601,20 +1443,20 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/persons.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span>
-<span class="normal">95</span>
-<span class="normal">96</span>
-<span class="normal">97</span>
-<span class="normal">98</span>
-<span class="normal">99</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_person_id_generator</span><span class="p">(</span><span class="n">family</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">personal</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_person_id_generator</span><span class="p">(</span><span class="n">family</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">personal</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate unique ID for a person.</span>
 
 <span class="sd">    Parameters:</span>

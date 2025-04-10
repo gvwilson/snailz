@@ -1,68 +1,21 @@
 """Generate snail assays."""
 
 import csv
-from datetime import date, timedelta
+from datetime import date
 import io
-import math
 import random
 
 from pydantic import BaseModel, Field, model_validator
 
 from .grid import Grid
 from .machines import Machine, AllMachines
+from .parameters import AssayParams
 from .persons import AllPersons
 from .specimens import Specimen, AllSpecimens
-from . import utils
+from . import model, utils
 
 
-DEFAULT_PLATE_SIZE = 4
 NUM_ASSAY_HEADER_ROWS = 6
-
-
-class AssayParams(BaseModel):
-    """Parameters for assay generation."""
-
-    baseline: float = Field(default=2.0, ge=0.0, description="Baseline reading value")
-    degrade: float = Field(
-        default=0.05,
-        ge=0.0,
-        le=1.0,
-        description="Rate at which sample responses decrease per day after first day (0..1)",
-    )
-    delay: int = Field(
-        default=5,
-        gt=0,
-        description="Maximum number of days between specimen collection and assay",
-    )
-    mutant: float = Field(
-        default=5.0, gt=0.0, description="Mutant reading value (must be positive)"
-    )
-    reading_noise: float = Field(
-        default=0.2, ge=0.0, description="Noise level for readings (must be positive)"
-    )
-    plate_size: int = Field(
-        default=DEFAULT_PLATE_SIZE,
-        gt=0,
-        description="Size of assay plate (must be positive)",
-    )
-    image_noise: int = Field(
-        default=32,
-        ge=0,
-        le=255,
-        description="Plate image noise (grayscale 0-255)",
-    )
-    p_duplicate_assay: float = Field(
-        default=0.05, ge=0, description="Probably that an assay is repeated"
-    )
-
-    model_config = {"extra": "forbid"}
-
-    @model_validator(mode="after")
-    def validate_fields(self):
-        """Validate requirements on fields."""
-        if self.mutant < self.baseline:
-            raise ValueError("mutant value must be greater than baseline")
-        return self
 
 
 class Assay(BaseModel):
@@ -169,17 +122,12 @@ class AllAssays(BaseModel):
             Assay list object
         """
         # Duplicate a few specimens and randomize order.
-        extra = random.choices(
-            specimens.items,
-            k=math.floor(params.p_duplicate_assay * len(specimens.items)),
-        )
-        subjects = specimens.items + extra
-        random.shuffle(subjects)
+        subjects = model.assay_specimens(params, specimens)
 
         gen = utils.unique_id("assays", lambda: f"{random.randint(0, 999999):06d}")
         items = []
         for spec in subjects:
-            performed = spec.collected + timedelta(days=random.randint(0, params.delay))
+            performed = spec.collected + model.assay_performed(params)
             person = random.choice(persons.items)
             machine = random.choice(machines.items)
             treatments = _make_treatments(params)
@@ -201,11 +149,6 @@ class AllAssays(BaseModel):
         return AllAssays(items=items)
 
 
-def _calc_degradation(params: AssayParams, collected: date, assayed: date) -> float:
-    """Calculate degradation based on days since collection."""
-    return max(0.0, 1.0 - (params.degrade * (assayed - collected).days))
-
-
 def _make_readings(
     params: AssayParams,
     specimen: Specimen,
@@ -214,20 +157,13 @@ def _make_readings(
     treatments: Grid[str],
 ) -> Grid[float]:
     """Make a single assay."""
-    degradation = _calc_degradation(params, specimen.collected, performed)
     readings = Grid(width=params.plate_size, height=params.plate_size, default=0.0)
     for x in range(params.plate_size):
         for y in range(params.plate_size):
-            if treatments[x, y] == "C":
-                base_value = 0.0
-            elif specimen.is_mutant:
-                base_value = params.mutant * degradation
-            else:
-                base_value = params.baseline * degradation
             readings[x, y] = round(
-                base_value + random.uniform(0.0, params.reading_noise), utils.PRECISION
+                model.assay_reading(params, specimen, treatments[x, y], performed),
+                utils.PRECISION,
             )
-
     return readings
 
 

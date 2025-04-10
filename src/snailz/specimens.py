@@ -1,57 +1,15 @@
 """Generate specimens."""
 
 from datetime import date
-import math
 import random
 import string
 
 from pydantic import BaseModel, Field
 
-from . import utils
 from .grid import Point
-from .surveys import Survey, AllSurveys, DEFAULT_START_DATE
-
-
-# Bases.
-BASES = "ACGT"
-
-
-class SpecimenParams(BaseModel):
-    """Parameters for specimen generation."""
-
-    length: int = Field(
-        default=20, gt=0, description="Length of specimen genomes (must be positive)"
-    )
-    start_date: date = Field(
-        default=DEFAULT_START_DATE,
-        description="Start date for specimen collection",
-    )
-    max_mass: float = Field(
-        default=10.0, gt=0, description="Maximum mass for specimens (must be positive)"
-    )
-    mut_mass_scale: float = Field(
-        default=2.0, gt=0, description="Scaling factor for mutant snail mass"
-    )
-    num_mutations: int = Field(
-        default=5,
-        ge=0,
-        description="Number of mutations in specimens (must be between 0 and length)",
-    )
-    spacing: float = Field(
-        default=utils.DEFAULT_SURVEY_SIZE / 4.0,
-        ge=0,
-        description="Inter-specimen spacing",
-    )
-    daily_growth: float = Field(
-        default=0.01,
-        ge=0,
-        description="Mass increase per day",
-    )
-    p_missing_location: float = Field(
-        default=0.05, ge=0, description="Probability that location is missing"
-    )
-
-    model_config = {"extra": "forbid"}
+from .parameters import SpecimenParams
+from .surveys import Survey, AllSurveys
+from . import model, utils
 
 
 class Specimen(BaseModel):
@@ -108,7 +66,7 @@ class AllSpecimens(BaseModel):
         """
 
         reference = _make_reference_genome(params)
-        loci = _make_loci(params)
+        loci = model.mutation_loci(params)
         susc_locus = utils.choose_one(loci)
         susc_base = reference[susc_locus]
         gen = utils.unique_id("specimen", _specimen_id_generator)
@@ -122,7 +80,7 @@ class AllSpecimens(BaseModel):
 
         max_pollution = surveys.max_pollution()
         for survey in surveys.items:
-            positions = _place_specimens(params, survey.size)
+            positions = model.specimen_locations(params, survey.size)
             for pos in positions:
                 ident = next(gen)
                 specimens.items.append(
@@ -130,18 +88,6 @@ class AllSpecimens(BaseModel):
                 )
 
         return specimens
-
-
-def _make_loci(params: SpecimenParams) -> list[int]:
-    """Make a list of mutable loci positions.
-
-    Parameters:
-        params: SpecimenParams with length and mutations attributes
-
-    Returns:
-        A list of unique randomly selected positions that can be mutated
-    """
-    return list(sorted(random.sample(list(range(params.length)), params.num_mutations)))
 
 
 def _make_reference_genome(params: SpecimenParams) -> str:
@@ -153,7 +99,7 @@ def _make_reference_genome(params: SpecimenParams) -> str:
     Returns:
         A randomly generated genome string of the specified length
     """
-    return "".join(random.choices(BASES, k=params.length))
+    return "".join(random.choices(utils.BASES, k=params.length))
 
 
 def _make_specimen(
@@ -177,100 +123,29 @@ def _make_specimen(
     Returns:
         A randomly-generated specimen.
     """
-    # Collection date
-    collected = date.fromordinal(
-        random.randint(survey.start_date.toordinal(), survey.end_date.toordinal())
-    )
-
-    # Mutated genome
-    genome = list(specimens.reference)
-    num_mutations = random.randint(1, len(specimens.loci))
-    for loc in random.sample(range(len(specimens.loci)), num_mutations):
-        candidates = list(sorted(set(BASES) - set(specimens.reference[loc])))
-        genome[loc] = candidates[random.randrange(len(candidates))]
-    genome = "".join(genome)
-
-    # Mutant status
+    collected = model.specimen_collection_date(survey)
+    genome = model.specimen_genome(specimens)
     is_mutant = genome[specimens.susc_locus] == specimens.susc_base
 
-    # Initial mass
-    mass_scale = params.mut_mass_scale if is_mutant else 1.0
-    max_mass = mass_scale * params.max_mass
-    mass = random.uniform(max_mass / 2.0, max_mass)
-
-    # Growth effects
-    days_passed = (collected - params.start_date).days
-    mass += params.daily_growth * days_passed * mass
-
-    # Pollution effects if location known
     assert survey.cells is not None  # for type checking
-    if (location.x >= 0) and (location.y >= 0):
-        pollution_scaling = 1.0 + 2.0 * utils.sigmoid(
-            survey.cells[location.x, location.y] / max_pollution
-        )
-        mass *= pollution_scaling
+    pollution_level = (
+        survey.cells[location.x, location.y]
+        if (location.x >= 0) and (location.y >= 0)
+        else None
+    )
 
+    mass = model.specimen_mass(
+        params, max_pollution, collected, pollution_level, is_mutant
+    )
     return Specimen(
         ident=ident,
         survey_id=survey.ident,
         collected=collected,
         genome=genome,
+        is_mutant=is_mutant,
         location=location,
         mass=round(mass, utils.PRECISION),
-        is_mutant=is_mutant,
     )
-
-
-def _calculate_span(size: int, coord: int, span: int) -> range:
-    """
-    Calculate axial range of cells close to a center point.
-
-    Parameters:
-        size: grid size
-        coord: X or Y coordinate
-        span: maximum width on either side
-
-    Returns:
-        Endpoint coordinates of span.
-    """
-    return range(max(0, coord - span), 1 + min(size, coord + span))
-
-
-def _place_specimens(params: SpecimenParams, size: int) -> list[Point]:
-    """Generate locations for specimens.
-
-    - Initialize a set of all possible (x, y) points.
-    - Repeatedly choose one at random and add to the result.
-    - Remove all points within a random radius of that point.
-
-    Parameters:
-        params: specimen generation parameters
-        size: grid size
-
-    Returns:
-        A list of specimen locations.
-    """
-
-    # Generate points by repeated spatial subtraction.
-    available = {(x, y) for x in range(size) for y in range(size)}
-    result = []
-    while available:
-        loc = utils.choose_one(list(available))
-        result.append(loc)
-        radius = random.uniform(params.spacing / 4, params.spacing)
-        span = math.ceil(radius)
-        for x in _calculate_span(size, loc[0], span):
-            for y in _calculate_span(size, loc[1], span):
-                available.discard((x, y))
-
-    # Replace some points with markers for missing data
-    missing = Point(x=-1, y=-1)
-    return [
-        missing
-        if random.uniform(0.0, 1.0) < params.p_missing_location
-        else Point(x=r[0], y=r[1])
-        for r in result
-    ]
 
 
 def _specimen_id_generator() -> str:

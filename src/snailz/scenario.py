@@ -5,38 +5,15 @@ import shutil
 
 from pydantic import BaseModel, Field
 
-from .assays import AssayParams, AllAssays
+from .assays import AllAssays
 from .images import AllImages
-from .machines import MachineParams, AllMachines
+from .machines import AllMachines
 from .mangle import mangle_assays
-from .persons import PersonParams, AllPersons
-from .specimens import SpecimenParams, AllSpecimens
-from .surveys import SurveyParams, AllSurveys
+from .parameters import ScenarioParams
+from .persons import AllPersons
+from .specimens import AllSpecimens
+from .surveys import AllSurveys
 from . import utils
-
-
-class ScenarioParams(BaseModel):
-    """Represent all parameters combined."""
-
-    seed: int = Field(default=7493418, ge=0, description="RNG seed")
-    machine: MachineParams = Field(
-        default=MachineParams(), description="parameters for machine generation"
-    )
-    assay: AssayParams = Field(
-        default=AssayParams(), description="parameters for assay generation"
-    )
-    survey: SurveyParams = Field(
-        default=SurveyParams(), description="parameters for survey generation"
-    )
-    person: PersonParams = Field(
-        default=PersonParams(), description="parameters for people generation"
-    )
-    specimen: SpecimenParams = Field(
-        default=SpecimenParams(),
-        description="parameters for specimen generation",
-    )
-
-    model_config = {"extra": "forbid"}
 
 
 class ScenarioData(BaseModel):

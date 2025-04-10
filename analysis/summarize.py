@@ -10,7 +10,9 @@ import utils
 
 
 @click.command()
-@click.option("--data", type=click.Path(exists=True), required=True, help="Path to data directory")
+@click.option(
+    "--data", type=click.Path(exists=True), required=True, help="Path to data directory"
+)
 def summarize(data):
     """Do data summarization."""
     assays_dir = Path(data) / "assays"
@@ -21,9 +23,15 @@ def summarize(data):
         df = assay["data"].group_by("treatment").agg(pl.mean("reading"))
         df = df.with_columns(pl.lit(assay["id"]).alias("assay"))
         dataframes.append(df)
-    summary = pl.concat(dataframes).pivot(index="assay", columns="treatment", values="reading")
-    summary = summary.with_columns((summary["S"] / summary["C"]).alias("ratio")).sort("ratio")
-    print(summary)
+    summary = (
+        pl.concat(dataframes)
+        .pivot(index="assay", columns="treatment", values="reading")
+        .rename({"C": "control", "S": "specimen"})
+    )
+    summary = summary.with_columns(
+        (summary["specimen"] / summary["control"]).alias("ratio")
+    ).sort("ratio")
+    summary.write_csv(sys.stdout, float_precision=3)
 
 
 if __name__ == "__main__":

@@ -3,26 +3,10 @@
 import random
 
 import faker
-import faker.config
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field
 
+from .parameters import PersonParams
 from . import utils
-
-
-class PersonParams(BaseModel):
-    """Parameters for people generation."""
-
-    locale: str = Field(default="et_EE", description="Locale for names")
-    number: int = Field(default=5, gt=0, description="Number of people")
-
-    model_config = {"extra": "forbid"}
-
-    @field_validator("locale")
-    def validate_fields(cls, v):
-        """Validate that the locale is available in faker."""
-        if v not in faker.config.AVAILABLE_LOCALES:
-            raise ValueError(f"Unknown locale {v}")
-        return v
 
 
 class Person(BaseModel):
