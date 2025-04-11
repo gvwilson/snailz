@@ -54,12 +54,15 @@ def assay_reading(
     )
     if treatment == "C":
         base_value = 0.0
+        stdev = params.rel_stdev
     elif specimen.is_mutant:
         base_value = params.mutant * degradation
+        stdev = base_value * params.rel_stdev
     else:
         base_value = params.baseline * degradation
+        stdev = base_value * params.rel_stdev
 
-    return base_value + random.uniform(0.0, params.reading_noise)
+    return abs(random.gauss(base_value, stdev))
 
 
 def assay_specimens(params: AssayParams, specimens: BaseModel) -> list:
@@ -139,7 +142,7 @@ def mutation_loci(params: SpecimenParams) -> list[int]:
     Returns:
         Randomly selected positions that can be mutated.
     """
-    return list(sorted(random.sample(list(range(params.length)), params.num_mutations)))
+    return list(sorted(random.sample(list(range(params.length)), params.max_mutations)))
 
 
 def specimen_collection_date(survey: BaseModel) -> date:
@@ -166,8 +169,8 @@ def specimen_genome(specimens: BaseModel) -> str:
         Random genome produced by mutating reference genome.
     """
     genome = list(specimens.reference)
-    num_mutations = random.randint(1, len(specimens.loci))
-    locations = random.sample(specimens.loci, num_mutations)
+    max_mutations = random.randint(1, len(specimens.loci))
+    locations = random.sample(specimens.loci, max_mutations)
     for loc in locations:
         genome[loc] = utils.choose_one(utils.BASES)
     result = "".join(genome)
@@ -233,8 +236,8 @@ def specimen_mass(
 
     # Initial mass
     mass_scale = params.mut_mass_scale if is_mutant else 1.0
-    max_mass = mass_scale * params.max_mass
-    mass = random.uniform(max_mass / 2.0, max_mass)
+    mean_mass = mass_scale * params.mean_mass
+    mass = abs(random.gauss(mean_mass, mean_mass * params.mass_rel_stdev))
 
     # Growth effects
     days_passed = (collected - params.start_date).days

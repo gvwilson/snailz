@@ -36,8 +36,8 @@ class AssayParams(BaseModel):
     mutant: float = Field(
         default=5.0, gt=0.0, description="Mutant reading value (must be positive)"
     )
-    reading_noise: float = Field(
-        default=0.2, ge=0.0, description="Noise level for readings (must be positive)"
+    rel_stdev: float = Field(
+        default=0.2, ge=0.0, description="Relative standard deviation in readings"
     )
     plate_size: int = Field(
         default=DEFAULT_PLATE_SIZE,
@@ -99,16 +99,19 @@ class SpecimenParams(BaseModel):
         default=DEFAULT_START_DATE,
         description="Start date for specimen collection",
     )
-    max_mass: float = Field(
-        default=10.0, gt=0, description="Maximum mass for specimens (must be positive)"
+    mean_mass: float = Field(
+        default=10.0, gt=0, description="Mean mass for specimens (must be positive)"
     )
     mut_mass_scale: float = Field(
         default=2.0, gt=0, description="Scaling factor for mutant snail mass"
     )
-    num_mutations: int = Field(
+    mass_rel_stdev: float = Field(
+        default=0.5, gt=0, description="Relative standard deviation in mass"
+    )
+    max_mutations: int = Field(
         default=5,
         ge=0,
-        description="Number of mutations in specimens (must be between 0 and length)",
+        description="Maximum number of mutations in specimens (must be between 0 and length)",
     )
     spacing: float = Field(
         default=utils.DEFAULT_SURVEY_SIZE / 4.0,

@@ -33,14 +33,6 @@ class AllSpecimens(BaseModel):
     susc_locus: int = Field(ge=0, description="location of mass change mutation")
     items: list[Specimen] = Field(description="list of individual specimens")
 
-    def count_mutants(self) -> int:
-        """How many are mutants?
-
-        Returns:
-            The number of specimens that are mutants.
-        """
-        return sum(s.is_mutant for s in self.items)
-
     def to_csv(self) -> str:
         """Return a CSV string representation of the specimen data.
 

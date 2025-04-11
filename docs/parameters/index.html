@@ -1044,14 +1044,14 @@
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>reading_noise</code>
+                <code>rel_stdev</code>
             </td>
             <td>
                   <code><span title="float">float</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Noise level for readings (must be positive)</p>
+                <p>Relative standard deviation in readings</p>
               </div>
             </td>
             <td>
@@ -1178,8 +1178,8 @@
     <span class="n">mutant</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">gt</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Mutant reading value (must be positive)&quot;</span>
     <span class="p">)</span>
-    <span class="n">reading_noise</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Noise level for readings (must be positive)&quot;</span>
+    <span class="n">rel_stdev</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Relative standard deviation in readings&quot;</span>
     <span class="p">)</span>
     <span class="n">plate_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="n">DEFAULT_PLATE_SIZE</span><span class="p">,</span>
@@ -1589,14 +1589,14 @@
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>max_mass</code>
+                <code>mean_mass</code>
             </td>
             <td>
                   <code><span title="float">float</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Maximum mass for specimens (must be positive)</p>
+                <p>Mean mass for specimens (must be positive)</p>
               </div>
             </td>
             <td>
@@ -1621,14 +1621,30 @@
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>num_mutations</code>
+                <code>mass_rel_stdev</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Relative standard deviation in mass</p>
+              </div>
+            </td>
+            <td>
+                  <code>0.5</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>max_mutations</code>
             </td>
             <td>
                   <code><span title="int">int</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Number of mutations in specimens (must be between 0 and length)</p>
+                <p>Maximum number of mutations in specimens (must be between 0 and length)</p>
               </div>
             </td>
             <td>
@@ -1729,7 +1745,10 @@
 <span class="normal">124</span>
 <span class="normal">125</span>
 <span class="normal">126</span>
-<span class="normal">127</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SpecimenParams</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SpecimenParams</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parameters for specimen generation.&quot;&quot;&quot;</span>
 
     <span class="n">length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
@@ -1739,16 +1758,19 @@
         <span class="n">default</span><span class="o">=</span><span class="n">DEFAULT_START_DATE</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Start date for specimen collection&quot;</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">max_mass</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Maximum mass for specimens (must be positive)&quot;</span>
+    <span class="n">mean_mass</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Mean mass for specimens (must be positive)&quot;</span>
     <span class="p">)</span>
     <span class="n">mut_mass_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Scaling factor for mutant snail mass&quot;</span>
     <span class="p">)</span>
-    <span class="n">num_mutations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+    <span class="n">mass_rel_stdev</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Relative standard deviation in mass&quot;</span>
+    <span class="p">)</span>
+    <span class="n">max_mutations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
         <span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of mutations in specimens (must be between 0 and length)&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Maximum number of mutations in specimens (must be between 0 and length)&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">spacing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">DEFAULT_SURVEY_SIZE</span> <span class="o">/</span> <span class="mf">4.0</span><span class="p">,</span>
@@ -1893,10 +1915,7 @@
 
               <details class="quote">
                 <summary>Source code in <code>src/snailz/parameters.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span>
-<span class="normal">133</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">133</span>
 <span class="normal">134</span>
 <span class="normal">135</span>
 <span class="normal">136</span>
@@ -1908,7 +1927,10 @@
 <span class="normal">142</span>
 <span class="normal">143</span>
 <span class="normal">144</span>
-<span class="normal">145</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SurveyParams</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SurveyParams</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parameters for survey generation.&quot;&quot;&quot;</span>
 
     <span class="n">number</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of surveys&quot;</span><span class="p">)</span>
@@ -2006,7 +2028,7 @@
               </div>
             </td>
             <td>
-                  <code>AssayParams(baseline=1.0, degrade=0.05, delay=5, mutant=5.0, reading_noise=0.2, plate_size=4, image_noise=32, p_duplicate_assay=0.05)</code>
+                  <code>AssayParams(baseline=1.0, degrade=0.05, delay=5, mutant=5.0, rel_stdev=0.2, plate_size=4, image_noise=32, p_duplicate_assay=0.05)</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -2054,7 +2076,7 @@
               </div>
             </td>
             <td>
-                  <code>SpecimenParams(length=20, start_date=datetime.date(2024, 3, 1), max_mass=10.0, mut_mass_scale=2.0, num_mutations=5, spacing=3.75, daily_growth=0.01, p_missing_location=0.05)</code>
+                  <code>SpecimenParams(length=20, start_date=datetime.date(2024, 3, 1), mean_mass=10.0, mut_mass_scale=2.0, mass_rel_stdev=0.5, max_mutations=5, spacing=3.75, daily_growth=0.01, p_missing_location=0.05)</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -2084,10 +2106,7 @@
 
               <details class="quote">
                 <summary>Source code in <code>src/snailz/parameters.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">148</span>
-<span class="normal">149</span>
-<span class="normal">150</span>
-<span class="normal">151</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">151</span>
 <span class="normal">152</span>
 <span class="normal">153</span>
 <span class="normal">154</span>
@@ -2105,7 +2124,10 @@
 <span class="normal">166</span>
 <span class="normal">167</span>
 <span class="normal">168</span>
-<span class="normal">169</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ScenarioParams</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ScenarioParams</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represent all parameters combined.&quot;&quot;&quot;</span>
 
     <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">7493418</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;RNG seed&quot;</span><span class="p">)</span>

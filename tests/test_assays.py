@@ -195,13 +195,9 @@ def test_assay_reading_value_susceptible(seed):
     for x in range(2):
         for y in range(2):
             if assay.treatments[x, y] == "C":
-                assert 0.0 <= assay.readings[x, y] <= params.reading_noise
+                assert 0.0 <= assay.readings[x, y] <= 3.0
             else:
-                assert (
-                    params.mutant
-                    <= assay.readings[x, y]
-                    <= params.mutant + params.reading_noise
-                )
+                assert 2.0 <= assay.readings[x, y] <= 8.0
 
 
 @pytest.mark.parametrize("seed", [127891, 457129, 9924, 527411, 931866])
@@ -218,10 +214,6 @@ def test_assay_reading_value_not_susceptible(seed):
     for x in range(2):
         for y in range(2):
             if assay.treatments[x, y] == "C":
-                assert 0.0 <= assay.readings[x, y] <= params.reading_noise
+                assert 0.0 <= assay.readings[x, y] <= 3.0
             else:
-                assert (
-                    params.baseline
-                    <= assay.readings[x, y]
-                    <= params.baseline + params.reading_noise
-                )
+                assert 0.0 < assay.readings[x, y] <= 5.0

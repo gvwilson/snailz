@@ -97,7 +97,7 @@ def task_format():
     }
 
 
-def task_lims():
+def task_lims_run():
     """Run the LIMS."""
 
     return {

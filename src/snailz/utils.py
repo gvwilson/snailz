@@ -19,8 +19,8 @@ BASES = "ACGT"
 # Floating point precision.
 PRECISION = 2
 
-# Maximum tries to generate a unique ID.
-UNIQUE_ID_LIMIT = 10_000
+# Maximum tries to generate a unique ID or random value.
+TRIAL_LIMIT = 10_000
 
 # Default survey grid size.
 DEFAULT_SURVEY_SIZE = 15
@@ -108,7 +108,7 @@ def to_csv(rows: list, fields: list, f_make_row: Callable) -> str:
 
 
 def unique_id(
-    name: str, func: Callable, limit: int = UNIQUE_ID_LIMIT
+    name: str, func: Callable, limit: int = TRIAL_LIMIT
 ) -> Generator[str, tuple | None, None]:
     """Generate unique IDs.
 
@@ -137,6 +137,9 @@ def _make_unique_id_generator(
 
     Returns:
         Unique ID.
+
+    Raises:
+        RuntimeError: if no unique ID can be round.
     """
     seen = set()
     provided = yield ""  # to prime the generator

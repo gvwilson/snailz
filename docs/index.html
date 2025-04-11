@@ -981,7 +981,7 @@ the tendency for different people to perform experiments in slightly different w
 Like persons, they are included to enable simulation of bias.</dd>
 <dt>Surveys</dt>
 <dd>The locations where specimens are collected.
-Each survey site is represented as a square grid of pollution readings.</dd>
+Each survey site is represented as a square grid of pollution measurements.</dd>
 <dt>Specimens</dt>
 <dd>The snails collected from the sites.
 The data records where the snail was found,
@@ -1071,9 +1071,9 @@ The parameters, their meanings, and their properties are:</p>
 </tr>
 <tr>
 <td></td>
-<td><code>reading_noise</code></td>
-<td>random noise for readings</td>
-<td>0.1</td>
+<td><code>rel_stdev</code></td>
+<td>relative standard deviation readings</td>
+<td>0.2</td>
 <td>non-negative real</td>
 </tr>
 <tr>
@@ -1141,8 +1141,8 @@ The parameters, their meanings, and their properties are:</p>
 </tr>
 <tr>
 <td></td>
-<td><code>max_mass</code></td>
-<td>maximum unmutated snail mass</td>
+<td><code>mean_mass</code></td>
+<td>mean unmutated snail mass</td>
 <td>10.0</td>
 <td>non-negative real</td>
 </tr>
@@ -1155,7 +1155,14 @@ The parameters, their meanings, and their properties are:</p>
 </tr>
 <tr>
 <td></td>
-<td><code>num_mutations</code></td>
+<td><code>mass_rel_stdev</code></td>
+<td>relative standard deviation in masses</td>
+<td>0.5</td>
+<td>non-negative real</td>
+</tr>
+<tr>
+<td></td>
+<td><code>max_mutations</code></td>
 <td>maximum number of mutations in genome</td>
 <td>5</td>
 <td>non-negative integer</td>
@@ -1244,7 +1251,7 @@ The parameters, their meanings, and their properties are:</p>
 </li>
 <li>
 <p>The actual readings for mutated and unmutated snails are randomly generated
-    by adding uniform noise to <code>assay.baseline</code> and <code>assay.mutant</code>.
+    from normal distributions centered around <code>assay.baseline</code> and <code>assay.mutant</code>.
     The readings for control wells are just noise.</p>
 </li>
 <li>

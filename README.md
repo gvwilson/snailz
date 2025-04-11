@@ -38,7 +38,7 @@ Machines
 
 Surveys
 :   The locations where specimens are collected.
-    Each survey site is represented as a square grid of pollution readings.
+    Each survey site is represented as a square grid of pollution measurements.
 
 Specimens
 :   The snails collected from the sites.
@@ -94,7 +94,7 @@ The parameters, their meanings, and their properties are:
 | | `degrade` | reading degradation per day between sample collection and assay | 0.05 | non-negative real |
 | | `delay` | maximum days of delay between sample collection and assay | 5 | non-negative integer |
 | | `mutant` | assay reading for mutant specimens | 10.0 | non-negative real, greater than `baseline` |
-| | `reading_noise` | random noise for readings | 0.1 | non-negative real |
+| | `rel_stdev` | relative standard deviation readings | 0.2 | non-negative real |
 | | `plate_size` | number of rows and columns in assay plate | 4 | non-negative integer |
 | | `image_noise` | noise to add to assay images | 32 | scale is 0-255 |
 | | `p_duplicate_assay` | probability of duplicate assay | 0.05 | probability |
@@ -104,9 +104,10 @@ The parameters, their meanings, and their properties are:
 | | `number` | number of persons | 5 | non-negative integer |
 | `specimen` | `length` | genome length in bases | 20 | non-negative integer |
 | | `start_date` | date of first assay | 2024-03-01 | copied from surveys for convenience |
-| | `max_mass` | maximum unmutated snail mass | 10.0 | non-negative real |
+| | `mean_mass` | mean unmutated snail mass | 10.0 | non-negative real |
 | | `mut_mass_scale` | scaling factor for mutated snails | 2.0 | real greater or equal to 1.0 |
-| | `num_mutations` | maximum number of mutations in genome | 5 | non-negative integer |
+| | `mass_rel_stdev` | relative standard deviation in masses | 0.5 | non-negative real |
+| | `max_mutations` | maximum number of mutations in genome | 5 | non-negative integer |
 | | `spacing` | space between snail specimens | 3.75 | non-negative real |
 | | `daily_growth` | percentage increase in mass per day | 0.01 | non-negative real |
 | | `p_missing_location` | probability that sample location is unknown | 0.05 | probability |
@@ -141,7 +142,7 @@ Notes:
 1.  A few specimens are assayed twice instead of once.
 
 1.  The actual readings for mutated and unmutated snails are randomly generated
-    by adding uniform noise to `assay.baseline` and `assay.mutant`.
+    from normal distributions centered around `assay.baseline` and `assay.mutant`.
     The readings for control wells are just noise.
 
 1.  Assay readings for both mutated and unmutated snails are lowered
