@@ -57,10 +57,12 @@ def summarize(data, format):
 
     # Label.
     summary = summary.with_columns(
-        pl.when((pl.col("p_1") > 0.8) & (pl.col("p_2") < 0.2)).then(pl.lit("group_1"))
-          .when((pl.col("p_1") < 0.2) & (pl.col("p_2") > 0.8)).then(pl.lit("group_2"))
-          .otherwise(pl.lit("unknown"))
-          .alias("label")
+        pl.when((pl.col("p_1") > 0.8) & (pl.col("p_2") < 0.2))
+        .then(pl.lit("group_1"))
+        .when((pl.col("p_1") < 0.2) & (pl.col("p_2") > 0.8))
+        .then(pl.lit("group_2"))
+        .otherwise(pl.lit("unknown"))
+        .alias("label")
     )
 
     # Report.
@@ -72,7 +74,7 @@ def summarize(data, format):
         elif format == "df":
             print(summary)
         elif format == "count":
-            temp = summary.group_by("label").agg(pl.count().alias("count"))
+            temp = summary.group_by("label").agg(pl.len().alias("count"))
             print(temp)
 
 

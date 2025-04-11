@@ -547,6 +547,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#snailz.specimens.AllSpecimens.count_mutants" class="md-nav__link">
+    <span class="md-ellipsis">
+      count_mutants
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#snailz.specimens.AllSpecimens.to_csv" class="md-nav__link">
     <span class="md-ellipsis">
       to_csv
@@ -823,6 +832,15 @@
   
     <nav class="md-nav" aria-label="AllSpecimens">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#snailz.specimens.AllSpecimens.count_mutants" class="md-nav__link">
+    <span class="md-ellipsis">
+      count_mutants
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#snailz.specimens.AllSpecimens.to_csv" class="md-nav__link">
@@ -1297,7 +1315,15 @@
 <span class="normal">87</span>
 <span class="normal">88</span>
 <span class="normal">89</span>
-<span class="normal">90</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllSpecimens</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span>
+<span class="normal">96</span>
+<span class="normal">97</span>
+<span class="normal">98</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllSpecimens</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A set of generated specimens.&quot;&quot;&quot;</span>
 
     <span class="n">loci</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;locations where mutations can occur&quot;</span><span class="p">)</span>
@@ -1305,6 +1331,14 @@
     <span class="n">susc_base</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;mutant base that induces mass changes&quot;</span><span class="p">)</span>
     <span class="n">susc_locus</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;location of mass change mutation&quot;</span><span class="p">)</span>
     <span class="n">items</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Specimen</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;list of individual specimens&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">count_mutants</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;How many are mutants?</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The number of specimens that are mutants.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">is_mutant</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a CSV string representation of the specimen data.</span>
@@ -1341,7 +1375,7 @@
         <span class="n">reference</span> <span class="o">=</span> <span class="n">_make_reference_genome</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
         <span class="n">loci</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">mutation_loci</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
         <span class="n">susc_locus</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">choose_one</span><span class="p">(</span><span class="n">loci</span><span class="p">)</span>
-        <span class="n">susc_base</span> <span class="o">=</span> <span class="n">reference</span><span class="p">[</span><span class="n">susc_locus</span><span class="p">]</span>
+        <span class="n">susc_base</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">choose_one</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">BASES</span><span class="p">)</span> <span class="o">-</span> <span class="p">{</span><span class="n">reference</span><span class="p">[</span><span class="n">susc_locus</span><span class="p">]}))</span>
         <span class="n">gen</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">unique_id</span><span class="p">(</span><span class="s2">&quot;specimen&quot;</span><span class="p">,</span> <span class="n">_specimen_id_generator</span><span class="p">)</span>
         <span class="n">specimens</span> <span class="o">=</span> <span class="n">AllSpecimens</span><span class="p">(</span>
             <span class="n">loci</span><span class="o">=</span><span class="n">loci</span><span class="p">,</span>
@@ -1375,6 +1409,64 @@
 
 
 
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="snailz.specimens.AllSpecimens.count_mutants" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">count_mutants</span><span class="p">()</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>How many are mutants?</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The number of specimens that are mutants.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/snailz/specimens.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">count_mutants</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;How many are mutants?</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The number of specimens that are mutants.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">is_mutant</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
 
 <div class="doc doc-object doc-function">
 
@@ -1415,15 +1507,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/specimens.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">44</span>
 <span class="normal">45</span>
 <span class="normal">46</span>
 <span class="normal">47</span>
@@ -1433,7 +1517,15 @@
 <span class="normal">51</span>
 <span class="normal">52</span>
 <span class="normal">53</span>
-<span class="normal">54</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a CSV string representation of the specimen data.</span>
 
 <span class="sd">    Returns:</span>
@@ -1548,15 +1640,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/specimens.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">64</span>
 <span class="normal">65</span>
 <span class="normal">66</span>
 <span class="normal">67</span>
@@ -1582,7 +1666,15 @@
 <span class="normal">87</span>
 <span class="normal">88</span>
 <span class="normal">89</span>
-<span class="normal">90</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span>
+<span class="normal">96</span>
+<span class="normal">97</span>
+<span class="normal">98</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">SpecimenParams</span><span class="p">,</span> <span class="n">surveys</span><span class="p">:</span> <span class="n">AllSurveys</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;AllSpecimens&quot;</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a set of specimens.</span>
 
@@ -1597,7 +1689,7 @@
     <span class="n">reference</span> <span class="o">=</span> <span class="n">_make_reference_genome</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
     <span class="n">loci</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">mutation_loci</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
     <span class="n">susc_locus</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">choose_one</span><span class="p">(</span><span class="n">loci</span><span class="p">)</span>
-    <span class="n">susc_base</span> <span class="o">=</span> <span class="n">reference</span><span class="p">[</span><span class="n">susc_locus</span><span class="p">]</span>
+    <span class="n">susc_base</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">choose_one</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">BASES</span><span class="p">)</span> <span class="o">-</span> <span class="p">{</span><span class="n">reference</span><span class="p">[</span><span class="n">susc_locus</span><span class="p">]}))</span>
     <span class="n">gen</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">unique_id</span><span class="p">(</span><span class="s2">&quot;specimen&quot;</span><span class="p">,</span> <span class="n">_specimen_id_generator</span><span class="p">)</span>
     <span class="n">specimens</span> <span class="o">=</span> <span class="n">AllSpecimens</span><span class="p">(</span>
         <span class="n">loci</span><span class="o">=</span><span class="n">loci</span><span class="p">,</span>
@@ -1702,16 +1794,16 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/specimens.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_make_reference_genome</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">SpecimenParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_make_reference_genome</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">SpecimenParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Make a random reference genome.</span>
 
 <span class="sd">    Parameters:</span>
@@ -1877,15 +1969,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/specimens.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">105</span>
-<span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">113</span>
 <span class="normal">114</span>
 <span class="normal">115</span>
 <span class="normal">116</span>
@@ -1920,7 +2004,15 @@
 <span class="normal">145</span>
 <span class="normal">146</span>
 <span class="normal">147</span>
-<span class="normal">148</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_make_specimen</span><span class="p">(</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_make_specimen</span><span class="p">(</span>
     <span class="n">params</span><span class="p">:</span> <span class="n">SpecimenParams</span><span class="p">,</span>
     <span class="n">survey</span><span class="p">:</span> <span class="n">Survey</span><span class="p">,</span>
     <span class="n">specimens</span><span class="p">:</span> <span class="n">AllSpecimens</span><span class="p">,</span>
@@ -2009,13 +2101,13 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/specimens.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">151</span>
-<span class="normal">152</span>
-<span class="normal">153</span>
-<span class="normal">154</span>
-<span class="normal">155</span>
-<span class="normal">156</span>
-<span class="normal">157</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_specimen_id_generator</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_specimen_id_generator</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Specimen ID generation function.</span>
 
 <span class="sd">    Returns:</span>

@@ -33,6 +33,14 @@ class AllSpecimens(BaseModel):
     susc_locus: int = Field(ge=0, description="location of mass change mutation")
     items: list[Specimen] = Field(description="list of individual specimens")
 
+    def count_mutants(self) -> int:
+        """How many are mutants?
+
+        Returns:
+            The number of specimens that are mutants.
+        """
+        return sum(s.is_mutant for s in self.items)
+
     def to_csv(self) -> str:
         """Return a CSV string representation of the specimen data.
 
@@ -68,7 +76,7 @@ class AllSpecimens(BaseModel):
         reference = _make_reference_genome(params)
         loci = model.mutation_loci(params)
         susc_locus = utils.choose_one(loci)
-        susc_base = reference[susc_locus]
+        susc_base = utils.choose_one(list(set(utils.BASES) - {reference[susc_locus]}))
         gen = utils.unique_id("specimen", _specimen_id_generator)
         specimens = AllSpecimens(
             loci=loci,

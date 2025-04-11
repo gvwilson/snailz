@@ -3,9 +3,8 @@
 import click
 import csv
 from pathlib import Path
-from pypika import Order, Query, Table
+from pypika import Query, Table
 import sqlite3
-import sys
 
 from flask import Flask, render_template
 
@@ -47,9 +46,14 @@ def assay(ident):
 @app.route("/machine/<ident>")
 def machine(ident):
     conn = _get_connection(app.config)
-    q = Query.from_(MACHINES_TBL).select("*").where(MACHINES_TBL.ident==ident)
+    q = Query.from_(MACHINES_TBL).select("*").where(MACHINES_TBL.ident == ident)
     machine = conn.execute(str(q)).fetchone()
-    q = Query.from_(ASSAYS_TBL).select("*").where(ASSAYS_TBL.machine == ident).orderby(ASSAYS_TBL.performed)
+    q = (
+        Query.from_(ASSAYS_TBL)
+        .select("*")
+        .where(ASSAYS_TBL.machine == ident)
+        .orderby(ASSAYS_TBL.performed)
+    )
     assays = conn.execute(str(q)).fetchall()
     return render_template("machine.jinja", ident=ident, machine=machine, assays=assays)
 
@@ -59,7 +63,12 @@ def person(ident):
     conn = _get_connection(app.config)
     q = Query.from_(PERSONS_TBL).select("*").where(PERSONS_TBL.ident == ident)
     person = conn.execute(str(q)).fetchone()
-    q = Query.from_(ASSAYS_TBL).select("*").where(ASSAYS_TBL.person == ident).orderby(ASSAYS_TBL.performed)
+    q = (
+        Query.from_(ASSAYS_TBL)
+        .select("*")
+        .where(ASSAYS_TBL.person == ident)
+        .orderby(ASSAYS_TBL.performed)
+    )
     assays = conn.execute(str(q)).fetchall()
     return render_template("person.jinja", ident=ident, person=person, assays=assays)
 

@@ -167,10 +167,11 @@ def specimen_genome(specimens: BaseModel) -> str:
     """
     genome = list(specimens.reference)
     num_mutations = random.randint(1, len(specimens.loci))
-    for loc in random.sample(specimens.loci, num_mutations):
-        candidates = list(sorted(set(utils.BASES) - set(specimens.reference[loc])))
-        genome[loc] = candidates[random.randrange(len(candidates))]
-    return "".join(genome)
+    locations = random.sample(specimens.loci, num_mutations)
+    for loc in locations:
+        genome[loc] = utils.choose_one(utils.BASES)
+    result = "".join(genome)
+    return result
 
 
 def specimen_locations(params: SpecimenParams, size: int) -> list[Point]:

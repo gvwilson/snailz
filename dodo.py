@@ -112,7 +112,7 @@ def task_lims_test():
 
     return {
         "actions": [
-            f"pytest lims/tests",
+            "pytest lims/tests",
         ],
     }
 
