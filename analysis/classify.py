@@ -16,9 +16,9 @@ import utils
 )
 @click.option(
     "--format",
-    type=click.Choice(["csv", "df"], case_sensitive=False),
+    type=click.Choice(["csv", "df", "count"], case_sensitive=False),
     required=True,
-    help="Output format: csv or dataframe",
+    help="Output format: CSV, dataframe, or count",
 )
 def summarize(data, format):
     """Do data summarization."""
@@ -55,14 +55,25 @@ def summarize(data, format):
         ]
     )
 
+    # Label.
+    summary = summary.with_columns(
+        pl.when((pl.col("p_1") > 0.8) & (pl.col("p_2") < 0.2)).then(pl.lit("group_1"))
+          .when((pl.col("p_1") < 0.2) & (pl.col("p_2") > 0.8)).then(pl.lit("group_2"))
+          .otherwise(pl.lit("unknown"))
+          .alias("label")
+    )
+
     # Report.
-    if format == "csv":
-        summary.write_csv(sys.stdout, float_precision=3)
-    elif format == "df":
-        with pl.Config() as cfg:
-            cfg.set_tbl_rows(len(summary))
-            cfg.set_float_precision(3)
+    with pl.Config() as cfg:
+        cfg.set_tbl_rows(len(summary))
+        cfg.set_float_precision(3)
+        if format == "csv":
+            summary.write_csv(sys.stdout, float_precision=3)
+        elif format == "df":
             print(summary)
+        elif format == "count":
+            temp = summary.group_by("label").agg(pl.count().alias("count"))
+            print(temp)
 
 
 if __name__ == "__main__":

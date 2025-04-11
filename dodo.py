@@ -9,6 +9,7 @@ import shutil
 # Which tasks are run by default.
 DOIT_CONFIG = {
     "default_tasks": [],
+    "verbosity": 2,
 }
 
 # Directories and files to clean during the build process.
@@ -37,7 +38,7 @@ def task_classify():
 
     return {
         "actions": [
-            f"python scripts/classify.py --data {DATA_DIR} --format df",
+            f"python analysis/classify.py --data {DATA_DIR} --format df",
         ],
     }
 
