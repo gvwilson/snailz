@@ -33,6 +33,7 @@ dev = [
   "pyright",
   "pytest",
   "pytest-cov",
+  "pytest-playwright",
   "ruff",
   "scikit-learn",
   "twine",

@@ -101,7 +101,17 @@ def task_lims():
 
     return {
         "actions": [
-            f"python lims/app.py {DATA_DIR}",
+            f"python lims/app/app.py --data {DATA_DIR} --memory",
+        ],
+    }
+
+
+def task_lims_test():
+    """Run the LIMS tests."""
+
+    return {
+        "actions": [
+            f"pytest lims/tests",
         ],
     }
 
