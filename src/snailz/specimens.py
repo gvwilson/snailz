@@ -116,7 +116,7 @@ def _make_specimen(
         params: specimen parameters
         survey: survey this specimen is from
         specimens: all specimens in this survey
-        gen: unique ID generation function
+        ident: specimen identifier
         location: grid point where specimen was sampled
         max_pollution: maximum pollution value across all surveys
 

@@ -13,8 +13,9 @@ nav:
   - mangle.md
   - model.md
   - parameters.md
-  - scenario.md
   - persons.md
+  - scenario.md
+  - specimens.md
   - surveys.md
   - utils.md
 - Project:
