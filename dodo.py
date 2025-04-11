@@ -112,7 +112,7 @@ def task_lims_test():
 
     return {
         "actions": [
-            "pytest lims/tests",
+            "pytest lims/test_*.py --data data",
         ],
     }
 
