@@ -1018,6 +1018,12 @@ wheels = [
 ]
 
 [[package]]
+name = "pypika"
+version = "0.48.9"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/c7/2c/94ed7b91db81d61d7096ac8f2d325ec562fc75e35f3baea8749c85b28784/PyPika-0.48.9.tar.gz", hash = "sha256:838836a61747e7c8380cd1b7ff638694b7a7335345d0f559b04b2cd832ad5378", size = 67259 }
+
+[[package]]
 name = "pyproject-hooks"
 version = "1.2.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1351,6 +1357,7 @@ dependencies = [
     { name = "faker" },
     { name = "pillow" },
     { name = "pydantic" },
+    { name = "pypika" },
 ]
 
 [package.optional-dependencies]
@@ -1390,6 +1397,7 @@ requires-dist = [
     { name = "polars", marker = "extra == 'dev'" },
     { name = "pydantic" },
     { name = "pyfakefs", marker = "extra == 'dev'" },
+    { name = "pypika" },
     { name = "pyright", marker = "extra == 'dev'" },
     { name = "pytest", marker = "extra == 'dev'" },
     { name = "pytest-cov", marker = "extra == 'dev'" },

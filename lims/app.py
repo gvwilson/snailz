@@ -3,11 +3,16 @@
 import click
 import csv
 from pathlib import Path
+from pypika import Order, Query, Table
 import sqlite3
 import sys
 
 from flask import Flask, render_template
 
+
+ASSAYS_TBL = Table("assays")
+MACHINES_TBL = Table("machines")
+PERSONS_TBL = Table("persons")
 
 app = Flask(__name__)
 
@@ -15,7 +20,8 @@ app = Flask(__name__)
 @app.route("/")
 def home():
     conn = _get_connection(app.config)
-    assays = conn.execute("select * from assays order by performed").fetchall()
+    q = Query.from_(ASSAYS_TBL).select("*").orderby("performed")
+    assays = conn.execute(str(q)).fetchall()
     return render_template("home.jinja", assays=assays)
 
 
@@ -41,20 +47,20 @@ def assay(ident):
 @app.route("/machine/<ident>")
 def machine(ident):
     conn = _get_connection(app.config)
-    machine = conn.execute("select * from machines where ident=?", (ident,)).fetchone()
-    assays = conn.execute(
-        "select * from assays where machine=? order by performed", (ident,)
-    ).fetchall()
+    q = Query.from_(MACHINES_TBL).select("*").where(MACHINES_TBL.ident==ident)
+    machine = conn.execute(str(q)).fetchone()
+    q = Query.from_(ASSAYS_TBL).select("*").where(ASSAYS_TBL.machine == ident).orderby(ASSAYS_TBL.performed)
+    assays = conn.execute(str(q)).fetchall()
     return render_template("machine.jinja", ident=ident, machine=machine, assays=assays)
 
 
 @app.route("/person/<ident>")
 def person(ident):
     conn = _get_connection(app.config)
-    person = conn.execute("select * from persons where ident=?", (ident,)).fetchone()
-    assays = conn.execute(
-        "select * from assays where person=? order by performed", (ident,)
-    ).fetchall()
+    q = Query.from_(PERSONS_TBL).select("*").where(PERSONS_TBL.ident == ident)
+    person = conn.execute(str(q)).fetchone()
+    q = Query.from_(ASSAYS_TBL).select("*").where(ASSAYS_TBL.person == ident).orderby(ASSAYS_TBL.performed)
+    assays = conn.execute(str(q)).fetchall()
     return render_template("person.jinja", ident=ident, person=person, assays=assays)
 
 

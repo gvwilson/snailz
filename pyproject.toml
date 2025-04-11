@@ -13,6 +13,7 @@ dependencies = [
     "faker",
     "pillow",
     "pydantic",
+    "pypika",
 ]
 
 [project.urls]

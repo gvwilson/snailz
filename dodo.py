@@ -101,7 +101,7 @@ def task_lims():
 
     return {
         "actions": [
-            f"python lims/app/app.py --data {DATA_DIR} --memory",
+            f"python lims/app.py --data {DATA_DIR} --memory",
         ],
     }
 
