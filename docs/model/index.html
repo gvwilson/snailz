@@ -220,6 +220,29 @@
   
   
     <li class="md-nav__item">
+      <a href="../anneal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Anneal
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../assays/" class="md-nav__link">
         
   
@@ -499,6 +522,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#snailz.model.specimen_adjust_mass" class="md-nav__link">
+    <span class="md-ellipsis">
+      specimen_adjust_mass
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#snailz.model.specimen_collection_date" class="md-nav__link">
     <span class="md-ellipsis">
       specimen_collection_date
@@ -517,27 +549,36 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#snailz.model.specimen_locations" class="md-nav__link">
+  <a href="#snailz.model.specimen_initial_mass" class="md-nav__link">
     <span class="md-ellipsis">
-      specimen_locations
+      specimen_initial_mass
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#snailz.model.specimen_mass" class="md-nav__link">
+  <a href="#snailz.model.specimens_num_per_survey" class="md-nav__link">
     <span class="md-ellipsis">
-      specimen_mass
+      specimens_num_per_survey
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#snailz.model._calculate_span" class="md-nav__link">
+  <a href="#snailz.model.specimens_place" class="md-nav__link">
     <span class="md-ellipsis">
-      _calculate_span
+      specimens_place
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snailz.model.survey_initialize_grid" class="md-nav__link">
+    <span class="md-ellipsis">
+      survey_initialize_grid
     </span>
   </a>
   
@@ -908,6 +949,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#snailz.model.specimen_adjust_mass" class="md-nav__link">
+    <span class="md-ellipsis">
+      specimen_adjust_mass
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#snailz.model.specimen_collection_date" class="md-nav__link">
     <span class="md-ellipsis">
       specimen_collection_date
@@ -926,27 +976,36 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#snailz.model.specimen_locations" class="md-nav__link">
+  <a href="#snailz.model.specimen_initial_mass" class="md-nav__link">
     <span class="md-ellipsis">
-      specimen_locations
+      specimen_initial_mass
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#snailz.model.specimen_mass" class="md-nav__link">
+  <a href="#snailz.model.specimens_num_per_survey" class="md-nav__link">
     <span class="md-ellipsis">
-      specimen_mass
+      specimens_num_per_survey
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#snailz.model._calculate_span" class="md-nav__link">
+  <a href="#snailz.model.specimens_place" class="md-nav__link">
     <span class="md-ellipsis">
-      _calculate_span
+      specimens_place
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snailz.model.survey_initialize_grid" class="md-nav__link">
+    <span class="md-ellipsis">
+      survey_initialize_grid
     </span>
   </a>
   
@@ -1067,16 +1126,16 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">28</span>
 <span class="normal">29</span>
 <span class="normal">30</span>
 <span class="normal">31</span>
 <span class="normal">32</span>
 <span class="normal">33</span>
-<span class="normal">34</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">assay_performed</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">AssayParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">timedelta</span><span class="p">:</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">assay_performed</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">AssayParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">timedelta</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Number of days between collection and assay being performed.</span>
 
 <span class="sd">    Parameters:</span>
@@ -1210,10 +1269,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">40</span>
 <span class="normal">41</span>
 <span class="normal">42</span>
 <span class="normal">43</span>
@@ -1238,7 +1294,10 @@
 <span class="normal">62</span>
 <span class="normal">63</span>
 <span class="normal">64</span>
-<span class="normal">65</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">assay_reading</span><span class="p">(</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">assay_reading</span><span class="p">(</span>
     <span class="n">params</span><span class="p">:</span> <span class="n">AssayParams</span><span class="p">,</span> <span class="n">specimen</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">performed</span><span class="p">:</span> <span class="n">date</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1359,10 +1418,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">71</span>
 <span class="normal">72</span>
 <span class="normal">73</span>
 <span class="normal">74</span>
@@ -1375,7 +1431,10 @@
 <span class="normal">81</span>
 <span class="normal">82</span>
 <span class="normal">83</span>
-<span class="normal">84</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">assay_specimens</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">AssayParams</span><span class="p">,</span> <span class="n">specimens</span><span class="p">:</span> <span class="n">BaseModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">assay_specimens</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">AssayParams</span><span class="p">,</span> <span class="n">specimens</span><span class="p">:</span> <span class="n">BaseModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate list of specimens to be assayed.</span>
 
 <span class="sd">    Parameters:</span>
@@ -1468,16 +1527,16 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">90</span>
 <span class="normal">91</span>
 <span class="normal">92</span>
 <span class="normal">93</span>
 <span class="normal">94</span>
 <span class="normal">95</span>
-<span class="normal">96</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">days_to_next_survey</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">SurveyParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">timedelta</span><span class="p">:</span>
+<span class="normal">96</span>
+<span class="normal">97</span>
+<span class="normal">98</span>
+<span class="normal">99</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">days_to_next_survey</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">SurveyParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">timedelta</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Choose the number of days between surveys.</span>
 
 <span class="sd">    Parameters:</span>
@@ -1563,10 +1622,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">102</span>
 <span class="normal">103</span>
 <span class="normal">104</span>
 <span class="normal">105</span>
@@ -1584,7 +1640,10 @@
 <span class="normal">117</span>
 <span class="normal">118</span>
 <span class="normal">119</span>
-<span class="normal">120</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">image_noise</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">AssayParams</span><span class="p">,</span> <span class="n">img</span><span class="p">:</span> <span class="n">PilImage</span><span class="p">,</span> <span class="n">img_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PilImage</span><span class="p">:</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">image_noise</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">AssayParams</span><span class="p">,</span> <span class="n">img</span><span class="p">:</span> <span class="n">PilImage</span><span class="p">,</span> <span class="n">img_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PilImage</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add noise effects to image.</span>
 
 <span class="sd">    Parameters:</span>
@@ -1682,17 +1741,17 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">123</span>
-<span class="normal">124</span>
-<span class="normal">125</span>
-<span class="normal">126</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">126</span>
 <span class="normal">127</span>
 <span class="normal">128</span>
 <span class="normal">129</span>
 <span class="normal">130</span>
 <span class="normal">131</span>
 <span class="normal">132</span>
-<span class="normal">133</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">machine_brightness</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">MachineParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">machine_brightness</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">MachineParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Choose relative brightness of this machine&#39;s camera.</span>
 
 <span class="sd">    Parameters:</span>
@@ -1779,16 +1838,16 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">136</span>
-<span class="normal">137</span>
-<span class="normal">138</span>
-<span class="normal">139</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">139</span>
 <span class="normal">140</span>
 <span class="normal">141</span>
 <span class="normal">142</span>
 <span class="normal">143</span>
 <span class="normal">144</span>
-<span class="normal">145</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mutation_loci</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">SpecimenParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mutation_loci</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">SpecimenParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Make a list of mutable loci positions.</span>
 
 <span class="sd">    Parameters:</span>
@@ -1798,6 +1857,116 @@
 <span class="sd">        Randomly selected positions that can be mutated.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">length</span><span class="p">)),</span> <span class="n">params</span><span class="o">.</span><span class="n">max_mutations</span><span class="p">)))</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="snailz.model.specimen_adjust_mass" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">specimen_adjust_mass</span><span class="p">(</span><span class="n">survey</span><span class="p">,</span> <span class="n">max_pollution</span><span class="p">,</span> <span class="n">specimen</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Adjust mass of specimen depending on pollution levels.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>survey</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="Survey (snailz.surveys.Survey)" href="../surveys/#snailz.surveys.Survey">Survey</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>survey that specimen is taken from</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>max_pollution</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>maximum pollution level seen across all surveys</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>specimen</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="Specimen (snailz.specimens.Specimen)" href="../specimens/#snailz.specimens.Specimen">Specimen</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>specimen to adjust</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/snailz/model.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">specimen_adjust_mass</span><span class="p">(</span><span class="n">survey</span><span class="p">:</span> <span class="n">Survey</span><span class="p">,</span> <span class="n">max_pollution</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">specimen</span><span class="p">:</span> <span class="n">Specimen</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adjust mass of specimen depending on pollution levels.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        survey: survey that specimen is taken from</span>
+<span class="sd">        max_pollution: maximum pollution level seen across all surveys</span>
+<span class="sd">        specimen: specimen to adjust</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pollution</span> <span class="o">=</span> <span class="n">survey</span><span class="o">.</span><span class="n">cells</span><span class="p">[</span><span class="n">specimen</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">specimen</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">y</span><span class="p">]</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">pollution</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">pollution</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">specimen</span><span class="o">.</span><span class="n">mass</span>
+    <span class="n">scaling</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">utils</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">pollution</span> <span class="o">/</span> <span class="n">max_pollution</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">specimen</span><span class="o">.</span><span class="n">mass</span> <span class="o">*</span> <span class="n">scaling</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -1874,18 +2043,18 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">148</span>
-<span class="normal">149</span>
-<span class="normal">150</span>
-<span class="normal">151</span>
-<span class="normal">152</span>
-<span class="normal">153</span>
-<span class="normal">154</span>
-<span class="normal">155</span>
-<span class="normal">156</span>
-<span class="normal">157</span>
-<span class="normal">158</span>
-<span class="normal">159</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">specimen_collection_date</span><span class="p">(</span><span class="n">survey</span><span class="p">:</span> <span class="n">BaseModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">date</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">specimen_collection_date</span><span class="p">(</span><span class="n">survey</span><span class="p">:</span> <span class="n">BaseModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">date</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Choose a collection date for a specimen.</span>
 
 <span class="sd">    Parameters:</span>
@@ -1973,22 +2142,22 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">162</span>
-<span class="normal">163</span>
-<span class="normal">164</span>
-<span class="normal">165</span>
-<span class="normal">166</span>
-<span class="normal">167</span>
-<span class="normal">168</span>
-<span class="normal">169</span>
-<span class="normal">170</span>
-<span class="normal">171</span>
-<span class="normal">172</span>
-<span class="normal">173</span>
-<span class="normal">174</span>
-<span class="normal">175</span>
-<span class="normal">176</span>
-<span class="normal">177</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">specimen_genome</span><span class="p">(</span><span class="n">specimens</span><span class="p">:</span> <span class="n">BaseModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">specimen_genome</span><span class="p">(</span><span class="n">specimens</span><span class="p">:</span> <span class="n">BaseModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate genome for a particular specimen.</span>
 
 <span class="sd">    Parameters:</span>
@@ -2013,174 +2182,8 @@
 <div class="doc doc-object doc-function">
 
 
-<h2 id="snailz.model.specimen_locations" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">specimen_locations</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span></code>
-
-</h2>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Generate locations for specimens.</p>
-<ul>
-<li>Initialize a set of all possible (x, y) points.</li>
-<li>Repeatedly choose one at random and add to the result.</li>
-<li>Remove all points within a random radius of that point.</li>
-</ul>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>params</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="SpecimenParams (snailz.parameters.SpecimenParams)" href="../parameters/#snailz.parameters.SpecimenParams">SpecimenParams</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>specimen generation parameters</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>size</code>
-            </td>
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>grid size</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="list">list</span>[<a class="autorefs autorefs-internal" title="Point (snailz.grid.Point)" href="../grid/#snailz.grid.Point">Point</a>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>A list of specimen locations.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-            <details class="quote">
-              <summary>Source code in <code>src/snailz/model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">180</span>
-<span class="normal">181</span>
-<span class="normal">182</span>
-<span class="normal">183</span>
-<span class="normal">184</span>
-<span class="normal">185</span>
-<span class="normal">186</span>
-<span class="normal">187</span>
-<span class="normal">188</span>
-<span class="normal">189</span>
-<span class="normal">190</span>
-<span class="normal">191</span>
-<span class="normal">192</span>
-<span class="normal">193</span>
-<span class="normal">194</span>
-<span class="normal">195</span>
-<span class="normal">196</span>
-<span class="normal">197</span>
-<span class="normal">198</span>
-<span class="normal">199</span>
-<span class="normal">200</span>
-<span class="normal">201</span>
-<span class="normal">202</span>
-<span class="normal">203</span>
-<span class="normal">204</span>
-<span class="normal">205</span>
-<span class="normal">206</span>
-<span class="normal">207</span>
-<span class="normal">208</span>
-<span class="normal">209</span>
-<span class="normal">210</span>
-<span class="normal">211</span>
-<span class="normal">212</span>
-<span class="normal">213</span>
-<span class="normal">214</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">specimen_locations</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">SpecimenParams</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Point</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate locations for specimens.</span>
-
-<span class="sd">    - Initialize a set of all possible (x, y) points.</span>
-<span class="sd">    - Repeatedly choose one at random and add to the result.</span>
-<span class="sd">    - Remove all points within a random radius of that point.</span>
-
-<span class="sd">    Parameters:</span>
-<span class="sd">        params: specimen generation parameters</span>
-<span class="sd">        size: grid size</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        A list of specimen locations.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="c1"># Generate points by repeated spatial subtraction.</span>
-    <span class="n">available</span> <span class="o">=</span> <span class="p">{(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">)}</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">while</span> <span class="n">available</span><span class="p">:</span>
-        <span class="n">loc</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">choose_one</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">available</span><span class="p">))</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loc</span><span class="p">)</span>
-        <span class="n">radius</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">spacing</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">spacing</span><span class="p">)</span>
-        <span class="n">span</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">_calculate_span</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">span</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">_calculate_span</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">loc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">span</span><span class="p">):</span>
-                <span class="n">available</span><span class="o">.</span><span class="n">discard</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
-
-    <span class="c1"># Replace some points with markers for missing data</span>
-    <span class="n">missing</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="n">x</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">[</span>
-        <span class="n">missing</span>
-        <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">params</span><span class="o">.</span><span class="n">p_missing_location</span>
-        <span class="k">else</span> <span class="n">Point</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">result</span>
-    <span class="p">]</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="snailz.model.specimen_mass" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">specimen_mass</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">max_pollution</span><span class="p">,</span> <span class="n">collected</span><span class="p">,</span> <span class="n">pollution_level</span><span class="p">,</span> <span class="n">is_mutant</span><span class="p">)</span></code>
+<h2 id="snailz.model.specimen_initial_mass" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">specimen_initial_mass</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">collected</span><span class="p">,</span> <span class="n">is_mutant</span><span class="p">)</span></code>
 
 </h2>
 
@@ -2219,22 +2222,6 @@
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>max_pollution</code>
-            </td>
-            <td>
-                  <code><span title="float">float</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>maximum pollution level across all surveys</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
                 <code>collected</code>
             </td>
             <td>
@@ -2243,22 +2230,6 @@
             <td>
               <div class="doc-md-description">
                 <p>specimen collection date</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>pollution_level</code>
-            </td>
-            <td>
-                  <code><span title="float">float</span> | None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>this specimen's pollution level</p>
               </div>
             </td>
             <td>
@@ -2310,54 +2281,41 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">217</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
 <span class="normal">218</span>
 <span class="normal">219</span>
 <span class="normal">220</span>
 <span class="normal">221</span>
 <span class="normal">222</span>
-<span class="normal">223</span>
-<span class="normal">224</span>
-<span class="normal">225</span>
-<span class="normal">226</span>
-<span class="normal">227</span>
-<span class="normal">228</span>
-<span class="normal">229</span>
-<span class="normal">230</span>
-<span class="normal">231</span>
-<span class="normal">232</span>
-<span class="normal">233</span>
-<span class="normal">234</span>
-<span class="normal">235</span>
-<span class="normal">236</span>
-<span class="normal">237</span>
-<span class="normal">238</span>
-<span class="normal">239</span>
-<span class="normal">240</span>
-<span class="normal">241</span>
-<span class="normal">242</span>
-<span class="normal">243</span>
-<span class="normal">244</span>
-<span class="normal">245</span>
-<span class="normal">246</span>
-<span class="normal">247</span>
-<span class="normal">248</span>
-<span class="normal">249</span>
-<span class="normal">250</span>
-<span class="normal">251</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">specimen_mass</span><span class="p">(</span>
+<span class="normal">223</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">specimen_initial_mass</span><span class="p">(</span>
     <span class="n">params</span><span class="p">:</span> <span class="n">SpecimenParams</span><span class="p">,</span>
-    <span class="n">max_pollution</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">collected</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
-    <span class="n">pollution_level</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">is_mutant</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate mass of a specimen.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        params: specimen generation parameters</span>
-<span class="sd">        max_pollution: maximum pollution level across all surveys</span>
 <span class="sd">        collected: specimen collection date</span>
-<span class="sd">        pollution_level: this specimen&#39;s pollution level</span>
 <span class="sd">        is_mutant: whether this specimen is a mutant</span>
 
 <span class="sd">    Returns:</span>
@@ -2373,11 +2331,6 @@
     <span class="n">days_passed</span> <span class="o">=</span> <span class="p">(</span><span class="n">collected</span> <span class="o">-</span> <span class="n">params</span><span class="o">.</span><span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">days</span>
     <span class="n">mass</span> <span class="o">+=</span> <span class="n">params</span><span class="o">.</span><span class="n">daily_growth</span> <span class="o">*</span> <span class="n">days_passed</span> <span class="o">*</span> <span class="n">mass</span>
 
-    <span class="c1"># Pollution effects if location known</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">pollution_level</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">pollution_level</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">):</span>
-        <span class="n">scaling</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">utils</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">pollution_level</span> <span class="o">/</span> <span class="n">max_pollution</span><span class="p">)</span>
-        <span class="n">mass</span> <span class="o">*=</span> <span class="n">scaling</span>
-
     <span class="k">return</span> <span class="n">mass</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2388,15 +2341,212 @@
 <div class="doc doc-object doc-function">
 
 
-<h2 id="snailz.model._calculate_span" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">_calculate_span</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">coord</span><span class="p">,</span> <span class="n">span</span><span class="p">)</span></code>
+<h2 id="snailz.model.specimens_num_per_survey" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">specimens_num_per_survey</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">survey</span><span class="p">)</span></code>
 
 </h2>
 
 
     <div class="doc doc-contents ">
 
-        <p>Calculate axial range of cells close to a center point.</p>
+        <p>Number of specimens per survey.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>params</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="SpecimenParams (snailz.parameters.SpecimenParams)" href="../parameters/#snailz.parameters.SpecimenParams">SpecimenParams</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>specimen generation parameters</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>survey</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="Survey (snailz.surveys.Survey)" href="../surveys/#snailz.surveys.Survey">Survey</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>particular survey</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of specimens.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/snailz/model.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">specimens_num_per_survey</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">SpecimenParams</span><span class="p">,</span> <span class="n">survey</span><span class="p">:</span> <span class="n">Survey</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Number of specimens per survey.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        params: specimen generation parameters</span>
+<span class="sd">        survey: particular survey</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Number of specimens.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">survey</span><span class="o">.</span><span class="n">size</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">survey</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="snailz.model.specimens_place" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">specimens_place</span><span class="p">(</span><span class="n">survey</span><span class="p">,</span> <span class="n">specimens</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Place specimens in grid.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>survey</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="Survey (snailz.surveys.Survey)" href="../surveys/#snailz.surveys.Survey">Survey</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>survey from which specimens taken</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>specimens</code>
+            </td>
+            <td>
+                  <code><span title="list">list</span>[<a class="autorefs autorefs-internal" title="Specimen (snailz.specimens.Specimen)" href="../specimens/#snailz.specimens.Specimen">Specimen</a>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>to place</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/snailz/model.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">specimens_place</span><span class="p">(</span><span class="n">survey</span><span class="p">:</span> <span class="n">Survey</span><span class="p">,</span> <span class="n">specimens</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Specimen</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Place specimens in grid.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        survey: survey from which specimens taken</span>
+<span class="sd">        specimens: to place</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">anneal</span><span class="p">(</span><span class="n">survey</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">specimens</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="snailz.model.survey_initialize_grid" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">survey_initialize_grid</span><span class="p">(</span><span class="n">size</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Initialize values in survey grid.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -2419,39 +2569,7 @@
             </td>
             <td>
               <div class="doc-md-description">
-                <p>grid size</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>coord</code>
-            </td>
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>X or Y coordinate</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>span</code>
-            </td>
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>maximum width on either side</p>
+                <p>size of survey grid</p>
               </div>
             </td>
             <td>
@@ -2473,11 +2591,11 @@
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="range">range</span></code>
+                  <code><a class="autorefs autorefs-internal" title="Grid (snailz.grid.Grid)" href="../grid/#snailz.grid.Grid">Grid</a>[<span title="int">int</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Endpoint coordinates of span.</p>
+                <p>Initialized grid.</p>
               </div>
             </td>
           </tr>
@@ -2487,7 +2605,12 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">254</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
 <span class="normal">255</span>
 <span class="normal">256</span>
 <span class="normal">257</span>
@@ -2499,19 +2622,30 @@
 <span class="normal">263</span>
 <span class="normal">264</span>
 <span class="normal">265</span>
-<span class="normal">266</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_calculate_span</span><span class="p">(</span><span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">coord</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">span</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">range</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Calculate axial range of cells close to a center point.</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">survey_initialize_grid</span><span class="p">(</span><span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Grid</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize values in survey grid.</span>
 
 <span class="sd">    Parameters:</span>
-<span class="sd">        size: grid size</span>
-<span class="sd">        coord: X or Y coordinate</span>
-<span class="sd">        span: maximum width on either side</span>
+<span class="sd">        size: size of survey grid</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Endpoint coordinates of span.</span>
+<span class="sd">        Initialized grid.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="nb">range</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">coord</span> <span class="o">-</span> <span class="n">span</span><span class="p">),</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">min</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">coord</span> <span class="o">+</span> <span class="n">span</span><span class="p">))</span>
+    <span class="n">cells</span> <span class="o">=</span> <span class="n">Grid</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">size_1</span> <span class="o">=</span> <span class="n">size</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">center</span> <span class="o">=</span> <span class="n">size</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">moves</span> <span class="o">=</span> <span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">center</span><span class="p">,</span> <span class="n">center</span>
+    <span class="n">cells</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">x</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">x</span> <span class="o">!=</span> <span class="n">size_1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">y</span> <span class="o">!=</span> <span class="n">size_1</span><span class="p">):</span>
+        <span class="n">cells</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">moves</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">+=</span> <span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">y</span> <span class="o">+=</span> <span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">cells</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

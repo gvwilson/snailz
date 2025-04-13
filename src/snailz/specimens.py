@@ -70,6 +70,7 @@ class AllSpecimens(BaseModel):
         susc_locus = utils.choose_one(loci)
         susc_base = utils.choose_one(list(set(utils.BASES) - {reference[susc_locus]}))
         gen = utils.unique_id("specimen", _specimen_id_generator)
+
         specimens = AllSpecimens(
             loci=loci,
             reference=reference,
@@ -80,12 +81,14 @@ class AllSpecimens(BaseModel):
 
         max_pollution = surveys.max_pollution()
         for survey in surveys.items:
-            positions = model.specimen_locations(params, survey.size)
-            for pos in positions:
-                ident = next(gen)
-                specimens.items.append(
-                    _make_specimen(params, survey, specimens, ident, pos, max_pollution)
-                )
+            temp = [
+                _make_specimen(params, specimens, survey, next(gen))
+                for _ in range(model.specimens_num_per_survey(params, survey))
+            ]
+            model.specimens_place(survey, temp)
+            for s in temp:
+                s.mass = round(model.specimen_adjust_mass(survey, max_pollution, s), utils.PRECISION)
+            specimens.items.extend(temp)
 
         return specimens
 
@@ -104,21 +107,16 @@ def _make_reference_genome(params: SpecimenParams) -> str:
 
 def _make_specimen(
     params: SpecimenParams,
-    survey: Survey,
     specimens: AllSpecimens,
+    survey: Survey,
     ident: str,
-    location: Point,
-    max_pollution: float,
 ) -> Specimen:
     """Make a single specimen.
 
     Parameters:
         params: specimen parameters
         survey: survey this specimen is from
-        specimens: all specimens in this survey
         ident: specimen identifier
-        location: grid point where specimen was sampled
-        max_pollution: maximum pollution value across all surveys
 
     Returns:
         A randomly-generated specimen.
@@ -127,24 +125,15 @@ def _make_specimen(
     genome = model.specimen_genome(specimens)
     is_mutant = genome[specimens.susc_locus] == specimens.susc_base
 
-    assert survey.cells is not None  # for type checking
-    pollution_level = (
-        survey.cells[location.x, location.y]
-        if (location.x >= 0) and (location.y >= 0)
-        else None
-    )
-
-    mass = model.specimen_mass(
-        params, max_pollution, collected, pollution_level, is_mutant
-    )
+    mass = model.specimen_initial_mass(params, collected, is_mutant)
     return Specimen(
         ident=ident,
         survey_id=survey.ident,
         collected=collected,
         genome=genome,
         is_mutant=is_mutant,
-        location=location,
-        mass=round(mass, utils.PRECISION),
+        location=Point(x=0, y=0),
+        mass=mass,
     )
 
 

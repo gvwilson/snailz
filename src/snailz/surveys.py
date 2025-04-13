@@ -4,7 +4,7 @@ from datetime import date, timedelta
 import io
 import random
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field
 
 from .grid import Grid
 from .parameters import SurveyParams
@@ -24,29 +24,9 @@ class Survey(BaseModel):
         default=date.fromisoformat("2024-04-30"),
         description="End date for specimen collection",
     )
-    cells: Grid[int] | None = Field(default=None, description="survey cells")
+    cells: Grid[int] = Field(default_factory=lambda data: model.survey_initialize_grid(data["size"]), description="survey cells")
 
     model_config = {"extra": "forbid"}
-
-    @model_validator(mode="after")
-    def initialize_grid(self):
-        self.cells = Grid(width=self.size, height=self.size, default=0)
-        self.fill_cells()
-        return self
-
-    def fill_cells(self) -> None:
-        """Fill survey grid with fractal of random values."""
-        assert isinstance(self.cells, Grid)
-        size_1 = self.size - 1
-        center = self.size // 2
-        moves = [[-1, 0], [1, 0], [0, -1], [0, 1]]
-        x, y = center, center
-        self.cells[x, y] = 1
-        while (x != 0) and (x != size_1) and (y != 0) and (y != size_1):
-            self.cells[x, y] += 1
-            m = random.choice(moves)
-            x += m[0]
-            y += m[1]
 
     def max_pollution(self) -> float:
         """Maximum pollution value in this survey."""
@@ -109,6 +89,7 @@ class AllSurveys(BaseModel):
             current_date = next_date + timedelta(days=1)
 
         return AllSurveys(items=items)
+
 
 
 def _survey_id_generator() -> str:

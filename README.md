@@ -108,7 +108,6 @@ The parameters, their meanings, and their properties are:
 | | `mut_mass_scale` | scaling factor for mutated snails | 2.0 | real greater or equal to 1.0 |
 | | `mass_rel_stdev` | relative standard deviation in masses | 0.5 | non-negative real |
 | | `max_mutations` | maximum number of mutations in genome | 5 | non-negative integer |
-| | `spacing` | space between snail specimens | 3.75 | non-negative real |
 | | `daily_growth` | percentage increase in mass per day | 0.01 | non-negative real |
 | | `p_missing_location` | probability that sample location is unknown | 0.05 | probability |
 | `survey` | `number` | number of survey sites | 3 | non-negative integer |
@@ -148,6 +147,11 @@ Notes:
 1.  Assay readings for both mutated and unmutated snails are lowered
     by an amount that depends on the number of days between the sample being collected
     and the assay being performed.
+
+1.  Snails are placed on survey grids using simulated annealing.
+    Each snail is initially put in a randomly-chosen location.
+    Snails are then moved as if they were repulsive electrical charges,
+    with large snails repelling their neighbors more than small ones.
 
 ## Data Dictionary
 

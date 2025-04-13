@@ -13,8 +13,11 @@ from PIL import ImageFilter
 from PIL.Image import Image as PilImage  # to satisfy type checking
 from pydantic import BaseModel
 
-from .grid import Point
+from .anneal import anneal
+from .grid import Grid
 from .parameters import AssayParams, MachineParams, SpecimenParams, SurveyParams
+from .specimens import Specimen
+from .surveys import Survey
 from . import utils
 
 
@@ -145,6 +148,21 @@ def mutation_loci(params: SpecimenParams) -> list[int]:
     return list(sorted(random.sample(list(range(params.length)), params.max_mutations)))
 
 
+def specimen_adjust_mass(survey: Survey, max_pollution: float, specimen: Specimen) -> float:
+    """Adjust mass of specimen depending on pollution levels.
+
+    Parameters:
+        survey: survey that specimen is taken from
+        max_pollution: maximum pollution level seen across all surveys
+        specimen: specimen to adjust
+    """
+    pollution = survey.cells[specimen.location.x, specimen.location.y]
+    if (pollution is None) or (pollution == 0.0):
+        return specimen.mass
+    scaling = 1.0 + 2.0 * utils.sigmoid(pollution / max_pollution)
+    return specimen.mass * scaling
+
+
 def specimen_collection_date(survey: BaseModel) -> date:
     """Choose a collection date for a specimen.
 
@@ -177,57 +195,16 @@ def specimen_genome(specimens: BaseModel) -> str:
     return result
 
 
-def specimen_locations(params: SpecimenParams, size: int) -> list[Point]:
-    """Generate locations for specimens.
-
-    - Initialize a set of all possible (x, y) points.
-    - Repeatedly choose one at random and add to the result.
-    - Remove all points within a random radius of that point.
-
-    Parameters:
-        params: specimen generation parameters
-        size: grid size
-
-    Returns:
-        A list of specimen locations.
-    """
-
-    # Generate points by repeated spatial subtraction.
-    available = {(x, y) for x in range(size) for y in range(size)}
-    result = []
-    while available:
-        loc = utils.choose_one(list(available))
-        result.append(loc)
-        radius = random.uniform(params.spacing / 4, params.spacing)
-        span = math.ceil(radius)
-        for x in _calculate_span(size, loc[0], span):
-            for y in _calculate_span(size, loc[1], span):
-                available.discard((x, y))
-
-    # Replace some points with markers for missing data
-    missing = Point(x=-1, y=-1)
-    return [
-        missing
-        if random.uniform(0.0, 1.0) < params.p_missing_location
-        else Point(x=r[0], y=r[1])
-        for r in result
-    ]
-
-
-def specimen_mass(
+def specimen_initial_mass(
     params: SpecimenParams,
-    max_pollution: float,
     collected: date,
-    pollution_level: float | None,
     is_mutant: bool,
 ) -> float:
     """Generate mass of a specimen.
 
     Parameters:
         params: specimen generation parameters
-        max_pollution: maximum pollution level across all surveys
         collected: specimen collection date
-        pollution_level: this specimen's pollution level
         is_mutant: whether this specimen is a mutant
 
     Returns:
@@ -243,24 +220,50 @@ def specimen_mass(
     days_passed = (collected - params.start_date).days
     mass += params.daily_growth * days_passed * mass
 
-    # Pollution effects if location known
-    if (pollution_level is not None) and (pollution_level > 0.0):
-        scaling = 1.0 + 2.0 * utils.sigmoid(pollution_level / max_pollution)
-        mass *= scaling
-
     return mass
 
 
-def _calculate_span(size: int, coord: int, span: int) -> range:
-    """
-    Calculate axial range of cells close to a center point.
+def specimens_num_per_survey(params: SpecimenParams, survey: Survey) -> int:
+    """Number of specimens per survey.
 
     Parameters:
-        size: grid size
-        coord: X or Y coordinate
-        span: maximum width on either side
+        params: specimen generation parameters
+        survey: particular survey
 
     Returns:
-        Endpoint coordinates of span.
+        Number of specimens.
     """
-    return range(max(0, coord - span), 1 + min(size, coord + span))
+    return random.randint(survey.size // 2, (3 * survey.size) // 2)
+
+
+def specimens_place(survey: Survey, specimens: list[Specimen]) -> None:
+    """Place specimens in grid.
+
+    Parameters:
+        survey: survey from which specimens taken
+        specimens: to place
+    """
+    anneal(survey.size, specimens)
+
+
+def survey_initialize_grid(size: int) -> Grid[int]:
+    """Initialize values in survey grid.
+
+    Parameters:
+        size: size of survey grid
+
+    Returns:
+        Initialized grid.
+    """
+    cells = Grid(width=size, height=size, default=0)
+    size_1 = size - 1
+    center = size // 2
+    moves = [[-1, 0], [1, 0], [0, -1], [0, 1]]
+    x, y = center, center
+    cells[x, y] = 1
+    while (x != 0) and (x != size_1) and (y != 0) and (y != size_1):
+        cells[x, y] += 1
+        m = random.choice(moves)
+        x += m[0]
+        y += m[1]
+    return cells

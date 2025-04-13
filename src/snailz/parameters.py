@@ -113,11 +113,6 @@ class SpecimenParams(BaseModel):
         ge=0,
         description="Maximum number of mutations in specimens (must be between 0 and length)",
     )
-    spacing: float = Field(
-        default=utils.DEFAULT_SURVEY_SIZE / 4.0,
-        ge=0,
-        description="Inter-specimen spacing",
-    )
     daily_growth: float = Field(
         default=0.01,
         ge=0,

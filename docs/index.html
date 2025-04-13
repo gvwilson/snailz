@@ -10,7 +10,7 @@
       
       
       
-        <link rel="next" href="assays/">
+        <link rel="next" href="anneal/">
       
       
       <link rel="icon" href="assets/images/favicon.png">
@@ -355,6 +355,29 @@
             Software
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="anneal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Anneal
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1169,13 +1192,6 @@ The parameters, their meanings, and their properties are:</p>
 </tr>
 <tr>
 <td></td>
-<td><code>spacing</code></td>
-<td>space between snail specimens</td>
-<td>3.75</td>
-<td>non-negative real</td>
-</tr>
-<tr>
-<td></td>
 <td><code>daily_growth</code></td>
 <td>percentage increase in mass per day</td>
 <td>0.01</td>
@@ -1258,6 +1274,12 @@ The parameters, their meanings, and their properties are:</p>
 <p>Assay readings for both mutated and unmutated snails are lowered
     by an amount that depends on the number of days between the sample being collected
     and the assay being performed.</p>
+</li>
+<li>
+<p>Snails are placed on survey grids using simulated annealing.
+    Each snail is initially put in a randomly-chosen location.
+    Snails are then moved as if they were repulsive electrical charges,
+    with large snails repelling their neighbors more than small ones.</p>
 </li>
 </ol>
 <h2 id="data-dictionary">Data Dictionary</h2>

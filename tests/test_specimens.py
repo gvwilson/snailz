@@ -3,14 +3,15 @@
 from datetime import date
 
 from snailz.grid import Point
+from snailz.parameters import SpecimenParams
+from snailz.specimens import AllSpecimens, Specimen
 from snailz.surveys import Survey, AllSurveys
-from snailz.specimens import SpecimenParams, Specimen, AllSpecimens
 
 
 def test_generate_specimens_correct_length():
-    size = 1
+    size = 10
     num = 5
-    temp = [
+    surveys = AllSurveys(items=[
         Survey(
             ident=f"G00{i}",
             size=size,
@@ -18,11 +19,10 @@ def test_generate_specimens_correct_length():
             end_date=date(2024, 1, 31),
         )
         for i in range(num)
-    ]
-    surveys = AllSurveys(items=temp)
+    ])
     params = SpecimenParams()
     specimens = AllSpecimens.generate(params, surveys)
-    assert len(specimens.items) == num
+    assert 0 < len(specimens.items) < (2 * num * size)
 
 
 def test_convert_specimens_to_csv():
