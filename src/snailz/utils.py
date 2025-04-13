@@ -10,8 +10,9 @@ import sys
 from typing import Callable, Generator
 
 from PIL.Image import Image as PilImage
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
+from .grid import Point
 
 # Bases.
 BASES = "ACGT"
@@ -30,6 +31,7 @@ BLACK = 0
 WHITE = 255
 
 # File paths
+ASSAY_SUMMARY_CSV = "assay_summary.csv"
 ASSAYS_CSV = "assays.csv"
 ASSAYS_DIR = "assays"
 DATA_JSON = "data.json"
@@ -37,6 +39,14 @@ MACHINES_CSV = "machines.csv"
 PERSONS_CSV = "persons.csv"
 SPECIMENS_CSV = "specimens.csv"
 SURVEYS_DIR = "surveys"
+
+
+class MinimalSpecimen(BaseModel):
+    """Minimal specimen to avoid circular import issues."""
+
+    ident: str = Field(description="unique identifier")
+    location: Point = Field(description="where specimen was collected")
+    mass: float = Field(default=0.0, ge=0, description="specimen mass in grams")
 
 
 def choose_one(items, weights=None):

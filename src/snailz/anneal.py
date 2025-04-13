@@ -3,10 +3,10 @@
 from datetime import date
 import math
 import random
-
+from typing import Sequence
 
 from .grid import Grid, Point
-from .specimens import Specimen
+from .utils import MinimalSpecimen
 
 
 # Arbitrary date for initializing wall specimens
@@ -19,7 +19,7 @@ BORDER = 4
 STEPS = 100
 
 
-def anneal(size: int, specimens: list[Specimen]) -> None:
+def anneal(size: int, specimens: Sequence[MinimalSpecimen]) -> None:
     """Calculate specimen positions using simulated annealing.
 
     Parameters:
@@ -33,7 +33,7 @@ def anneal(size: int, specimens: list[Specimen]) -> None:
         _move(grid, wall, specimens)
 
 
-def _initial_placement(size: int, specimens: list[Specimen]) -> None:
+def _initial_placement(size: int, specimens: Sequence[MinimalSpecimen]) -> None:
     """Randomly initialize specimen placement.
 
     Parameters:
@@ -46,7 +46,7 @@ def _initial_placement(size: int, specimens: list[Specimen]) -> None:
         specimens[i].location.y = y
 
 
-def _make_grid(size: int, specimens: list[Specimen]) -> Grid[str]:
+def _make_grid(size: int, specimens: Sequence[MinimalSpecimen]) -> Grid[str]:
     """Make initial grid to track specimen positions during placement.
 
     Parameters:
@@ -59,7 +59,7 @@ def _make_grid(size: int, specimens: list[Specimen]) -> Grid[str]:
     return grid
 
 
-def _make_wall(size: int) -> list[Specimen]:
+def _make_wall(size: int) -> list[MinimalSpecimen]:
     """Make a wall of unit-mass specimens to keep actual specimens in the grid.
 
     Parameters:
@@ -70,33 +70,29 @@ def _make_wall(size: int) -> list[Specimen]:
     for x in range(*bounds):
         for y in bounds:
             result.append(
-                Specimen(
+                MinimalSpecimen(
                     ident="",
-                    survey_id="",
-                    species=0,
                     location=Point(x=x, y=y),
-                    collected=DATE,
-                    genome="",
                     mass=1.0,
                 )
             )
     for y in range(1 - BORDER, size + BORDER - 2):
         for x in bounds:
             result.append(
-                Specimen(
+                MinimalSpecimen(
                     ident="",
-                    survey_id="",
-                    species=0,
                     location=Point(x=x, y=y),
-                    collected=DATE,
-                    genome="",
                     mass=1.0,
                 )
             )
     return result
 
 
-def _move(grid: Grid[str], wall: list[Specimen], specimens: list[Specimen]) -> None:
+def _move(
+    grid: Grid[str],
+    wall: Sequence[MinimalSpecimen],
+    specimens: Sequence[MinimalSpecimen],
+) -> None:
     """Move a randomly-selected specimen one step.
 
     Parameters:
@@ -117,7 +113,9 @@ def _move(grid: Grid[str], wall: list[Specimen], specimens: list[Specimen]) -> N
         grid[s.location.x, s.location.y] = s.ident
 
 
-def _point_point_force(specimens: list[Specimen], i: int) -> tuple[float, float]:
+def _point_point_force(
+    specimens: Sequence[MinimalSpecimen], i: int
+) -> tuple[float, float]:
     """Calculate force on specimen 'i' from other specimens.
 
     Parameters:
@@ -137,7 +135,9 @@ def _point_point_force(specimens: list[Specimen], i: int) -> tuple[float, float]
     return fx, fy
 
 
-def _wall_point_force(wall: list[Specimen], specimen: Specimen) -> tuple[float, float]:
+def _wall_point_force(
+    wall: Sequence[MinimalSpecimen], specimen: MinimalSpecimen
+) -> tuple[float, float]:
     """Calculate force on selected specimen from fixed wall.
 
     Parameters:
@@ -155,7 +155,7 @@ def _wall_point_force(wall: list[Specimen], specimen: Specimen) -> tuple[float, 
     return fx, fy
 
 
-def _single_force(s0: Specimen, s1: Specimen) -> tuple[float, float]:
+def _single_force(s0: MinimalSpecimen, s1: MinimalSpecimen) -> tuple[float, float]:
     """Calculate force on specimen from another specimen.
 
     Parameters:

@@ -11,14 +11,14 @@ def test_scenario_saves_all_files(fs):
     params = ScenarioParams()
     data = ScenarioData.generate(params)
     root = Path("/")
-    ScenarioData.save(root, data)
+    ScenarioData.save(root, data, True)
 
 
 def test_scenario_fails_for_nonexist_directory(fs):
     params = ScenarioParams()
     data = ScenarioData.generate(params, with_images=False)
     with pytest.raises(ValueError):
-        ScenarioData.save(Path("/nonexist"), data)
+        ScenarioData.save(Path("/nonexist"), data, False)
 
 
 def test_scenario_clean_existing_directory(fs):
@@ -27,5 +27,5 @@ def test_scenario_clean_existing_directory(fs):
     temp = root / "assays" / "temp.txt"
     fs.create_file(str(temp), contents="temporary")
     data = ScenarioData.generate(params, with_images=False)
-    ScenarioData.save(root, data)
+    ScenarioData.save(root, data, False)
     assert not temp.exists()

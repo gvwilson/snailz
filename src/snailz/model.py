@@ -8,6 +8,7 @@
 from datetime import date, timedelta
 import math
 import random
+from typing import Sequence
 
 from PIL import ImageFilter
 from PIL.Image import Image as PilImage  # to satisfy type checking
@@ -243,7 +244,7 @@ def specimens_num_per_survey(params: SpecimenParams, survey: Survey) -> int:
     return random.randint(survey.size // 2, (3 * survey.size) // 2)
 
 
-def specimens_place(survey: Survey, specimens: list[Specimen]) -> None:
+def specimens_place(survey: Survey, specimens: Sequence[Specimen]) -> None:
     """Place specimens in grid.
 
     Parameters:

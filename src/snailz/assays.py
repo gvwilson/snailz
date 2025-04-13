@@ -35,6 +35,28 @@ class Assay(BaseModel):
     def show_fields(self):
         return self
 
+    def as_chunk(self) -> list[list[str]]:
+        """Generate chunk for inclusion in overall assay CSV.
+
+        Returns:
+            Rows of data.
+        """
+        result = []
+        col_names = [chr(ord("A") + i) for i in range(self.treatments.width)]
+        for i_col, col_name in zip(range(self.treatments.width), col_names):
+            for i_row in range(self.treatments.height):
+                result.append(
+                    [
+                        self.ident,
+                        self.specimen,
+                        col_name,
+                        str(i_row + 1),
+                        self.treatments[i_col, i_row],
+                        self.readings[i_col, i_row],
+                    ]
+                )
+        return result
+
     def to_csv(self, kind: str) -> str:
         """Return a CSV string representation of the assay data.
 
@@ -85,23 +107,36 @@ class AllAssays(BaseModel):
 
     items: list[Assay] = Field(description="actual assays")
 
-    def to_csv(self) -> str:
+    def to_csv(self, summary: bool = True) -> str:
         """Return a CSV string representation of the assay summary data.
 
+        Parameters:
+            summary: produce summary (default) or include all results
+
         Returns:
-            A CSV-formatted string containing a summary of all assays
+            A CSV-formatted string containing assay data
         """
-        return utils.to_csv(
-            self.items,
-            ["ident", "specimen", "person", "performed", "machine"],
-            lambda r: [
-                r.ident,
-                r.specimen,
-                r.person,
-                r.performed.isoformat(),
-                r.machine,
-            ],
-        )
+        if summary:
+            return utils.to_csv(
+                self.items,
+                ["ident", "specimen", "person", "performed", "machine"],
+                lambda r: [
+                    r.ident,
+                    r.specimen,
+                    r.person,
+                    r.performed.isoformat(),
+                    r.machine,
+                ],
+            )
+        else:
+            rows = []
+            for assay in self.items:
+                rows.extend(assay.as_chunk())
+            return utils.to_csv(
+                rows,
+                ["ident", "specimen", "col", "row", "treatment", "reading"],
+                lambda r: r,
+            )
 
     @staticmethod
     def generate(

@@ -12,16 +12,13 @@ from .surveys import Survey, AllSurveys
 from . import model, utils
 
 
-class Specimen(BaseModel):
+class Specimen(utils.MinimalSpecimen):
     """A single specimen."""
 
-    ident: str = Field(description="unique identifier")
     survey_id: str = Field(description="survey identifier")
     species: int = Field(description="species this snail belongs to")
-    location: Point = Field(description="where specimen was collected")
     collected: date = Field(description="date when specimen was collected")
     genome: str = Field(description="bases in genome")
-    mass: float = Field(default=0.0, ge=0, description="specimen mass in grams")
     is_mutant: bool = Field(default=False, description="is this specimen a mutant?")
 
 

@@ -18,17 +18,18 @@ MACHINES_1 = AllMachines(
 PERSONS_1 = AllPersons(items=[Person(ident="abc", family="BC", personal="A")])
 
 SPECIMENS_1 = AllSpecimens(
-    loci=[0],
-    reference="A",
+    loci=[[0]],
+    references=["A"],
     susc_base="A",
     susc_locus=0,
     items=[
         Specimen(
             ident="S01",
             survey_id="G01",
+            species=0,
+            location=Point(x=1, y=1),
             collected=date(2023, 7, 5),
             genome="ACGT",
-            location=Point(x=1, y=1),
             mass=0.1,
             is_mutant=False,
         ),
@@ -43,26 +44,30 @@ PERSONS_2 = AllPersons(
 )
 
 SPECIMENS_2 = AllSpecimens(
-    loci=[1],
-    reference="AAAA",
+    loci=[[1]],
+    references=["AAAA"],
     susc_base="C",
     susc_locus=0,
     items=[
         Specimen(
             ident="S01",
             survey_id="G01",
+            species=0,
             collected=date(2023, 7, 5),
             genome="ACGT",
             location=Point(x=1, y=1),
             mass=0.1,
+            is_mutant=False,
         ),
         Specimen(
             ident="S03",
             survey_id="G03",
+            species=0,
             collected=date(2024, 7, 5),
             genome="TGCA",
             location=Point(x=3, y=3),
             mass=0.3,
+            is_mutant=False,
         ),
     ],
 )

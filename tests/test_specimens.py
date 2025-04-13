@@ -2,10 +2,20 @@
 
 from datetime import date
 
+import pytest
+
 from snailz.grid import Point
 from snailz.parameters import SpecimenParams
 from snailz.specimens import AllSpecimens, Specimen
 from snailz.surveys import Survey, AllSurveys
+
+
+def test_specimen_parameters_incorrect():
+    with pytest.raises(ValueError):
+        SpecimenParams(
+            prob_species=[1.0],
+            mean_masses=[2.0, 3.0],
+        )
 
 
 def test_generate_specimens_correct_length():
@@ -29,14 +39,15 @@ def test_generate_specimens_correct_length():
 
 def test_convert_specimens_to_csv():
     fixture = AllSpecimens(
-        loci=[1],
-        reference="AAAA",
+        loci=[[1]],
+        references=["AAAA"],
         susc_base="C",
         susc_locus=0,
         items=[
             Specimen(
                 ident="S01",
                 survey_id="G01",
+                species=0,
                 collected=date(2023, 7, 5),
                 genome="ACGT",
                 location=Point(x=1, y=1),
@@ -45,6 +56,7 @@ def test_convert_specimens_to_csv():
             Specimen(
                 ident="S03",
                 survey_id="G03",
+                species=0,
                 collected=date(2024, 7, 5),
                 genome="TGCA",
                 location=Point(x=3, y=3),

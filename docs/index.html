@@ -1355,7 +1355,7 @@ The file looks like this:</p>
 <p>Note that the CSV file does <em>not</em> record which species the snail belongs to
 or whether it is a mutant.</p>
 <h3 id="assays">Assays</h3>
-<p>Summary information about all assays is stored in <code>assays.csv</code>.
+<p>Summary information about all assays is stored in <code>assay_summary.csv</code>.
 The file looks like this:</p>
 <table>
 <thead>
@@ -1364,6 +1364,7 @@ The file looks like this:</p>
 <th style="text-align: left;">specimen</th>
 <th style="text-align: left;">person</th>
 <th style="text-align: left;">performed</th>
+<th style="text-align: left;">machine</th>
 </tr>
 </thead>
 <tbody>
@@ -1372,14 +1373,17 @@ The file looks like this:</p>
 <td style="text-align: left;">KHNKDL</td>
 <td style="text-align: left;">km3478</td>
 <td style="text-align: left;">2024-03-05</td>
+<td style="text-align: left;">M0005</td>
 </tr>
 <tr>
 <td style="text-align: left;">508199</td>
 <td style="text-align: left;">DZYIPY</td>
 <td style="text-align: left;">mt8294</td>
 <td style="text-align: left;">2024-03-01</td>
+<td style="text-align: left;">M0001</td>
 </tr>
 <tr>
+<td style="text-align: left;">…</td>
 <td style="text-align: left;">…</td>
 <td style="text-align: left;">…</td>
 <td style="text-align: left;">…</td>
@@ -1416,6 +1420,93 @@ The file looks like this:</p>
 <td><code>performed</code></td>
 <td>assay date</td>
 <td>ISO date, required</td>
+</tr>
+<tr>
+<td><code>machine</code></td>
+<td>machine used</td>
+<td>text, required</td>
+</tr>
+</tbody>
+</table>
+<p>Assay results are stored in <code>assays.csv</code>.
+The file looks like this:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">ident</th>
+<th style="text-align: left;">specimen</th>
+<th style="text-align: left;">col</th>
+<th style="text-align: right;">row</th>
+<th style="text-align: left;">treatment</th>
+<th style="text-align: right;">reading</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">720482</td>
+<td style="text-align: left;">LYKVID</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">C</td>
+<td style="text-align: right;">0.20</td>
+</tr>
+<tr>
+<td style="text-align: left;">720482</td>
+<td style="text-align: left;">LYKVID</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">C</td>
+<td style="text-align: right;">0.25</td>
+</tr>
+<tr>
+<td style="text-align: left;">…</td>
+<td style="text-align: left;">…</td>
+<td style="text-align: left;">…</td>
+<td style="text-align: right;">…</td>
+<td style="text-align: left;">…</td>
+<td style="text-align: right;">…</td>
+</tr>
+</tbody>
+</table>
+<p>and its fields are:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Purpose</th>
+<th>Properties</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ident</code></td>
+<td>assay ID</td>
+<td>text, required</td>
+</tr>
+<tr>
+<td><code>specimen</code></td>
+<td>specimen ID</td>
+<td>text, required</td>
+</tr>
+<tr>
+<td><code>col</code></td>
+<td>assay plate column</td>
+<td>text, required</td>
+</tr>
+<tr>
+<td><code>row</code></td>
+<td>assay plate row</td>
+<td>integer, required</td>
+</tr>
+<tr>
+<td><code>treatment</code></td>
+<td>control or sample</td>
+<td>"C" or "S"</td>
+</tr>
+<tr>
+<td><code>reading</code></td>
+<td>well reading</td>
+<td>non-negative real</td>
 </tr>
 </tbody>
 </table>

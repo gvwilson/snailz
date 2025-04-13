@@ -69,8 +69,10 @@ class ScenarioData(BaseModel):
             writer.write(utils.json_dump(data, indent=None))
 
         # Assays
+        with open(out_dir / utils.ASSAY_SUMMARY_CSV, "w") as writer:
+            writer.write(data.assays.to_csv(summary=True))
         with open(out_dir / utils.ASSAYS_CSV, "w") as writer:
-            writer.write(data.assays.to_csv())
+            writer.write(data.assays.to_csv(summary=False))
         for assay in data.assays.items:
             for which in ["readings", "treatments"]:
                 with open(assays_dir / f"{assay.ident}_{which}.csv", "w") as writer:

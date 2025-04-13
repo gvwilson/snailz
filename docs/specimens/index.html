@@ -936,7 +936,7 @@
 
     <div class="doc doc-contents ">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
+              Bases: <code><a class="autorefs autorefs-internal" title="MinimalSpecimen (snailz.utils.MinimalSpecimen)" href="../utils/#snailz.utils.MinimalSpecimen">MinimalSpecimen</a></code></p>
 
 
         <p>A single specimen.</p>
@@ -953,22 +953,6 @@
         </tr>
       </thead>
       <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>ident</code>
-            </td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>unique identifier</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
           <tr class="doc-section-item">
             <td>
                 <code>survey_id</code>
@@ -995,22 +979,6 @@
             <td>
               <div class="doc-md-description">
                 <p>species this snail belongs to</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>location</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="Point (snailz.grid.Point)" href="../grid/#snailz.grid.Point">Point</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>where specimen was collected</p>
               </div>
             </td>
             <td>
@@ -1051,22 +1019,6 @@
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>mass</code>
-            </td>
-            <td>
-                  <code><span title="float">float</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>specimen mass in grams</p>
-              </div>
-            </td>
-            <td>
-                  <code>0.0</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
                 <code>is_mutant</code>
             </td>
             <td>
@@ -1099,19 +1051,13 @@
 <span class="normal">19</span>
 <span class="normal">20</span>
 <span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Specimen</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">22</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Specimen</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">MinimalSpecimen</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A single specimen.&quot;&quot;&quot;</span>
 
-    <span class="n">ident</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;unique identifier&quot;</span><span class="p">)</span>
     <span class="n">survey_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;survey identifier&quot;</span><span class="p">)</span>
     <span class="n">species</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;species this snail belongs to&quot;</span><span class="p">)</span>
-    <span class="n">location</span><span class="p">:</span> <span class="n">Point</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;where specimen was collected&quot;</span><span class="p">)</span>
     <span class="n">collected</span><span class="p">:</span> <span class="n">date</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;date when specimen was collected&quot;</span><span class="p">)</span>
     <span class="n">genome</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;bases in genome&quot;</span><span class="p">)</span>
-    <span class="n">mass</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;specimen mass in grams&quot;</span><span class="p">)</span>
     <span class="n">is_mutant</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;is this specimen a mutant?&quot;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -1257,7 +1203,10 @@
 
               <details class="quote">
                 <summary>Source code in <code>src/snailz/specimens.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 28</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 25</span>
+<span class="normal"> 26</span>
+<span class="normal"> 27</span>
+<span class="normal"> 28</span>
 <span class="normal"> 29</span>
 <span class="normal"> 30</span>
 <span class="normal"> 31</span>
@@ -1358,10 +1307,7 @@
 <span class="normal">126</span>
 <span class="normal">127</span>
 <span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllSpecimens</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">129</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllSpecimens</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A set of generated specimens.&quot;&quot;&quot;</span>
 
     <span class="n">loci</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;locations where mutations can occur&quot;</span><span class="p">)</span>
@@ -1551,7 +1497,10 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/specimens.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">37</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
 <span class="normal">38</span>
 <span class="normal">39</span>
 <span class="normal">40</span>
@@ -1596,10 +1545,7 @@
 <span class="normal">79</span>
 <span class="normal">80</span>
 <span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">full</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">82</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">full</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a CSV string representation of the specimen data.</span>
 
 <span class="sd">    Parameters:</span>
@@ -1744,7 +1690,10 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/specimens.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 87</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
 <span class="normal"> 88</span>
 <span class="normal"> 89</span>
 <span class="normal"> 90</span>
@@ -1786,10 +1735,7 @@
 <span class="normal">126</span>
 <span class="normal">127</span>
 <span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">129</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">SpecimenParams</span><span class="p">,</span> <span class="n">surveys</span><span class="p">:</span> <span class="n">AllSurveys</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;AllSpecimens&quot;</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a set of specimens.</span>
 
@@ -1952,7 +1898,10 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/specimens.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">135</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
 <span class="normal">136</span>
 <span class="normal">137</span>
 <span class="normal">138</span>
@@ -1979,10 +1928,7 @@
 <span class="normal">159</span>
 <span class="normal">160</span>
 <span class="normal">161</span>
-<span class="normal">162</span>
-<span class="normal">163</span>
-<span class="normal">164</span>
-<span class="normal">165</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_make_specimen</span><span class="p">(</span>
+<span class="normal">162</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_make_specimen</span><span class="p">(</span>
     <span class="n">params</span><span class="p">:</span> <span class="n">SpecimenParams</span><span class="p">,</span>
     <span class="n">specimens</span><span class="p">:</span> <span class="n">AllSpecimens</span><span class="p">,</span>
     <span class="n">survey</span><span class="p">:</span> <span class="n">Survey</span><span class="p">,</span>
@@ -2058,13 +2004,13 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/specimens.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">168</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
 <span class="normal">169</span>
 <span class="normal">170</span>
-<span class="normal">171</span>
-<span class="normal">172</span>
-<span class="normal">173</span>
-<span class="normal">174</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_specimen_id_generator</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">171</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_specimen_id_generator</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Specimen ID generation function.</span>
 
 <span class="sd">    Returns:</span>

@@ -261,14 +261,14 @@ or whether it is a mutant.
 
 ### Assays
 
-Summary information about all assays is stored in `assays.csv`.
+Summary information about all assays is stored in `assay_summary.csv`.
 The file looks like this:
 
-| ident  | specimen | person | performed  |
-| :----  | :------- | :----- | :--------- |
-| 386915 | KHNKDL   | km3478 | 2024-03-05 |
-| 508199 | DZYIPY   | mt8294 | 2024-03-01 |
-| …      | …        | …      | …          |
+| ident  | specimen | person | performed  | machine |
+| :----  | :------- | :----- | :--------- | :------ |
+| 386915 | KHNKDL   | km3478 | 2024-03-05 | M0005   |
+| 508199 | DZYIPY   | mt8294 | 2024-03-01 | M0001   |
+| …      | …        | …      | …          | …       |
 
 and its fields are:
 
@@ -278,6 +278,27 @@ and its fields are:
 | `specimen` | specimen identifier | text, required |
 | `person` | scientist identifier | text, required |
 | `performed` | assay date | ISO date, required |
+| `machine` | machine used | text, required |
+
+Assay results are stored in `assays.csv`.
+The file looks like this:
+
+| ident  | specimen | col | row | treatment | reading |
+| :----- | :------- | :-- | --: | :-------- | ------: |
+| 720482 | LYKVID   | A   | 1   | C         | 0.20    |
+| 720482 | LYKVID   | A   | 2   | C         | 0.25    |
+| …      | …        | …   | …   | …         | …       |
+
+and its fields are:
+
+| Field | Purpose | Properties |
+| ----- | ------- | ---------- |
+| `ident` | assay ID | text, required |
+| `specimen` | specimen ID | text, required |
+| `col` | assay plate column | text, required |
+| `row` | assay plate row | integer, required |
+| `treatment` | control or sample | "C" or "S" |
+| `reading` | well reading | non-negative real |
 
 The `assays` directory contains three files for each assay:
 
