@@ -22,3 +22,6 @@ snailz.zip
 # Editor backup files
 *~
 *.bkp
+
+# Temporary files
+tmp/*

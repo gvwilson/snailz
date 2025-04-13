@@ -19,6 +19,8 @@ DIRS_TO_TIDY = ["build", "dist", "*.egg-info"]
 DATA_DIR = Path("data")
 DATA_ZIP = Path("snailz.zip")
 PARAMS_JSON = DATA_DIR / "params.json"
+SCRIPTS_DIR = Path("scripts")
+TMP_DIR = Path("tmp")
 
 
 def task_build():
@@ -38,7 +40,7 @@ def task_classify():
 
     return {
         "actions": [
-            f"python analysis/classify.py --data {DATA_DIR} --format df",
+            f"python {SCRIPTS_DIR}/classify.py --data {DATA_DIR} --format df",
         ],
     }
 
@@ -156,6 +158,16 @@ def task_tidy():
         ],
     }
 
+
+def task_vis_grids():
+    """Visualize grids."""
+
+    return {
+        "actions": [
+            f"mkdir -p {TMP_DIR}",
+            f"python {SCRIPTS_DIR}/visualize.py --data {DATA_DIR} --make grid --output {TMP_DIR}/grids.png --show",
+        ],
+    }
 
 def task_zip():
     """Create ZIP file from generated data."""
