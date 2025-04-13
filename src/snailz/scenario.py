@@ -49,8 +49,14 @@ class ScenarioData(BaseModel):
         )
 
     @staticmethod
-    def save(out_dir: Path, data: "ScenarioData") -> None:
-        """Save all data."""
+    def save(out_dir: Path, data: "ScenarioData", full: bool) -> None:
+        """Save all data.
+
+        Parameters:
+            out_dir: where to write
+            data: what to write
+            full: save all details
+        """
 
         # Preparation
         if not out_dir.is_dir():
@@ -87,7 +93,7 @@ class ScenarioData(BaseModel):
 
         # Specimens
         with open(out_dir / utils.SPECIMENS_CSV, "w") as writer:
-            writer.write(data.specimens.to_csv())
+            writer.write(data.specimens.to_csv(full=full))
 
         # Surveys
         for survey in data.surveys.items:

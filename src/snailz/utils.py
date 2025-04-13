@@ -39,9 +39,9 @@ SPECIMENS_CSV = "specimens.csv"
 SURVEYS_DIR = "surveys"
 
 
-def choose_one(items):
+def choose_one(items, weights=None):
     """Choose one item at random."""
-    return random.choices(items, k=1)[0]
+    return random.choices(items, weights=weights, k=1)[0]
 
 
 def fail(msg: str) -> None:

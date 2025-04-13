@@ -11,15 +11,17 @@ from snailz.surveys import Survey, AllSurveys
 def test_generate_specimens_correct_length():
     size = 10
     num = 5
-    surveys = AllSurveys(items=[
-        Survey(
-            ident=f"G00{i}",
-            size=size,
-            start_date=date(2024, 1, 1),
-            end_date=date(2024, 1, 31),
-        )
-        for i in range(num)
-    ])
+    surveys = AllSurveys(
+        items=[
+            Survey(
+                ident=f"G00{i}",
+                size=size,
+                start_date=date(2024, 1, 1),
+                end_date=date(2024, 1, 31),
+            )
+            for i in range(num)
+        ]
+    )
     params = SpecimenParams()
     specimens = AllSpecimens.generate(params, surveys)
     assert 0 < len(specimens.items) < (2 * num * size)

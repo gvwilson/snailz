@@ -169,6 +169,7 @@ def task_vis_grids():
         ],
     }
 
+
 def task_zip():
     """Create ZIP file from generated data."""
 

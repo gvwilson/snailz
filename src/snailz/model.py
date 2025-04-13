@@ -145,10 +145,14 @@ def mutation_loci(params: SpecimenParams) -> list[int]:
     Returns:
         Randomly selected positions that can be mutated.
     """
-    return list(sorted(random.sample(list(range(params.length)), params.max_mutations)))
+    return list(
+        sorted(random.sample(list(range(params.genome_length)), params.max_mutations))
+    )
 
 
-def specimen_adjust_mass(survey: Survey, max_pollution: float, specimen: Specimen) -> float:
+def specimen_adjust_mass(
+    survey: Survey, max_pollution: float, specimen: Specimen
+) -> float:
     """Adjust mass of specimen depending on pollution levels.
 
     Parameters:
@@ -177,7 +181,7 @@ def specimen_collection_date(survey: BaseModel) -> date:
     )
 
 
-def specimen_genome(specimens: BaseModel) -> str:
+def specimen_genome(params: SpecimenParams, specimens: BaseModel) -> tuple[int, str]:
     """Generate genome for a particular specimen.
 
     Parameters:
@@ -186,17 +190,20 @@ def specimen_genome(specimens: BaseModel) -> str:
     Returns:
         Random genome produced by mutating reference genome.
     """
-    genome = list(specimens.reference)
-    max_mutations = random.randint(1, len(specimens.loci))
-    locations = random.sample(specimens.loci, max_mutations)
+    num_species = len(specimens.references)
+    species = utils.choose_one(list(range(num_species)), weights=params.prob_species)
+    genome = list(specimens.references[species])
+    max_mutations = random.randint(1, len(specimens.loci[species]))
+    locations = random.sample(specimens.loci[species], max_mutations)
     for loc in locations:
         genome[loc] = utils.choose_one(utils.BASES)
     result = "".join(genome)
-    return result
+    return species, result
 
 
 def specimen_initial_mass(
     params: SpecimenParams,
+    species: int,
     collected: date,
     is_mutant: bool,
 ) -> float:
@@ -204,6 +211,7 @@ def specimen_initial_mass(
 
     Parameters:
         params: specimen generation parameters
+        specimen: which species this is
         collected: specimen collection date
         is_mutant: whether this specimen is a mutant
 
@@ -213,7 +221,7 @@ def specimen_initial_mass(
 
     # Initial mass
     mass_scale = params.mut_mass_scale if is_mutant else 1.0
-    mean_mass = mass_scale * params.mean_mass
+    mean_mass = mass_scale * params.mean_masses[species]
     mass = abs(random.gauss(mean_mass, mean_mass * params.mass_rel_stdev))
 
     # Growth effects
@@ -244,6 +252,18 @@ def specimens_place(survey: Survey, specimens: list[Specimen]) -> None:
         specimens: to place
     """
     anneal(survey.size, specimens)
+
+
+def specimen_reference_genome(params: SpecimenParams) -> str:
+    """Make a random reference genome.
+
+    Parameters:
+        params: SpecimenParams with length attribute
+
+    Returns:
+        A randomly generated genome string of the specified length
+    """
+    return "".join(random.choices(utils.BASES, k=params.genome_length))
 
 
 def survey_initialize_grid(size: int) -> Grid[int]:

@@ -17,6 +17,7 @@ class Specimen(BaseModel):
 
     ident: str = Field(description="unique identifier")
     survey_id: str = Field(description="survey identifier")
+    species: int = Field(description="species this snail belongs to")
     location: Point = Field(description="where specimen was collected")
     collected: date = Field(description="date when specimen was collected")
     genome: str = Field(description="bases in genome")
@@ -27,31 +28,61 @@ class Specimen(BaseModel):
 class AllSpecimens(BaseModel):
     """A set of generated specimens."""
 
-    loci: list[int] = Field(description="locations where mutations can occur")
-    reference: str = Field(description="unmutated genome")
+    loci: list[list[int]] = Field(description="locations where mutations can occur")
+    references: list[str] = Field(description="unmutated genomes of each species")
     susc_base: str = Field(description="mutant base that induces mass changes")
     susc_locus: int = Field(ge=0, description="location of mass change mutation")
     items: list[Specimen] = Field(description="list of individual specimens")
 
-    def to_csv(self) -> str:
+    def to_csv(self, full=False) -> str:
         """Return a CSV string representation of the specimen data.
+
+        Parameters:
+            full: include mutant and species information
 
         Returns:
             A CSV-formatted string.
         """
-        return utils.to_csv(
-            self.items,
-            ["ident", "survey", "x", "y", "collected", "genome", "mass"],
-            lambda s: [
-                s.ident,
-                s.survey_id,
-                s.location.x if s.location.x >= 0 else None,
-                s.location.y if s.location.y >= 0 else None,
-                s.collected.isoformat(),
-                s.genome,
-                s.mass,
-            ],
-        )
+        if full:
+            return utils.to_csv(
+                self.items,
+                [
+                    "ident",
+                    "survey",
+                    "x",
+                    "y",
+                    "collected",
+                    "genome",
+                    "mass",
+                    "mutant",
+                    "species",
+                ],
+                lambda s: [
+                    s.ident,
+                    s.survey_id,
+                    s.location.x if s.location.x >= 0 else None,
+                    s.location.y if s.location.y >= 0 else None,
+                    s.collected.isoformat(),
+                    s.genome,
+                    s.mass,
+                    s.is_mutant,
+                    s.species,
+                ],
+            )
+        else:
+            return utils.to_csv(
+                self.items,
+                ["ident", "survey", "x", "y", "collected", "genome", "mass"],
+                lambda s: [
+                    s.ident,
+                    s.survey_id,
+                    s.location.x if s.location.x >= 0 else None,
+                    s.location.y if s.location.y >= 0 else None,
+                    s.collected.isoformat(),
+                    s.genome,
+                    s.mass,
+                ],
+            )
 
     @staticmethod
     def generate(params: SpecimenParams, surveys: AllSurveys) -> "AllSpecimens":
@@ -65,15 +96,20 @@ class AllSpecimens(BaseModel):
             A set of surveys.
         """
 
-        reference = _make_reference_genome(params)
-        loci = model.mutation_loci(params)
-        susc_locus = utils.choose_one(loci)
-        susc_base = utils.choose_one(list(set(utils.BASES) - {reference[susc_locus]}))
+        num_species = len(params.prob_species)
+        references = [
+            model.specimen_reference_genome(params) for _ in range(num_species)
+        ]
+        loci = [model.mutation_loci(params) for _ in range(num_species)]
+        susc_locus = utils.choose_one(loci[0])
+        susc_base = utils.choose_one(
+            list(set(utils.BASES) - {references[0][susc_locus]})
+        )
         gen = utils.unique_id("specimen", _specimen_id_generator)
 
         specimens = AllSpecimens(
+            references=references,
             loci=loci,
-            reference=reference,
             susc_base=susc_base,
             susc_locus=susc_locus,
             items=[],
@@ -87,22 +123,13 @@ class AllSpecimens(BaseModel):
             ]
             model.specimens_place(survey, temp)
             for s in temp:
-                s.mass = round(model.specimen_adjust_mass(survey, max_pollution, s), utils.PRECISION)
+                s.mass = round(
+                    model.specimen_adjust_mass(survey, max_pollution, s),
+                    utils.PRECISION,
+                )
             specimens.items.extend(temp)
 
         return specimens
-
-
-def _make_reference_genome(params: SpecimenParams) -> str:
-    """Make a random reference genome.
-
-    Parameters:
-        params: SpecimenParams with length attribute
-
-    Returns:
-        A randomly generated genome string of the specified length
-    """
-    return "".join(random.choices(utils.BASES, k=params.length))
 
 
 def _make_specimen(
@@ -122,13 +149,14 @@ def _make_specimen(
         A randomly-generated specimen.
     """
     collected = model.specimen_collection_date(survey)
-    genome = model.specimen_genome(specimens)
-    is_mutant = genome[specimens.susc_locus] == specimens.susc_base
+    species, genome = model.specimen_genome(params, specimens)
+    is_mutant = (species == 0) and (genome[specimens.susc_locus] == specimens.susc_base)
 
-    mass = model.specimen_initial_mass(params, collected, is_mutant)
+    mass = model.specimen_initial_mass(params, species, collected, is_mutant)
     return Specimen(
         ident=ident,
         survey_id=survey.ident,
+        species=species,
         collected=collected,
         genome=genome,
         is_mutant=is_mutant,

@@ -66,27 +66,33 @@ def _make_wall(size: int) -> list[Specimen]:
         size: grid size
     """
     result = []
-    bounds = (- BORDER, size + BORDER - 1)
+    bounds = (-BORDER, size + BORDER - 1)
     for x in range(*bounds):
         for y in bounds:
-            result.append(Specimen(
-                ident="",
-                survey_id="",
-                location=Point(x=x, y=y),
-                collected = DATE,
-                genome="",
-                mass=1.0,
-            ))
+            result.append(
+                Specimen(
+                    ident="",
+                    survey_id="",
+                    species=0,
+                    location=Point(x=x, y=y),
+                    collected=DATE,
+                    genome="",
+                    mass=1.0,
+                )
+            )
     for y in range(1 - BORDER, size + BORDER - 2):
         for x in bounds:
-            result.append(Specimen(
-                ident="",
-                survey_id="",
-                location=Point(x=x, y=y),
-                collected = DATE,
-                genome="",
-                mass=1.0,
-            ))
+            result.append(
+                Specimen(
+                    ident="",
+                    survey_id="",
+                    species=0,
+                    location=Point(x=x, y=y),
+                    collected=DATE,
+                    genome="",
+                    mass=1.0,
+                )
+            )
     return result
 
 
@@ -163,12 +169,12 @@ def _single_force(s0: Specimen, s1: Specimen) -> tuple[float, float]:
     loc1 = s1.location
     dx = loc1.x - loc0.x
     dy = loc1.y - loc0.y
-    r_sq = dx ** 2 + dy ** 2
+    r_sq = dx**2 + dy**2
     assert r_sq > 0, f"{s0} vs. {s1}"
     r = math.sqrt(r_sq)
     f = s0.mass * s1.mass / r_sq
-    fx = - f * dx / r
-    fy = - f * dy / r
+    fx = -f * dx / r
+    fy = -f * dy / r
     return fx, fy
 
 

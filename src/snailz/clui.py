@@ -28,6 +28,7 @@ def db(data):
 
 
 @cli.command()
+@click.option("--full", is_flag=True, default=False, help="Full details")
 @click.option(
     "--params",
     required=True,
@@ -36,13 +37,13 @@ def db(data):
 )
 @click.option("--output", type=click.Path(), help="Path to output directory")
 @click.option("--seed", default=None, help="Override seed for ad hoc testing")
-def data(params, output, seed):
+def data(full, params, output, seed):
     """Generate and save data using provided parameters."""
     try:
         parameters = ScenarioParams.model_validate(json.load(open(params, "r")))
         random.seed(parameters.seed if seed is None else seed)
         data = ScenarioData.generate(parameters)
-        ScenarioData.save(Path(output), data)
+        ScenarioData.save(Path(output), data, full=full)
     except OSError as exc:
         utils.fail(str(exc))
 

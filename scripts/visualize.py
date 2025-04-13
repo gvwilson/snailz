@@ -5,7 +5,6 @@ from pathlib import Path
 import sys
 
 import plotly.express as px
-import polars as pl
 
 import utils
 
@@ -14,7 +13,12 @@ import utils
 @click.option(
     "--data", type=click.Path(exists=True), required=True, help="Path to data directory"
 )
-@click.option("--make", type=click.Choice(["grid"], case_sensitive=False), required=True, help="What to visualize",)
+@click.option(
+    "--make",
+    type=click.Choice(["grid"], case_sensitive=False),
+    required=True,
+    help="What to visualize",
+)
 @click.option("--output", type=click.Path(), default=None, help="Path to output file")
 @click.option("--show", is_flag=True, default=False, help="Show figure")
 def visualize(data, make, output, show):
@@ -33,7 +37,7 @@ def _make_grids(data):
     df = utils.combine_grids(grids)
     fig = px.density_heatmap(
         df,
-        x="col", 
+        x="col",
         y="row",
         z="val",
         facet_col="survey",
@@ -41,7 +45,7 @@ def _make_grids(data):
             [0, "rgb(128,128,128)"],  # gray at 0
             [0.000001, "rgb(220,235,255)"],  # lightest blue just above 0
             [0.5, "rgb(65,105,225)"],  # medium blue
-            [1, "rgb(0,0,139)"]
+            [1, "rgb(0,0,139)"],
         ],
     )
 

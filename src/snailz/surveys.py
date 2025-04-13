@@ -24,7 +24,10 @@ class Survey(BaseModel):
         default=date.fromisoformat("2024-04-30"),
         description="End date for specimen collection",
     )
-    cells: Grid[int] = Field(default_factory=lambda data: model.survey_initialize_grid(data["size"]), description="survey cells")
+    cells: Grid[int] = Field(
+        default_factory=lambda data: model.survey_initialize_grid(data["size"]),
+        description="survey cells",
+    )
 
     model_config = {"extra": "forbid"}
 
@@ -89,7 +92,6 @@ class AllSurveys(BaseModel):
             current_date = next_date + timedelta(days=1)
 
         return AllSurveys(items=items)
-
 
 
 def _survey_id_generator() -> str:

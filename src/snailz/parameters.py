@@ -92,15 +92,19 @@ class PersonParams(BaseModel):
 class SpecimenParams(BaseModel):
     """Parameters for specimen generation."""
 
-    length: int = Field(
-        default=20, gt=0, description="Length of specimen genomes (must be positive)"
+    prob_species: list[float] = Field(
+        default=[0.6, 0.4],
+        description="Proability of each species (first is mutatable)",
+    )
+    mean_masses: list[float] = Field(
+        default=[10.0, 20.0], description="Mean mass for each species"
+    )
+    genome_length: int = Field(
+        default=20, gt=0, description="Length of specimen genomes"
     )
     start_date: date = Field(
         default=DEFAULT_START_DATE,
         description="Start date for specimen collection",
-    )
-    mean_mass: float = Field(
-        default=10.0, gt=0, description="Mean mass for specimens (must be positive)"
     )
     mut_mass_scale: float = Field(
         default=2.0, gt=0, description="Scaling factor for mutant snail mass"
@@ -123,6 +127,13 @@ class SpecimenParams(BaseModel):
     )
 
     model_config = {"extra": "forbid"}
+
+    @model_validator(mode="after")
+    def validate_fields(self):
+        """Check parameter validity."""
+        if len(self.prob_species) != len(self.mean_masses):
+            raise ValueError("prob_species and mean_masses length mis-match")
+        return self
 
 
 class SurveyParams(BaseModel):
