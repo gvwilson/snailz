@@ -87,33 +87,34 @@ $ snailz data --params params.json --output data
 and can generate a file with default parameter values as a starting point.
 The parameters, their meanings, and their properties are:
 
-| Group | Name | Purpose | Default | Notes |
-| ----- | ---- | ------- | ------- | ----- |
-| overall | `seed` | random number generation seed | 7493418 | non-negative integer |
-| `assay` | `baseline` | assay reading for non-mutant specimens | 1.0 | non-negative real |
-| | `degrade` | reading degradation per day between sample collection and assay | 0.05 | non-negative real |
-| | `delay` | maximum days of delay between sample collection and assay | 5 | non-negative integer |
-| | `mutant` | assay reading for mutant specimens | 10.0 | non-negative real, greater than `baseline` |
-| | `rel_stdev` | relative standard deviation readings | 0.2 | non-negative real |
-| | `plate_size` | number of rows and columns in assay plate | 4 | non-negative integer |
-| | `image_noise` | noise to add to assay images | 32 | scale is 0-255 |
-| | `p_duplicate_assay` | probability of duplicate assay | 0.05 | probability |
-| `machine` | `variation` | systematic variation in readings | 0.05 | percentage |
-| | `number` | number of machines | 5 | non-negative integer |
-| `person` | `locale` | locale for random name generation | `et_EE` (Estonia) | valid ISO locale |
-| | `number` | number of persons | 5 | non-negative integer |
-| `specimen` | `length` | genome length in bases | 20 | non-negative integer |
-| | `start_date` | date of first assay | 2024-03-01 | copied from surveys for convenience |
-| | `mean_mass` | mean unmutated snail mass | 10.0 | non-negative real |
-| | `mut_mass_scale` | scaling factor for mutated snails | 2.0 | real greater or equal to 1.0 |
-| | `mass_rel_stdev` | relative standard deviation in masses | 0.5 | non-negative real |
-| | `max_mutations` | maximum number of mutations in genome | 5 | non-negative integer |
-| | `daily_growth` | percentage increase in mass per day | 0.01 | non-negative real |
-| | `p_missing_location` | probability that sample location is unknown | 0.05 | probability |
-| `survey` | `number` | number of survey sites | 3 | non-negative integer |
-| | `size` | survey grid size | 15 | non-negative integer |
-| | `start_date` | overall survey start date | 2024-03-01 | ISO date |
-| | `max_interval` | maximum number of days between specimen samples | 7 | non-negative integer |
+| Group | Name | Purpose | Notes | Default |
+| ----- | ---- | ------- | ----- | -----__ |
+| overall | `seed` | random number generation seed | non-negative integer | 7493418 |
+| `assay` | `baseline` | assay reading for non-mutant specimens | non-negative real | 1.0 |
+| | `degrade` | reading degradation per day between sample collection and assay | non-negative real | 0.05 |
+| | `delay` | maximum days of delay between sample collection and assay | non-negative integer | 5 |
+| | `mutant` | assay reading for mutant specimens | non-negative real, greater than `baseline` | 10.0 |
+| | `rel_stdev` | relative standard deviation readings | non-negative real | 0.2 |
+| | `plate_size` | number of rows and columns in assay plate | non-negative integer | 4 |
+| | `image_noise` | noise to add to assay images | scale is 0-255 | 32 |
+| | `p_duplicate_assay` | probability of duplicate assay | probability | 0.05 |
+| `machine` | `variation` | systematic variation in readings | percentage | 0.05 |
+| | `number` | number of machines | non-negative integer | 5 |
+| `person` | `locale` | locale for random name generation | valid ISO locale | `et_EE` (Estonia) |
+| | `number` | number of persons | non-negative integer | 5 |
+| `specimen` | `length` | genome length in bases | non-negative integer | 20 |
+| | `prob_species` | probability of each species | list of probabilities summing to 1.0 | [0.6, 0.4] |
+| | `mean_masses` | mean unmutated snail mass per species | non-negative reals (same length as probabilities) | [10.0, 20.0] |
+| | `start_date` | date of first assay | copied from surveys for convenience | 2024-03-01 |
+| | `mut_mass_scale` | scaling factor for mutated snails | real greater or equal to 1.0 | 2.0 |
+| | `mass_rel_stdev` | relative standard deviation in masses | non-negative real | 0.5 |
+| | `max_mutations` | maximum number of mutations in genome | non-negative integer | 5 |
+| | `daily_growth` | percentage increase in mass per day | non-negative real | 0.01 |
+| | `p_missing_location` | probability that sample location is unknown | probability | 0.05 |
+| `survey` | `number` | number of survey sites | non-negative integer | 3 |
+| | `size` | survey grid size | non-negative integer | 15 |
+| | `start_date` | overall survey start date | ISO date | 2024-03-01 |
+| | `max_interval` | maximum number of days between specimen samples | non-negative integer | 7 |
 
 Notes:
 
@@ -128,11 +129,14 @@ Notes:
 1.  Some specimens' grid locations are missing from the final data.
     Their XY coordinates are missing in `specimens.csv` and `null` in `snailz.db`.
 
-1.  All snail genomes are the same length,
+1.  Snails belong to one or more species,
+    each of which has a different reference genome
+    and (potentially) different mean mass.
+
+1.  All snail genome fragments are the same length,
     and are generated by mutating the bases at a few randomly-chosen locations.
-    One of those locations and one of the variant bases is selected at random;
-    a snail with that mutant base in that location is a mutant
-    that can grow to unusual size.
+    One of those locations and one of the variant bases is selected at random for species 0;
+    a snail with that mutant base in that location is a mutant of unusual size.
 
 1.  The masses of all snails are scaled up by an amount that depends on
     how polluted their collection location is.
@@ -152,6 +156,8 @@ Notes:
     Each snail is initially put in a randomly-chosen location.
     Snails are then moved as if they were repulsive electrical charges,
     with large snails repelling their neighbors more than small ones.
+    A "wall" of snails with unit mass surrounding the grid
+    ensures that actual snails don't wander off.
 
 ## Data Dictionary
 
@@ -249,6 +255,9 @@ and its fields are:
 | `collected` | collection date | ISO date, required |
 | `genome` | base sequence | text, required |
 | `mass` | snail weight in grams | real, required |
+
+Note that the CSV file does *not* record which species the snail belongs to
+or whether it is a mutant.
 
 ### Assays
 

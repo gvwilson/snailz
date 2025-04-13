@@ -34,7 +34,7 @@ class AllSpecimens(BaseModel):
     susc_locus: int = Field(ge=0, description="location of mass change mutation")
     items: list[Specimen] = Field(description="list of individual specimens")
 
-    def to_csv(self, full=False) -> str:
+    def to_csv(self, full: bool = False) -> str:
         """Return a CSV string representation of the specimen data.
 
         Parameters:

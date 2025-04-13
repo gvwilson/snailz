@@ -1046,194 +1046,34 @@ $ snailz data --params params.json --output data
 <p><code>snailz</code> reads controlling parameters from a JSON file,
 and can generate a file with default parameter values as a starting point.
 The parameters, their meanings, and their properties are:</p>
-<table>
-<thead>
-<tr>
-<th>Group</th>
-<th>Name</th>
-<th>Purpose</th>
-<th>Default</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>overall</td>
-<td><code>seed</code></td>
-<td>random number generation seed</td>
-<td>7493418</td>
-<td>non-negative integer</td>
-</tr>
-<tr>
-<td><code>assay</code></td>
-<td><code>baseline</code></td>
-<td>assay reading for non-mutant specimens</td>
-<td>1.0</td>
-<td>non-negative real</td>
-</tr>
-<tr>
-<td></td>
-<td><code>degrade</code></td>
-<td>reading degradation per day between sample collection and assay</td>
-<td>0.05</td>
-<td>non-negative real</td>
-</tr>
-<tr>
-<td></td>
-<td><code>delay</code></td>
-<td>maximum days of delay between sample collection and assay</td>
-<td>5</td>
-<td>non-negative integer</td>
-</tr>
-<tr>
-<td></td>
-<td><code>mutant</code></td>
-<td>assay reading for mutant specimens</td>
-<td>10.0</td>
-<td>non-negative real, greater than <code>baseline</code></td>
-</tr>
-<tr>
-<td></td>
-<td><code>rel_stdev</code></td>
-<td>relative standard deviation readings</td>
-<td>0.2</td>
-<td>non-negative real</td>
-</tr>
-<tr>
-<td></td>
-<td><code>plate_size</code></td>
-<td>number of rows and columns in assay plate</td>
-<td>4</td>
-<td>non-negative integer</td>
-</tr>
-<tr>
-<td></td>
-<td><code>image_noise</code></td>
-<td>noise to add to assay images</td>
-<td>32</td>
-<td>scale is 0-255</td>
-</tr>
-<tr>
-<td></td>
-<td><code>p_duplicate_assay</code></td>
-<td>probability of duplicate assay</td>
-<td>0.05</td>
-<td>probability</td>
-</tr>
-<tr>
-<td><code>machine</code></td>
-<td><code>variation</code></td>
-<td>systematic variation in readings</td>
-<td>0.05</td>
-<td>percentage</td>
-</tr>
-<tr>
-<td></td>
-<td><code>number</code></td>
-<td>number of machines</td>
-<td>5</td>
-<td>non-negative integer</td>
-</tr>
-<tr>
-<td><code>person</code></td>
-<td><code>locale</code></td>
-<td>locale for random name generation</td>
-<td><code>et_EE</code> (Estonia)</td>
-<td>valid ISO locale</td>
-</tr>
-<tr>
-<td></td>
-<td><code>number</code></td>
-<td>number of persons</td>
-<td>5</td>
-<td>non-negative integer</td>
-</tr>
-<tr>
-<td><code>specimen</code></td>
-<td><code>length</code></td>
-<td>genome length in bases</td>
-<td>20</td>
-<td>non-negative integer</td>
-</tr>
-<tr>
-<td></td>
-<td><code>start_date</code></td>
-<td>date of first assay</td>
-<td>2024-03-01</td>
-<td>copied from surveys for convenience</td>
-</tr>
-<tr>
-<td></td>
-<td><code>mean_mass</code></td>
-<td>mean unmutated snail mass</td>
-<td>10.0</td>
-<td>non-negative real</td>
-</tr>
-<tr>
-<td></td>
-<td><code>mut_mass_scale</code></td>
-<td>scaling factor for mutated snails</td>
-<td>2.0</td>
-<td>real greater or equal to 1.0</td>
-</tr>
-<tr>
-<td></td>
-<td><code>mass_rel_stdev</code></td>
-<td>relative standard deviation in masses</td>
-<td>0.5</td>
-<td>non-negative real</td>
-</tr>
-<tr>
-<td></td>
-<td><code>max_mutations</code></td>
-<td>maximum number of mutations in genome</td>
-<td>5</td>
-<td>non-negative integer</td>
-</tr>
-<tr>
-<td></td>
-<td><code>daily_growth</code></td>
-<td>percentage increase in mass per day</td>
-<td>0.01</td>
-<td>non-negative real</td>
-</tr>
-<tr>
-<td></td>
-<td><code>p_missing_location</code></td>
-<td>probability that sample location is unknown</td>
-<td>0.05</td>
-<td>probability</td>
-</tr>
-<tr>
-<td><code>survey</code></td>
-<td><code>number</code></td>
-<td>number of survey sites</td>
-<td>3</td>
-<td>non-negative integer</td>
-</tr>
-<tr>
-<td></td>
-<td><code>size</code></td>
-<td>survey grid size</td>
-<td>15</td>
-<td>non-negative integer</td>
-</tr>
-<tr>
-<td></td>
-<td><code>start_date</code></td>
-<td>overall survey start date</td>
-<td>2024-03-01</td>
-<td>ISO date</td>
-</tr>
-<tr>
-<td></td>
-<td><code>max_interval</code></td>
-<td>maximum number of days between specimen samples</td>
-<td>7</td>
-<td>non-negative integer</td>
-</tr>
-</tbody>
-</table>
+<p>| Group | Name | Purpose | Notes | Default |
+| ----- | ---- | ------- | ----- | -----__ |
+| overall | <code>seed</code> | random number generation seed | non-negative integer | 7493418 |
+| <code>assay</code> | <code>baseline</code> | assay reading for non-mutant specimens | non-negative real | 1.0 |
+| | <code>degrade</code> | reading degradation per day between sample collection and assay | non-negative real | 0.05 |
+| | <code>delay</code> | maximum days of delay between sample collection and assay | non-negative integer | 5 |
+| | <code>mutant</code> | assay reading for mutant specimens | non-negative real, greater than <code>baseline</code> | 10.0 |
+| | <code>rel_stdev</code> | relative standard deviation readings | non-negative real | 0.2 |
+| | <code>plate_size</code> | number of rows and columns in assay plate | non-negative integer | 4 |
+| | <code>image_noise</code> | noise to add to assay images | scale is 0-255 | 32 |
+| | <code>p_duplicate_assay</code> | probability of duplicate assay | probability | 0.05 |
+| <code>machine</code> | <code>variation</code> | systematic variation in readings | percentage | 0.05 |
+| | <code>number</code> | number of machines | non-negative integer | 5 |
+| <code>person</code> | <code>locale</code> | locale for random name generation | valid ISO locale | <code>et_EE</code> (Estonia) |
+| | <code>number</code> | number of persons | non-negative integer | 5 |
+| <code>specimen</code> | <code>length</code> | genome length in bases | non-negative integer | 20 |
+| | <code>prob_species</code> | probability of each species | list of probabilities summing to 1.0 | [0.6, 0.4] |
+| | <code>mean_masses</code> | mean unmutated snail mass per species | non-negative reals (same length as probabilities) | [10.0, 20.0] |
+| | <code>start_date</code> | date of first assay | copied from surveys for convenience | 2024-03-01 |
+| | <code>mut_mass_scale</code> | scaling factor for mutated snails | real greater or equal to 1.0 | 2.0 |
+| | <code>mass_rel_stdev</code> | relative standard deviation in masses | non-negative real | 0.5 |
+| | <code>max_mutations</code> | maximum number of mutations in genome | non-negative integer | 5 |
+| | <code>daily_growth</code> | percentage increase in mass per day | non-negative real | 0.01 |
+| | <code>p_missing_location</code> | probability that sample location is unknown | probability | 0.05 |
+| <code>survey</code> | <code>number</code> | number of survey sites | non-negative integer | 3 |
+| | <code>size</code> | survey grid size | non-negative integer | 15 |
+| | <code>start_date</code> | overall survey start date | ISO date | 2024-03-01 |
+| | <code>max_interval</code> | maximum number of days between specimen samples | non-negative integer | 7 |</p>
 <p>Notes:</p>
 <ol>
 <li>
@@ -1251,11 +1091,15 @@ The parameters, their meanings, and their properties are:</p>
     Their XY coordinates are missing in <code>specimens.csv</code> and <code>null</code> in <code>snailz.db</code>.</p>
 </li>
 <li>
-<p>All snail genomes are the same length,
+<p>Snails belong to one or more species,
+    each of which has a different reference genome
+    and (potentially) different mean mass.</p>
+</li>
+<li>
+<p>All snail genome fragments are the same length,
     and are generated by mutating the bases at a few randomly-chosen locations.
-    One of those locations and one of the variant bases is selected at random;
-    a snail with that mutant base in that location is a mutant
-    that can grow to unusual size.</p>
+    One of those locations and one of the variant bases is selected at random for species 0;
+    a snail with that mutant base in that location is a mutant of unusual size.</p>
 </li>
 <li>
 <p>The masses of all snails are scaled up by an amount that depends on
@@ -1279,7 +1123,9 @@ The parameters, their meanings, and their properties are:</p>
 <p>Snails are placed on survey grids using simulated annealing.
     Each snail is initially put in a randomly-chosen location.
     Snails are then moved as if they were repulsive electrical charges,
-    with large snails repelling their neighbors more than small ones.</p>
+    with large snails repelling their neighbors more than small ones.
+    A "wall" of snails with unit mass surrounding the grid
+    ensures that actual snails don't wander off.</p>
 </li>
 </ol>
 <h2 id="data-dictionary">Data Dictionary</h2>
@@ -1506,6 +1352,8 @@ The file looks like this:</p>
 </tr>
 </tbody>
 </table>
+<p>Note that the CSV file does <em>not</em> record which species the snail belongs to
+or whether it is a mutant.</p>
 <h3 id="assays">Assays</h3>
 <p>Summary information about all assays is stored in <code>assays.csv</code>.
 The file looks like this:</p>

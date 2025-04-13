@@ -211,7 +211,6 @@ def specimen_initial_mass(
 
     Parameters:
         params: specimen generation parameters
-        specimen: which species this is
         collected: specimen collection date
         is_mutant: whether this specimen is a mutant
 
