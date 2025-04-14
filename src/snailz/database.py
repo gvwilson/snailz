@@ -140,7 +140,7 @@ def _import_single_files(root: Path, cursor: sqlite3.Cursor) -> None:
         cursor: database cursor
     """
     for filename, table, spec in (
-        (utils.ASSAYS_CSV, "assays", ASSAYS),
+        (utils.ASSAY_SUMMARY_CSV, "assays", ASSAYS),
         (utils.MACHINES_CSV, "machines", MACHINES),
         (utils.PERSONS_CSV, "persons", PERSONS),
         (utils.SPECIMENS_CSV, "specimens", SPECIMENS),

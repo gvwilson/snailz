@@ -22,7 +22,6 @@ home = "https://github.com/gvwilson/snailz"
 [project.optional-dependencies]
 dev = [
   "build",
-  "doit",
   "flask",
   "griffe-fieldz",
   "kaleido",
