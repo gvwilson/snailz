@@ -27,13 +27,20 @@ app.state.db_path = None
 async def home(request: Request):
     cursor = request.app.state.db_conn.cursor()
     values = {
-        "n_assays": _get_one(cursor, "select count(*) from assays"),
-        "n_machines": _get_one(cursor, "select count(*) from machines"),
-        "n_persons": _get_one(cursor, "select count(*) from persons"),
-        "n_specimens": _get_one(cursor, "select count(*) from specimens"),
-        "n_surveys": _get_one(cursor, "select count(distinct survey) from specimens"),
+        "n_assays": _get_one(cursor, "select count(*) as c from assays", "c"),
+        "n_machines": _get_one(cursor, "select count(*) as c from machines", "c"),
+        "n_persons": _get_one(cursor, "select count(*) as c from persons", "c"),
+        "n_specimens": _get_one(cursor, "select count(*) as c from specimens", "c"),
+        "n_surveys": _get_one(cursor, "select count(distinct survey) as c from specimens", "c"),
     }
-    return templates.TemplateResponse("home.html", {"request": request, **SETTINGS, **values})
+    return templates.TemplateResponse("home.html", {"request": request, "site": SETTINGS, **values})
+
+
+@app.get("/machines", response_class=HTMLResponse)
+async def machines(request: Request):
+    cursor = request.app.state.db_conn.cursor()
+    rows = cursor.execute("select * from machines").fetchall()
+    return templates.TemplateResponse("table.html", {"request": request, "site": SETTINGS, "section": "Machines", "keys": list(rows[0].keys()), "rows": rows})
 
 
 @click.command()
@@ -43,11 +50,16 @@ def main(db):
     assert Path(db).is_file(), f"No such database file {db}"
     app.state.db_path = db
     app.state.db_conn = sqlite3.connect(db)
+    app.state.db_conn.row_factory = _dict_factory
     uvicorn.run(app)
 
 
-def _get_one(cursor, query):
-    return cursor.execute(query).fetchone()[0]
+def _dict_factory(cursor, row):
+    return {col[0]: row[idx] for idx, col in enumerate(cursor.description)}
+
+
+def _get_one(cursor, query, key):
+    return cursor.execute(query).fetchone()[key]
 
 
 if __name__ == "__main__":

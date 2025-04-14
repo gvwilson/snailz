@@ -1,0 +1,15 @@
+<h2>{{ section }}</h2>
+<table>
+  <thead>
+    <tr>
+      {% for k in keys %}<th>{{ k }}</th>{% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in rows %}
+    <tr>
+      {% for k in keys %}<td>{{ r[k] }}</td>{% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

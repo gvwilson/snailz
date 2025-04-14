@@ -46,3 +46,14 @@ td, th {
     text-align: left;
     padding: 5px;
 }
+
+/* Generic layout */
+.center {
+    text-align: center;
+}
+.left {
+    text-align: left;
+}
+.right {
+    text-align: right;
+}
