@@ -79,7 +79,7 @@ site:
 test:
 	${PYTHON_M} pytest tests
 
-## vis: visualize grids
+## vis_grids: visualize grids
 vis_grids:
 	@mkdir -p ${TMP}
 	${PYTHON} ${SCRIPTS}/visualize.py --data ${DATA} --make grid --output ${TMP}/grids.png --show
