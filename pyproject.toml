@@ -22,8 +22,9 @@ home = "https://github.com/gvwilson/snailz"
 [project.optional-dependencies]
 dev = [
   "build",
-  "flask",
+  "fastapi",
   "griffe-fieldz",
+  "jinja2",
   "kaleido==0.2.1",
   "markdown-include",
   "mkdocs-click",
@@ -39,6 +40,7 @@ dev = [
   "ruff",
   "scikit-learn",
   "twine",
+  "uvicorn",
 ]
 
 [project.scripts]
