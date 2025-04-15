@@ -1,6 +1,7 @@
 """Summarize data."""
 
 import click
+import math
 from pathlib import Path
 import sys
 
@@ -35,29 +36,20 @@ def _make_grids(data):
     """Make survey grid visualization."""
     grids = utils.read_grids(Path(data))
     df = utils.combine_grids(grids)
+
+    facet_col_wrap = round(math.sqrt(len(grids)))
     fig = px.density_heatmap(
         df,
         x="col",
         y="row",
         z="val",
         facet_col="survey",
-        color_continuous_scale=[
-            [0, "rgb(128,128,128)"],  # gray at 0
-            [0.000001, "rgb(220,235,255)"],  # lightest blue just above 0
-            [0.5, "rgb(65,105,225)"],  # medium blue
-            [1, "rgb(0,0,139)"],
-        ],
+        facet_col_wrap=facet_col_wrap,  # Create a grid layout based on sqrt
+        color_continuous_scale="dense",
     )
 
     # Remove title from colorbar
     fig.update_layout(coloraxis_colorbar_title_text=None)
-
-    # Make subplots square
-    min_row, max_row = df["row"].min(), df["row"].max()
-    fig.update_layout(
-        yaxis={"scaleanchor": "x", "scaleratio": 1, "range": [min_row, max_row]},
-        yaxis2={"scaleanchor": "x2", "scaleratio": 1, "range": [min_row, max_row]},
-    )
 
     return fig
 
