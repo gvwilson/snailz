@@ -71,6 +71,15 @@ lint:
 	${PYTHON_M} ruff check .
 	${PYTHON_M} pyright
 
+## profile: run with profiling and show top 20 time-consuming functions
+profile:
+	@mkdir -p ${DATA}
+	${PYTHON_M} cProfile -s tottime scripts/profiling.py | head -n 30
+
+## publish: publish package (needs TOKEN defined on command line)
+publish:
+	${PYTHON_M} twine upload --verbose -u __token__ -p ${TOKEN} dist/*
+
 ## site: serve documentation website
 site:
 	${PYTHON_M} mkdocs serve
@@ -78,11 +87,6 @@ site:
 ## test: run tests
 test:
 	${PYTHON_M} pytest tests
-
-## profile: run with profiling and show top 20 time-consuming functions
-profile:
-	@mkdir -p ${DATA}
-	${PYTHON_M} cProfile -s tottime scripts/profiling.py | head -n 30
 
 ## vis_grids: visualize grids
 vis_grids:
