@@ -107,6 +107,20 @@ class AllAssays(BaseModel):
 
     items: list[Assay] = Field(description="actual assays")
 
+    def max_reading(self) -> int:
+        """Find maximum assay reading value.
+
+        Returns:
+            Largest reading value across all assays.
+        """
+        result = 0.0
+        for a in self.items:
+            for x in range(a.readings.width):
+                for y in range(a.readings.height):
+                    result = max(result, a.readings[x, y])
+        return result
+
+
     def to_csv(self, summary: bool = True) -> str:
         """Return a CSV string representation of the assay summary data.
 

@@ -31,16 +31,29 @@ async def home(request: Request):
         "n_machines": _get_one(cursor, "select count(*) as c from machines", "c"),
         "n_persons": _get_one(cursor, "select count(*) as c from persons", "c"),
         "n_specimens": _get_one(cursor, "select count(*) as c from specimens", "c"),
-        "n_surveys": _get_one(cursor, "select count(distinct survey) as c from specimens", "c"),
+        "n_surveys": _get_one(
+            cursor, "select count(distinct survey) as c from specimens", "c"
+        ),
     }
-    return templates.TemplateResponse("home.html", {"request": request, "site": SETTINGS, **values})
+    return templates.TemplateResponse(
+        "home.html", {"request": request, "site": SETTINGS, **values}
+    )
 
 
 @app.get("/machines", response_class=HTMLResponse)
 async def machines(request: Request):
     cursor = request.app.state.db_conn.cursor()
     rows = cursor.execute("select * from machines").fetchall()
-    return templates.TemplateResponse("table.html", {"request": request, "site": SETTINGS, "section": "Machines", "keys": list(rows[0].keys()), "rows": rows})
+    return templates.TemplateResponse(
+        "table.html",
+        {
+            "request": request,
+            "site": SETTINGS,
+            "section": "Machines",
+            "keys": list(rows[0].keys()),
+            "rows": rows,
+        },
+    )
 
 
 @click.command()

@@ -9,6 +9,7 @@ from datetime import date, timedelta
 import math
 import random
 from typing import Sequence
+import numpy as np
 
 from PIL import ImageFilter
 from PIL.Image import Image as PilImage  # to satisfy type checking
@@ -100,28 +101,43 @@ def days_to_next_survey(params: SurveyParams) -> timedelta:
     return timedelta(days=random.randint(1, params.max_interval))
 
 
-def image_noise(params: AssayParams, img: PilImage, img_size: int) -> PilImage:
-    """Add noise effects to image.
+def image_noise(params: AssayParams, array: np.ndarray, img_size: int) -> np.ndarray:
+    """Add noise effects to numpy array before conversion to image.
 
     Parameters:
-        img: pristine image
+        params: assay parameters
+        array: pristine numpy array
+        img_size: size of the image
 
     Returns:
-        Distorted image.
+        Distorted numpy array.
     """
-    # Add uniform noise (not provided by pillow).
-    for x in range(img_size):
-        for y in range(img_size):
-            noise = random.randint(-params.image_noise, params.image_noise)
-            old_val = img.getpixel((x, y))
-            assert isinstance(old_val, int)  # for type checking
-            val = max(utils.BLACK, min(utils.WHITE, old_val + noise))
-            img.putpixel((x, y), val)
+    # Generate random noise array of the same shape
+    noise = np.random.randint(
+        -params.image_noise,
+        params.image_noise + 1,
+        size=(img_size, img_size),
+        dtype=np.int16,
+    )
 
-    # Blur.
-    img = img.filter(ImageFilter.GaussianBlur(BLUR_RADIUS))
+    # Add noise to the original array
+    noisy_array = np.clip(
+        array.astype(np.int16) + noise, utils.BLACK, utils.WHITE
+    ).astype(np.uint8)
 
-    return img
+    return noisy_array
+
+
+def image_blur(img: PilImage) -> PilImage:
+    """Apply Gaussian blur to an image.
+
+    Parameters:
+        img: image to blur
+
+    Returns:
+        Blurred image.
+    """
+    return img.filter(ImageFilter.GaussianBlur(BLUR_RADIUS))
 
 
 def machine_brightness(params: MachineParams) -> float:
