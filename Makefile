@@ -79,6 +79,11 @@ site:
 test:
 	${PYTHON_M} pytest tests
 
+## profile: run with profiling and show top 20 time-consuming functions
+profile:
+	@mkdir -p ${DATA}
+	${PYTHON_M} cProfile -s tottime scripts/profiling.py | head -n 30
+
 ## vis_grids: visualize grids
 vis_grids:
 	@mkdir -p ${TMP}
