@@ -55,7 +55,7 @@ machine,M0001,,,
 """
 
 FIXTURE = (
-    ("/assays.csv", ASSAYS),
+    ("/assay_summary.csv", ASSAYS),
     ("/machines.csv", MACHINES),
     ("/persons.csv", PERSONS),
     ("/specimens.csv", SPECIMENS),
