@@ -28,7 +28,7 @@ class AllImages(BaseModel):
 
         Parameters:
             params: assay generation parameters
-            max_reading: largest assay reading
+            assays: assays to generate images for
 
         Returns:
             A dictionary of assay IDs and generated images.
