@@ -472,6 +472,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#snailz.mangle._mangle_missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      _mangle_missing
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#snailz.mangle._mangle_person" class="md-nav__link">
     <span class="md-ellipsis">
       _mangle_person
@@ -841,6 +850,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#snailz.mangle._mangle_missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      _mangle_missing
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#snailz.mangle._mangle_person" class="md-nav__link">
     <span class="md-ellipsis">
       _mangle_person
@@ -1033,7 +1051,7 @@
     <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="n">assays_dir</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">ORIGINAL</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
             <span class="n">original</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">stream</span><span class="p">)]</span>
-        <span class="n">mangled</span> <span class="o">=</span> <span class="n">_mangle_assay</span><span class="p">(</span><span class="n">original</span><span class="p">,</span> <span class="n">staff</span><span class="p">,</span> <span class="n">forced</span><span class="p">)</span>
+        <span class="n">mangled</span> <span class="o">=</span> <span class="n">_mangle_assay</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">original</span><span class="p">,</span> <span class="n">staff</span><span class="p">,</span> <span class="n">forced</span><span class="p">)</span>
         <span class="n">output_file</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ORIGINAL</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">MANGLED</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">)</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
             <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">lineterminator</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">writerows</span><span class="p">(</span><span class="n">mangled</span><span class="p">)</span>
@@ -1047,7 +1065,7 @@
 
 
 <h2 id="snailz.mangle._mangle_assay" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">_mangle_assay</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">staff</span><span class="p">,</span> <span class="n">forced</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">_mangle_assay</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">staff</span><span class="p">,</span> <span class="n">forced</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1172,8 +1190,10 @@
 <span class="normal">61</span>
 <span class="normal">62</span>
 <span class="normal">63</span>
-<span class="normal">64</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_mangle_assay</span><span class="p">(</span>
-    <span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">staff</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Person</span><span class="p">],</span> <span class="n">forced</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_mangle_assay</span><span class="p">(</span>
+    <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">staff</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Person</span><span class="p">],</span> <span class="n">forced</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Mangle a single assay file.</span>
 
@@ -1188,6 +1208,7 @@
     <span class="n">available</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">_mangle_id</span><span class="p">,</span>
         <span class="s2">&quot;indent&quot;</span><span class="p">:</span> <span class="n">_mangle_indent</span><span class="p">,</span>
+        <span class="s2">&quot;missing&quot;</span><span class="p">:</span> <span class="n">_mangle_missing</span><span class="p">,</span>
         <span class="s2">&quot;person&quot;</span><span class="p">:</span> <span class="n">_mangle_person</span><span class="p">,</span>
     <span class="p">}</span>
 
@@ -1199,6 +1220,7 @@
 
     <span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">manglers</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">staff</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">data</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -1292,9 +1314,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/mangle.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">69</span>
 <span class="normal">70</span>
 <span class="normal">71</span>
 <span class="normal">72</span>
@@ -1306,7 +1326,9 @@
 <span class="normal">78</span>
 <span class="normal">79</span>
 <span class="normal">80</span>
-<span class="normal">81</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_mangle_id</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">staff</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Person</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_mangle_id</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">staff</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Person</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert ID field to string.</span>
 
 <span class="sd">    Parameters:</span>
@@ -1357,7 +1379,7 @@
                 <code>data</code>
             </td>
             <td>
-                  <code><span title="list">list</span>[<span title="list">list</span>]</code>
+                  <code><span title="list">list</span>[<span title="list">list</span>[<span title="str">str</span>]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1413,22 +1435,22 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/mangle.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span>
-<span class="normal">95</span>
-<span class="normal">96</span>
-<span class="normal">97</span>
-<span class="normal">98</span>
-<span class="normal">99</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_mangle_indent</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">],</span> <span class="n">staff</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Person</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_mangle_indent</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">staff</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Person</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Indent data portion.</span>
 
 <span class="sd">    Parameters:</span>
@@ -1444,6 +1466,119 @@
         <span class="k">else</span> <span class="p">(</span><span class="n">row</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
         <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">data</span>
     <span class="p">]</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="snailz.mangle._mangle_missing" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">_mangle_missing</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">staff</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Remove machine name (alters length of header).</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>data</code>
+            </td>
+            <td>
+                  <code><span title="list">list</span>[<span title="list">list</span>[<span title="str">str</span>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>values from CSV file</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>staff</code>
+            </td>
+            <td>
+                  <code><span title="dict">dict</span>[<span title="str">str</span>, <a class="autorefs autorefs-internal" title="Person (snailz.persons.Person)" href="../persons/#snailz.persons.Person">Person</a>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>people keyed by ID</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span>[<span title="list">list</span>[<span title="str">str</span>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Modified copy of data.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/snailz/mangle.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_mangle_missing</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">staff</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Person</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove machine name (alters length of header).</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        data: values from CSV file</span>
+<span class="sd">        staff: people keyed by ID</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Modified copy of data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">row</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">data</span> <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;machine&quot;</span><span class="p">]</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -1480,7 +1615,7 @@
                 <code>data</code>
             </td>
             <td>
-                  <code><span title="list">list</span>[<span title="list">list</span>]</code>
+                  <code><span title="list">list</span>[<span title="list">list</span>[<span title="str">str</span>]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1536,22 +1671,22 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/mangle.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_mangle_person</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">],</span> <span class="n">staff</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Person</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_mangle_person</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">staff</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Person</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Replace person identifier with name.</span>
 
 <span class="sd">    Parameters:</span>

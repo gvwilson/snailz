@@ -296,7 +296,6 @@ def survey_initialize_grid(size: int) -> Grid[int]:
     center = size // 2
     moves = [[-1, 0], [1, 0], [0, -1], [0, 1]]
     x, y = center, center
-    cells[x, y] = 1
     while (x != 0) and (x != size_1) and (y != 0) and (y != size_1):
         cells[x, y] += 1
         m = random.choice(moves)

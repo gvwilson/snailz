@@ -28,14 +28,14 @@ def mangle_assays(
     for filename in Path(assays_dir).glob(f"*{ORIGINAL}.csv"):
         with open(filename, "r") as stream:
             original = [row for row in csv.reader(stream)]
-        mangled = _mangle_assay(original, staff, forced)
+        mangled = _mangle_assay(filename, original, staff, forced)
         output_file = str(filename).replace(f"{ORIGINAL}.csv", f"{MANGLED}.csv")
         with open(output_file, "w") as stream:
             csv.writer(stream, lineterminator="\n").writerows(mangled)
 
 
 def _mangle_assay(
-    data: list[list[str]], staff: dict[str, Person], forced: list[str] | None
+    filename: str, data: list[list[str]], staff: dict[str, Person], forced: list[str] | None
 ) -> list[list]:
     """Mangle a single assay file.
 
@@ -50,6 +50,7 @@ def _mangle_assay(
     available = {
         "id": _mangle_id,
         "indent": _mangle_indent,
+        "missing": _mangle_missing,
         "person": _mangle_person,
     }
 
@@ -61,6 +62,7 @@ def _mangle_assay(
 
     for func in manglers:
         data = func(data, staff)
+
     return data
 
 
@@ -81,7 +83,7 @@ def _mangle_id(data: list[list[str]], staff: dict[str, Person]) -> list[list[str
     return data
 
 
-def _mangle_indent(data: list[list], staff: dict[str, Person]) -> list[list[str]]:
+def _mangle_indent(data: list[list[str]], staff: dict[str, Person]) -> list[list[str]]:
     """Indent data portion.
 
     Parameters:
@@ -99,7 +101,20 @@ def _mangle_indent(data: list[list], staff: dict[str, Person]) -> list[list[str]
     ]
 
 
-def _mangle_person(data: list[list], staff: dict[str, Person]) -> list[list[str]]:
+def _mangle_missing(data: list[list[str]], staff: dict[str, Person]) -> list[list[str]]:
+    """Remove machine name (alters length of header).
+
+    Parameters:
+        data: values from CSV file
+        staff: people keyed by ID
+
+    Returns:
+        Modified copy of data.
+    """
+    return [row for row in data if row[0] != "machine"]
+
+
+def _mangle_person(data: list[list[str]], staff: dict[str, Person]) -> list[list[str]]:
     """Replace person identifier with name.
 
     Parameters:

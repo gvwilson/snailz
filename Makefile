@@ -21,7 +21,7 @@ commands:
 ## build: build package
 build: clean
 	${PYTHON_M} build
-	${PYTHON_M} twine check dist/*
+	@${PYTHON_M} twine check dist/*
 
 ## classify: classify assay results
 classify:
