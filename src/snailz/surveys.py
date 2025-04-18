@@ -34,11 +34,7 @@ class Survey(BaseModel):
     def max_pollution(self) -> float:
         """Maximum pollution value in this survey."""
         assert self.cells is not None  # for type checking
-        result = self.cells[0, 0]
-        for x in range(self.size):
-            for y in range(self.size):
-                result = max(result, self.cells[x, y])
-        return result
+        return self.cells.max()
 
     def to_csv(self) -> str:
         """Create a CSV representation of a single survey.

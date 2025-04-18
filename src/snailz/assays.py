@@ -107,7 +107,7 @@ class AllAssays(BaseModel):
 
     items: list[Assay] = Field(description="actual assays")
 
-    def max_reading(self) -> int:
+    def max_reading(self) -> float:
         """Find maximum assay reading value.
 
         Returns:
@@ -115,9 +115,7 @@ class AllAssays(BaseModel):
         """
         result = 0.0
         for a in self.items:
-            for x in range(a.readings.width):
-                for y in range(a.readings.height):
-                    result = max(result, a.readings[x, y])
+            result = max(result, a.readings.max())
         return result
 
 

@@ -62,3 +62,18 @@ class Grid(BaseModel, Generic[T]):
             ",".join(f"{self[x, y]}" for x in range(self.width))
             for y in range(self.height - 1, -1, -1)
         )
+
+    def max(self) -> T:
+        """Find maximum value.
+
+        Returns:
+            Maximum value in grid.
+        """
+        assert self.data is not None
+        result = self[0, 0]
+        for x in range(self.width):
+            for y in range(self.height):
+                val = self[x, y]
+                if val > result:  # type: ignore
+                    result = val
+        return result
