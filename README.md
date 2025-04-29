@@ -24,7 +24,7 @@ and uses modern Python tools.
 > Your team is now collecting and analyzing specimens from affected regions
 > to determine if a mutant gene makes snails more susceptible to the pollution.
 
-`snailz` generates five related sets of data:
+`snailz` generates several related sets of data:
 
 Persons
 :   The scientists conducting the study.
@@ -35,10 +35,6 @@ Persons
 Machines
 :   The equipment used to analyze the samples.
     Like persons, they are included to enable simulation of bias.
-
-Surveys
-:   The locations where specimens are collected.
-    Each survey site is represented as a square grid of pollution measurements.
 
 Specimens
 :   The snails collected from the sites.
@@ -74,11 +70,11 @@ $ source .venv/bin/activate
 # Install snailz and dependencies
 $ uv pip install snailz
 
-# Write default parameter values to ./params.json file
-$ snailz params --output params.json
+# Write default parameter values to the ./params.json file
+$ snailz params --defaults > params.json
 
-# Generate all output files in ./data directory
-$ snailz data --params params.json --output data
+# Generate all output files in the ./data directory
+$ snailz data --params params.json --outdir data
 ```
 
 ## Parameters
@@ -87,34 +83,28 @@ $ snailz data --params params.json --output data
 and can generate a file with default parameter values as a starting point.
 The parameters, their meanings, and their properties are:
 
-| Group | Name | Purpose | Notes | Default |
-| ----- | ---- | ------- | ----- | -----__ |
-| overall | `seed` | random number generation seed | non-negative integer | 7493418 |
-| `assay` | `baseline` | assay reading for non-mutant specimens | non-negative real | 1.0 |
-| | `degrade` | reading degradation per day between sample collection and assay | non-negative real | 0.05 |
-| | `delay` | maximum days of delay between sample collection and assay | non-negative integer | 5 |
-| | `mutant` | assay reading for mutant specimens | non-negative real, greater than `baseline` | 10.0 |
-| | `rel_stdev` | relative standard deviation readings | non-negative real | 0.2 |
-| | `plate_size` | number of rows and columns in assay plate | non-negative integer | 4 |
-| | `image_noise` | noise to add to assay images | scale is 0-255 | 32 |
-| | `p_duplicate_assay` | probability of duplicate assay | probability | 0.05 |
-| `machine` | `variation` | systematic variation in readings | percentage | 0.05 |
-| | `number` | number of machines | non-negative integer | 5 |
-| `person` | `locale` | locale for random name generation | valid ISO locale | `et_EE` (Estonia) |
-| | `number` | number of persons | non-negative integer | 5 |
-| `specimen` | `length` | genome length in bases | non-negative integer | 20 |
-| | `prob_species` | probability of each species | list of probabilities summing to 1.0 | [0.6, 0.4] |
-| | `mean_masses` | mean unmutated snail mass per species | non-negative reals (same length as probabilities) | [10.0, 20.0] |
-| | `start_date` | date of first assay | copied from surveys for convenience | 2024-03-01 |
-| | `mut_mass_scale` | scaling factor for mutated snails | real greater or equal to 1.0 | 2.0 |
-| | `mass_rel_stdev` | relative standard deviation in masses | non-negative real | 0.5 |
-| | `max_mutations` | maximum number of mutations in genome | non-negative integer | 5 |
-| | `daily_growth` | percentage increase in mass per day | non-negative real | 0.01 |
-| | `p_missing_location` | probability that sample location is unknown | probability | 0.05 |
-| `survey` | `number` | number of survey sites | non-negative integer | 3 |
-| | `size` | survey grid size | non-negative integer | 15 |
-| | `start_date` | overall survey start date | ISO date | 2024-03-01 |
-| | `max_interval` | maximum number of days between specimen samples | non-negative integer | 7 |
+| Group | Name | Purpose | Default |
+| ----- | ---- | ------- | ------: |
+| overall | `rng_seed` | random number generation seed | 123456 |
+| | `grid_size` | XY dimensions of survey grids | 15 |
+| | `num_sites` | number of survey sites | 3 |
+| | `num_specimens` | average number of specimens per site | 10 |
+| | `num_machines` | number of lab machines used for assays | 5 |
+| | `num_persons` | number of lab staff doing assays | 5 |
+| | `locale` | locale used for generating staff names | `et_EE` (Estonian) |
+| | `assays_per_specimen` | number of assays done per specimen | 2 |
+| `specimen_params` | `mass_mean` | mean specimen mass | 10.0 |
+| | `mass_sd` | relative standard deviation of masses | 1.0 |
+| | `genome_length` | number of bases in specimen genomes | 20 |
+| | `mut_mass_scale` | scaling factor for mutant specimen masses | 2.0 |
+| | `mut_frac` | fraction of specimens with significant mutation | 0.2 |
+| | `mut_prob` | probability of non-significant mutations per base | 0.0 |
+| `assays_params` | `plate_size` | XY dimensions of assay plates | 4 |
+| | `mean_control` | mean plate reading for control wells | 0.0 |
+| | `mean_normal` | mean plate reading for normal specimens | 2.0 |
+| | `mean_mutant` | mean plate reading for mutant specimens | 5.0 |
+| | `reading_noise` | noise applied to plate readings | 0.5 |
+| | `image_noise` | pixel noise applied to plate images | 3 |
 
 Notes:
 
@@ -122,65 +112,31 @@ Notes:
     adding one to each cell's value each time it is visited.
     The random walk starts when the polluted region reaches the boundary of the survey grid.
 
-1.  Survey sites are sampled sequentially,
-    i.e.,
-    all of the samples from one site are collected before any samples are collected from the next.
-
-1.  Some specimens' grid locations are missing from the final data.
-    Their XY coordinates are missing in `specimens.csv` and `null` in `snailz.db`.
-
-1.  Snails belong to one or more species,
-    each of which has a different reference genome
-    and (potentially) different mean mass.
-
 1.  All snail genome fragments are the same length,
     and are generated by mutating the bases at a few randomly-chosen locations.
-    One of those locations and one of the variant bases is selected at random for species 0;
+    One of those locations and one of the variant bases is selected at random as significant;
     a snail with that mutant base in that location is a mutant of unusual size.
-
-1.  The masses of all snails are scaled up by an amount that depends on
-    how polluted their collection location is.
-    This scaling uses a [sigmoid function][sigmoid] rather than a linear function.
-
-1.  A few specimens are assayed twice instead of once.
-
-1.  The actual readings for mutated and unmutated snails are randomly generated
-    from normal distributions centered around `assay.baseline` and `assay.mutant`.
-    The readings for control wells are just noise.
-
-1.  Assay readings for both mutated and unmutated snails are lowered
-    by an amount that depends on the number of days between the sample being collected
-    and the assay being performed.
-
-1.  Snails are placed on survey grids using simulated annealing.
-    Each snail is initially put in a randomly-chosen location.
-    Snails are then moved as if they were repulsive electrical charges,
-    with large snails repelling their neighbors more than small ones.
-    A "wall" of snails with unit mass surrounding the grid
-    ensures that actual snails don't wander off.
 
 ## Data Dictionary
 
-All of the generated data is stored in a single JSON file called `data.json`.
-It can be read and analyzed directly,
-but it is more realistic to use the data described below.
+All of the generated data is stored in CSV files.
 
 ### Persons
 
 `persons.csv` contains information about the scientists performing the study.
 The file looks like this:
 
-| ident  | personal | family   |
+| id     | personal | family   |
 | :----- | :------- | :------- |
-| aa1942 | Artur    | Aasmäe   |
-| kk0085 | Katrin   | Kool     |
-| …      | …        | …        |
+| P06 | Artur | Aasmäe |
+| P07 | Katrin | Kool |
+| …   | …      | … |
 
 and its fields are:
 
 | Field | Purpose | Properties |
 | ----- | ------- | ---------- |
-| `ident` | identifier | text, unique, required |
+| `id` | identifier | text, unique, required |
 | `personal` | personal name | text, required |
 | `family` | family name | text, required |
 
@@ -189,10 +145,10 @@ and its fields are:
 `machines.csv` contains information about the machines used in the study.
 The file looks like this:
 
-| ident | name |
-| ----- | ---- |
-| M0001 | AeroProbe |
-| M0002 | NanoCounter Plus |
+| id    | name |
+| :---- | :--- |
+| M01 | Aero Probe |
+| M02 | Nano Counter |
 | …     | … |
 
 
@@ -200,17 +156,15 @@ and its fields are:
 
 | Field | Purpose | Properties |
 | ----- | ------- | ---------- |
-| `ident` | identifier | text, unique, required |
+| `id` | identifier | text, unique, required |
 | `name` | machine name | text, required |
 
 Note that the systematic variation in readings introduced by different machines
 is *not* stored in the generated data.
 
-### Surveys
+### Grids
 
-The `surveys` directory contains one CSV file for each survey site.
-Each file's name has the form <code>S<em>nnn</em>.csv</code> (e.g., `S165.csv`),
-where <code>S<em>nnn</em></code> is the survey site's unique identifier.
+The pollution readings for each survey grid are stored in a file <code>G<em>nn</em>.csv</code> (e.g., `G03.csv`).
 These CSV files do *not* have column headers;
 instead, each contains a square integer matrix of pollution readings.
 A typical file is:
@@ -238,166 +192,99 @@ A typical file is:
 `specimens.csv` holds information about individual snails in CSV format (with column headers).
 The file looks like this:
 
-| ident  | survey |  x |  y | collected  | genome               | mass |
-| :----- | :----- | -: | -: | :--------- | :------------------- | ---: |
-| KHNKDL | S165   | 11 |  4 | 2024-03-01 | GCAACCGGACCGCCGTAAGG | 3.82 |
-| DZYIPY | S165   |  3 |  7 | 2024-03-01 | TCATACGGACCGCCGTAAGG | 3.53 |
+| id  | genome               | mass |
+| :----- | :------------------- | ---: |
+| S0001 | GCAACCGGACCGCCGTAAGG | 3.82 |
+| S0002 | TCATACGGACCGCCGTAAGG | 3.53 |
 | … | … | … | … | … | … | … |
 
 and its fields are:
 
 | Field | Purpose | Properties |
 | ----- | ------- | ---------- |
-| `ident` | specimen identifier | text, unique, required |
-| `survey` | survey identifier | text, required |
-| `x` | collection X coordinate within survey grid | integer, required |
-| `y` | collection Y coordinate within survey grid | integer, required |
-| `collected` | collection date | ISO date, required |
+| `id` | specimen identifier | text, unique, required |
 | `genome` | base sequence | text, required |
 | `mass` | snail weight in grams | real, required |
-
-Note that the CSV file does *not* record which species the snail belongs to
-or whether it is a mutant.
 
 ### Assays
 
 Summary information about all assays is stored in `assay_summary.csv`.
 The file looks like this:
 
-| ident  | specimen | person | performed  | machine |
-| :----  | :------- | :----- | :--------- | :------ |
-| 386915 | KHNKDL   | km3478 | 2024-03-05 | M0005   |
-| 508199 | DZYIPY   | mt8294 | 2024-03-01 | M0001   |
-| …      | …        | …      | …          | …       |
+| id | specimen | machine | person | row | col | treatment | reading |
+| -- | -------- | ------- | ------ | --- | --- | --------- | ------- |
+| A0001 | S0001 | M00 | P03 | 1 | A | C | 0.56 |
+| A0001 | S0001 | M00 | P03 | 2 | A | C | 1.16 |
+| … | … | … | … | … | … | … | … |
 
 and its fields are:
 
 | Field | Purpose | Properties |
 | ----- | ------- | ---------- |
-| `ident` | assay identifier | text, required |
+| `id` | assay identifier | text, required |
 | `specimen` | specimen identifier | text, required |
-| `person` | scientist identifier | text, required |
-| `performed` | assay date | ISO date, required |
 | `machine` | machine used | text, required |
-
-Assay results are stored in `assays.csv`.
-The file looks like this:
-
-| ident  | specimen | col | row | treatment | reading |
-| :----- | :------- | :-- | --: | :-------- | ------: |
-| 720482 | LYKVID   | A   | 1   | C         | 0.20    |
-| 720482 | LYKVID   | A   | 2   | C         | 0.25    |
-| …      | …        | …   | …   | …         | …       |
-
-and its fields are:
-
-| Field | Purpose | Properties |
-| ----- | ------- | ---------- |
-| `ident` | assay ID | text, required |
-| `specimen` | specimen ID | text, required |
-| `col` | assay plate column | text, required |
+| `person` | scientist identifier | text, required |
 | `row` | assay plate row | integer, required |
-| `treatment` | control or sample | "C" or "S" |
-| `reading` | well reading | non-negative real |
+| `col` | assay plate column | text, required |
+| `treatment` | control "C" or specimen "S" | text, required |
+| `reading` | well reading | real, required |
 
-The `assays` directory contains three files for each assay:
+The directory also contains four files for each assay:
 
-1.  a design file <code><em>nnnnnn</em>_treatments.csv</code>
+1.  a design file <code>A<em>nnnn</em>_treatments.csv</code>
     showing whether specimen samples or control material was placed in each well of the assay plate;
 
-2.  a readings file <code><em>nnnnnn</em>_readings.csv</code>
-    with the reading from each well;
+2.  a readings file <code>A<em>nnnn</em>_readings.csv</code>
+    with the readings from each well;
+
+3.  a "raw" readings file <code>A<em>nnnn</em>_raw.csv</code>
+    with the raw readings from each well;
     and
 
 3.  an image file <code><em>nnnn</em>.png</code> showing the image that the readings were taken from.
-    (In actuality `snailz` generates the readings first and then the image.)
 
 Each CSV file contains a multi-line header with metadata followed by
 a table of well values with row and column labels.
-A typical design file is:
+A typical treatments file is:
 
 ```
-id,037356,,,
-specimen,AMEMRZ,,,
-date,2024-03-11,,,
-by,pv8677,,,
-machine,M0002,,,
+id,A0001
+specimen,S0001
+machine,M00
+person,P03
 ,A,B,C,D
-1,S,C,C,S
-2,C,C,S,C
-3,S,C,S,S
-4,C,S,C,S
+1,0.56,2.22,2.17,0.55
+2,1.16,2.33,2.18,0.11
+3,0.35,2.13,2.82,0.08
+4,1.38,1.74,2.2,1.0
 ```
 
 while a typical readings file is:
 
 ```
-id,037356,,,
-specimen,AMEMRZ,,,
-date,2024-03-11,,,
-by,pv8677,,,
-machine,M0002,,,
+id,A0001
+specimen,S0001
+machine,M00
+person,P03
 ,A,B,C,D
-1,1.09,0.08,0.02,1.1
-2,0.02,0.02,1.0,0.07
-3,1.03,0.03,1.1,1.07
-4,0.09,1.02,0.04,1.01
+1,C,S,S,C
+2,C,S,S,C
+3,C,S,S,C
+4,S,S,S,S
 ```
 
-The first five rows of each file are:
+The first four rows of each file are:
 
 | Field | Purpose | Properties |
 | ----- | ------- | ---------- |
 | `id`  | assay identifier | text, required |
 | `specimen` | specimen identifier | text, required |
-| `date` | assay date | ISO date, required |
-| `by` | scientist identifier | text |
 | `machine` | machine identifier | text |
+| `person` | scientist identifier | text |
 
-The `assays` directory also contains files called <code><em>nnnnnn</em>_raw.csv</code>.
-Each of these files contains the same data as the assay's readings file,
-but has some deliberate errors:
-header rows may be missing or out of order,
-data may be indented,
-and so on.
-These files are provided so that people can learn how to deal with messy real-world data.
-
-### Database
-
-All of the data about people, specimens, and assays is also stored in
-a SQLite database called `snailz.db`,
-whose structure is shown below.
-
-<div align="center">
-  <img src="https://raw.githubusercontent.com/gvwilson/snailz/main/pages/img/schema.svg" alt="database schema">
-</div>
-
-### Data File Structure
-
-```
-data
-├── params.json
-├── data.json
-├── persons.csv
-├── machines.csv
-├── surveys
-│   ├── S165.csv
-│   ├── S410.csv
-│   └── …
-├── specimens.csv
-├── assays.csv
-├── assays
-│   ├── 037356_treatments.csv
-│   ├── 037356.png
-│   ├── 037356_raw.csv
-│   ├── 037356_readings.csv
-│   ├── 092025_treatments.csv
-│   ├── 092025.png
-│   ├── 092025_raw.csv
-│   ├── 092025_readings.csv
-│   └── …
-└── snailz.db
-```
+The "raw" files are copies of the readings files with deliberate formatting errors,
+and can be used to teach students how to deal with realistic data.
 
 ## Colophon
 
@@ -409,27 +296,21 @@ The snail logo was created by [sunar.ko][snail-logo].
 
 My thanks to everyone who built the tools this project relies on, including:
 
--   [`click`][click] for building the command-line interface.
--   [`doit`][doit] to run commands.
 -   [`mkdocs`][mkdocs] for documentation.
 -   [`pydantic`][pydantic] for storing and validating data (including parameters).
 -   [`pytest`][pytest], [`pyfakefs`][pyfakefs], and [`faker`][faker] for testing.
--   [`ruff`][ruff] and [`pyright`][pyright] for checking the code.
+-   [`ruff`][ruff] for checking the code.
 -   [`uv`][uv] for managing packages and the virtual environment.
 
 [alexander-rohan]: https://rohanalexander.com/
-[click]: https://click.palletsprojects.com/
-[doit]: https://pydoit.org/
 [faker]: https://faker.readthedocs.io/
 [mkdocs]: https://www.mkdocs.org/
 [microplate]: https://en.wikipedia.org/wiki/Microplate
 [penguins]: https://allisonhorst.github.io/palmerpenguins/
 [pydantic]: https://docs.pydantic.dev/
 [pyfakefs]: https://pypi.org/project/pyfakefs/
-[pyright]: https://pypi.org/project/pyright/
 [pytest]: https://docs.pytest.org/
 [ruff]: https://docs.astral.sh/ruff/
-[sigmoid]: https://en.wikipedia.org/wiki/Sigmoid_function
 [snail-logo]: https://www.vecteezy.com/vector-art/7319786-snails-logo-vector-on-white-background
 [telling-stories]: https://tellingstorieswithdata.com/
 [uv]: https://docs.astral.sh/uv/

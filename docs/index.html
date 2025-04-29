@@ -252,9 +252,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#surveys" class="md-nav__link">
+  <a href="#grids" class="md-nav__link">
     <span class="md-ellipsis">
-      Surveys
+      Grids
     </span>
   </a>
   
@@ -273,24 +273,6 @@
   <a href="#assays" class="md-nav__link">
     <span class="md-ellipsis">
       Assays
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#database" class="md-nav__link">
-    <span class="md-ellipsis">
-      Database
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#data-file-structure" class="md-nav__link">
-    <span class="md-ellipsis">
-      Data File Structure
     </span>
   </a>
   
@@ -803,9 +785,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#surveys" class="md-nav__link">
+  <a href="#grids" class="md-nav__link">
     <span class="md-ellipsis">
-      Surveys
+      Grids
     </span>
   </a>
   
@@ -824,24 +806,6 @@
   <a href="#assays" class="md-nav__link">
     <span class="md-ellipsis">
       Assays
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#database" class="md-nav__link">
-    <span class="md-ellipsis">
-      Database
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#data-file-structure" class="md-nav__link">
-    <span class="md-ellipsis">
-      Data File Structure
     </span>
   </a>
   
@@ -900,7 +864,7 @@ some of the tree snails in the region began growing unusually large.
 Your team is now collecting and analyzing specimens from affected regions
 to determine if a mutant gene makes snails more susceptible to the pollution.</p>
 </blockquote>
-<p><code>snailz</code> generates five related sets of data:</p>
+<p><code>snailz</code> generates several related sets of data:</p>
 <dl>
 <dt>Persons</dt>
 <dd>The scientists conducting the study.
@@ -910,9 +874,6 @@ the tendency for different people to perform experiments in slightly different w
 <dt>Machines</dt>
 <dd>The equipment used to analyze the samples.
 Like persons, they are included to enable simulation of bias.</dd>
-<dt>Surveys</dt>
-<dd>The locations where specimens are collected.
-Each survey site is represented as a square grid of pollution measurements.</dd>
 <dt>Specimens</dt>
 <dd>The snails collected from the sites.
 The data records where the snail was found,
@@ -944,44 +905,148 @@ $ source .venv/bin/activate
 # Install snailz and dependencies
 $ uv pip install snailz
 
-# Write default parameter values to ./params.json file
-$ snailz params --output params.json
+# Write default parameter values to the ./params.json file
+$ snailz params --defaults &gt; params.json
 
-# Generate all output files in ./data directory
-$ snailz data --params params.json --output data
+# Generate all output files in the ./data directory
+$ snailz data --params params.json --outdir data
 </code></pre>
 <h2 id="parameters">Parameters</h2>
 <p><code>snailz</code> reads controlling parameters from a JSON file,
 and can generate a file with default parameter values as a starting point.
 The parameters, their meanings, and their properties are:</p>
-<p>| Group | Name | Purpose | Notes | Default |
-| ----- | ---- | ------- | ----- | -----__ |
-| overall | <code>seed</code> | random number generation seed | non-negative integer | 7493418 |
-| <code>assay</code> | <code>baseline</code> | assay reading for non-mutant specimens | non-negative real | 1.0 |
-| | <code>degrade</code> | reading degradation per day between sample collection and assay | non-negative real | 0.05 |
-| | <code>delay</code> | maximum days of delay between sample collection and assay | non-negative integer | 5 |
-| | <code>mutant</code> | assay reading for mutant specimens | non-negative real, greater than <code>baseline</code> | 10.0 |
-| | <code>rel_stdev</code> | relative standard deviation readings | non-negative real | 0.2 |
-| | <code>plate_size</code> | number of rows and columns in assay plate | non-negative integer | 4 |
-| | <code>image_noise</code> | noise to add to assay images | scale is 0-255 | 32 |
-| | <code>p_duplicate_assay</code> | probability of duplicate assay | probability | 0.05 |
-| <code>machine</code> | <code>variation</code> | systematic variation in readings | percentage | 0.05 |
-| | <code>number</code> | number of machines | non-negative integer | 5 |
-| <code>person</code> | <code>locale</code> | locale for random name generation | valid ISO locale | <code>et_EE</code> (Estonia) |
-| | <code>number</code> | number of persons | non-negative integer | 5 |
-| <code>specimen</code> | <code>length</code> | genome length in bases | non-negative integer | 20 |
-| | <code>prob_species</code> | probability of each species | list of probabilities summing to 1.0 | [0.6, 0.4] |
-| | <code>mean_masses</code> | mean unmutated snail mass per species | non-negative reals (same length as probabilities) | [10.0, 20.0] |
-| | <code>start_date</code> | date of first assay | copied from surveys for convenience | 2024-03-01 |
-| | <code>mut_mass_scale</code> | scaling factor for mutated snails | real greater or equal to 1.0 | 2.0 |
-| | <code>mass_rel_stdev</code> | relative standard deviation in masses | non-negative real | 0.5 |
-| | <code>max_mutations</code> | maximum number of mutations in genome | non-negative integer | 5 |
-| | <code>daily_growth</code> | percentage increase in mass per day | non-negative real | 0.01 |
-| | <code>p_missing_location</code> | probability that sample location is unknown | probability | 0.05 |
-| <code>survey</code> | <code>number</code> | number of survey sites | non-negative integer | 3 |
-| | <code>size</code> | survey grid size | non-negative integer | 15 |
-| | <code>start_date</code> | overall survey start date | ISO date | 2024-03-01 |
-| | <code>max_interval</code> | maximum number of days between specimen samples | non-negative integer | 7 |</p>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th>Name</th>
+<th>Purpose</th>
+<th style="text-align: right;">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>overall</td>
+<td><code>rng_seed</code></td>
+<td>random number generation seed</td>
+<td style="text-align: right;">123456</td>
+</tr>
+<tr>
+<td></td>
+<td><code>grid_size</code></td>
+<td>XY dimensions of survey grids</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr>
+<td></td>
+<td><code>num_sites</code></td>
+<td>number of survey sites</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td></td>
+<td><code>num_specimens</code></td>
+<td>average number of specimens per site</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr>
+<td></td>
+<td><code>num_machines</code></td>
+<td>number of lab machines used for assays</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td></td>
+<td><code>num_persons</code></td>
+<td>number of lab staff doing assays</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td></td>
+<td><code>locale</code></td>
+<td>locale used for generating staff names</td>
+<td style="text-align: right;"><code>et_EE</code> (Estonian)</td>
+</tr>
+<tr>
+<td></td>
+<td><code>assays_per_specimen</code></td>
+<td>number of assays done per specimen</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td><code>specimen_params</code></td>
+<td><code>mass_mean</code></td>
+<td>mean specimen mass</td>
+<td style="text-align: right;">10.0</td>
+</tr>
+<tr>
+<td></td>
+<td><code>mass_sd</code></td>
+<td>relative standard deviation of masses</td>
+<td style="text-align: right;">1.0</td>
+</tr>
+<tr>
+<td></td>
+<td><code>genome_length</code></td>
+<td>number of bases in specimen genomes</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr>
+<td></td>
+<td><code>mut_mass_scale</code></td>
+<td>scaling factor for mutant specimen masses</td>
+<td style="text-align: right;">2.0</td>
+</tr>
+<tr>
+<td></td>
+<td><code>mut_frac</code></td>
+<td>fraction of specimens with significant mutation</td>
+<td style="text-align: right;">0.2</td>
+</tr>
+<tr>
+<td></td>
+<td><code>mut_prob</code></td>
+<td>probability of non-significant mutations per base</td>
+<td style="text-align: right;">0.0</td>
+</tr>
+<tr>
+<td><code>assays_params</code></td>
+<td><code>plate_size</code></td>
+<td>XY dimensions of assay plates</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td></td>
+<td><code>mean_control</code></td>
+<td>mean plate reading for control wells</td>
+<td style="text-align: right;">0.0</td>
+</tr>
+<tr>
+<td></td>
+<td><code>mean_normal</code></td>
+<td>mean plate reading for normal specimens</td>
+<td style="text-align: right;">2.0</td>
+</tr>
+<tr>
+<td></td>
+<td><code>mean_mutant</code></td>
+<td>mean plate reading for mutant specimens</td>
+<td style="text-align: right;">5.0</td>
+</tr>
+<tr>
+<td></td>
+<td><code>reading_noise</code></td>
+<td>noise applied to plate readings</td>
+<td style="text-align: right;">0.5</td>
+</tr>
+<tr>
+<td></td>
+<td><code>image_noise</code></td>
+<td>pixel noise applied to plate images</td>
+<td style="text-align: right;">3</td>
+</tr>
+</tbody>
+</table>
 <p>Notes:</p>
 <ol>
 <li>
@@ -990,75 +1055,33 @@ The parameters, their meanings, and their properties are:</p>
     The random walk starts when the polluted region reaches the boundary of the survey grid.</p>
 </li>
 <li>
-<p>Survey sites are sampled sequentially,
-    i.e.,
-    all of the samples from one site are collected before any samples are collected from the next.</p>
-</li>
-<li>
-<p>Some specimens' grid locations are missing from the final data.
-    Their XY coordinates are missing in <code>specimens.csv</code> and <code>null</code> in <code>snailz.db</code>.</p>
-</li>
-<li>
-<p>Snails belong to one or more species,
-    each of which has a different reference genome
-    and (potentially) different mean mass.</p>
-</li>
-<li>
 <p>All snail genome fragments are the same length,
     and are generated by mutating the bases at a few randomly-chosen locations.
-    One of those locations and one of the variant bases is selected at random for species 0;
+    One of those locations and one of the variant bases is selected at random as significant;
     a snail with that mutant base in that location is a mutant of unusual size.</p>
-</li>
-<li>
-<p>The masses of all snails are scaled up by an amount that depends on
-    how polluted their collection location is.
-    This scaling uses a <a href="https://en.wikipedia.org/wiki/Sigmoid_function">sigmoid function</a> rather than a linear function.</p>
-</li>
-<li>
-<p>A few specimens are assayed twice instead of once.</p>
-</li>
-<li>
-<p>The actual readings for mutated and unmutated snails are randomly generated
-    from normal distributions centered around <code>assay.baseline</code> and <code>assay.mutant</code>.
-    The readings for control wells are just noise.</p>
-</li>
-<li>
-<p>Assay readings for both mutated and unmutated snails are lowered
-    by an amount that depends on the number of days between the sample being collected
-    and the assay being performed.</p>
-</li>
-<li>
-<p>Snails are placed on survey grids using simulated annealing.
-    Each snail is initially put in a randomly-chosen location.
-    Snails are then moved as if they were repulsive electrical charges,
-    with large snails repelling their neighbors more than small ones.
-    A "wall" of snails with unit mass surrounding the grid
-    ensures that actual snails don't wander off.</p>
 </li>
 </ol>
 <h2 id="data-dictionary">Data Dictionary</h2>
-<p>All of the generated data is stored in a single JSON file called <code>data.json</code>.
-It can be read and analyzed directly,
-but it is more realistic to use the data described below.</p>
+<p>All of the generated data is stored in CSV files.</p>
 <h3 id="persons">Persons</h3>
 <p><code>persons.csv</code> contains information about the scientists performing the study.
 The file looks like this:</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">ident</th>
+<th style="text-align: left;">id</th>
 <th style="text-align: left;">personal</th>
 <th style="text-align: left;">family</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;">aa1942</td>
+<td style="text-align: left;">P06</td>
 <td style="text-align: left;">Artur</td>
 <td style="text-align: left;">Aasmäe</td>
 </tr>
 <tr>
-<td style="text-align: left;">kk0085</td>
+<td style="text-align: left;">P07</td>
 <td style="text-align: left;">Katrin</td>
 <td style="text-align: left;">Kool</td>
 </tr>
@@ -1080,7 +1103,7 @@ The file looks like this:</p>
 </thead>
 <tbody>
 <tr>
-<td><code>ident</code></td>
+<td><code>id</code></td>
 <td>identifier</td>
 <td>text, unique, required</td>
 </tr>
@@ -1102,22 +1125,22 @@ The file looks like this:</p>
 <table>
 <thead>
 <tr>
-<th>ident</th>
-<th>name</th>
+<th style="text-align: left;">id</th>
+<th style="text-align: left;">name</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>M0001</td>
-<td>AeroProbe</td>
+<td style="text-align: left;">M01</td>
+<td style="text-align: left;">Aero Probe</td>
 </tr>
 <tr>
-<td>M0002</td>
-<td>NanoCounter Plus</td>
+<td style="text-align: left;">M02</td>
+<td style="text-align: left;">Nano Counter</td>
 </tr>
 <tr>
-<td>…</td>
-<td>…</td>
+<td style="text-align: left;">…</td>
+<td style="text-align: left;">…</td>
 </tr>
 </tbody>
 </table>
@@ -1132,7 +1155,7 @@ The file looks like this:</p>
 </thead>
 <tbody>
 <tr>
-<td><code>ident</code></td>
+<td><code>id</code></td>
 <td>identifier</td>
 <td>text, unique, required</td>
 </tr>
@@ -1145,10 +1168,8 @@ The file looks like this:</p>
 </table>
 <p>Note that the systematic variation in readings introduced by different machines
 is <em>not</em> stored in the generated data.</p>
-<h3 id="surveys">Surveys</h3>
-<p>The <code>surveys</code> directory contains one CSV file for each survey site.
-Each file's name has the form <code>S<em>nnn</em>.csv</code> (e.g., <code>S165.csv</code>),
-where <code>S<em>nnn</em></code> is the survey site's unique identifier.
+<h3 id="grids">Grids</h3>
+<p>The pollution readings for each survey grid are stored in a file <code>G<em>nn</em>.csv</code> (e.g., <code>G03.csv</code>).
 These CSV files do <em>not</em> have column headers;
 instead, each contains a square integer matrix of pollution readings.
 A typical file is:</p>
@@ -1174,39 +1195,23 @@ The file looks like this:</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">ident</th>
-<th style="text-align: left;">survey</th>
-<th style="text-align: right;">x</th>
-<th style="text-align: right;">y</th>
-<th style="text-align: left;">collected</th>
+<th style="text-align: left;">id</th>
 <th style="text-align: left;">genome</th>
 <th style="text-align: right;">mass</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;">KHNKDL</td>
-<td style="text-align: left;">S165</td>
-<td style="text-align: right;">11</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: left;">2024-03-01</td>
+<td style="text-align: left;">S0001</td>
 <td style="text-align: left;">GCAACCGGACCGCCGTAAGG</td>
 <td style="text-align: right;">3.82</td>
 </tr>
 <tr>
-<td style="text-align: left;">DZYIPY</td>
-<td style="text-align: left;">S165</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">7</td>
-<td style="text-align: left;">2024-03-01</td>
+<td style="text-align: left;">S0002</td>
 <td style="text-align: left;">TCATACGGACCGCCGTAAGG</td>
 <td style="text-align: right;">3.53</td>
 </tr>
 <tr>
-<td style="text-align: left;">…</td>
-<td style="text-align: left;">…</td>
-<td style="text-align: right;">…</td>
-<td style="text-align: right;">…</td>
 <td style="text-align: left;">…</td>
 <td style="text-align: left;">…</td>
 <td style="text-align: right;">…</td>
@@ -1224,29 +1229,9 @@ The file looks like this:</p>
 </thead>
 <tbody>
 <tr>
-<td><code>ident</code></td>
+<td><code>id</code></td>
 <td>specimen identifier</td>
 <td>text, unique, required</td>
-</tr>
-<tr>
-<td><code>survey</code></td>
-<td>survey identifier</td>
-<td>text, required</td>
-</tr>
-<tr>
-<td><code>x</code></td>
-<td>collection X coordinate within survey grid</td>
-<td>integer, required</td>
-</tr>
-<tr>
-<td><code>y</code></td>
-<td>collection Y coordinate within survey grid</td>
-<td>integer, required</td>
-</tr>
-<tr>
-<td><code>collected</code></td>
-<td>collection date</td>
-<td>ISO date, required</td>
 </tr>
 <tr>
 <td><code>genome</code></td>
@@ -1260,207 +1245,56 @@ The file looks like this:</p>
 </tr>
 </tbody>
 </table>
-<p>Note that the CSV file does <em>not</em> record which species the snail belongs to
-or whether it is a mutant.</p>
 <h3 id="assays">Assays</h3>
 <p>Summary information about all assays is stored in <code>assay_summary.csv</code>.
 The file looks like this:</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">ident</th>
-<th style="text-align: left;">specimen</th>
-<th style="text-align: left;">person</th>
-<th style="text-align: left;">performed</th>
-<th style="text-align: left;">machine</th>
+<th>id</th>
+<th>specimen</th>
+<th>machine</th>
+<th>person</th>
+<th>row</th>
+<th>col</th>
+<th>treatment</th>
+<th>reading</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;">386915</td>
-<td style="text-align: left;">KHNKDL</td>
-<td style="text-align: left;">km3478</td>
-<td style="text-align: left;">2024-03-05</td>
-<td style="text-align: left;">M0005</td>
+<td>A0001</td>
+<td>S0001</td>
+<td>M00</td>
+<td>P03</td>
+<td>1</td>
+<td>A</td>
+<td>C</td>
+<td>0.56</td>
 </tr>
 <tr>
-<td style="text-align: left;">508199</td>
-<td style="text-align: left;">DZYIPY</td>
-<td style="text-align: left;">mt8294</td>
-<td style="text-align: left;">2024-03-01</td>
-<td style="text-align: left;">M0001</td>
+<td>A0001</td>
+<td>S0001</td>
+<td>M00</td>
+<td>P03</td>
+<td>2</td>
+<td>A</td>
+<td>C</td>
+<td>1.16</td>
 </tr>
 <tr>
-<td style="text-align: left;">…</td>
-<td style="text-align: left;">…</td>
-<td style="text-align: left;">…</td>
-<td style="text-align: left;">…</td>
-<td style="text-align: left;">…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
 </tr>
 </tbody>
 </table>
 <p>and its fields are:</p>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Purpose</th>
-<th>Properties</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>ident</code></td>
-<td>assay identifier</td>
-<td>text, required</td>
-</tr>
-<tr>
-<td><code>specimen</code></td>
-<td>specimen identifier</td>
-<td>text, required</td>
-</tr>
-<tr>
-<td><code>person</code></td>
-<td>scientist identifier</td>
-<td>text, required</td>
-</tr>
-<tr>
-<td><code>performed</code></td>
-<td>assay date</td>
-<td>ISO date, required</td>
-</tr>
-<tr>
-<td><code>machine</code></td>
-<td>machine used</td>
-<td>text, required</td>
-</tr>
-</tbody>
-</table>
-<p>Assay results are stored in <code>assays.csv</code>.
-The file looks like this:</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">ident</th>
-<th style="text-align: left;">specimen</th>
-<th style="text-align: left;">col</th>
-<th style="text-align: right;">row</th>
-<th style="text-align: left;">treatment</th>
-<th style="text-align: right;">reading</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;">720482</td>
-<td style="text-align: left;">LYKVID</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: left;">C</td>
-<td style="text-align: right;">0.20</td>
-</tr>
-<tr>
-<td style="text-align: left;">720482</td>
-<td style="text-align: left;">LYKVID</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: left;">C</td>
-<td style="text-align: right;">0.25</td>
-</tr>
-<tr>
-<td style="text-align: left;">…</td>
-<td style="text-align: left;">…</td>
-<td style="text-align: left;">…</td>
-<td style="text-align: right;">…</td>
-<td style="text-align: left;">…</td>
-<td style="text-align: right;">…</td>
-</tr>
-</tbody>
-</table>
-<p>and its fields are:</p>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Purpose</th>
-<th>Properties</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>ident</code></td>
-<td>assay ID</td>
-<td>text, required</td>
-</tr>
-<tr>
-<td><code>specimen</code></td>
-<td>specimen ID</td>
-<td>text, required</td>
-</tr>
-<tr>
-<td><code>col</code></td>
-<td>assay plate column</td>
-<td>text, required</td>
-</tr>
-<tr>
-<td><code>row</code></td>
-<td>assay plate row</td>
-<td>integer, required</td>
-</tr>
-<tr>
-<td><code>treatment</code></td>
-<td>control or sample</td>
-<td>"C" or "S"</td>
-</tr>
-<tr>
-<td><code>reading</code></td>
-<td>well reading</td>
-<td>non-negative real</td>
-</tr>
-</tbody>
-</table>
-<p>The <code>assays</code> directory contains three files for each assay:</p>
-<ol>
-<li>
-<p>a design file <code><em>nnnnnn</em>_treatments.csv</code>
-    showing whether specimen samples or control material was placed in each well of the assay plate;</p>
-</li>
-<li>
-<p>a readings file <code><em>nnnnnn</em>_readings.csv</code>
-    with the reading from each well;
-    and</p>
-</li>
-<li>
-<p>an image file <code><em>nnnn</em>.png</code> showing the image that the readings were taken from.
-    (In actuality <code>snailz</code> generates the readings first and then the image.)</p>
-</li>
-</ol>
-<p>Each CSV file contains a multi-line header with metadata followed by
-a table of well values with row and column labels.
-A typical design file is:</p>
-<pre><code>id,037356,,,
-specimen,AMEMRZ,,,
-date,2024-03-11,,,
-by,pv8677,,,
-machine,M0002,,,
-,A,B,C,D
-1,S,C,C,S
-2,C,C,S,C
-3,S,C,S,S
-4,C,S,C,S
-</code></pre>
-<p>while a typical readings file is:</p>
-<pre><code>id,037356,,,
-specimen,AMEMRZ,,,
-date,2024-03-11,,,
-by,pv8677,,,
-machine,M0002,,,
-,A,B,C,D
-1,1.09,0.08,0.02,1.1
-2,0.02,0.02,1.0,0.07
-3,1.03,0.03,1.1,1.07
-4,0.09,1.02,0.04,1.01
-</code></pre>
-<p>The first five rows of each file are:</p>
 <table>
 <thead>
 <tr>
@@ -1481,61 +1315,114 @@ machine,M0002,,,
 <td>text, required</td>
 </tr>
 <tr>
-<td><code>date</code></td>
-<td>assay date</td>
-<td>ISO date, required</td>
+<td><code>machine</code></td>
+<td>machine used</td>
+<td>text, required</td>
 </tr>
 <tr>
-<td><code>by</code></td>
+<td><code>person</code></td>
 <td>scientist identifier</td>
-<td>text</td>
+<td>text, required</td>
+</tr>
+<tr>
+<td><code>row</code></td>
+<td>assay plate row</td>
+<td>integer, required</td>
+</tr>
+<tr>
+<td><code>col</code></td>
+<td>assay plate column</td>
+<td>text, required</td>
+</tr>
+<tr>
+<td><code>treatment</code></td>
+<td>control "C" or specimen "S"</td>
+<td>text, required</td>
+</tr>
+<tr>
+<td><code>reading</code></td>
+<td>well reading</td>
+<td>real, required</td>
+</tr>
+</tbody>
+</table>
+<p>The directory also contains four files for each assay:</p>
+<ol>
+<li>
+<p>a design file <code>A<em>nnnn</em>_treatments.csv</code>
+    showing whether specimen samples or control material was placed in each well of the assay plate;</p>
+</li>
+<li>
+<p>a readings file <code>A<em>nnnn</em>_readings.csv</code>
+    with the readings from each well;</p>
+</li>
+<li>
+<p>a "raw" readings file <code>A<em>nnnn</em>_raw.csv</code>
+    with the raw readings from each well;
+    and</p>
+</li>
+<li>
+<p>an image file <code><em>nnnn</em>.png</code> showing the image that the readings were taken from.</p>
+</li>
+</ol>
+<p>Each CSV file contains a multi-line header with metadata followed by
+a table of well values with row and column labels.
+A typical treatments file is:</p>
+<pre><code>id,A0001
+specimen,S0001
+machine,M00
+person,P03
+,A,B,C,D
+1,0.56,2.22,2.17,0.55
+2,1.16,2.33,2.18,0.11
+3,0.35,2.13,2.82,0.08
+4,1.38,1.74,2.2,1.0
+</code></pre>
+<p>while a typical readings file is:</p>
+<pre><code>id,A0001
+specimen,S0001
+machine,M00
+person,P03
+,A,B,C,D
+1,C,S,S,C
+2,C,S,S,C
+3,C,S,S,C
+4,S,S,S,S
+</code></pre>
+<p>The first four rows of each file are:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Purpose</th>
+<th>Properties</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>assay identifier</td>
+<td>text, required</td>
+</tr>
+<tr>
+<td><code>specimen</code></td>
+<td>specimen identifier</td>
+<td>text, required</td>
 </tr>
 <tr>
 <td><code>machine</code></td>
 <td>machine identifier</td>
 <td>text</td>
 </tr>
+<tr>
+<td><code>person</code></td>
+<td>scientist identifier</td>
+<td>text</td>
+</tr>
 </tbody>
 </table>
-<p>The <code>assays</code> directory also contains files called <code><em>nnnnnn</em>_raw.csv</code>.
-Each of these files contains the same data as the assay's readings file,
-but has some deliberate errors:
-header rows may be missing or out of order,
-data may be indented,
-and so on.
-These files are provided so that people can learn how to deal with messy real-world data.</p>
-<h3 id="database">Database</h3>
-<p>All of the data about people, specimens, and assays is also stored in
-a SQLite database called <code>snailz.db</code>,
-whose structure is shown below.</p>
-<div align="center">
-  <img src="https://raw.githubusercontent.com/gvwilson/snailz/main/pages/img/schema.svg" alt="database schema">
-</div>
-
-<h3 id="data-file-structure">Data File Structure</h3>
-<pre><code>data
-├── params.json
-├── data.json
-├── persons.csv
-├── machines.csv
-├── surveys
-│   ├── S165.csv
-│   ├── S410.csv
-│   └── …
-├── specimens.csv
-├── assays.csv
-├── assays
-│   ├── 037356_treatments.csv
-│   ├── 037356.png
-│   ├── 037356_raw.csv
-│   ├── 037356_readings.csv
-│   ├── 092025_treatments.csv
-│   ├── 092025.png
-│   ├── 092025_raw.csv
-│   ├── 092025_readings.csv
-│   └── …
-└── snailz.db
-</code></pre>
+<p>The "raw" files are copies of the readings files with deliberate formatting errors,
+and can be used to teach students how to deal with realistic data.</p>
 <h2 id="colophon">Colophon</h2>
 <p><code>snailz</code> was inspired by the <a href="https://allisonhorst.github.io/palmerpenguins/">Palmer Penguins</a> dataset
 and by conversations with <a href="https://rohanalexander.com/">Rohan Alexander</a>
@@ -1543,12 +1430,10 @@ about his book <a href="https://tellingstorieswithdata.com/"><em>Telling Stories
 <p>The snail logo was created by <a href="https://www.vecteezy.com/vector-art/7319786-snails-logo-vector-on-white-background">sunar.ko</a>.</p>
 <p>My thanks to everyone who built the tools this project relies on, including:</p>
 <ul>
-<li><a href="https://click.palletsprojects.com/"><code>click</code></a> for building the command-line interface.</li>
-<li><a href="https://pydoit.org/"><code>doit</code></a> to run commands.</li>
 <li><a href="https://www.mkdocs.org/"><code>mkdocs</code></a> for documentation.</li>
 <li><a href="https://docs.pydantic.dev/"><code>pydantic</code></a> for storing and validating data (including parameters).</li>
 <li><a href="https://docs.pytest.org/"><code>pytest</code></a>, <a href="https://pypi.org/project/pyfakefs/"><code>pyfakefs</code></a>, and <a href="https://faker.readthedocs.io/"><code>faker</code></a> for testing.</li>
-<li><a href="https://docs.astral.sh/ruff/"><code>ruff</code></a> and <a href="https://pypi.org/project/pyright/"><code>pyright</code></a> for checking the code.</li>
+<li><a href="https://docs.astral.sh/ruff/"><code>ruff</code></a> for checking the code.</li>
 <li><a href="https://docs.astral.sh/uv/"><code>uv</code></a> for managing packages and the virtual environment.</li>
 </ul>
 
