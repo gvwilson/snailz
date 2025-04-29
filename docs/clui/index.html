@@ -12,7 +12,7 @@
         <link rel="prev" href="../assays/">
       
       
-        <link rel="next" href="../database/">
+        <link rel="next" href="../grid/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cli" class="md-skip">
+        <a href="#snailz.clui" class="md-skip">
           Skip to content
         </a>
       
@@ -220,29 +220,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../anneal/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Anneal
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../assays/" class="md-nav__link">
         
   
@@ -271,8 +248,6 @@
       
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
-      
-        
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
@@ -306,8 +281,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -316,36 +289,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#data" class="md-nav__link">
+  <a href="#snailz.clui" class="md-nav__link">
     <span class="md-ellipsis">
-      data
+      clui
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#db" class="md-nav__link">
+  <a href="#snailz.clui.cli" class="md-nav__link">
     <span class="md-ellipsis">
-      db
+      cli
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#params" class="md-nav__link">
+  <a href="#snailz.clui.parse_args" class="md-nav__link">
     <span class="md-ellipsis">
-      params
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#zip" class="md-nav__link">
-    <span class="md-ellipsis">
-      zip
+      parse_args
     </span>
   </a>
   
@@ -355,29 +319,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../database/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Database
-    
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -482,35 +423,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../model/" class="md-nav__link">
+      <a href="../params/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Model
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../parameters/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Parameters
+    Params
     
   </span>
   
@@ -580,29 +498,6 @@
   
   <span class="md-ellipsis">
     Specimens
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../surveys/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Surveys
     
   </span>
   
@@ -774,8 +669,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -784,36 +677,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#data" class="md-nav__link">
+  <a href="#snailz.clui" class="md-nav__link">
     <span class="md-ellipsis">
-      data
+      clui
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#db" class="md-nav__link">
+  <a href="#snailz.clui.cli" class="md-nav__link">
     <span class="md-ellipsis">
-      db
+      cli
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#params" class="md-nav__link">
+  <a href="#snailz.clui.parse_args" class="md-nav__link">
     <span class="md-ellipsis">
-      params
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#zip" class="md-nav__link">
-    <span class="md-ellipsis">
-      zip
+      parse_args
     </span>
   </a>
   
@@ -835,54 +719,160 @@
 
 
 
-<h1 id="cli">cli</h1>
-<p>Entry point for command-line interface.</p>
-<p><strong>Usage:</strong></p>
-<pre><code class="language-text">cli [OPTIONS] COMMAND [ARGS]...
-</code></pre>
-<p><strong>Options:</strong></p>
-<pre><code class="language-text">  --help  Show this message and exit.
-</code></pre>
-<h2 id="data">data</h2>
-<p>Generate and save data using provided parameters.</p>
-<p><strong>Usage:</strong></p>
-<pre><code class="language-text">cli data [OPTIONS]
-</code></pre>
-<p><strong>Options:</strong></p>
-<pre><code class="language-text">  --full         Full details
-  --params PATH  Path to parameters file  [required]
-  --output PATH  Path to output directory
-  --seed TEXT    Override seed for ad hoc testing
-  --help         Show this message and exit.
-</code></pre>
-<h2 id="db">db</h2>
-<p>Create SQLite database of generated data.</p>
-<p><strong>Usage:</strong></p>
-<pre><code class="language-text">cli db [OPTIONS]
-</code></pre>
-<p><strong>Options:</strong></p>
-<pre><code class="language-text">  --data PATH  Path to data directory
-  --help       Show this message and exit.
-</code></pre>
-<h2 id="params">params</h2>
-<p>Generate and save parameters.</p>
-<p><strong>Usage:</strong></p>
-<pre><code class="language-text">cli params [OPTIONS]
-</code></pre>
-<p><strong>Options:</strong></p>
-<pre><code class="language-text">  --output PATH  Path to output file
-  --help         Show this message and exit.
-</code></pre>
-<h2 id="zip">zip</h2>
-<p>Create ZIP archive of generated data.</p>
-<p><strong>Usage:</strong></p>
-<pre><code class="language-text">cli zip [OPTIONS]
-</code></pre>
-<p><strong>Options:</strong></p>
-<pre><code class="language-text">  --data PATH    Path to data directory
-  --output PATH  Path to output ZIP file
-  --help         Show this message and exit.
-</code></pre>
+  <h1>CLUI</h1>
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="snailz.clui"></a>
+    <div class="doc doc-contents first">
+
+        <p>Command-line interface.</p>
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="snailz.clui.cli" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">cli</span><span class="p">()</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Main driver.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/snailz/clui.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">cli</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Main driver.&quot;&quot;&quot;</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">defaults</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">json_dump</span><span class="p">(</span><span class="n">DEFAULT_PARAMS</span><span class="p">))</span>
+        <span class="k">return</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">outdir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;output directory required (used --outdir)&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">params</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="n">ScenarioParams</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)))</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unable to read parameters from </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">params</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">ScenarioParams</span><span class="p">(</span>
+            <span class="n">rng_seed</span><span class="o">=</span><span class="n">DEFAULT_SEED</span><span class="p">,</span>
+            <span class="n">specimen_params</span><span class="o">=</span><span class="n">SpecimenParams</span><span class="p">(),</span>
+            <span class="n">assay_params</span><span class="o">=</span><span class="n">AssayParams</span><span class="p">(),</span>
+        <span class="p">)</span>
+
+    <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">scenario</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">outdir</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="snailz.clui.parse_args" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">parse_args</span><span class="p">()</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Parse command-line arguments.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/snailz/clui.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parse_args</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse command-line arguments.&quot;&quot;&quot;</span>
+
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--defaults&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;show default parameters&quot;</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--outdir&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;output directory&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--params&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;JSON parameter file&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
 
 
 

@@ -1,3 +1,1 @@
-::: mkdocs-click
-    :module: snailz.clui
-    :command: cli
+::: snailz.clui

@@ -3,41 +3,18 @@
 import math
 import numpy as np
 
-from PIL import Image
-from PIL.Image import Image as PilImage  # to satisfy type checking
-from pydantic import BaseModel
-
-from .assays import AssayParams, Assay, AllAssays
-
-from . import model, utils
+from PIL import Image, ImageFilter
 
 
 # Image parameters.
+BLACK = 0
+WHITE = 255
 BORDER_WIDTH = 8
 WELL_SIZE = 32
+BLUR_RADIUS = 4
 
 
-class AllImages(BaseModel):
-    """A set of generated images."""
-
-    model_config = {"arbitrary_types_allowed": True, "extra": "forbid"}
-
-    @staticmethod
-    def generate(params: AssayParams, assays: AllAssays) -> dict:
-        """Generate image files.
-
-        Parameters:
-            params: assay generation parameters
-            assays: assays to generate images for
-
-        Returns:
-            A dictionary of assay IDs and generated images.
-        """
-        scaling = float(math.ceil(assays.max_reading() + 1))
-        return {a.ident: _make_image(params, a, scaling) for a in assays.items}
-
-
-def _make_image(params: AssayParams, assay: Assay, scaling: float) -> PilImage:
+def make_image(params, assay, scaling):
     """Generate a single image.
 
     Parameters:
@@ -51,20 +28,47 @@ def _make_image(params: AssayParams, assay: Assay, scaling: float) -> PilImage:
     # Create blank image array.
     p_size = params.plate_size
     img_size = (p_size * WELL_SIZE) + ((p_size + 1) * BORDER_WIDTH)
-    array = np.full((img_size, img_size), utils.BLACK, dtype=np.uint8)
+    array = np.full((img_size, img_size), BLACK, dtype=np.uint8)
 
     # Fill with pristine reading values.
     spacing = WELL_SIZE + BORDER_WIDTH
     for ix, x in enumerate(range(BORDER_WIDTH, img_size, spacing)):
         for iy, y in enumerate(range(BORDER_WIDTH, img_size, spacing)):
-            color = math.floor(utils.WHITE * assay.readings[ix, iy] / scaling)
+            color = math.floor(WHITE * assay.readings[ix, iy] / scaling)
             array[y : y + WELL_SIZE + 1, x : x + WELL_SIZE + 1] = color
 
     # Add noise to numpy array before converting to image
-    array = model.image_noise(params, array, img_size)
+    array = _image_noise(params, array, img_size)
 
     # Convert to PIL Image
     img = Image.fromarray(array)
 
     # Apply blur filter
-    return model.image_blur(img)
+    img = img.filter(ImageFilter.GaussianBlur(BLUR_RADIUS))
+
+    return img
+
+
+def _image_noise(params, array, img_size):
+    """Add noise effects to numpy array before conversion to image.
+
+    Parameters:
+        params: assay parameters
+        array: pristine numpy array
+        img_size: size of the image
+
+    Returns:
+        Distorted numpy array.
+    """
+    # Generate random noise array of the same shape
+    noise = np.random.randint(
+        -params.image_noise,
+        params.image_noise + 1,
+        size=(img_size, img_size),
+        dtype=np.int16,
+    )
+
+    # Add noise to the original array
+    noisy_array = np.clip(array.astype(np.int16) + noise, BLACK, WHITE).astype(np.uint8)
+
+    return noisy_array

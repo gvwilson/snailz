@@ -1,89 +1,60 @@
-"""Command-line interface for snailz."""
+"""Command-line interface."""
 
+import argparse
 import json
-from pathlib import Path
-import random
-import zipfile
+import sys
 
-import click
-
-from .database import database_generate
-from .scenario import ScenarioParams, ScenarioData
-from . import utils
+from .params import AssayParams, ScenarioParams, SpecimenParams
+from .scenario import Scenario
+from .utils import json_dump
 
 
-@click.group()
-def cli():
-    """Entry point for command-line interface."""
-
-
-@cli.command()
-@click.option("--data", type=click.Path(), help="Path to data directory")
-def db(data):
-    """Create SQLite database of generated data."""
-    try:
-        database_generate(Path(data), "snailz.db")
-    except Exception as exc:
-        utils.fail(str(exc))
-
-
-@cli.command()
-@click.option("--full", is_flag=True, default=False, help="Full details")
-@click.option(
-    "--params",
-    required=True,
-    type=click.Path(exists=True),
-    help="Path to parameters file",
+DEFAULT_SEED = 123456
+DEFAULT_PARAMS = ScenarioParams(
+    rng_seed=DEFAULT_SEED, specimen_params=SpecimenParams(), assay_params=AssayParams()
 )
-@click.option("--output", type=click.Path(), help="Path to output directory")
-@click.option("--seed", default=None, help="Override seed for ad hoc testing")
-def data(full, params, output, seed):
-    """Generate and save data using provided parameters."""
-    try:
-        parameters = ScenarioParams.model_validate(json.load(open(params, "r")))
-        random.seed(parameters.seed if seed is None else seed)
-        data = ScenarioData.generate(parameters)
-        ScenarioData.save(Path(output), data, full=full)
-    except OSError as exc:
-        utils.fail(str(exc))
 
 
-@cli.command()
-@click.option("--output", type=click.Path(), help="Path to output file")
-def params(output):
-    """Generate and save parameters."""
-    try:
-        params = ScenarioParams()
-        with open(output, "w") as writer:
-            writer.write(utils.json_dump(params))
-    except OSError as exc:
-        utils.fail(str(exc))
+def cli():
+    """Main driver."""
+
+    args = parse_args()
+
+    if args.defaults:
+        print(json_dump(DEFAULT_PARAMS))
+        return
+
+    if args.outdir is None:
+        print("output directory required (used --outdir)", file=sys.stderr)
+        sys.exit(1)
+
+    if args.params:
+        try:
+            params = ScenarioParams.model_validate(json.load(open(args.params, "r")))
+        except Exception as exc:
+            print(f"unable to read parameters from {args.params}: {exc}")
+            sys.exit(1)
+    else:
+        params = ScenarioParams(
+            rng_seed=DEFAULT_SEED,
+            specimen_params=SpecimenParams(),
+            assay_params=AssayParams(),
+        )
+
+    scenario = Scenario.generate(params)
+    scenario.to_csv(args.outdir)
 
 
-@cli.command()
-@click.option("--data", type=click.Path(), help="Path to data directory")
-@click.option("--output", type=click.Path(), help="Path to output ZIP file")
-def zip(data, output):
-    """Create ZIP archive of generated data."""
-    try:
-        _zip_generate(Path(data), Path(output))
-    except Exception as exc:
-        utils.fail(str(exc))
+def parse_args():
+    """Parse command-line arguments."""
 
-
-def _zip_generate(data_dir: Path, output_file: Path) -> None:
-    """Create ZIP file of generated data.
-
-    Parameters:
-        data_dir: directory containing generated files
-        output_file: ZIP file to create
-    """
-    sources = []
-    for pattern in ["**/*.csv", "**/*.png"]:
-        sources.extend(data_dir.glob(pattern))
-    with zipfile.ZipFile(output_file, "w", zipfile.ZIP_DEFLATED) as zipper:
-        for src in sources:
-            zipper.write(src, src.relative_to(data_dir))
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--defaults", action="store_true", help="show default parameters"
+    )
+    parser.add_argument("--outdir", default=None, help="output directory")
+    parser.add_argument("--params", default=None, help="JSON parameter file")
+    return parser.parse_args()
 
 
 if __name__ == "__main__":

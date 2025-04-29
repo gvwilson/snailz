@@ -5,9 +5,8 @@
 BUILD = build
 DATA = data
 SCRIPTS = scripts
-TMP = tmp
 
-PARAMS = ${DATA}/params.json
+PARAMS = params.json
 ZIPFILE = snailz.zip
 
 PYTHON = uv run python
@@ -23,14 +22,10 @@ build: clean
 	${PYTHON_M} build
 	@${PYTHON_M} twine check dist/*
 
-## classify: classify assay results
-classify:
-	${PYTHON} ${SCRIPTS}/classify.py --data ${DATA} --format df
-
 ## clean: clean up build artifacts
 clean:
 	@find . -name '*~' -delete
-	@rm -rf ${BUILD}
+	@rm -rf ${PARAMS} ${DATA} ${BUILD}
 
 ## coverage: run tests with coverage
 coverage:
@@ -41,13 +36,8 @@ coverage:
 .PHONY: data
 data:
 	@rm -rf ${DATA}
-	@mkdir -p ${DATA}
-	${SNAILZ} params --output ${PARAMS}
-	${SNAILZ} data --params ${PARAMS} --output ${DATA}
-
-## db: create database from generated data
-db:
-	${SNAILZ} db --data ${DATA}
+	${SNAILZ} --defaults > ${PARAMS}
+	${SNAILZ} --params ${PARAMS} --outdir ${DATA}
 
 ## docs: generate documentation using MkDocs
 .PHONY: docs
@@ -58,18 +48,9 @@ docs:
 format:
 	${PYTHON_M} ruff format .
 
-## lims_run: run the web app
-lims_run:
-	${PYTHON} lims/app.py --data ${DATA} --memory
-
-## lims_test: run the web app tests
-lims_test:
-	${PYTHON_M} pytest lims/test_*.py --data data
-
 ## lint: check the code format and typing
 lint:
 	${PYTHON_M} ruff check .
-	${PYTHON_M} pyright
 
 ## profile: run with profiling and show top 20 time-consuming functions
 profile:
@@ -87,11 +68,6 @@ site:
 ## test: run tests
 test:
 	${PYTHON_M} pytest tests
-
-## vis_grids: visualize grids
-vis_grids:
-	@mkdir -p ${TMP}
-	${PYTHON} ${SCRIPTS}/visualize.py --data ${DATA} --make grid --output ${TMP}/grids.png --show
 
 ## zip: create ZIP file from generated data
 zip:

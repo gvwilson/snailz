@@ -1,228 +1,117 @@
-"""Generate snail assays."""
-
-import csv
-from datetime import date
-import io
 import random
+from typing import ClassVar
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field
 
 from .grid import Grid
-from .machines import Machine, AllMachines
-from .parameters import AssayParams
-from .persons import AllPersons
-from .specimens import Specimen, AllSpecimens
-from . import model, utils
-
-
-NUM_ASSAY_HEADER_ROWS = 6
+from .utils import PRECISION, generic_id_generator
 
 
 class Assay(BaseModel):
-    """A single assay."""
+    """Represent a single assay."""
 
-    ident: str = Field(description="unique identifier")
-    specimen: str = Field(description="which specimen")
-    person: str = Field(description="who did the assay")
-    machine: str = Field(description="machine ID")
-    performed: date = Field(description="date assay was performed")
-    readings: Grid[float] = Field(description="assay readings")
-    treatments: Grid[str] = Field(description="samples or controls")
+    id: str = Field(description="unique ID")
+    specimen_id: str = Field(description="specimen assayed")
+    machine_id: str = Field(description="machine used")
+    person_id: str = Field(description="who did assay")
+    treatments: Grid = Field(description="treatments applied")
+    readings: Grid = Field(description="readings obtained")
 
-    model_config = {"extra": "forbid"}
-
-    @model_validator(mode="after")
-    def show_fields(self):
-        return self
-
-    def as_chunk(self) -> list[list[str]]:
-        """Generate chunk for inclusion in overall assay CSV.
-
-        Returns:
-            Rows of data.
-        """
-        result = []
-        col_names = [chr(ord("A") + i) for i in range(self.treatments.width)]
-        for i_col, col_name in zip(range(self.treatments.width), col_names):
-            for i_row in range(self.treatments.height):
-                result.append(
-                    [
-                        self.ident,
-                        self.specimen,
-                        col_name,
-                        str(i_row + 1),
-                        self.treatments[i_col, i_row],
-                        self.readings[i_col, i_row],
-                    ]
-                )
-        return result
-
-    def to_csv(self, kind: str) -> str:
-        """Return a CSV string representation of the assay data.
-
-        Parameters:
-            kind: Either "readings" or "treatments"
-
-        Returns:
-            A CSV-formatted string with the assay data.
-
-        Raises:
-            ValueError: If 'kind' is not "readings" or "treatments"
-        """
-        if kind not in ["readings", "treatments"]:
-            raise ValueError("data_type must be 'readings' or 'treatments'")
-
-        # Get the appropriate data based on data_type
-        data = self.readings if kind == "readings" else self.treatments
-        assert isinstance(data, Grid)
-
-        # Generate column headers (A, B, C, etc.) and calculate metadata padding
-        column_headers = [""] + [chr(ord("A") + i) for i in range(data.width)]
-        max_columns = len(column_headers)
-        padding = [""] * (max_columns - 2)
-
-        # Write data
-        output = io.StringIO()
-        writer = csv.writer(output, lineterminator="\n")
-        pre = [
-            ["id", self.ident] + padding,
-            ["specimen", self.specimen] + padding,
-            ["date", self.performed.isoformat()] + padding,
-            ["by", self.person] + padding,
-            ["machine", self.machine] + padding,
-            column_headers,
-        ]
-        for row in pre:
-            writer.writerow(row)
-
-        for i, y in enumerate(range(data.height - 1, -1, -1)):
-            row = [i + 1] + [data[x, y] for x in range(data.width)]
-            writer.writerow(row)
-
-        return output.getvalue()
-
-
-class AllAssays(BaseModel):
-    """All generated assays."""
-
-    items: list[Assay] = Field(description="actual assays")
-
-    def max_reading(self) -> float:
-        """Find maximum assay reading value.
-
-        Returns:
-            Largest reading value across all assays.
-        """
-        result = 0.0
-        for a in self.items:
-            result = max(result, a.readings.max())
-        return result
-
-
-    def to_csv(self, summary: bool = True) -> str:
-        """Return a CSV string representation of the assay summary data.
-
-        Parameters:
-            summary: produce summary (default) or include all results
-
-        Returns:
-            A CSV-formatted string containing assay data
-        """
-        if summary:
-            return utils.to_csv(
-                self.items,
-                ["ident", "specimen", "person", "performed", "machine"],
-                lambda r: [
-                    r.ident,
-                    r.specimen,
-                    r.person,
-                    r.performed.isoformat(),
-                    r.machine,
-                ],
-            )
-        else:
-            rows = []
-            for assay in self.items:
-                rows.extend(assay.as_chunk())
-            return utils.to_csv(
-                rows,
-                ["ident", "specimen", "col", "row", "treatment", "reading"],
-                lambda r: r,
-            )
+    _id_generator: ClassVar = generic_id_generator(lambda i: f"A{i:04d}")
 
     @staticmethod
-    def generate(
-        params: AssayParams,
-        persons: AllPersons,
-        machines: AllMachines,
-        specimens: AllSpecimens,
-    ) -> "AllAssays":
-        """Generate an assay for each specimen.
+    def generate(params, specimen, machine, person):
+        """Generate an assay for a specimen."""
 
-        Parameters:
-            params: assay generation parameters
-            persons: all staff members
-            machines: all laboratory equipment
-            specimens: specimens to generate assays for
+        treatments = Assay._make_treatments(params)
+        readings = Assay._make_readings(params, specimen, treatments)
+        return Assay(
+            id=next(Assay._id_generator),
+            specimen_id=specimen.id,
+            machine_id=machine.id,
+            person_id=person.id,
+            treatments=treatments,
+            readings=readings,
+        )
 
-        Returns:
-            Assay list object
-        """
-        # Duplicate a few specimens and randomize order.
-        subjects = model.assay_specimens(params, specimens)
+    @staticmethod
+    def _make_treatments(params):
+        """Generate grid of treatments."""
 
-        gen = utils.unique_id("assays", lambda: f"{random.randint(0, 999999):06d}")
-        items = []
-        for spec in subjects:
-            performed = spec.collected + model.assay_performed(params)
-            person = random.choice(persons.items)
-            machine = random.choice(machines.items)
-            treatments = _make_treatments(params)
-            readings = _make_readings(params, spec, performed, machine, treatments)
-            ident = next(gen)
-            assert isinstance(ident, str)  # to satisfy type checking
-            items.append(
-                Assay(
-                    ident=ident,
-                    performed=performed,
-                    specimen=spec.ident,
-                    person=person.ident,
-                    machine=machine.ident,
-                    treatments=treatments,
-                    readings=readings,
-                )
-            )
+        grid = Grid(size=params.plate_size)
+        for x in range(grid.size):
+            for y in range(grid.size):
+                grid[x, y] = random.choice("CS")
 
-        return AllAssays(items=items)
+        return grid
 
+    @staticmethod
+    def _make_readings(params, specimen, treatments):
+        """Make grid of readings."""
+        grid = Grid(size=params.plate_size)
+        for x in range(grid.size):
+            for y in range(grid.size):
+                if treatments[x, y] == "C":
+                    mean = 0.0
+                elif specimen.is_mutant:
+                    mean = params.mean_mutant
+                else:
+                    mean = params.mean_normal
+                grid[x, y] = abs(mean + random.gauss(0, params.reading_noise))
 
-def _make_readings(
-    params: AssayParams,
-    specimen: Specimen,
-    performed: date,
-    machine: Machine,
-    treatments: Grid[str],
-) -> Grid[float]:
-    """Make a single assay."""
-    readings = Grid(width=params.plate_size, height=params.plate_size, default=0.0)
-    for x in range(params.plate_size):
-        for y in range(params.plate_size):
-            readings[x, y] = round(
-                model.assay_reading(params, specimen, treatments[x, y], performed),
-                utils.PRECISION,
-            )
-    return readings
+        return grid
 
+    @staticmethod
+    def all_csv(writer, assays):
+        """Write all assays as a single CSV."""
+        writer.writerow(
+            [
+                "id",
+                "specimen",
+                "machine",
+                "person",
+                "row",
+                "col",
+                "treatment",
+                "reading",
+            ]
+        )
+        for a in assays:
+            for x in range(a.readings.size):
+                for y in range(a.readings.size):
+                    writer.writerow(
+                        [
+                            a.id,
+                            a.specimen_id,
+                            a.machine_id,
+                            a.person_id,
+                            y + 1,
+                            chr(ord("A") + x),
+                            a.treatments[x, y],
+                            round(a.readings[x, y], PRECISION),
+                        ]
+                    )
 
-def _make_treatments(params: AssayParams) -> Grid[str]:
-    """Generate random treatments."""
-    size = params.plate_size
-    size_sq = size**2
-    half = size_sq // 2
-    available = list(("S" * half) + ("C" * (size_sq - half)))
-    random.shuffle(available)
-    treatments = Grid(width=size, height=size, default="")
-    for x in range(size):
-        for y in range(size):
-            treatments[x, y] = available.pop()
-    return treatments
+    def to_csv(self, writer, write_treatments):
+        """Save as CSV."""
+        padding = [""] * (self.treatments.size - 4)
+        for name, value in (
+            ("id", self.id),
+            ("specimen", self.specimen_id),
+            ("machine", self.machine_id),
+            ("person", self.person_id),
+        ):
+            writer.writerow([name, value] + padding)
+
+        if write_treatments:
+            grid = self.treatments
+            convert = lambda x: x
+        else:
+            grid = self.readings
+            convert = lambda x: round(x, PRECISION)
+
+        title = [""] + [chr(ord("A") + i) for i in range(grid.size)]
+        writer.writerow(title)
+        for y in range(grid.size):
+            row = [f"{y + 1}"] + [convert(grid[x, y]) for x in range(grid.size)]
+            writer.writerow(row)

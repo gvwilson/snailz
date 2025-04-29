@@ -4,20 +4,16 @@ site_dir: docs
 nav:
 - Home: index.md
 - Software:
-  - anneal.md
   - assays.md
   - CLUI: clui.md
-  - database.md
   - grid.md
   - images.md
   - machines.md
   - mangle.md
-  - model.md
-  - parameters.md
+  - params.md
   - persons.md
   - scenario.md
   - specimens.md
-  - surveys.md
   - utils.md
 - Project:
   - license.md
@@ -44,7 +40,6 @@ markdown_extensions:
 - def_list
 - markdown_include.include:
     base_path: docs
-- mkdocs-click
 - footnotes
 
 exclude_docs: >

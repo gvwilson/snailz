@@ -10,8 +10,8 @@ wheels/
 # Virtual environments
 .venv
 
-# Database files
-*.db
+# Parameter file
+params.json
 
 # Sample data files
 data/
@@ -21,7 +21,5 @@ snailz.zip
 
 # Editor backup files
 *~
+*.bak
 *.bkp
-
-# Temporary files
-tmp/*

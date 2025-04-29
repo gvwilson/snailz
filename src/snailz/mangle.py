@@ -1,51 +1,17 @@
 """Modify assay CSV files to simulate poor formatting."""
 
 import csv
-from pathlib import Path
 import random
 
-from .persons import Person, AllPersons
 
-
-ORIGINAL = "_readings"
-MANGLED = "_raw"
-
-
-def mangle_assays(
-    assays_dir: Path | str, persons: AllPersons, forced: list[str] | None = None
-) -> None:
-    """Create 'raw' assay files by mangling data of pristine files.
-
-    Parameters:
-        assays_dir: Directory containing assay CSV files
-        persons: People who performed experiments
-        forced: names of changes to apply (select randomly if None)
-
-    Raises:
-        ValueError: If people data cannot be loaded
-    """
-    staff = {p.ident: p for p in persons.items}
-    for filename in Path(assays_dir).glob(f"*{ORIGINAL}.csv"):
-        with open(filename, "r") as stream:
-            original = [row for row in csv.reader(stream)]
-        mangled = _mangle_assay(filename, original, staff, forced)
-        output_file = str(filename).replace(f"{ORIGINAL}.csv", f"{MANGLED}.csv")
-        with open(output_file, "w") as stream:
-            csv.writer(stream, lineterminator="\n").writerows(mangled)
-
-
-def _mangle_assay(
-    filename: str, data: list[list[str]], staff: dict[str, Person], forced: list[str] | None
-) -> list[list]:
+def mangle_assay(readings_file, raw_file, persons, forced=None):
     """Mangle a single assay file.
 
     Parameters:
-        data: values from CSV file
-        staff: people keyed by ID
+        readings_file: clean readings file
+        raw_file: file to produce
+        persons: staff members
         forced: optional list of specified manglings (for testing)
-
-    Returns:
-        Modified copy of data.
     """
     available = {
         "id": _mangle_id,
@@ -60,18 +26,20 @@ def _mangle_assay(
     else:
         manglers = [available[name] for name in forced]
 
+    with open(readings_file, "r") as stream:
+        data = [r for r in csv.reader(stream)]
     for func in manglers:
-        data = func(data, staff)
+        data = func(data, persons)
+    with open(raw_file, "w") as stream:
+        csv.writer(stream).writerows(data)
 
-    return data
 
-
-def _mangle_id(data: list[list[str]], staff: dict[str, Person]) -> list[list[str]]:
+def _mangle_id(data, persons):
     """Convert ID field to string.
 
     Parameters:
         data: values from CSV file
-        staff: people keyed by ID
+        persons: lab staff
 
     Returns:
         Modified copy of data.
@@ -83,12 +51,12 @@ def _mangle_id(data: list[list[str]], staff: dict[str, Person]) -> list[list[str
     return data
 
 
-def _mangle_indent(data: list[list[str]], staff: dict[str, Person]) -> list[list[str]]:
+def _mangle_indent(data, persons):
     """Indent data portion.
 
     Parameters:
         data: values from CSV file
-        staff: people keyed by ID
+        persons: lab staff
 
     Returns:
         Modified copy of data.
@@ -101,12 +69,12 @@ def _mangle_indent(data: list[list[str]], staff: dict[str, Person]) -> list[list
     ]
 
 
-def _mangle_missing(data: list[list[str]], staff: dict[str, Person]) -> list[list[str]]:
+def _mangle_missing(data, persons):
     """Remove machine name (alters length of header).
 
     Parameters:
         data: values from CSV file
-        staff: people keyed by ID
+        persons: lab staff
 
     Returns:
         Modified copy of data.
@@ -114,12 +82,12 @@ def _mangle_missing(data: list[list[str]], staff: dict[str, Person]) -> list[lis
     return [row for row in data if row[0] != "machine"]
 
 
-def _mangle_person(data: list[list[str]], staff: dict[str, Person]) -> list[list[str]]:
+def _mangle_person(data, persons):
     """Replace person identifier with name.
 
     Parameters:
         data: values from CSV file
-        staff: people keyed by ID
+        persons: lab staff
 
     Returns:
         Modified copy of data.
@@ -127,6 +95,8 @@ def _mangle_person(data: list[list[str]], staff: dict[str, Person]) -> list[list
     for row in data:
         if row[0] == "by":
             row[0] = "performed"
-            person = staff[row[1]]
-            row[1] = f"{person.personal} {person.family}"
+            person_id = staff[row[1]]
+            matches = [p for p in persons if p.id == person_id]
+            assert len(matches) == 1, f"Bad person ID {person_id} during mangling"
+            row[1] = f"{matches[0].personal} {matches[0].family}"
     return data
