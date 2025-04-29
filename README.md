@@ -46,7 +46,7 @@ Specimens
 :   The snails collected from the sites.
     The data records a short fragment of the specimen's genome.
     its mass,
-    and the date it was collected.
+    and when and where it was collected.
 
 Assays
 :   The chemical analysis of the snails' genomes.
@@ -194,11 +194,11 @@ A typical file is:
 `specimens.csv` holds information about individual snails in CSV format (with column headers).
 The file looks like this:
 
-| id  | genome               | mass | sampled |
-| :----- | :------------------- | ---: | ---: |
-| S0001 | GCAACCGGACCGCCGTAAGG | 3.82 | 2025-04-22 |
-| S0002 | TCATACGGACCGCCGTAAGG | 3.53 | 2025-04-19 |
-| … | … | … | … | … | … | … | … |
+| id  | genome               | mass | grid | x | y |sampled |
+| :----- | :------------------- | ---: | ---: | -: | -: | ---: |
+| S0001 | GCAACCGGACCGCCGTAAGG | 3.82 | G01 | 5 | 2 | 2025-04-22 |
+| S0002 | TCATACGGACCGCCGTAAGG | 3.53 | G02 | 3 | 7 | 2025-04-19 |
+| … | … | … | … | … | … | … | … | … | … | … |
 
 and its fields are:
 
@@ -207,6 +207,9 @@ and its fields are:
 | `id` | specimen identifier | text, unique, required |
 | `genome` | base sequence | text, required |
 | `mass` | snail weight in grams | real, required |
+| `grid` | sample grid ID | text, required |
+| `x` | sample X coordinate | integer, required |
+| `y` | sample Y coordinate | integer, required |
 | `sampled` | date specimen was taken | date, required |
 
 ### Assays

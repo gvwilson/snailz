@@ -25,6 +25,9 @@ class Specimen(BaseModel):
     genome: str = Field(min_length=1, description="genome")
     is_mutant: bool = Field(description="is this a mutant?")
     mass: float = Field(gt=0, description="mass (g)")
+    grid: str = Field(default="", description="sample grid ID")
+    x: int = Field(default=-1, description="sample X coordinate")
+    y: int = Field(default=-1, description="sample Y coordinate")
     sampled: date = Field(default=DEFAULT_START_DATE, description="Date sample taken")
 
     _id_generator: ClassVar = generic_id_generator(lambda i: f"S{i:04d}")
@@ -98,7 +101,8 @@ class AllSpecimens(BaseModel):
 
     def to_csv(self, writer):
         """Save specimens as CSV."""
-        writer.writerow(["id", "genome", "mass", "sampled"])
+        writer.writerow(["id", "genome", "mass", "grid", "x", "y", "sampled"])
         writer.writerows(
-            [s.id, s.genome, round(s.mass, PRECISION), s.sampled.isoformat()] for s in self.samples
+            [s.id, s.genome, round(s.mass, PRECISION), s.grid, s.x, s.y, s.sampled.isoformat()]
+            for s in self.samples
         )

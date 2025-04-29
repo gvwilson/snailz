@@ -25,7 +25,6 @@ class Scenario(BaseModel):
     params: ScenarioParams = Field(description="scenario parameters")
     grids: list[Grid] = Field(default_factory=list, description="sample site grids")
     specimens: AllSpecimens = Field(description="all specimens")
-    sampled: dict = Field(default_factory=dict, description="where specimens taken")
     machines: list[Machine] = Field(
         default_factory=[], description="laboratory machines"
     )
@@ -39,10 +38,11 @@ class Scenario(BaseModel):
     @staticmethod
     def generate(params):
         """Generate entire scenario."""
-        grids = [Grid.generate(params.grid_size) for _ in range(params.num_sites)]
-        specimens = AllSpecimens.generate(params.specimen_params, params.num_specimens)
         machines = Machine.generate(params.num_machines)
         persons = Person.generate(params.locale, params.num_persons)
+        grids = [Grid.generate(params.grid_size) for _ in range(params.num_sites)]
+        specimens = AllSpecimens.generate(params.specimen_params, params.num_specimens)
+        _sample_locations(grids, specimens)
 
         assays = []
         for s in specimens.samples:
@@ -63,27 +63,11 @@ class Scenario(BaseModel):
             params=params,
             grids=grids,
             specimens=specimens,
-            sampled=Scenario.sample(params.grid_size, grids, specimens.samples),
             machines=Machine.generate(params.num_machines),
             persons=Person.generate(params.locale, params.num_persons),
             assays=assays,
             images=images,
         )
-
-    @staticmethod
-    def sample(size, grids, specimens):
-        """Allocate specimens to grids."""
-        grid_ids = [g.id for g in grids]
-        coords = {
-            g.id: [(x, y) for x in range(size) for y in range(size)] for g in grids
-        }
-        result = {}
-        for s in specimens:
-            gid = random.choice(grid_ids)
-            loc = random.choice(range(len(coords[gid])))
-            result[s.id] = (gid, coords[gid][loc])
-            del coords[gid][loc]
-        return result
 
     def to_csv(self, root):
         """Write to multi-CSV."""
@@ -132,3 +116,18 @@ def _max_reading(assays):
             for y in range(a.readings.size):
                 result = max(result, a.readings[x, y])
     return result
+
+
+def _sample_locations(grids, specimens):
+    """Allocate specimens to grid locations."""
+
+    size = grids[0].size
+    assert all(g.size == size for g in grids), f"Grid size(s) mis-match"
+
+    coords = [
+        (g.id, x, y) for g in grids for x in range(size) for y in range(size)
+    ]
+    for s in specimens.samples:
+        i = random.randint(0, len(coords) - 1)
+        s.grid, s.x, s.y = coords[i]
+        del coords[i]
