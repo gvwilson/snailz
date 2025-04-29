@@ -23,7 +23,7 @@ def make_image(params, assay, scaling):
         scaling: color scaling factor
 
     Returns:
-       Image.
+       the generated image
     """
     # Create blank image array.
     p_size = params.plate_size

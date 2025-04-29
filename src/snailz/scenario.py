@@ -11,6 +11,7 @@ from pydantic import BaseModel, Field
 
 from .params import AssayParams, SpecimenParams, ScenarioParams
 from .assays import Assay
+from .effects import apply_effects, assign_sample_locations
 from .grid import Grid
 from .images import make_image
 from .machines import Machine
@@ -42,7 +43,7 @@ class Scenario(BaseModel):
         persons = Person.generate(params.locale, params.num_persons)
         grids = [Grid.generate(params.grid_size) for _ in range(params.num_sites)]
         specimens = AllSpecimens.generate(params.specimen_params, params.num_specimens)
-        _sample_locations(grids, specimens)
+        assign_sample_locations(grids, specimens)
 
         assays = []
         for s in specimens.samples:
@@ -59,15 +60,17 @@ class Scenario(BaseModel):
         scaling = float(math.ceil(_max_reading(assays) + 1))
         images = {a.id: make_image(params.assay_params, a, scaling) for a in assays}
 
-        return Scenario(
+        result = Scenario(
             params=params,
+            machines=machines,
+            persons=persons,
             grids=grids,
             specimens=specimens,
-            machines=Machine.generate(params.num_machines),
-            persons=Person.generate(params.locale, params.num_persons),
             assays=assays,
             images=images,
         )
+        apply_effects(result)
+        return result
 
     def to_csv(self, root):
         """Write to multi-CSV."""
@@ -94,12 +97,12 @@ class Scenario(BaseModel):
         for assay in self.assays:
             treatments_file = root / f"{assay.id}_treatments.csv"
             with open(treatments_file, "w") as stream:
-                assay.to_csv(csv.writer(stream), False)
+                assay.to_csv(csv.writer(stream), True)
 
             readings_file = root / f"{assay.id}_readings.csv"
             raw_file = root / f"{assay.id}_raw.csv"
             with open(readings_file, "w") as stream:
-                assay.to_csv(csv.writer(stream), True)
+                assay.to_csv(csv.writer(stream), False)
             mangle_assay(readings_file, raw_file, self.persons)
 
         for id, img in self.images.items():
@@ -116,18 +119,3 @@ def _max_reading(assays):
             for y in range(a.readings.size):
                 result = max(result, a.readings[x, y])
     return result
-
-
-def _sample_locations(grids, specimens):
-    """Allocate specimens to grid locations."""
-
-    size = grids[0].size
-    assert all(g.size == size for g in grids), f"Grid size(s) mis-match"
-
-    coords = [
-        (g.id, x, y) for g in grids for x in range(size) for y in range(size)
-    ]
-    for s in specimens.samples:
-        i = random.randint(0, len(coords) - 1)
-        s.grid, s.x, s.y = coords[i]
-        del coords[i]

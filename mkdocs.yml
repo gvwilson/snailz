@@ -6,6 +6,7 @@ nav:
 - Software:
   - assays.md
   - CLUI: clui.md
+  - effects.md
   - grid.md
   - images.md
   - machines.md

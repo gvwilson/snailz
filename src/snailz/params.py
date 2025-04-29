@@ -29,6 +29,7 @@ class AssayParams(BaseModel):
         le=255,
         description="plate image noise (grayscale 0-255)",
     )
+    max_delay: int = Field(default=7, description="delay in performing assay (days)")
 
 
 class SpecimenParams(BaseModel):

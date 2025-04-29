@@ -391,6 +391,29 @@
   
   
     <li class="md-nav__item">
+      <a href="effects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Effects
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="grid/" class="md-nav__link">
         
   
@@ -883,7 +906,7 @@ Like persons, they are included to enable simulation of bias.</dd>
 <dd>The snails collected from the sites.
 The data records a short fragment of the specimen's genome.
 its mass,
-and the date it was collected.</dd>
+and when and where it was collected.</dd>
 <dt>Assays</dt>
 <dd>The chemical analysis of the snails' genomes.
 Each assay is stored in two files:
@@ -1209,6 +1232,9 @@ The file looks like this:</p>
 <th style="text-align: left;">id</th>
 <th style="text-align: left;">genome</th>
 <th style="text-align: right;">mass</th>
+<th style="text-align: right;">grid</th>
+<th style="text-align: right;">x</th>
+<th style="text-align: right;">y</th>
 <th style="text-align: right;">sampled</th>
 </tr>
 </thead>
@@ -1217,17 +1243,26 @@ The file looks like this:</p>
 <td style="text-align: left;">S0001</td>
 <td style="text-align: left;">GCAACCGGACCGCCGTAAGG</td>
 <td style="text-align: right;">3.82</td>
+<td style="text-align: right;">G01</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">2</td>
 <td style="text-align: right;">2025-04-22</td>
 </tr>
 <tr>
 <td style="text-align: left;">S0002</td>
 <td style="text-align: left;">TCATACGGACCGCCGTAAGG</td>
 <td style="text-align: right;">3.53</td>
+<td style="text-align: right;">G02</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">7</td>
 <td style="text-align: right;">2025-04-19</td>
 </tr>
 <tr>
 <td style="text-align: left;">…</td>
 <td style="text-align: left;">…</td>
+<td style="text-align: right;">…</td>
+<td style="text-align: right;">…</td>
+<td style="text-align: right;">…</td>
 <td style="text-align: right;">…</td>
 <td style="text-align: right;">…</td>
 </tr>
@@ -1257,6 +1292,21 @@ The file looks like this:</p>
 <td><code>mass</code></td>
 <td>snail weight in grams</td>
 <td>real, required</td>
+</tr>
+<tr>
+<td><code>grid</code></td>
+<td>sample grid ID</td>
+<td>text, required</td>
+</tr>
+<tr>
+<td><code>x</code></td>
+<td>sample X coordinate</td>
+<td>integer, required</td>
+</tr>
+<tr>
+<td><code>y</code></td>
+<td>sample Y coordinate</td>
+<td>integer, required</td>
 </tr>
 <tr>
 <td><code>sampled</code></td>

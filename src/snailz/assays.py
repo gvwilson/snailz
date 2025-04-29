@@ -1,9 +1,14 @@
+"""Represent and generate assays."""
+
+from datetime import date
 import random
 from typing import ClassVar
 
 from pydantic import BaseModel, Field
 
+from .effects import choose_assay_date
 from .grid import Grid
+from .params import DEFAULT_START_DATE
 from .utils import PRECISION, generic_id_generator
 
 
@@ -14,6 +19,7 @@ class Assay(BaseModel):
     specimen_id: str = Field(description="specimen assayed")
     machine_id: str = Field(description="machine used")
     person_id: str = Field(description="who did assay")
+    performed: date = Field(default=DEFAULT_START_DATE, description="date assay performed")
     treatments: Grid = Field(description="treatments applied")
     readings: Grid = Field(description="readings obtained")
 
@@ -30,6 +36,7 @@ class Assay(BaseModel):
             specimen_id=specimen.id,
             machine_id=machine.id,
             person_id=person.id,
+            performed=choose_assay_date(params, specimen),
             treatments=treatments,
             readings=readings,
         )
@@ -70,6 +77,7 @@ class Assay(BaseModel):
                 "specimen",
                 "machine",
                 "person",
+                "performed",
                 "row",
                 "col",
                 "treatment",
@@ -85,6 +93,7 @@ class Assay(BaseModel):
                             a.specimen_id,
                             a.machine_id,
                             a.person_id,
+                            a.performed.isoformat(),
                             y + 1,
                             chr(ord("A") + x),
                             a.treatments[x, y],
@@ -100,6 +109,7 @@ class Assay(BaseModel):
             ("specimen", self.specimen_id),
             ("machine", self.machine_id),
             ("person", self.person_id),
+            ("performed", self.performed.isoformat()),
         ):
             writer.writerow([name, value] + padding)
 

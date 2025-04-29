@@ -266,6 +266,29 @@
   
   
     <li class="md-nav__item">
+      <a href="../effects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Effects
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../grid/" class="md-nav__link">
         
   
@@ -472,15 +495,6 @@
   <a href="#snailz.scenario.Scenario.generate" class="md-nav__link">
     <span class="md-ellipsis">
       generate
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#snailz.scenario.Scenario.sample" class="md-nav__link">
-    <span class="md-ellipsis">
-      sample
     </span>
   </a>
   
@@ -738,15 +752,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#snailz.scenario.Scenario.sample" class="md-nav__link">
-    <span class="md-ellipsis">
-      sample
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#snailz.scenario.Scenario.to_csv" class="md-nav__link">
     <span class="md-ellipsis">
       to_csv
@@ -966,8 +971,7 @@
 
               <details class="quote">
                 <summary>Source code in <code>src/snailz/scenario.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 22</span>
-<span class="normal"> 23</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 23</span>
 <span class="normal"> 24</span>
 <span class="normal"> 25</span>
 <span class="normal"> 26</span>
@@ -1054,26 +1058,12 @@
 <span class="normal">107</span>
 <span class="normal">108</span>
 <span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Scenario</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">110</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Scenario</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Entire synthetic data scenario.&quot;&quot;&quot;</span>
 
     <span class="n">params</span><span class="p">:</span> <span class="n">ScenarioParams</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;scenario parameters&quot;</span><span class="p">)</span>
     <span class="n">grids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Grid</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;sample site grids&quot;</span><span class="p">)</span>
     <span class="n">specimens</span><span class="p">:</span> <span class="n">AllSpecimens</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;all specimens&quot;</span><span class="p">)</span>
-    <span class="n">sampled</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;where specimens taken&quot;</span><span class="p">)</span>
     <span class="n">machines</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Machine</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default_factory</span><span class="o">=</span><span class="p">[],</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;laboratory machines&quot;</span>
     <span class="p">)</span>
@@ -1087,10 +1077,11 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate entire scenario.&quot;&quot;&quot;</span>
-        <span class="n">grids</span> <span class="o">=</span> <span class="p">[</span><span class="n">Grid</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">grid_size</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">num_sites</span><span class="p">)]</span>
-        <span class="n">specimens</span> <span class="o">=</span> <span class="n">AllSpecimens</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">specimen_params</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">num_specimens</span><span class="p">)</span>
         <span class="n">machines</span> <span class="o">=</span> <span class="n">Machine</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">num_machines</span><span class="p">)</span>
         <span class="n">persons</span> <span class="o">=</span> <span class="n">Person</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">locale</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">num_persons</span><span class="p">)</span>
+        <span class="n">grids</span> <span class="o">=</span> <span class="p">[</span><span class="n">Grid</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">grid_size</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">num_sites</span><span class="p">)]</span>
+        <span class="n">specimens</span> <span class="o">=</span> <span class="n">AllSpecimens</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">specimen_params</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">num_specimens</span><span class="p">)</span>
+        <span class="n">assign_sample_locations</span><span class="p">(</span><span class="n">grids</span><span class="p">,</span> <span class="n">specimens</span><span class="p">)</span>
 
         <span class="n">assays</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">specimens</span><span class="o">.</span><span class="n">samples</span><span class="p">:</span>
@@ -1107,30 +1098,16 @@
         <span class="n">scaling</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">_max_reading</span><span class="p">(</span><span class="n">assays</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
         <span class="n">images</span> <span class="o">=</span> <span class="p">{</span><span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="n">make_image</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">assay_params</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">scaling</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">assays</span><span class="p">}</span>
 
-        <span class="k">return</span> <span class="n">Scenario</span><span class="p">(</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span>
             <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+            <span class="n">machines</span><span class="o">=</span><span class="n">machines</span><span class="p">,</span>
+            <span class="n">persons</span><span class="o">=</span><span class="n">persons</span><span class="p">,</span>
             <span class="n">grids</span><span class="o">=</span><span class="n">grids</span><span class="p">,</span>
             <span class="n">specimens</span><span class="o">=</span><span class="n">specimens</span><span class="p">,</span>
-            <span class="n">sampled</span><span class="o">=</span><span class="n">Scenario</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">grid_size</span><span class="p">,</span> <span class="n">grids</span><span class="p">,</span> <span class="n">specimens</span><span class="o">.</span><span class="n">samples</span><span class="p">),</span>
-            <span class="n">machines</span><span class="o">=</span><span class="n">Machine</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">num_machines</span><span class="p">),</span>
-            <span class="n">persons</span><span class="o">=</span><span class="n">Person</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">locale</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">num_persons</span><span class="p">),</span>
             <span class="n">assays</span><span class="o">=</span><span class="n">assays</span><span class="p">,</span>
             <span class="n">images</span><span class="o">=</span><span class="n">images</span><span class="p">,</span>
         <span class="p">)</span>
-
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">sample</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">grids</span><span class="p">,</span> <span class="n">specimens</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Allocate specimens to grids.&quot;&quot;&quot;</span>
-        <span class="n">grid_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">grids</span><span class="p">]</span>
-        <span class="n">coords</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">g</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="p">[(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">)]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">grids</span>
-        <span class="p">}</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">specimens</span><span class="p">:</span>
-            <span class="n">gid</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">grid_ids</span><span class="p">)</span>
-            <span class="n">loc</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="n">gid</span><span class="p">])))</span>
-            <span class="n">result</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="n">coords</span><span class="p">[</span><span class="n">gid</span><span class="p">][</span><span class="n">loc</span><span class="p">])</span>
-            <span class="k">del</span> <span class="n">coords</span><span class="p">[</span><span class="n">gid</span><span class="p">][</span><span class="n">loc</span><span class="p">]</span>
+        <span class="n">apply_effects</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
@@ -1158,12 +1135,12 @@
         <span class="k">for</span> <span class="n">assay</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">assays</span><span class="p">:</span>
             <span class="n">treatments_file</span> <span class="o">=</span> <span class="n">root</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">assay</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">_treatments.csv&quot;</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">treatments_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
-                <span class="n">assay</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">stream</span><span class="p">),</span> <span class="kc">False</span><span class="p">)</span>
+                <span class="n">assay</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">stream</span><span class="p">),</span> <span class="kc">True</span><span class="p">)</span>
 
             <span class="n">readings_file</span> <span class="o">=</span> <span class="n">root</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">assay</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">_readings.csv&quot;</span>
             <span class="n">raw_file</span> <span class="o">=</span> <span class="n">root</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">assay</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">_raw.csv&quot;</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">readings_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
-                <span class="n">assay</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">stream</span><span class="p">),</span> <span class="kc">True</span><span class="p">)</span>
+                <span class="n">assay</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">stream</span><span class="p">),</span> <span class="kc">False</span><span class="p">)</span>
             <span class="n">mangle_assay</span><span class="p">(</span><span class="n">readings_file</span><span class="p">,</span> <span class="n">raw_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">persons</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">img</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -1236,13 +1213,16 @@
 <span class="normal">68</span>
 <span class="normal">69</span>
 <span class="normal">70</span>
-<span class="normal">71</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate entire scenario.&quot;&quot;&quot;</span>
-    <span class="n">grids</span> <span class="o">=</span> <span class="p">[</span><span class="n">Grid</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">grid_size</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">num_sites</span><span class="p">)]</span>
-    <span class="n">specimens</span> <span class="o">=</span> <span class="n">AllSpecimens</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">specimen_params</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">num_specimens</span><span class="p">)</span>
     <span class="n">machines</span> <span class="o">=</span> <span class="n">Machine</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">num_machines</span><span class="p">)</span>
     <span class="n">persons</span> <span class="o">=</span> <span class="n">Person</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">locale</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">num_persons</span><span class="p">)</span>
+    <span class="n">grids</span> <span class="o">=</span> <span class="p">[</span><span class="n">Grid</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">grid_size</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">num_sites</span><span class="p">)]</span>
+    <span class="n">specimens</span> <span class="o">=</span> <span class="n">AllSpecimens</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">specimen_params</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">num_specimens</span><span class="p">)</span>
+    <span class="n">assign_sample_locations</span><span class="p">(</span><span class="n">grids</span><span class="p">,</span> <span class="n">specimens</span><span class="p">)</span>
 
     <span class="n">assays</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">specimens</span><span class="o">.</span><span class="n">samples</span><span class="p">:</span>
@@ -1259,68 +1239,16 @@
     <span class="n">scaling</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">_max_reading</span><span class="p">(</span><span class="n">assays</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
     <span class="n">images</span> <span class="o">=</span> <span class="p">{</span><span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="n">make_image</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">assay_params</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">scaling</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">assays</span><span class="p">}</span>
 
-    <span class="k">return</span> <span class="n">Scenario</span><span class="p">(</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span>
         <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+        <span class="n">machines</span><span class="o">=</span><span class="n">machines</span><span class="p">,</span>
+        <span class="n">persons</span><span class="o">=</span><span class="n">persons</span><span class="p">,</span>
         <span class="n">grids</span><span class="o">=</span><span class="n">grids</span><span class="p">,</span>
         <span class="n">specimens</span><span class="o">=</span><span class="n">specimens</span><span class="p">,</span>
-        <span class="n">sampled</span><span class="o">=</span><span class="n">Scenario</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">grid_size</span><span class="p">,</span> <span class="n">grids</span><span class="p">,</span> <span class="n">specimens</span><span class="o">.</span><span class="n">samples</span><span class="p">),</span>
-        <span class="n">machines</span><span class="o">=</span><span class="n">Machine</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">num_machines</span><span class="p">),</span>
-        <span class="n">persons</span><span class="o">=</span><span class="n">Person</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">locale</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">num_persons</span><span class="p">),</span>
         <span class="n">assays</span><span class="o">=</span><span class="n">assays</span><span class="p">,</span>
         <span class="n">images</span><span class="o">=</span><span class="n">images</span><span class="p">,</span>
     <span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="snailz.scenario.Scenario.sample" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">sample</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">grids</span><span class="p">,</span> <span class="n">specimens</span><span class="p">)</span></code>
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
-  </span>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Allocate specimens to grids.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>src/snailz/scenario.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">sample</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">grids</span><span class="p">,</span> <span class="n">specimens</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Allocate specimens to grids.&quot;&quot;&quot;</span>
-    <span class="n">grid_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">grids</span><span class="p">]</span>
-    <span class="n">coords</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="n">g</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="p">[(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">)]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">grids</span>
-    <span class="p">}</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">specimens</span><span class="p">:</span>
-        <span class="n">gid</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">grid_ids</span><span class="p">)</span>
-        <span class="n">loc</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="n">gid</span><span class="p">])))</span>
-        <span class="n">result</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="n">coords</span><span class="p">[</span><span class="n">gid</span><span class="p">][</span><span class="n">loc</span><span class="p">])</span>
-        <span class="k">del</span> <span class="n">coords</span><span class="p">[</span><span class="n">gid</span><span class="p">][</span><span class="n">loc</span><span class="p">]</span>
+    <span class="n">apply_effects</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -1344,7 +1272,20 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/scenario.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 88</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
 <span class="normal"> 89</span>
 <span class="normal"> 90</span>
 <span class="normal"> 91</span>
@@ -1366,20 +1307,7 @@
 <span class="normal">107</span>
 <span class="normal">108</span>
 <span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
+<span class="normal">110</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Write to multi-CSV.&quot;&quot;&quot;</span>
 
     <span class="n">root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
@@ -1404,12 +1332,12 @@
     <span class="k">for</span> <span class="n">assay</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">assays</span><span class="p">:</span>
         <span class="n">treatments_file</span> <span class="o">=</span> <span class="n">root</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">assay</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">_treatments.csv&quot;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">treatments_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
-            <span class="n">assay</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">stream</span><span class="p">),</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="n">assay</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">stream</span><span class="p">),</span> <span class="kc">True</span><span class="p">)</span>
 
         <span class="n">readings_file</span> <span class="o">=</span> <span class="n">root</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">assay</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">_readings.csv&quot;</span>
         <span class="n">raw_file</span> <span class="o">=</span> <span class="n">root</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">assay</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">_raw.csv&quot;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">readings_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
-            <span class="n">assay</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">stream</span><span class="p">),</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="n">assay</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">stream</span><span class="p">),</span> <span class="kc">False</span><span class="p">)</span>
         <span class="n">mangle_assay</span><span class="p">(</span><span class="n">readings_file</span><span class="p">,</span> <span class="n">raw_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">persons</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">img</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -1446,15 +1374,15 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/scenario.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">126</span>
-<span class="normal">127</span>
-<span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span>
-<span class="normal">133</span>
-<span class="normal">134</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_max_reading</span><span class="p">(</span><span class="n">assays</span><span class="p">):</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_max_reading</span><span class="p">(</span><span class="n">assays</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Find maximum reading across all assays.&quot;&quot;&quot;</span>
 
     <span class="n">result</span> <span class="o">=</span> <span class="mf">0.0</span>

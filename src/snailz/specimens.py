@@ -42,14 +42,12 @@ class Specimen(BaseModel):
             else b
             for i, b in enumerate(ref_genome)
         ]
+        if is_mutant:
+            genome[susc_locus] = susc_base
         mass = abs(random.gauss(params.mass_mean, params.mass_sd))
 
         days = random.randint(0, 1 + (params.end_date - params.start_date).days)
         sampled = params.start_date + timedelta(days=days)
-
-        if is_mutant:
-            genome[susc_locus] = susc_base
-            mass *= params.mut_mass_scale
 
         return Specimen(
             id=next(Specimen._id_generator),
@@ -85,9 +83,7 @@ class AllSpecimens(BaseModel):
         )
 
         samples = [
-            Specimen.generate(
-                params, ref_genome, i in mutant_ids, susc_locus, susc_base
-            )
+            Specimen.generate(params, ref_genome, i in mutant_ids, susc_locus, susc_base)
             for i in range(num)
         ]
 
