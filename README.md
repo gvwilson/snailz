@@ -23,6 +23,12 @@ and uses modern Python tools.
 > some of the tree snails in the region began growing unusually large.
 > Your team is now collecting and analyzing specimens from affected regions
 > to determine if a mutant gene makes snails more susceptible to the pollution.
+>
+> Each genomic assay is performed by putting samples of a snail's tissue
+> into some small wells in a plastic [microplate][microplate].
+> An inert material is placed in other wells as a control;
+> the wells are then treated with chemicals and photographed,
+> and the brightness of each well shows how reactive the material was.
 
 `snailz` generates several related sets of data:
 
@@ -38,18 +44,12 @@ Machines
 
 Specimens
 :   The snails collected from the sites.
-    The data records where the snail was found,
-    the date it was collected,
+    The data records a short fragment of the specimen's genome.
     its mass,
-    and a short fragment of its genome.
+    and the date it was collected.
 
 Assays
 :   The chemical analysis of the snails' genomes.
-    Each assay is performed by putting samples of a snail's tissue
-    into some small wells in a plastic [microplate][microplate].
-    An inert material is placed in other wells as a control;
-    the wells are then treated with chemicals and photographed,
-    and the brightness of each well shows how reactive the material was.
     Each assay is stored in two files:
     a design file showing which wells contain samples and controls,
     and a readings file with the measured responses.
@@ -99,6 +99,8 @@ The parameters, their meanings, and their properties are:
 | | `mut_mass_scale` | scaling factor for mutant specimen masses | 2.0 |
 | | `mut_frac` | fraction of specimens with significant mutation | 0.2 |
 | | `mut_prob` | probability of non-significant mutations per base | 0.0 |
+| | `start_date` | start date of specimen sampling | 2025-04-01 |
+| | `end_date` | end date of specimen sampling | 2025-04-30 |
 | `assays_params` | `plate_size` | XY dimensions of assay plates | 4 |
 | | `mean_control` | mean plate reading for control wells | 0.0 |
 | | `mean_normal` | mean plate reading for normal specimens | 2.0 |
@@ -192,11 +194,11 @@ A typical file is:
 `specimens.csv` holds information about individual snails in CSV format (with column headers).
 The file looks like this:
 
-| id  | genome               | mass |
-| :----- | :------------------- | ---: |
-| S0001 | GCAACCGGACCGCCGTAAGG | 3.82 |
-| S0002 | TCATACGGACCGCCGTAAGG | 3.53 |
-| … | … | … | … | … | … | … |
+| id  | genome               | mass | sampled |
+| :----- | :------------------- | ---: | ---: |
+| S0001 | GCAACCGGACCGCCGTAAGG | 3.82 | 2025-04-22 |
+| S0002 | TCATACGGACCGCCGTAAGG | 3.53 | 2025-04-19 |
+| … | … | … | … | … | … | … | … |
 
 and its fields are:
 
@@ -205,6 +207,7 @@ and its fields are:
 | `id` | specimen identifier | text, unique, required |
 | `genome` | base sequence | text, required |
 | `mass` | snail weight in grams | real, required |
+| `sampled` | date specimen was taken | date, required |
 
 ### Assays
 

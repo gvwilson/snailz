@@ -25,9 +25,7 @@ class Scenario(BaseModel):
     params: ScenarioParams = Field(description="scenario parameters")
     grids: list[Grid] = Field(default_factory=list, description="sample site grids")
     specimens: AllSpecimens = Field(description="all specimens")
-    sampled: dict[str, tuple[str, tuple[int, int]]] = Field(
-        default_factory=dict, description="where specimens taken"
-    )
+    sampled: dict = Field(default_factory=dict, description="where specimens taken")
     machines: list[Machine] = Field(
         default_factory=[], description="laboratory machines"
     )

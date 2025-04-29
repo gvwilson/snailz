@@ -1,7 +1,12 @@
+"""Entire data generation scenario."""
+
+from datetime import date, timedelta
 from pydantic import BaseModel, Field
 
 
 DEFAULT_LOCALE = "et_EE"
+DEFAULT_START_DATE = date(2025, 4, 1)
+DEFAULT_END_DATE = date(2025, 4, 30)
 
 
 class AssayParams(BaseModel):
@@ -43,6 +48,8 @@ class SpecimenParams(BaseModel):
     mut_prob: float = Field(
         default=0.05, ge=0.0, le=1.0, description="Probability of point mutation"
     )
+    start_date: date = Field(default=DEFAULT_START_DATE, description="sampling start date")
+    end_date: date = Field(default=DEFAULT_END_DATE, description="sampling end date")
 
     model_config = {"extra": "forbid"}
 

@@ -1,10 +1,11 @@
+from datetime import date, timedelta
 import math
 import random
 from typing import ClassVar
 
 from pydantic import BaseModel, Field
 
-from .params import SpecimenParams
+from .params import DEFAULT_START_DATE, DEFAULT_END_DATE, SpecimenParams
 from .utils import PRECISION, generic_id_generator
 
 
@@ -24,6 +25,7 @@ class Specimen(BaseModel):
     genome: str = Field(min_length=1, description="genome")
     is_mutant: bool = Field(description="is this a mutant?")
     mass: float = Field(gt=0, description="mass (g)")
+    sampled: date = Field(default=DEFAULT_START_DATE, description="Date sample taken")
 
     _id_generator: ClassVar = generic_id_generator(lambda i: f"S{i:04d}")
 
@@ -39,6 +41,9 @@ class Specimen(BaseModel):
         ]
         mass = abs(random.gauss(params.mass_mean, params.mass_sd))
 
+        days = random.randint(0, 1 + (params.end_date - params.start_date).days)
+        sampled = params.start_date + timedelta(days=days)
+
         if is_mutant:
             genome[susc_locus] = susc_base
             mass *= params.mut_mass_scale
@@ -48,6 +53,7 @@ class Specimen(BaseModel):
             genome="".join(genome),
             is_mutant=is_mutant,
             mass=mass,
+            sampled=sampled,
         )
 
 
@@ -92,7 +98,7 @@ class AllSpecimens(BaseModel):
 
     def to_csv(self, writer):
         """Save specimens as CSV."""
-        writer.writerow(["id", "genome", "mass"])
+        writer.writerow(["id", "genome", "mass", "sampled"])
         writer.writerows(
-            [s.id, s.genome, round(s.mass, PRECISION)] for s in self.samples
+            [s.id, s.genome, round(s.mass, PRECISION), s.sampled.isoformat()] for s in self.samples
         )
