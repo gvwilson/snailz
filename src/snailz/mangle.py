@@ -8,10 +8,10 @@ def mangle_assay(readings_file, raw_file, persons, forced=None):
     """Mangle a single assay file.
 
     Parameters:
-        readings_file: clean readings file
-        raw_file: file to produce
-        persons: staff members
-        forced: optional list of specified manglings (for testing)
+        readings_file (Path): clean readings file
+        raw_file (Path): file to produce
+        persons (list[Person]): staff members
+        forced (bool): optional list of specified manglings (for testing)
     """
     available = {
         "id": _mangle_id,
@@ -35,15 +35,8 @@ def mangle_assay(readings_file, raw_file, persons, forced=None):
 
 
 def _mangle_id(data, persons):
-    """Convert ID field to string.
+    """Convert ID field to string."""
 
-    Parameters:
-        data: values from CSV file
-        persons: lab staff
-
-    Returns:
-        Modified copy of data.
-    """
     for row in data:
         if any(x == "id" for x in row):
             i = row.index("id")
@@ -52,15 +45,8 @@ def _mangle_id(data, persons):
 
 
 def _mangle_indent(data, persons):
-    """Indent data portion.
+    """Indent data portion."""
 
-    Parameters:
-        data: values from CSV file
-        persons: lab staff
-
-    Returns:
-        Modified copy of data.
-    """
     return [
         ([""] + row)
         if (row[0].isdigit() or (row[0] == "" and row[1] == "A"))
@@ -70,28 +56,14 @@ def _mangle_indent(data, persons):
 
 
 def _mangle_missing(data, persons):
-    """Remove machine name (alters length of header).
+    """Remove machine name (alters length of header)."""
 
-    Parameters:
-        data: values from CSV file
-        persons: lab staff
-
-    Returns:
-        Modified copy of data.
-    """
     return [row for row in data if row[0] != "machine"]
 
 
 def _mangle_person(data, persons):
-    """Replace person identifier with name.
+    """Replace person identifier with name."""
 
-    Parameters:
-        data: values from CSV file
-        persons: lab staff
-
-    Returns:
-        Modified copy of data.
-    """
     for row in data:
         if row[0] == "person":
             row[0] = "by"

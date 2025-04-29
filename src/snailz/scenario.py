@@ -17,6 +17,7 @@ from .machines import Machine
 from .mangle import mangle_assay
 from .persons import Person
 from .specimens import AllSpecimens
+from .utils import max_value
 
 
 class Scenario(BaseModel):
@@ -63,7 +64,7 @@ class Scenario(BaseModel):
                     )
                 )
 
-        scaling = float(math.ceil(_max_reading(assays) + 1))
+        scaling = float(math.ceil(max_value(grids) + 1))
         images = {a.id: make_image(params.assay_params, a, scaling) for a in assays}
 
         result = Scenario(
@@ -118,14 +119,3 @@ class Scenario(BaseModel):
         for id, img in self.images.items():
             img_file = root / f"{id}.png"
             img.save(img_file)
-
-
-def _max_reading(assays):
-    """Find maximum reading across all assays."""
-
-    result = 0.0
-    for a in assays:
-        for x in range(a.readings.size):
-            for y in range(a.readings.size):
-                result = max(result, a.readings[x, y])
-    return result

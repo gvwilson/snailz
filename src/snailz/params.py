@@ -31,6 +31,8 @@ class AssayParams(BaseModel):
     )
     max_delay: int = Field(default=7, description="delay in performing assay (days)")
 
+    model_config = {"extra": "forbid"}
+
 
 class SpecimenParams(BaseModel):
     """Parameters for specimen generation."""
@@ -68,7 +70,11 @@ class ScenarioParams(BaseModel):
     num_persons: int = Field(default=5, gt=0, description="number of lab staff")
     locale: str = Field(default=DEFAULT_LOCALE, description="name generation locale")
     assays_per_specimen: int = Field(default=2, gt=0, description="assays per specimen")
+    pollution_scale: float = Field(default=0.1, ge=0, description="pollution scaling factor")
+    delay_scale: float = Field(default=0.05, ge=0, description="delay scaling factor")
     specimen_params: SpecimenParams = Field(
         description="specimen generation parameters"
     )
     assay_params: AssayParams = Field(description="assay generation parameters")
+
+    model_config = {"extra": "forbid"}

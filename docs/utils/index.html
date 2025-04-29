@@ -546,6 +546,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#snailz.utils.max_value" class="md-nav__link">
+    <span class="md-ellipsis">
+      max_value
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#snailz.utils._serialize_json" class="md-nav__link">
     <span class="md-ellipsis">
       _serialize_json
@@ -730,6 +739,15 @@
   <a href="#snailz.utils.json_dump" class="md-nav__link">
     <span class="md-ellipsis">
       json_dump
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snailz.utils.max_value" class="md-nav__link">
+    <span class="md-ellipsis">
+      max_value
     </span>
   </a>
   
@@ -1010,6 +1028,45 @@
 <div class="doc doc-object doc-function">
 
 
+<h2 id="snailz.utils.max_value" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">max_value</span><span class="p">(</span><span class="n">grids</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Find maximum value across a list of grids.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/snailz/utils.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">max_value</span><span class="p">(</span><span class="n">grids</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find maximum value across a list of grids.&quot;&quot;&quot;</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">grids</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">g</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h2 id="snailz.utils._serialize_json" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">_serialize_json</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span></code>
 
@@ -1100,18 +1157,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">55</span>
 <span class="normal">56</span>
 <span class="normal">57</span>
 <span class="normal">58</span>
@@ -1119,7 +1165,18 @@
 <span class="normal">60</span>
 <span class="normal">61</span>
 <span class="normal">62</span>
-<span class="normal">63</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_serialize_json</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_serialize_json</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom JSON serializer for JSON conversion.</span>
 
 <span class="sd">    Parameters:</span>

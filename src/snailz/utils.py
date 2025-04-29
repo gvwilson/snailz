@@ -41,6 +41,17 @@ def json_dump(obj, indent=2):
     return json.dumps(obj, indent=indent, default=_serialize_json)
 
 
+def max_value(grids):
+    """Find maximum value across a list of grids."""
+
+    result = 0.0
+    for g in grids:
+        for x in range(g.size):
+            for y in range(g.size):
+                result = max(result, g[x, y])
+    return result
+
+
 def _serialize_json(obj):
     """Custom JSON serializer for JSON conversion.
 

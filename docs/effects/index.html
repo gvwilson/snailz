@@ -812,14 +812,56 @@
 <span class="normal">11</span>
 <span class="normal">12</span>
 <span class="normal">13</span>
-<span class="normal">14</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">apply_effects</span><span class="p">(</span><span class="n">scenario</span><span class="p">):</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">apply_effects</span><span class="p">(</span><span class="n">scenario</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply mix of random effects to scenario.&quot;&quot;&quot;</span>
 
+    <span class="n">params</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">params</span>
+    <span class="n">specimens</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">specimens</span><span class="o">.</span><span class="n">samples</span>
+
     <span class="c1"># Modify specimen masses based on mutation</span>
-    <span class="n">specimen_params</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">specimen_params</span>
-    <span class="k">for</span> <span class="n">specimen</span> <span class="ow">in</span> <span class="n">scenario</span><span class="o">.</span><span class="n">specimens</span><span class="o">.</span><span class="n">samples</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">specimen</span><span class="o">.</span><span class="n">is_mutant</span><span class="p">:</span>
-            <span class="n">specimen</span><span class="o">.</span><span class="n">mass</span> <span class="o">*=</span> <span class="n">specimen_params</span><span class="o">.</span><span class="n">mut_mass_scale</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">specimens</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">is_mutant</span><span class="p">:</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">mass</span> <span class="o">*=</span> <span class="n">params</span><span class="o">.</span><span class="n">specimen_params</span><span class="o">.</span><span class="n">mut_mass_scale</span>
+
+    <span class="c1"># Modify mass based on pollution level</span>
+    <span class="n">grids</span> <span class="o">=</span> <span class="p">{</span><span class="n">g</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="n">g</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">scenario</span><span class="o">.</span><span class="n">grids</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">specimens</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="o">.</span><span class="n">is_mutant</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="n">grids</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">grid</span><span class="p">][</span><span class="n">s</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">y</span><span class="p">]</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">mass</span> <span class="o">+=</span> <span class="n">s</span><span class="o">.</span><span class="n">mass</span> <span class="o">*</span> <span class="n">params</span><span class="o">.</span><span class="n">pollution_scale</span> <span class="o">*</span> <span class="n">level</span>
+
+    <span class="c1"># Modify sample readings based on delay in processing</span>
+    <span class="n">lookup</span> <span class="o">=</span> <span class="p">{</span><span class="n">s</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">specimens</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">assay</span> <span class="ow">in</span> <span class="n">scenario</span><span class="o">.</span><span class="n">assays</span><span class="p">:</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="p">(</span><span class="n">assay</span><span class="o">.</span><span class="n">performed</span> <span class="o">-</span> <span class="n">lookup</span><span class="p">[</span><span class="n">assay</span><span class="o">.</span><span class="n">specimen_id</span><span class="p">]</span><span class="o">.</span><span class="n">sampled</span><span class="p">)</span><span class="o">.</span><span class="n">days</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">assay</span><span class="o">.</span><span class="n">readings</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">assay</span><span class="o">.</span><span class="n">readings</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">assay</span><span class="o">.</span><span class="n">treatments</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;S&quot;</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">drop</span> <span class="o">=</span> <span class="n">assay</span><span class="o">.</span><span class="n">readings</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">*</span> <span class="n">params</span><span class="o">.</span><span class="n">delay_scale</span> <span class="o">*</span> <span class="n">delta</span>
+                <span class="n">assay</span><span class="o">.</span><span class="n">readings</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">assay</span><span class="o">.</span><span class="n">readings</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">-</span> <span class="n">drop</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -842,19 +884,19 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/effects.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">assign_sample_locations</span><span class="p">(</span><span class="n">grids</span><span class="p">,</span> <span class="n">specimens</span><span class="p">):</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">assign_sample_locations</span><span class="p">(</span><span class="n">grids</span><span class="p">,</span> <span class="n">specimens</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Allocate specimens to grid locations.&quot;&quot;&quot;</span>
 
     <span class="n">size</span> <span class="o">=</span> <span class="n">grids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
@@ -889,10 +931,10 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/effects.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">choose_assay_date</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">specimen</span><span class="p">):</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">choose_assay_date</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">specimen</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine date assay performed.&quot;&quot;&quot;</span>
 
     <span class="k">return</span> <span class="n">specimen</span><span class="o">.</span><span class="n">sampled</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">max_delay</span><span class="p">))</span>
