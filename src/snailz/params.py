@@ -1,6 +1,6 @@
 """Entire data generation scenario."""
 
-from datetime import date, timedelta
+from datetime import date
 from pydantic import BaseModel, Field
 
 

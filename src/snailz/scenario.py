@@ -4,12 +4,11 @@ import csv
 import random
 import math
 from pathlib import Path
-import sys
 
 from PIL.Image import Image
 from pydantic import BaseModel, Field
 
-from .params import AssayParams, SpecimenParams, ScenarioParams
+from .params import ScenarioParams
 from .assays import Assay
 from .effects import apply_effects, assign_sample_locations
 from .grid import Grid
@@ -38,7 +37,14 @@ class Scenario(BaseModel):
 
     @staticmethod
     def generate(params):
-        """Generate entire scenario."""
+        """Generate entire scenario.
+
+        Parameters:
+            params (ScenarioParams): controlling parameters
+
+        Returns:
+            (Scenario): all generated data.
+        """
         machines = Machine.generate(params.num_machines)
         persons = Person.generate(params.locale, params.num_persons)
         grids = [Grid.generate(params.grid_size) for _ in range(params.num_sites)]
@@ -73,7 +79,11 @@ class Scenario(BaseModel):
         return result
 
     def to_csv(self, root):
-        """Write to multi-CSV."""
+        """Write as CSV (and PNG).
+
+        Parameters:
+            root (str): root directory for output
+        """
 
         root = Path(root)
         root.mkdir(exist_ok=True)

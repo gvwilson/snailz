@@ -5,7 +5,7 @@ from typing import ClassVar
 
 from pydantic import BaseModel, Field
 
-from .params import DEFAULT_START_DATE, DEFAULT_END_DATE, SpecimenParams
+from .params import DEFAULT_START_DATE, SpecimenParams
 from .utils import PRECISION, generic_id_generator
 
 
@@ -34,7 +34,18 @@ class Specimen(BaseModel):
 
     @staticmethod
     def generate(params, ref_genome, is_mutant, susc_locus, susc_base):
-        """Generate a single specimen."""
+        """Generate a single specimen.
+
+        Parameters:
+            params (SpecimenParams): parameters
+            ref_genome (str): reference genome
+            is_mutant (bool): is this specimen a mutant?
+            susc_locus (int): susceptible locus in genome
+            susc_base (str): base indicating mutant
+
+        Returns:
+            (Specimen): randomly-generated specimen.
+        """
 
         genome = [
             random.choice(OTHERS[b])
@@ -69,7 +80,15 @@ class AllSpecimens(BaseModel):
 
     @staticmethod
     def generate(params, num):
-        """Generate specimens."""
+        """Generate specimens.
+
+        Parameters:
+            params (SpecimenParams): parameters
+            num (int): number of specimens required
+
+        Returns:
+            (AllSpecimens): collection of randomly-generated specimens.
+        """
 
         if num <= 0:
             raise ValueError(f"invalid number of specimens {num}")
@@ -96,7 +115,11 @@ class AllSpecimens(BaseModel):
         )
 
     def to_csv(self, writer):
-        """Save specimens as CSV."""
+        """Save specimens as CSV.
+
+        Parameters:
+            writer (stream): where to write
+        """
         writer.writerow(["id", "genome", "mass", "grid", "x", "y", "sampled"])
         writer.writerows(
             [s.id, s.genome, round(s.mass, PRECISION), s.grid, s.x, s.y, s.sampled.isoformat()]

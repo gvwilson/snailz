@@ -12,7 +12,14 @@ PRECISION = 2
 
 
 def generic_id_generator(id_func):
-    """Parameterized ID generator."""
+    """Parameterized ID generator.
+
+    Parameters:
+        id_func (callable): function to generate a single ID
+
+    Returns:
+        (generator): ID generator.
+    """
 
     current = 0
     while True:
@@ -24,11 +31,11 @@ def json_dump(obj, indent=2):
     """Dump as JSON with appropriate settings.
 
     Parameters:
-        obj: The object to serialize
-        indent: Indentation (None for none)
+        obj (any): The object to serialize
+        indent (int | None): Indentation (None for none)
 
     Returns:
-        String representation of object.
+        (str): JSON representation of object.
     """
 
     return json.dumps(obj, indent=indent, default=_serialize_json)
@@ -38,15 +45,15 @@ def _serialize_json(obj):
     """Custom JSON serializer for JSON conversion.
 
     Parameters:
-        obj: The object to serialize
+        obj (any): The object to serialize
 
     Returns:
-        String representation of date objects or dict for Pydantic models;
-        None for PIL images.
+        (str | None): string representation or None.
 
     Raises:
         TypeError: If the object type is not supported for serialization
     """
+
     if isinstance(obj, date):
         return obj.isoformat()
     if isinstance(obj, BaseModel):

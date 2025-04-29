@@ -971,7 +971,8 @@
 
               <details class="quote">
                 <summary>Source code in <code>src/snailz/scenario.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 23</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 22</span>
+<span class="normal"> 23</span>
 <span class="normal"> 24</span>
 <span class="normal"> 25</span>
 <span class="normal"> 26</span>
@@ -1058,7 +1059,17 @@
 <span class="normal">107</span>
 <span class="normal">108</span>
 <span class="normal">109</span>
-<span class="normal">110</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Scenario</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Scenario</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Entire synthetic data scenario.&quot;&quot;&quot;</span>
 
     <span class="n">params</span><span class="p">:</span> <span class="n">ScenarioParams</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;scenario parameters&quot;</span><span class="p">)</span>
@@ -1076,7 +1087,14 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate entire scenario.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate entire scenario.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            params (ScenarioParams): controlling parameters</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            (Scenario): all generated data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">machines</span> <span class="o">=</span> <span class="n">Machine</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">num_machines</span><span class="p">)</span>
         <span class="n">persons</span> <span class="o">=</span> <span class="n">Person</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">locale</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">num_persons</span><span class="p">)</span>
         <span class="n">grids</span> <span class="o">=</span> <span class="p">[</span><span class="n">Grid</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">grid_size</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">num_sites</span><span class="p">)]</span>
@@ -1111,7 +1129,11 @@
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write to multi-CSV.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write as CSV (and PNG).</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            root (str): root directory for output</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
         <span class="n">root</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1179,9 +1201,64 @@
         <p>Generate entire scenario.</p>
 
 
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>params</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="ScenarioParams (snailz.params.ScenarioParams)" href="../params/#snailz.params.ScenarioParams">ScenarioParams</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>controlling parameters</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="Scenario (snailz.scenario.Scenario)" href="#snailz.scenario.Scenario">Scenario</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>all generated data.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
             <details class="quote">
               <summary>Source code in <code>src/snailz/scenario.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">39</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">38</span>
+<span class="normal">39</span>
 <span class="normal">40</span>
 <span class="normal">41</span>
 <span class="normal">42</span>
@@ -1215,9 +1292,22 @@
 <span class="normal">70</span>
 <span class="normal">71</span>
 <span class="normal">72</span>
-<span class="normal">73</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate entire scenario.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate entire scenario.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        params (ScenarioParams): controlling parameters</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        (Scenario): all generated data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">machines</span> <span class="o">=</span> <span class="n">Machine</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">num_machines</span><span class="p">)</span>
     <span class="n">persons</span> <span class="o">=</span> <span class="n">Person</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">locale</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">num_persons</span><span class="p">)</span>
     <span class="n">grids</span> <span class="o">=</span> <span class="p">[</span><span class="n">Grid</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">grid_size</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">num_sites</span><span class="p">)]</span>
@@ -1267,18 +1357,43 @@
 
     <div class="doc doc-contents ">
 
-        <p>Write to multi-CSV.</p>
+        <p>Write as CSV (and PNG).</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>root</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>root directory for output</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/scenario.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 75</span>
-<span class="normal"> 76</span>
-<span class="normal"> 77</span>
-<span class="normal"> 78</span>
-<span class="normal"> 79</span>
-<span class="normal"> 80</span>
-<span class="normal"> 81</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 81</span>
 <span class="normal"> 82</span>
 <span class="normal"> 83</span>
 <span class="normal"> 84</span>
@@ -1307,8 +1422,22 @@
 <span class="normal">107</span>
 <span class="normal">108</span>
 <span class="normal">109</span>
-<span class="normal">110</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write to multi-CSV.&quot;&quot;&quot;</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write as CSV (and PNG).</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        root (str): root directory for output</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
     <span class="n">root</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1374,15 +1503,15 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/scenario.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_max_reading</span><span class="p">(</span><span class="n">assays</span><span class="p">):</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_max_reading</span><span class="p">(</span><span class="n">assays</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Find maximum reading across all assays.&quot;&quot;&quot;</span>
 
     <span class="n">result</span> <span class="o">=</span> <span class="mf">0.0</span>

@@ -15,16 +15,8 @@ BLUR_RADIUS = 4
 
 
 def make_image(params, assay, scaling):
-    """Generate a single image.
+    """Generate a single image."""
 
-    Parameters:
-        params: assay parameters
-        assay: assay to generate image for
-        scaling: color scaling factor
-
-    Returns:
-       the generated image
-    """
     # Create blank image array.
     p_size = params.plate_size
     img_size = (p_size * WELL_SIZE) + ((p_size + 1) * BORDER_WIDTH)
@@ -50,16 +42,8 @@ def make_image(params, assay, scaling):
 
 
 def _image_noise(params, array, img_size):
-    """Add noise effects to numpy array before conversion to image.
+    """Add noise effects to numpy array before conversion to image."""
 
-    Parameters:
-        params: assay parameters
-        array: pristine numpy array
-        img_size: size of the image
-
-    Returns:
-        Distorted numpy array.
-    """
     # Generate random noise array of the same shape
     noise = np.random.randint(
         -params.image_noise,

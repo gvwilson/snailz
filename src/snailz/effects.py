@@ -18,7 +18,7 @@ def assign_sample_locations(grids, specimens):
     """Allocate specimens to grid locations."""
 
     size = grids[0].size
-    assert all(g.size == size for g in grids), f"Grid size(s) mis-match"
+    assert all(g.size == size for g in grids), "Grid size(s) mis-match"
 
     coords = [
         (g.id, x, y) for g in grids for x in range(size) for y in range(size)

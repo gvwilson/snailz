@@ -93,9 +93,9 @@ def _mangle_person(data, persons):
         Modified copy of data.
     """
     for row in data:
-        if row[0] == "by":
-            row[0] = "performed"
-            person_id = staff[row[1]]
+        if row[0] == "person":
+            row[0] = "by"
+            person_id = row[1]
             matches = [p for p in persons if p.id == person_id]
             assert len(matches) == 1, f"Bad person ID {person_id} during mangling"
             row[1] = f"{matches[0].personal} {matches[0].family}"

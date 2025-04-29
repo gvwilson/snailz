@@ -918,7 +918,20 @@
 <span class="normal">38</span>
 <span class="normal">39</span>
 <span class="normal">40</span>
-<span class="normal">41</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Person</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Person</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A single person.&quot;&quot;&quot;</span>
 
     <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;unique identifier&quot;</span><span class="p">)</span>
@@ -931,7 +944,15 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="n">locale</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate random persons.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate random persons.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            locale (str): Faker locale</span>
+<span class="sd">            num (int): number of persons to generate</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            (list[Person]): generated persons.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">fake</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">Faker</span><span class="p">(</span><span class="n">locale</span><span class="p">)</span>
         <span class="n">fake</span><span class="o">.</span><span class="n">seed_instance</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1_000_000</span><span class="p">))</span>
         <span class="k">return</span> <span class="p">[</span>
@@ -945,7 +966,12 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_csv</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">persons</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Produce CSV&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert to CSV.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            writer (stream): where to write</span>
+<span class="sd">            persons (list[Person]): what to write</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;family&quot;</span><span class="p">,</span> <span class="s2">&quot;personal&quot;</span><span class="p">])</span>
         <span class="n">writer</span><span class="o">.</span><span class="n">writerows</span><span class="p">([</span><span class="n">p</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">family</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">personal</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">persons</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -981,6 +1007,76 @@
         <p>Generate random persons.</p>
 
 
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>locale</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Faker locale</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>num</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>number of persons to generate</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span>[<a class="autorefs autorefs-internal" title="Person (snailz.persons.Person)" href="#snailz.persons.Person">Person</a>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>generated persons.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
             <details class="quote">
               <summary>Source code in <code>src/snailz/persons.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">23</span>
@@ -995,9 +1091,25 @@
 <span class="normal">32</span>
 <span class="normal">33</span>
 <span class="normal">34</span>
-<span class="normal">35</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="n">locale</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate random persons.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate random persons.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        locale (str): Faker locale</span>
+<span class="sd">        num (int): number of persons to generate</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        (list[Person]): generated persons.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">fake</span> <span class="o">=</span> <span class="n">faker</span><span class="o">.</span><span class="n">Faker</span><span class="p">(</span><span class="n">locale</span><span class="p">)</span>
     <span class="n">fake</span><span class="o">.</span><span class="n">seed_instance</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1_000_000</span><span class="p">))</span>
     <span class="k">return</span> <span class="p">[</span>
@@ -1029,18 +1141,75 @@
 
     <div class="doc doc-contents ">
 
-        <p>Produce CSV</p>
+        <p>Convert to CSV.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>writer</code>
+            </td>
+            <td>
+                  <code><span title="stream">stream</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>where to write</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>persons</code>
+            </td>
+            <td>
+                  <code><span title="list">list</span>[<a class="autorefs autorefs-internal" title="Person (snailz.persons.Person)" href="#snailz.persons.Person">Person</a>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>what to write</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/persons.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">to_csv</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">persons</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Produce CSV&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert to CSV.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        writer (stream): where to write</span>
+<span class="sd">        persons (list[Person]): what to write</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;family&quot;</span><span class="p">,</span> <span class="s2">&quot;personal&quot;</span><span class="p">])</span>
     <span class="n">writer</span><span class="o">.</span><span class="n">writerows</span><span class="p">([</span><span class="n">p</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">family</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">personal</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">persons</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>

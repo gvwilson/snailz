@@ -22,7 +22,15 @@ class Person(BaseModel):
 
     @staticmethod
     def generate(locale, num):
-        """Generate random persons."""
+        """Generate random persons.
+
+        Parameters:
+            locale (str): Faker locale
+            num (int): number of persons to generate
+
+        Returns:
+            (list[Person]): generated persons.
+        """
         fake = faker.Faker(locale)
         fake.seed_instance(random.randint(0, 1_000_000))
         return [
@@ -36,6 +44,11 @@ class Person(BaseModel):
 
     @staticmethod
     def to_csv(writer, persons):
-        """Produce CSV"""
+        """Convert to CSV.
+
+        Parameters:
+            writer (stream): where to write
+            persons (list[Person]): what to write
+        """
         writer.writerow(["id", "family", "personal"])
         writer.writerows([p.id, p.family, p.personal] for p in persons)
