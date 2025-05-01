@@ -1,224 +1,242 @@
-"""Test assay generation."""
+"""Test assay functionality."""
 
+import csv
 from datetime import date
-import pytest
+import io
 import random
+import pytest
 
-from snailz.assays import AssayParams, Assay, AllAssays
-from snailz.machines import Machine, AllMachines
-from snailz.grid import Grid, Point
-from snailz.persons import Person, AllPersons
-from snailz.specimens import Specimen, AllSpecimens
-
-MACHINE_ID = "E1234"
-MACHINES_1 = AllMachines(
-    items=[Machine(ident=MACHINE_ID, name="SomeMachine", brightness=0.95)]
-)
-
-PERSONS_1 = AllPersons(items=[Person(ident="abc", family="BC", personal="A")])
-
-SPECIMENS_1 = AllSpecimens(
-    loci=[[0]],
-    references=["A"],
-    susc_base="A",
-    susc_locus=0,
-    items=[
-        Specimen(
-            ident="S01",
-            survey_id="G01",
-            species=0,
-            location=Point(x=1, y=1),
-            collected=date(2023, 7, 5),
-            genome="ACGT",
-            mass=0.1,
-            is_mutant=False,
-        ),
-    ],
-)
-
-PERSONS_2 = AllPersons(
-    items=[
-        Person(ident="abc", family="BC", personal="A"),
-        Person(ident="def", family="EF", personal="D"),
-    ]
-)
-
-SPECIMENS_2 = AllSpecimens(
-    loci=[[1]],
-    references=["AAAA"],
-    susc_base="C",
-    susc_locus=0,
-    items=[
-        Specimen(
-            ident="S01",
-            survey_id="G01",
-            species=0,
-            collected=date(2023, 7, 5),
-            genome="ACGT",
-            location=Point(x=1, y=1),
-            mass=0.1,
-            is_mutant=False,
-        ),
-        Specimen(
-            ident="S03",
-            survey_id="G03",
-            species=0,
-            collected=date(2024, 7, 5),
-            genome="TGCA",
-            location=Point(x=3, y=3),
-            mass=0.3,
-            is_mutant=False,
-        ),
-    ],
-)
+from snailz.assays import Assay
+from snailz.grid import Grid
+from snailz.machines import Machine
+from snailz.params import AssayParams
+from snailz.persons import Person
+from snailz.specimens import Specimen
 
 
-def test_assay_parameter_validation():
-    with pytest.raises(ValueError):
-        AssayParams(
-            baseline=10.0,
-            mutant=0.1,
-        )
+def test_assay_treatment_grid_generation():
+    """Test generation of treatment grids."""
+    random.seed(42)
+
+    params = AssayParams(plate_size=3)
+
+    # Test the internal method directly
+    grid = Assay._make_treatments(params)
+
+    assert grid.size == 3
+
+    # Verify all entries are either 'C' or 'S'
+    for x in range(grid.size):
+        for y in range(grid.size):
+            assert grid[x, y] in ["C", "S"]
+
+    # Make sure we have at least one of each type
+    has_control = False
+    has_specimen = False
+
+    for x in range(grid.size):
+        for y in range(grid.size):
+            if grid[x, y] == "C":
+                has_control = True
+            if grid[x, y] == "S":
+                has_specimen = True
+
+    assert has_control
+    assert has_specimen
 
 
-def test_assay_explicit_treatments_and_readings():
-    treatments = Grid[str](width=2, height=2, default="", data=[["C", "S"], ["C", "S"]])
-    readings = Grid[float](
-        width=2, height=2, default=0.0, data=[[1.0, 2.0], [3.0, 4.0]]
+def test_assay_reading_grid_generation():
+    """Test generation of reading grids."""
+    random.seed(42)
+
+    params = AssayParams(
+        plate_size=3,
+        mean_control=0.0,
+        mean_normal=2.0,
+        mean_mutant=5.0,
+        reading_noise=0.5,
     )
+
+    # Create a test specimen
+    specimen = Specimen(
+        id="S0001", genome="ACGT", is_mutant=False, mass=10.0, sampled=date(2025, 1, 1)
+    )
+
+    # Create a treatment grid
+    treatments = Grid(size=3)
+    treatments[0, 0] = "C"
+    treatments[0, 1] = "C"
+    treatments[0, 2] = "S"
+    treatments[1, 0] = "S"
+    treatments[1, 1] = "S"
+    treatments[1, 2] = "C"
+    treatments[2, 0] = "S"
+    treatments[2, 1] = "C"
+    treatments[2, 2] = "S"
+
+    # Test the internal method directly
+    readings = Assay._make_readings(params, specimen, treatments)
+
+    assert readings.size == 3
+
+    # Verify control readings are near 0
+    for x in range(readings.size):
+        for y in range(readings.size):
+            if treatments[x, y] == "C":
+                assert 0 <= readings[x, y] <= 1.5  # allowing for some noise
+            else:
+                # Non-mutant specimen readings
+                assert 0.5 <= readings[x, y] <= 3.5  # allowing for noise
+
+
+def test_assay_generation():
+    """Test full assay generation."""
+    random.seed(42)
+
+    params = AssayParams()
+
+    # Create minimal test objects
+    specimen = Specimen(
+        id="S0001", genome="ACGT", is_mutant=True, mass=10.0, sampled=date(2025, 1, 1)
+    )
+
+    # Create real Machine and Person objects
+    machine = Machine(id="M0001", name="Test Machine")
+    person = Person(id="P0001", family="Doe", personal="Jane")
+
+    # Generate an assay
+    assay = Assay.generate(params, specimen, machine, person)
+
+    assert assay.id.startswith("A")
+    assert assay.specimen_id == "S0001"
+    assert assay.machine_id == "M0001"
+    assert assay.person_id == "P0001"
+    assert assay.performed > specimen.sampled
+    assert assay.treatments.size == params.plate_size
+    assert assay.readings.size == params.plate_size
+
+
+def test_assay_csv_export():
+    """Test CSV export of assay data."""
+    # Create a simple assay with known values
+    treatments = Grid(size=2)
+    treatments[0, 0] = "C"
+    treatments[0, 1] = "S"
+    treatments[1, 0] = "S"
+    treatments[1, 1] = "C"
+
+    readings = Grid(size=2)
+    readings[0, 0] = 0.5
+    readings[0, 1] = 2.5
+    readings[1, 0] = 3.5
+    readings[1, 1] = 1.0
+
     assay = Assay(
-        ident="a01",
-        specimen="s01",
-        person="p01",
-        machine=MACHINE_ID,
-        performed=date(2021, 7, 1),
+        id="A0001",
+        specimen_id="S0001",
+        machine_id="M0001",
+        person_id="P0001",
+        performed=date(2025, 1, 1),
         treatments=treatments,
         readings=readings,
     )
-    assert assay.treatments[0, 0] == "C"
-    assert assay.treatments[0, 1] == "S"
-    assert assay.treatments[1, 0] == "C"
-    assert assay.treatments[1, 1] == "S"
-    assert assay.readings[0, 0] == 1.0
-    assert assay.readings[0, 1] == 2.0
-    assert assay.readings[1, 0] == 3.0
-    assert assay.readings[1, 1] == 4.0
+
+    # Test treatment export
+    treatment_output = io.StringIO()
+    writer = csv.writer(treatment_output)
+    assay.to_csv(writer, write_treatments=True)
+
+    result = treatment_output.getvalue().strip().split("\n")
+    assert len(result) >= 7
+    assert "id,A0001" in result[0]
+    assert "specimen,S0001" in result[1]
+
+    # Test readings export
+    readings_output = io.StringIO()
+    writer = csv.writer(readings_output)
+    assay.to_csv(writer, write_treatments=False)
+
+    result = readings_output.getvalue().strip().split("\n")
+    assert len(result) >= 7
+    assert "id,A0001" in result[0]
+    assert "specimen,S0001" in result[1]
 
 
-def test_generate_assays_correct_length_and_reference_ids():
-    params = AssayParams().model_copy(update={"p_duplicate_assay": 0.0})
-    assays = AllAssays.generate(params, PERSONS_2, MACHINES_1, SPECIMENS_2)
-    assert len(assays.items) == 2
-    assert {a.specimen for a in assays.items} == {s.ident for s in SPECIMENS_2.items}
-    person_ids = {p.ident for p in PERSONS_2.items}
-    assert all(a.person in person_ids for a in assays.items)
-
-
-def test_generate_assays_multiple_assays_per_specimen():
-    params = AssayParams().model_copy(update={"p_duplicate_assay": 1.0})
-    assays = AllAssays.generate(params, PERSONS_2, MACHINES_1, SPECIMENS_2)
-    assert len(assays.items) == 2 * len(SPECIMENS_2.items)
-
-
-def test_assay_csv_fails_for_unknown_kind():
-    assays = AllAssays.generate(AssayParams(), PERSONS_2, MACHINES_1, SPECIMENS_2)
-    with pytest.raises(ValueError):
-        assays.items[0].to_csv("nope")
-
-
-def test_convert_assays_to_csv():
-    first = Assay(
-        ident="a01",
-        specimen="s01",
-        person="p01",
-        machine=MACHINE_ID,
-        performed=date(2021, 7, 1),
-        treatments=Grid[str](
-            width=2, height=2, default="", data=[["C", "S"], ["C", "S"]]
-        ),
-        readings=Grid[float](
-            width=2, height=2, default=0.0, data=[[1.0, 2.0], [3.0, 4.0]]
-        ),
+def test_all_assays_csv_export():
+    """Test CSV export of multiple assays."""
+    # Create two assays with known values
+    assay1 = Assay(
+        id="A0001",
+        specimen_id="S0001",
+        machine_id="M0001",
+        person_id="P0001",
+        performed=date(2025, 1, 1),
+        treatments=Grid(size=2),
+        readings=Grid(size=2),
     )
-    second = Assay(
-        ident="a02",
-        specimen="s02",
-        person="p02",
-        machine=MACHINE_ID,
-        performed=date(2021, 7, 11),
-        treatments=Grid[str](
-            width=2, height=2, default="", data=[["C", "C"], ["S", "S"]]
-        ),
-        readings=Grid[float](
-            width=2, height=2, default=0.0, data=[[10.0, 20.0], [30.0, 40.0]]
-        ),
+
+    assay2 = Assay(
+        id="A0002",
+        specimen_id="S0002",
+        machine_id="M0002",
+        person_id="P0002",
+        performed=date(2025, 1, 2),
+        treatments=Grid(size=2),
+        readings=Grid(size=2),
     )
-    fixture = AllAssays(items=[first, second])
-    expected = [
-        "ident,specimen,person,performed,machine",
-        "a01,s01,p01,2021-07-01,E1234",
-        "a02,s02,p02,2021-07-11,E1234",
-    ]
-    assert fixture.to_csv() == "\n".join(expected) + "\n"
 
-    treatments = [
-        "id,a01,",
-        "specimen,s01,",
-        "date,2021-07-01,",
-        "by,p01,",
-        "machine,E1234,",
-        ",A,B",
-        "1,S,S",
-        "2,C,C",
-    ]
-    assert first.to_csv("treatments") == "\n".join(treatments) + "\n"
+    # Set specific values for grids
+    assay1.treatments[0, 0] = "C"
+    assay1.treatments[0, 1] = "S"
+    assay1.treatments[1, 0] = "S"
+    assay1.treatments[1, 1] = "C"
+    assay1.readings[0, 0] = 0.5
+    assay1.readings[0, 1] = 2.5
+    assay1.readings[1, 0] = 3.5
+    assay1.readings[1, 1] = 1.0
 
-    readings = [
-        "id,a01,",
-        "specimen,s01,",
-        "date,2021-07-01,",
-        "by,p01,",
-        "machine,E1234,",
-        ",A,B",
-        "1,2.0,4.0",
-        "2,1.0,3.0",
-    ]
-    assert first.to_csv("readings") == "\n".join(readings) + "\n"
+    assay2.treatments[0, 0] = "S"
+    assay2.treatments[0, 1] = "C"
+    assay2.treatments[1, 0] = "C"
+    assay2.treatments[1, 1] = "S"
+    assay2.readings[0, 0] = 4.0
+    assay2.readings[0, 1] = 0.7
+    assay2.readings[1, 0] = 0.3
+    assay2.readings[1, 1] = 3.8
 
+    assays = [assay1, assay2]
 
-@pytest.mark.parametrize("seed", [128915, 45729, 495924, 152741, 931866])
-def test_assay_reading_value_susceptible(seed):
-    random.seed(seed)
-    params = AssayParams().model_copy(update={"plate_size": 2, "degrade": 0.0})
+    # Test all_csv export
+    output = io.StringIO()
+    writer = csv.writer(output)
+    Assay.all_csv(writer, assays)
 
-    specimens = SPECIMENS_1.model_copy()
-    specimens.items = [specimens.items[0].model_copy(update={"is_mutant": True})]
-    assert specimens.items[0].is_mutant
+    csv_content = output.getvalue().strip()
+    lines = csv_content.split("\n")
 
-    assays = AllAssays.generate(params, PERSONS_1, MACHINES_1, specimens)
-    assay = assays.items[0]
-    for x in range(2):
-        for y in range(2):
-            if assay.treatments[x, y] == "C":
-                assert 0.0 <= assay.readings[x, y] <= 3.0
-            else:
-                assert 2.0 <= assay.readings[x, y] <= 8.0
+    # We should have a header line plus 8 data lines (2 assays x 4 cells each)
+    assert len(lines) == 9
 
+    # Check header line
+    header = lines[0]
+    assert "id" in header
+    assert "specimen" in header
+    assert "machine" in header
+    assert "person" in header
+    assert "performed" in header
 
-@pytest.mark.parametrize("seed", [127891, 457129, 9924, 527411, 931866])
-def test_assay_reading_value_not_susceptible(seed):
-    random.seed(seed)
-    params = AssayParams().model_copy(update={"plate_size": 2, "degrade": 0.0})
+    # Check content for first assay
+    first_assay_lines = [line for line in lines if "A0001" in line]
+    assert len(first_assay_lines) == 4  # 4 cells in the assay
 
-    specimens = SPECIMENS_1.model_copy()
-    specimens.items = [specimens.items[0].model_copy(update={"is_mutant": False})]
-    assert not specimens.items[0].is_mutant
+    # Check content for second assay
+    second_assay_lines = [line for line in lines if "A0002" in line]
+    assert len(second_assay_lines) == 4  # 4 cells in the assay
 
-    assays = AllAssays.generate(params, PERSONS_1, MACHINES_1, specimens)
-    assay = assays.items[0]
-    for x in range(2):
-        for y in range(2):
-            if assay.treatments[x, y] == "C":
-                assert 0.0 <= assay.readings[x, y] <= 3.0
-            else:
-                assert 0.0 < assay.readings[x, y] <= 5.0
+    # Verify some specific content is present
+    assert any("S0001" in line for line in first_assay_lines)
+    assert any("S0002" in line for line in second_assay_lines)
+    assert any("M0001" in line for line in first_assay_lines)
+    assert any("M0002" in line for line in second_assay_lines)
+    assert any("2025-01-01" in line for line in first_assay_lines)
+    assert any("2025-01-02" in line for line in second_assay_lines)

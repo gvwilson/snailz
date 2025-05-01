@@ -41,9 +41,7 @@ def assign_sample_locations(grids, specimens):
     size = grids[0].size
     assert all(g.size == size for g in grids), "Grid size(s) mis-match"
 
-    coords = [
-        (g.id, x, y) for g in grids for x in range(size) for y in range(size)
-    ]
+    coords = [(g.id, x, y) for g in grids for x in range(size) for y in range(size)]
     for s in specimens.samples:
         i = random.randint(0, len(coords) - 1)
         s.grid, s.x, s.y = coords[i]
@@ -54,4 +52,3 @@ def choose_assay_date(params, specimen):
     """Determine date assay performed."""
 
     return specimen.sampled + timedelta(days=random.randint(1, params.max_delay))
-

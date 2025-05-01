@@ -19,7 +19,9 @@ class Assay(BaseModel):
     specimen_id: str = Field(description="specimen assayed")
     machine_id: str = Field(description="machine used")
     person_id: str = Field(description="who did assay")
-    performed: date = Field(default=DEFAULT_START_DATE, description="date assay performed")
+    performed: date = Field(
+        default=DEFAULT_START_DATE, description="date assay performed"
+    )
     treatments: Grid = Field(description="treatments applied")
     readings: Grid = Field(description="readings obtained")
 

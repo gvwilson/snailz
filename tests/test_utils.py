@@ -1,81 +1,52 @@
-"""Test utilities."""
+"""Test utility functions."""
 
-from datetime import date, timedelta
-import pytest
+from datetime import date
 
 from pydantic import BaseModel
 
-from snailz.utils import fail, json_dump, report, to_csv, unique_id
+from snailz.grid import Grid
+from snailz.utils import generic_id_generator, json_dump, max_value
 
 
-class DummyModel(BaseModel):
-    top: int
-    middle: date
-    bottom: str
+def test_generic_id_generator():
+    """Test ID generator functionality."""
+    gen = generic_id_generator(lambda i: f"TEST{i}")
+    assert next(gen) == "TEST1"
+    assert next(gen) == "TEST2"
+    assert next(gen) == "TEST3"
 
 
-def test_json_dump_of_special_types():
-    fixture = {"key": DummyModel(top=1, middle=date(2025, 1, 1), bottom="text")}
-    actual = json_dump(fixture)
-    expected = [
-        "{",
-        '  "key": {',
-        '    "top": 1,',
-        '    "middle": "2025-01-01",',
-        '    "bottom": "text"',
-        "  }",
-        "}",
-    ]
-    assert actual == "\n".join(expected)
+def test_json_dump_with_base_model():
+    """Test JSON serialization of a Pydantic model."""
+
+    class TestModel(BaseModel):
+        name: str
+        value: int
+
+    model = TestModel(name="test", value=42)
+    result = json_dump(model)
+
+    assert "name" in result
+    assert "test" in result
+    assert "value" in result
+    assert "42" in result
 
 
-def test_json_dump_fails_for_unknown_type():
-    with pytest.raises(TypeError):
-        json_dump(timedelta(days=1))
+def test_json_dump_with_date():
+    """Test JSON serialization of a date object."""
+    test_date = date(2025, 1, 1)
+    result = json_dump({"date": test_date})
+
+    assert "2025-01-01" in result
 
 
-def test_unique_id_generator_produces_unique_ids():
-    gen = unique_id("test", lambda n: f"x{n}")
-    values = {gen.send((i,)) for i in range(10)}
-    assert len(values) == 10
+def test_max_value():
+    """Test finding maximum value across grids."""
+    grid1 = Grid(size=2)
+    grid2 = Grid(size=2)
+    for x in range(grid1.size):
+        for y in range(grid1.size):
+            grid1[x, y] = x + y
+            grid2[x, y] = 10 * (x + y)
 
-
-def test_unique_id_generator_fails_at_limit():
-    gen = unique_id("test", lambda: "x", limit=3)
-    with pytest.raises(RuntimeError):
-        for _ in range(3):
-            gen.send(())
-
-
-def test_fail_prints_message(capsys):
-    with pytest.raises(SystemExit) as exc:
-        fail("message")
-    assert exc.value.code == 1
-    captured = capsys.readouterr()
-    assert captured.err == "message\n"
-    assert captured.out == ""
-
-
-def test_report_with_verbosity_off(capsys):
-    report(False, "message")
-    captured = capsys.readouterr()
-    assert captured.out == ""
-    assert captured.err == ""
-
-
-def test_report_with_verbosity_on(capsys):
-    report(True, "message")
-    captured = capsys.readouterr()
-    assert captured.out == "message\n"
-    assert captured.err == ""
-
-
-def test_to_csv_generic_conversion():
-    rows = [[1, 2], [3, 4]]
-    fields = ["left", "right"]
-
-    def func(r):
-        return r
-
-    result = to_csv(rows, fields, func)
-    assert result == "left,right\n1,2\n3,4\n"
+    assert max_value([grid1, grid2]) == 20

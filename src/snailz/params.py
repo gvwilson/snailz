@@ -51,7 +51,9 @@ class SpecimenParams(BaseModel):
     mut_prob: float = Field(
         default=0.05, ge=0.0, le=1.0, description="Probability of point mutation"
     )
-    start_date: date = Field(default=DEFAULT_START_DATE, description="sampling start date")
+    start_date: date = Field(
+        default=DEFAULT_START_DATE, description="sampling start date"
+    )
     end_date: date = Field(default=DEFAULT_END_DATE, description="sampling end date")
 
     model_config = {"extra": "forbid"}
@@ -60,7 +62,7 @@ class SpecimenParams(BaseModel):
 class ScenarioParams(BaseModel):
     """Parameters for entire scenario."""
 
-    rng_seed: int = Field(required=True, description="random number generation seed")
+    rng_seed: int = Field(description="random number generation seed")
     grid_size: int = Field(default=15, gt=0, description="sample grid size")
     num_sites: int = Field(default=3, gt=0, description="number of sample sites")
     num_specimens: int = Field(
@@ -70,7 +72,9 @@ class ScenarioParams(BaseModel):
     num_persons: int = Field(default=5, gt=0, description="number of lab staff")
     locale: str = Field(default=DEFAULT_LOCALE, description="name generation locale")
     assays_per_specimen: int = Field(default=2, gt=0, description="assays per specimen")
-    pollution_scale: float = Field(default=0.1, ge=0, description="pollution scaling factor")
+    pollution_scale: float = Field(
+        default=0.1, ge=0, description="pollution scaling factor"
+    )
     delay_scale: float = Field(default=0.05, ge=0, description="delay scaling factor")
     specimen_params: SpecimenParams = Field(
         description="specimen generation parameters"

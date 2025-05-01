@@ -102,7 +102,9 @@ class AllSpecimens(BaseModel):
         )
 
         samples = [
-            Specimen.generate(params, ref_genome, i in mutant_ids, susc_locus, susc_base)
+            Specimen.generate(
+                params, ref_genome, i in mutant_ids, susc_locus, susc_base
+            )
             for i in range(num)
         ]
 
@@ -122,6 +124,14 @@ class AllSpecimens(BaseModel):
         """
         writer.writerow(["id", "genome", "mass", "grid", "x", "y", "sampled"])
         writer.writerows(
-            [s.id, s.genome, round(s.mass, PRECISION), s.grid, s.x, s.y, s.sampled.isoformat()]
+            [
+                s.id,
+                s.genome,
+                round(s.mass, PRECISION),
+                s.grid,
+                s.x,
+                s.y,
+                s.sampled.isoformat(),
+            ]
             for s in self.samples
         )

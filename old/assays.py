@@ -118,7 +118,6 @@ class AllAssays(BaseModel):
             result = max(result, a.readings.max())
         return result
 
-
     def to_csv(self, summary: bool = True) -> str:
         """Return a CSV string representation of the assay summary data.
 

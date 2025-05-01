@@ -35,7 +35,10 @@ def mangle_assays(
 
 
 def _mangle_assay(
-    filename: str, data: list[list[str]], staff: dict[str, Person], forced: list[str] | None
+    filename: str,
+    data: list[list[str]],
+    staff: dict[str, Person],
+    forced: list[str] | None,
 ) -> list[list]:
     """Mangle a single assay file.
 

@@ -1,78 +1,95 @@
-"""Test specimen generation."""
+"""Test specimen functionality."""
 
 from datetime import date
+import random
 
-import pytest
-
-from snailz.grid import Point
-from snailz.parameters import SpecimenParams
-from snailz.specimens import AllSpecimens, Specimen
-from snailz.surveys import Survey, AllSurveys
+from snailz.params import SpecimenParams
+from snailz.specimens import Specimen, AllSpecimens, BASES
 
 
-def test_specimen_parameters_incorrect():
-    with pytest.raises(ValueError):
-        SpecimenParams(
-            prob_species=[1.0],
-            mean_masses=[2.0, 3.0],
-        )
+def test_specimen_generation():
+    """Test specimen generation with specific parameters."""
+    # Set a fixed seed for reproducibility
+    random.seed(42)
 
-
-def test_generate_specimens_correct_length():
-    size = 10
-    num = 5
-    surveys = AllSurveys(
-        items=[
-            Survey(
-                ident=f"G00{i}",
-                size=size,
-                start_date=date(2024, 1, 1),
-                end_date=date(2024, 1, 31),
-            )
-            for i in range(num)
-        ]
-    )
     params = SpecimenParams()
-    specimens = AllSpecimens.generate(params, surveys)
-    assert 0 < len(specimens.items) < (2 * num * size)
+    ref_genome = "ACGT"
+    susc_locus = 2
+    susc_base = "T"
+
+    # Generate a non-mutant specimen
+    specimen = Specimen.generate(params, ref_genome, False, susc_locus, susc_base)
+
+    assert specimen.id.startswith("S")
+    assert len(specimen.genome) == len(ref_genome)
+    assert specimen.is_mutant is False
+    assert specimen.mass > 0
+    assert isinstance(specimen.sampled, date)
+
+    # Generate a mutant specimen
+    mutant = Specimen.generate(params, ref_genome, True, susc_locus, susc_base)
+
+    assert mutant.is_mutant is True
+    assert mutant.genome[susc_locus] == susc_base
 
 
-def test_convert_specimens_to_csv():
-    fixture = AllSpecimens(
-        loci=[[1]],
-        references=["AAAA"],
-        susc_base="C",
-        susc_locus=0,
-        items=[
-            Specimen(
-                ident="S01",
-                survey_id="G01",
-                species=0,
-                collected=date(2023, 7, 5),
-                genome="ACGT",
-                location=Point(x=1, y=1),
-                mass=0.1,
-            ),
-            Specimen(
-                ident="S03",
-                survey_id="G03",
-                species=0,
-                collected=date(2024, 7, 5),
-                genome="TGCA",
-                location=Point(x=3, y=3),
-                mass=0.3,
-            ),
-        ],
-    )
-    result = fixture.to_csv()
-    expected = (
-        "\n".join(
-            [
-                "ident,survey,x,y,collected,genome,mass",
-                "S01,G01,1,1,2023-07-05,ACGT,0.1",
-                "S03,G03,3,3,2024-07-05,TGCA,0.3",
-            ]
-        )
-        + "\n"
-    )
-    assert result == expected
+def test_all_specimens_generation():
+    """Test generating a collection of specimens."""
+    random.seed(42)
+
+    params = SpecimenParams()
+    num_specimens = 10
+
+    specimens = AllSpecimens.generate(params, num_specimens)
+
+    assert len(specimens.samples) == num_specimens
+    assert len(specimens.ref_genome) == params.genome_length
+    assert 0 <= specimens.susc_locus < params.genome_length
+    assert specimens.susc_base in BASES
+
+    # Check that we have some mutants
+    mutants = [s for s in specimens.samples if s.is_mutant]
+    assert len(mutants) > 0
+
+    # Check that mutants have the susceptible base at the susceptible locus
+    for mutant in mutants:
+        assert mutant.genome[specimens.susc_locus] == specimens.susc_base
+
+
+def test_specimen_csv_export(tmp_path):
+    """Test CSV export of specimens."""
+    random.seed(42)
+
+    params = SpecimenParams()
+    specimens = AllSpecimens.generate(params, 5)
+
+    # Assign grid locations for testing
+    for i, specimen in enumerate(specimens.samples):
+        specimen.grid = f"G{i + 1:02d}"
+        specimen.x = i
+        specimen.y = i
+
+    csv_path = tmp_path / "specimens.csv"
+
+    # Use a real CSV writer
+    import csv
+
+    with open(csv_path, "w", newline="") as f:
+        writer = csv.writer(f)
+        specimens.to_csv(writer)
+
+    # Read back and verify
+    with open(csv_path, "r") as f:
+        lines = f.readlines()
+
+    assert len(lines) == 6  # header + 5 specimens
+    assert "id,genome,mass,grid,x,y,sampled" in lines[0]
+
+    # Check each specimen is in the file
+    for specimen in specimens.samples:
+        found = False
+        for line in lines[1:]:
+            if specimen.id in line and specimen.grid in line:
+                found = True
+                break
+        assert found
