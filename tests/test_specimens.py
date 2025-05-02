@@ -1,5 +1,6 @@
 """Test specimen functionality."""
 
+import csv
 from datetime import date
 import random
 
@@ -17,10 +18,7 @@ def test_generate_invalid_number_of_specimens():
 
 
 def test_specimen_generation():
-    """Test specimen generation with specific parameters."""
-    # Set a fixed seed for reproducibility
     random.seed(42)
-
     params = SpecimenParams()
     ref_genome = "ACGT"
     susc_locus = 2
@@ -43,9 +41,7 @@ def test_specimen_generation():
 
 
 def test_all_specimens_generation():
-    """Test generating a collection of specimens."""
     random.seed(42)
-
     params = SpecimenParams()
     num_specimens = 10
 
@@ -66,9 +62,7 @@ def test_all_specimens_generation():
 
 
 def test_specimen_csv_export(tmp_path):
-    """Test CSV export of specimens."""
     random.seed(42)
-
     params = SpecimenParams()
     specimens = AllSpecimens.generate(params, 5)
 
@@ -80,17 +74,12 @@ def test_specimen_csv_export(tmp_path):
 
     csv_path = tmp_path / "specimens.csv"
 
-    # Use a real CSV writer
-    import csv
-
     with open(csv_path, "w", newline="") as f:
         writer = csv.writer(f)
         specimens.to_csv(writer)
 
-    # Read back and verify
     with open(csv_path, "r") as f:
         lines = f.readlines()
-
     assert len(lines) == 6  # header + 5 specimens
     assert "id,genome,mass,grid,x,y,sampled" in lines[0]
 

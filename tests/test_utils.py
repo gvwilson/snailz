@@ -2,7 +2,9 @@
 
 from datetime import date
 
+from PIL import Image
 from pydantic import BaseModel
+import pytest
 
 from snailz.grid import Grid
 from snailz.utils import generic_id_generator, json_dump, max_grid_value
@@ -15,7 +17,7 @@ def test_generic_id_generator():
     assert next(gen) == "TEST3"
 
 
-def test_json_dump_with_base_model():
+def test_json_dump_base_model():
     class TestModel(BaseModel):
         name: str
         value: int
@@ -29,11 +31,24 @@ def test_json_dump_with_base_model():
     assert "42" in result
 
 
-def test_json_dump_with_date():
+def test_json_dump_date():
     test_date = date(2025, 1, 1)
     result = json_dump({"date": test_date})
 
     assert "2025-01-01" in result
+
+
+def test_json_dump_image():
+    img = Image.new("1", (100, 100), 0)
+    assert '"image": null' in json_dump({"image": img})
+
+
+def test_json_dump_unknown():
+    class Unknown:
+        pass
+
+    with pytest.raises(TypeError):
+        json_dump({"unknown": Unknown()})
 
 
 def test_max_grid_value():

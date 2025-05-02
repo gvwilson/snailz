@@ -15,10 +15,7 @@ from snailz.specimens import Specimen, AllSpecimens
 
 
 def test_assign_sample_locations():
-    """Test assigning specimens to grid locations."""
     random.seed(42)
-
-    # Create test grids
     grid1 = Grid(id="G01", size=3)
     grid2 = Grid(id="G02", size=3)
 
@@ -47,9 +44,7 @@ def test_assign_sample_locations():
 
 
 def test_choose_assay_date():
-    """Test choosing assay dates based on specimen sampling date."""
     random.seed(42)
-
     params = AssayParams(max_delay=7)
     sample_date = date(2025, 1, 1)
 
@@ -68,10 +63,7 @@ def test_choose_assay_date():
 
 
 def test_apply_effects():
-    """Test applying effects to scenario."""
     random.seed(42)
-
-    # Create parameters
     params = ScenarioParams(
         rng_seed=42,
         specimen_params=SpecimenParams(mut_mass_scale=2.0),
@@ -120,12 +112,10 @@ def test_apply_effects():
     # Create assay treatments and readings
     treatments = Grid(size=2)
     readings = Grid(size=2)
-    # Set up treatments as C (control) and S (specimen)
     treatments[0, 0] = "C"
     treatments[0, 1] = "S"
     treatments[1, 0] = "S"
     treatments[1, 1] = "C"
-    # Set up initial readings
     readings[0, 0] = 1.0  # Control
     readings[0, 1] = 5.0  # Specimen
     readings[1, 0] = 5.0  # Specimen

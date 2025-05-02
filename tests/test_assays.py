@@ -14,25 +14,19 @@ from snailz.specimens import Specimen
 
 
 def test_assay_treatment_grid_generation():
-    """Test generation of treatment grids."""
     random.seed(42)
-
     params = AssayParams(plate_size=3)
 
     # Test the internal method directly
     grid = Assay._make_treatments(params)
-
     assert grid.size == 3
-
-    # Verify all entries are either 'C' or 'S'
     for x in range(grid.size):
         for y in range(grid.size):
-            assert grid[x, y] in ["C", "S"]
+            assert grid[x, y] in {"C", "S"}
 
     # Make sure we have at least one of each type
     has_control = False
     has_specimen = False
-
     for x in range(grid.size):
         for y in range(grid.size):
             if grid[x, y] == "C":
@@ -45,9 +39,7 @@ def test_assay_treatment_grid_generation():
 
 
 def test_assay_reading_grid_generation():
-    """Test generation of reading grids."""
     random.seed(42)
-
     params = AssayParams(
         plate_size=3,
         mean_control=0.0,
@@ -89,9 +81,7 @@ def test_assay_reading_grid_generation():
 
 
 def test_assay_generation():
-    """Test full assay generation."""
     random.seed(42)
-
     params = AssayParams()
 
     # Create minimal test objects
@@ -116,8 +106,6 @@ def test_assay_generation():
 
 
 def test_assay_csv_export():
-    """Test CSV export of assay data."""
-    # Create a simple assay with known values
     treatments = Grid(size=2)
     treatments[0, 0] = "C"
     treatments[0, 1] = "S"
@@ -162,8 +150,6 @@ def test_assay_csv_export():
 
 
 def test_all_assays_csv_export():
-    """Test CSV export of multiple assays."""
-    # Create two assays with known values
     assay1 = Assay(
         id="A0001",
         specimen_id="S0001",

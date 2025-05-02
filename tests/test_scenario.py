@@ -15,7 +15,7 @@ def test_scenario_creates_correct_files(fs):
         num_persons=1,
         assays_per_specimen=1,
         specimen_params=SpecimenParams(),
-        assay_params=AssayParams()
+        assay_params=AssayParams(),
     )
     random.seed(params.rng_seed)
     scenario = Scenario.generate(params)
