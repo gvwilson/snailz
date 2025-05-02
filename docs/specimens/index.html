@@ -1524,7 +1524,17 @@
 <span class="normal">124</span>
 <span class="normal">125</span>
 <span class="normal">126</span>
-<span class="normal">127</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllSpecimens</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AllSpecimens</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Store a set of specimens.&quot;&quot;&quot;</span>
 
     <span class="n">params</span><span class="p">:</span> <span class="n">SpecimenParams</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;generation parameters&quot;</span><span class="p">)</span>
@@ -1557,7 +1567,9 @@
         <span class="p">)</span>
 
         <span class="n">samples</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">Specimen</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">ref_genome</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">mutant_ids</span><span class="p">,</span> <span class="n">susc_locus</span><span class="p">,</span> <span class="n">susc_base</span><span class="p">)</span>
+            <span class="n">Specimen</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span>
+                <span class="n">params</span><span class="p">,</span> <span class="n">ref_genome</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">mutant_ids</span><span class="p">,</span> <span class="n">susc_locus</span><span class="p">,</span> <span class="n">susc_base</span>
+            <span class="p">)</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
         <span class="p">]</span>
 
@@ -1577,7 +1589,15 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;genome&quot;</span><span class="p">,</span> <span class="s2">&quot;mass&quot;</span><span class="p">,</span> <span class="s2">&quot;grid&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;sampled&quot;</span><span class="p">])</span>
         <span class="n">writer</span><span class="o">.</span><span class="n">writerows</span><span class="p">(</span>
-            <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">genome</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">mass</span><span class="p">,</span> <span class="n">PRECISION</span><span class="p">),</span> <span class="n">s</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">sampled</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()]</span>
+            <span class="p">[</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">genome</span><span class="p">,</span>
+                <span class="nb">round</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">mass</span><span class="p">,</span> <span class="n">PRECISION</span><span class="p">),</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">sampled</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+            <span class="p">]</span>
             <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples</span>
         <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -1719,7 +1739,9 @@
 <span class="normal">112</span>
 <span class="normal">113</span>
 <span class="normal">114</span>
-<span class="normal">115</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate specimens.</span>
 
@@ -1743,7 +1765,9 @@
     <span class="p">)</span>
 
     <span class="n">samples</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">Specimen</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">ref_genome</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">mutant_ids</span><span class="p">,</span> <span class="n">susc_locus</span><span class="p">,</span> <span class="n">susc_base</span><span class="p">)</span>
+        <span class="n">Specimen</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span>
+            <span class="n">params</span><span class="p">,</span> <span class="n">ref_genome</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">mutant_ids</span><span class="p">,</span> <span class="n">susc_locus</span><span class="p">,</span> <span class="n">susc_base</span>
+        <span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
     <span class="p">]</span>
 
@@ -1807,9 +1831,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/snailz/specimens.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">119</span>
 <span class="normal">120</span>
 <span class="normal">121</span>
 <span class="normal">122</span>
@@ -1817,7 +1839,17 @@
 <span class="normal">124</span>
 <span class="normal">125</span>
 <span class="normal">126</span>
-<span class="normal">127</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">writer</span><span class="p">):</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">writer</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Save specimens as CSV.</span>
 
 <span class="sd">    Parameters:</span>
@@ -1825,7 +1857,15 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;genome&quot;</span><span class="p">,</span> <span class="s2">&quot;mass&quot;</span><span class="p">,</span> <span class="s2">&quot;grid&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;sampled&quot;</span><span class="p">])</span>
     <span class="n">writer</span><span class="o">.</span><span class="n">writerows</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">genome</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">mass</span><span class="p">,</span> <span class="n">PRECISION</span><span class="p">),</span> <span class="n">s</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">sampled</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()]</span>
+        <span class="p">[</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">genome</span><span class="p">,</span>
+            <span class="nb">round</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">mass</span><span class="p">,</span> <span class="n">PRECISION</span><span class="p">),</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">sampled</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+        <span class="p">]</span>
         <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples</span>
     <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
