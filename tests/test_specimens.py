@@ -3,8 +3,17 @@
 from datetime import date
 import random
 
+import pytest
+
 from snailz.params import SpecimenParams
 from snailz.specimens import Specimen, AllSpecimens, BASES
+
+
+def test_generate_invalid_number_of_specimens():
+    random.seed(42)
+    params = SpecimenParams()
+    with pytest.raises(ValueError):
+        AllSpecimens.generate(params, 0)
 
 
 def test_specimen_generation():

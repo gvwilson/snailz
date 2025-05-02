@@ -1,6 +1,4 @@
 from typing import ClassVar
-import csv
-import io
 import random
 
 from pydantic import BaseModel, Field
@@ -13,26 +11,27 @@ class Grid(BaseModel):
 
     id: str | None = Field(default=None, description="optional grid ID")
     size: int = Field(gt=0, description="grid size")
-    grid: list[list] = Field(default_factory=list, description="grid values")
+    grid: list = Field(default_factory=list, description="grid values")
 
     def model_post_init(self, context):
-        self.grid = [[0 for _ in range(self.size)] for _ in range(self.size)]
+        self.grid = [0 for _ in range(self.size * self.size)]
 
     def __getitem__(self, key):
         """Get grid element."""
         x, y = key
-        return self.grid[x][y]
+        return self.grid[y * self.size + x]
 
     def __setitem__(self, key, value):
         """Set grid element."""
         x, y = key
-        self.grid[x][y] = value
+        self.grid[y * self.size + x] = value
 
     def __str__(self):
         """Convert to string."""
-        output = io.StringIO()
-        csv.writer(output).writerows(self.grid)
-        return output.getvalue()
+        result = []
+        for y in range(self.size - 1, -1, -1):
+            result.append(",".join([str(self[x, y]) for x in range(self.size)]))
+        return "\n".join(result)
 
     _id_generator: ClassVar = generic_id_generator(lambda i: f"G{i:02d}")
 
@@ -55,10 +54,3 @@ class Grid(BaseModel):
             y += m[1]
 
         return grid
-
-    @staticmethod
-    def to_csv(writer, grid):
-        """Convert to CSV."""
-        for y in range(grid.size - 1, -1, -1):
-            row = [grid[x, y] for x in range(grid.size)]
-            writer.writerow(row)

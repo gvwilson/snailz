@@ -77,7 +77,7 @@ def test_apply_effects():
         specimen_params=SpecimenParams(mut_mass_scale=2.0),
         assay_params=AssayParams(),
         pollution_scale=0.1,
-        delay_scale=0.05
+        delay_scale=0.05,
     )
 
     # Create grid with pollution levels
@@ -95,7 +95,7 @@ def test_apply_effects():
         grid="G01",
         x=0,
         y=0,
-        sampled=date(2025, 1, 1)
+        sampled=date(2025, 1, 1),
     )
     mutant_specimen = Specimen(
         id="S0002",
@@ -105,7 +105,7 @@ def test_apply_effects():
         grid="G01",
         x=2,
         y=2,
-        sampled=date(2025, 1, 1)
+        sampled=date(2025, 1, 1),
     )
 
     # Create AllSpecimens object
@@ -114,7 +114,7 @@ def test_apply_effects():
         ref_genome="ACGT",
         susc_locus=0,
         susc_base="T",
-        samples=[normal_specimen, mutant_specimen]
+        samples=[normal_specimen, mutant_specimen],
     )
 
     # Create assay treatments and readings
@@ -139,7 +139,7 @@ def test_apply_effects():
         person_id="P0001",
         performed=date(2025, 1, 6),  # 5 days after sampling
         treatments=treatments,
-        readings=readings
+        readings=readings,
     )
 
     # Create a machine and person
@@ -154,7 +154,7 @@ def test_apply_effects():
         machines=[machine],
         persons=[person],
         assays=[assay],
-        images={}  # Empty images dictionary
+        images={},  # Empty images dictionary
     )
 
     # Record initial values
@@ -178,7 +178,7 @@ def test_apply_effects():
     # Pollution effect adds mass * pollution_scale * pollution_level
     # At position (2, 2), pollution level is 4
     expected_mass = initial_mutant_mass * 2.0  # Mutation effect
-    expected_mass += expected_mass * 0.1 * 4   # Pollution effect
+    expected_mass += expected_mass * 0.1 * 4  # Pollution effect
     assert mutant_specimen.mass == pytest.approx(expected_mass)
 
     # Test 3: Control readings (C) should remain unchanged
