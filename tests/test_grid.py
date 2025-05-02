@@ -1,13 +1,9 @@
 """Test grid functionality."""
 
-import io
-import csv
-
 from snailz.grid import Grid
 
 
 def test_grid_creation():
-
     grid = Grid(size=3)
     assert grid.size == 3
     assert grid[0, 0] == 0
@@ -18,7 +14,6 @@ def test_grid_creation():
 
 
 def test_grid_generation():
-
     grid = Grid.generate(size=5)
     assert grid.size == 5
     assert grid.id.startswith("G")
@@ -31,7 +26,6 @@ def test_grid_generation():
 
 
 def test_grid_to_string():
-
     grid = Grid(size=2)
     grid[0, 0] = 1
     grid[0, 1] = 2

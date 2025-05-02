@@ -9,7 +9,6 @@ from snailz.utils import generic_id_generator, json_dump, max_value
 
 
 def test_generic_id_generator():
-
     gen = generic_id_generator(lambda i: f"TEST{i}")
     assert next(gen) == "TEST1"
     assert next(gen) == "TEST2"
@@ -17,7 +16,6 @@ def test_generic_id_generator():
 
 
 def test_json_dump_with_base_model():
-
     class TestModel(BaseModel):
         name: str
         value: int
@@ -32,7 +30,6 @@ def test_json_dump_with_base_model():
 
 
 def test_json_dump_with_date():
-
     test_date = date(2025, 1, 1)
     result = json_dump({"date": test_date})
 
@@ -40,7 +37,6 @@ def test_json_dump_with_date():
 
 
 def test_max_value():
-
     grid1 = Grid(size=2)
     grid2 = Grid(size=2)
     for x in range(grid1.size):

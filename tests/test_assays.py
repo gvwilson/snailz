@@ -4,7 +4,6 @@ import csv
 from datetime import date
 import io
 import random
-import pytest
 
 from snailz.assays import Assay
 from snailz.grid import Grid
