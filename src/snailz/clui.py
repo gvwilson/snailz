@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import random
 import sys
 
 from .params import AssayParams, ScenarioParams, SpecimenParams

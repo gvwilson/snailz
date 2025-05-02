@@ -1,5 +1,6 @@
 """Test entire scenario."""
 
+from pathlib import Path
 import random
 
 from snailz.params import AssayParams, ScenarioParams, SpecimenParams
@@ -19,4 +20,13 @@ def test_scenario_creates_correct_files(fs):
     )
     random.seed(params.rng_seed)
     scenario = Scenario.generate(params)
-    scenario.to_csv("/tmp")
+
+    root = Path("/tmp")
+    scenario.to_csv(root)
+    for filename in ["assays.csv", "machines.csv", "persons.csv", "specimens.csv"]:
+        assert (root / filename).is_file()
+    assert len(list(root.glob("**/G*.csv"))) == 1
+    assert len(list(root.glob("**/*_raw.csv"))) == 1
+    assert len(list(root.glob("**/*_readings.csv"))) == 1
+    assert len(list(root.glob("**/*_treatments.csv"))) == 1
+    assert len(list(root.glob("*.png"))) == 1

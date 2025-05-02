@@ -1,6 +1,6 @@
 [project]
 name = "snailz"
-version = "2.0.0"
+version = "2.1.1"
 description = "Synthetic data generator for snail mutation survey"
 keywords = ["open science", "synthetic data"]
 readme = "README.md"

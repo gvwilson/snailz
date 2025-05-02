@@ -59,7 +59,7 @@ profile:
 
 ## publish: publish package (needs TOKEN defined on command line)
 publish:
-	${PYTHON_M} twine upload --verbose -u __token__ -p ${TOKEN} dist/*
+	@${PYTHON_M} twine upload --verbose -u __token__ -p ${TOKEN} dist/*
 
 ## site: serve documentation website
 site:
