@@ -41,6 +41,7 @@ def cli():
             assay_params=AssayParams(),
         )
 
+    random.seed(params.rng_seed)
     scenario = Scenario.generate(params)
     scenario.to_csv(args.outdir)
 

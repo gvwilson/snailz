@@ -5,7 +5,7 @@ from datetime import date
 from pydantic import BaseModel
 
 from snailz.grid import Grid
-from snailz.utils import generic_id_generator, json_dump, max_value
+from snailz.utils import generic_id_generator, json_dump, max_grid_value
 
 
 def test_generic_id_generator():
@@ -36,7 +36,7 @@ def test_json_dump_with_date():
     assert "2025-01-01" in result
 
 
-def test_max_value():
+def test_max_grid_value():
     grid1 = Grid(size=2)
     grid2 = Grid(size=2)
     for x in range(grid1.size):
@@ -44,4 +44,4 @@ def test_max_value():
             grid1[x, y] = x + y
             grid2[x, y] = 10 * (x + y)
 
-    assert max_value([grid1, grid2]) == 20
+    assert max_grid_value([grid1, grid2]) == 20

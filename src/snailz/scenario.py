@@ -17,7 +17,7 @@ from .machines import Machine
 from .mangle import mangle_assay
 from .persons import Person
 from .specimens import AllSpecimens
-from .utils import max_value
+from .utils import max_grid_value
 
 
 class Scenario(BaseModel):
@@ -64,7 +64,8 @@ class Scenario(BaseModel):
                     )
                 )
 
-        scaling = float(math.ceil(max_value(grids) + 1))
+        all_readings = [a.readings for a in assays]
+        scaling = float(math.ceil(max_grid_value(all_readings) + 1))
         images = {a.id: make_image(params.assay_params, a, scaling) for a in assays}
 
         result = Scenario(
