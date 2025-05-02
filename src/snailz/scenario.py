@@ -97,7 +97,7 @@ class Scenario(BaseModel):
 
         for grid in self.grids:
             with open(root / f"{grid.id}.csv", "w") as stream:
-                Grid.to_csv(csv.writer(stream), grid)
+                print(grid, file=stream)
 
         with open(root / "specimens.csv", "w") as stream:
             self.specimens.to_csv(csv.writer(stream))
