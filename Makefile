@@ -2,8 +2,8 @@
 
 .DEFAULT: commands
 
-BUILD = build
 DATA = data
+DIST = dist
 SCRIPTS = scripts
 
 PARAMS = params.json
@@ -25,7 +25,7 @@ build: clean
 ## clean: clean up build artifacts
 clean:
 	@find . -name '*~' -delete
-	@rm -rf ${PARAMS} ${DATA} ${BUILD}
+	@rm -rf ${PARAMS} ${DATA} ${DIST}
 
 ## coverage: run tests with coverage
 coverage:
