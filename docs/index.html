@@ -954,25 +954,7 @@ The parameters, their meanings, and their properties are:</p>
 <td style="text-align: right;">123456</td>
 </tr>
 <tr>
-<td></td>
-<td><code>grid_size</code></td>
-<td>XY dimensions of survey grids</td>
-<td style="text-align: right;">15</td>
-</tr>
-<tr>
-<td></td>
-<td><code>num_sites</code></td>
-<td>number of survey sites</td>
-<td style="text-align: right;">3</td>
-</tr>
-<tr>
-<td></td>
-<td><code>num_specimens</code></td>
-<td>average number of specimens per site</td>
-<td style="text-align: right;">10</td>
-</tr>
-<tr>
-<td></td>
+<td><code>lab_params</code></td>
 <td><code>num_machines</code></td>
 <td>number of lab machines used for assays</td>
 <td style="text-align: right;">5</td>
@@ -987,13 +969,49 @@ The parameters, their meanings, and their properties are:</p>
 <td></td>
 <td><code>locale</code></td>
 <td>locale used for generating staff names</td>
-<td style="text-align: right;"><code>et_EE</code> (Estonian)</td>
+<td style="text-align: right;"><code>et_EE</code></td>
 </tr>
 <tr>
 <td></td>
 <td><code>assays_per_specimen</code></td>
 <td>number of assays done per specimen</td>
 <td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td><code>assays_params</code></td>
+<td><code>plate_size</code></td>
+<td>XY dimensions of assay plates</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td></td>
+<td><code>mean_control</code></td>
+<td>mean plate reading for control wells</td>
+<td style="text-align: right;">0.0</td>
+</tr>
+<tr>
+<td></td>
+<td><code>mean_normal</code></td>
+<td>mean plate reading for normal specimens</td>
+<td style="text-align: right;">2.0</td>
+</tr>
+<tr>
+<td></td>
+<td><code>mean_mutant</code></td>
+<td>mean plate reading for mutant specimens</td>
+<td style="text-align: right;">5.0</td>
+</tr>
+<tr>
+<td></td>
+<td><code>reading_noise</code></td>
+<td>noise applied to plate readings</td>
+<td style="text-align: right;">0.5</td>
+</tr>
+<tr>
+<td></td>
+<td><code>image_noise</code></td>
+<td>pixel noise applied to plate images</td>
+<td style="text-align: right;">3</td>
 </tr>
 <tr>
 <td><code>specimen_params</code></td>
@@ -1044,40 +1062,22 @@ The parameters, their meanings, and their properties are:</p>
 <td style="text-align: right;">2025-04-30</td>
 </tr>
 <tr>
-<td><code>assays_params</code></td>
-<td><code>plate_size</code></td>
-<td>XY dimensions of assay plates</td>
-<td style="text-align: right;">4</td>
+<td><code>survey_params</code></td>
+<td><code>grid_size</code></td>
+<td>XY dimensions of survey grids</td>
+<td style="text-align: right;">15</td>
 </tr>
 <tr>
 <td></td>
-<td><code>mean_control</code></td>
-<td>mean plate reading for control wells</td>
-<td style="text-align: right;">0.0</td>
-</tr>
-<tr>
-<td></td>
-<td><code>mean_normal</code></td>
-<td>mean plate reading for normal specimens</td>
-<td style="text-align: right;">2.0</td>
-</tr>
-<tr>
-<td></td>
-<td><code>mean_mutant</code></td>
-<td>mean plate reading for mutant specimens</td>
-<td style="text-align: right;">5.0</td>
-</tr>
-<tr>
-<td></td>
-<td><code>reading_noise</code></td>
-<td>noise applied to plate readings</td>
-<td style="text-align: right;">0.5</td>
-</tr>
-<tr>
-<td></td>
-<td><code>image_noise</code></td>
-<td>pixel noise applied to plate images</td>
+<td><code>num_sites</code></td>
+<td>number of survey sites</td>
 <td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td></td>
+<td><code>num_specimens</code></td>
+<td>average number of specimens per site</td>
+<td style="text-align: right;">10</td>
 </tr>
 </tbody>
 </table>

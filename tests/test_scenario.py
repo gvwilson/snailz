@@ -3,18 +3,15 @@
 from pathlib import Path
 import random
 
-from snailz.params import AssayParams, ScenarioParams, SpecimenParams
+from snailz.params import AssayParams, LabParams, ScenarioParams, SpecimenParams, SurveyParams
 from snailz.scenario import Scenario
 
 
 def test_scenario_creates_correct_files(fs):
     params = ScenarioParams(
         rng_seed=987654,
-        num_sites=1,
-        num_specimens=1,
-        num_machines=1,
-        num_persons=1,
-        assays_per_specimen=1,
+        lab_params=LabParams(num_machines=1, num_persons=1, assays_per_specimen=1),
+        survey_params=SurveyParams(num_sites=1, num_specimens=1),
         specimen_params=SpecimenParams(),
         assay_params=AssayParams(),
     )

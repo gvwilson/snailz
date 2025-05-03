@@ -83,30 +83,30 @@ $ snailz data --params params.json --outdir data
 and can generate a file with default parameter values as a starting point.
 The parameters, their meanings, and their properties are:
 
-| Group | Name | Purpose | Default |
-| ----- | ---- | ------- | ------: |
-| overall | `rng_seed` | random number generation seed | 123456 |
-| | `grid_size` | XY dimensions of survey grids | 15 |
-| | `num_sites` | number of survey sites | 3 |
-| | `num_specimens` | average number of specimens per site | 10 |
-| | `num_machines` | number of lab machines used for assays | 5 |
-| | `num_persons` | number of lab staff doing assays | 5 |
-| | `locale` | locale used for generating staff names | `et_EE` (Estonian) |
-| | `assays_per_specimen` | number of assays done per specimen | 2 |
-| `specimen_params` | `mass_mean` | mean specimen mass | 10.0 |
-| | `mass_sd` | relative standard deviation of masses | 1.0 |
-| | `genome_length` | number of bases in specimen genomes | 20 |
-| | `mut_mass_scale` | scaling factor for mutant specimen masses | 2.0 |
-| | `mut_frac` | fraction of specimens with significant mutation | 0.2 |
-| | `mut_prob` | probability of non-significant mutations per base | 0.0 |
-| | `start_date` | start date of specimen sampling | 2025-04-01 |
-| | `end_date` | end date of specimen sampling | 2025-04-30 |
-| `assays_params` | `plate_size` | XY dimensions of assay plates | 4 |
-| | `mean_control` | mean plate reading for control wells | 0.0 |
-| | `mean_normal` | mean plate reading for normal specimens | 2.0 |
-| | `mean_mutant` | mean plate reading for mutant specimens | 5.0 |
-| | `reading_noise` | noise applied to plate readings | 0.5 |
-| | `image_noise` | pixel noise applied to plate images | 3 |
+| Group             | Name                  | Purpose                                           | Default    |
+| ----------------- | --------------------- | ------------------------------------------------- | ---------: |
+| overall           | `rng_seed`            | random number generation seed                     | 123456     |
+| `lab_params`      | `num_machines`        | number of lab machines used for assays            | 5          |
+|                   | `num_persons`         | number of lab staff doing assays                  | 5          |
+|                   | `locale`              | locale used for generating staff names            | `et_EE`    |
+|                   | `assays_per_specimen` | number of assays done per specimen                | 2          |
+| `assays_params`   | `plate_size`          | XY dimensions of assay plates                     | 4          |
+|                   | `mean_control`        | mean plate reading for control wells              | 0.0        |
+|                   | `mean_normal`         | mean plate reading for normal specimens           | 2.0        |
+|                   | `mean_mutant`         | mean plate reading for mutant specimens           | 5.0        |
+|                   | `reading_noise`       | noise applied to plate readings                   | 0.5        |
+|                   | `image_noise`         | pixel noise applied to plate images               | 3          |
+| `specimen_params` | `mass_mean`           | mean specimen mass                                | 10.0       |
+|                   | `mass_sd`             | relative standard deviation of masses             | 1.0        |
+|                   | `genome_length`       | number of bases in specimen genomes               | 20         |
+|                   | `mut_mass_scale`      | scaling factor for mutant specimen masses         | 2.0        |
+|                   | `mut_frac`            | fraction of specimens with significant mutation   | 0.2        |
+|                   | `mut_prob`            | probability of non-significant mutations per base | 0.0        |
+|                   | `start_date`          | start date of specimen sampling                   | 2025-04-01 |
+|                   | `end_date`            | end date of specimen sampling                     | 2025-04-30 |
+| `survey_params`   | `grid_size`           | XY dimensions of survey grids                     | 15         |
+|                   | `num_sites`           | number of survey sites                            | 3          |
+|                   | `num_specimens`       | average number of specimens per site              | 10         |
 
 Notes:
 

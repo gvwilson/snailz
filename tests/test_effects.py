@@ -8,7 +8,7 @@ from snailz.assays import Assay
 from snailz.effects import apply_effects, assign_sample_locations, choose_assay_date
 from snailz.grid import Grid
 from snailz.machines import Machine
-from snailz.params import AssayParams, ScenarioParams, SpecimenParams
+from snailz.params import AssayParams, LabParams, ScenarioParams, SpecimenParams, SurveyParams
 from snailz.persons import Person
 from snailz.scenario import Scenario
 from snailz.specimens import Specimen, AllSpecimens
@@ -66,6 +66,8 @@ def test_apply_effects():
     random.seed(42)
     params = ScenarioParams(
         rng_seed=42,
+        lab_params=LabParams(),
+        survey_params=SurveyParams(),
         specimen_params=SpecimenParams(mut_mass_scale=2.0),
         assay_params=AssayParams(),
         pollution_scale=0.1,

@@ -34,6 +34,17 @@ class AssayParams(BaseModel):
     model_config = {"extra": "forbid"}
 
 
+class LabParams(BaseModel):
+    """Parameters describing laboratory setup."""
+
+    num_machines: int = Field(default=5, gt=0, description="number of lab machines")
+    num_persons: int = Field(default=5, gt=0, description="number of lab staff")
+    locale: str = Field(default=DEFAULT_LOCALE, description="name generation locale")
+    assays_per_specimen: int = Field(default=2, gt=0, description="assays per specimen")
+
+    model_config = {"extra": "forbid"}
+
+
 class SpecimenParams(BaseModel):
     """Parameters for specimen generation."""
 
@@ -59,23 +70,28 @@ class SpecimenParams(BaseModel):
     model_config = {"extra": "forbid"}
 
 
-class ScenarioParams(BaseModel):
-    """Parameters for entire scenario."""
+class SurveyParams(BaseModel):
+    """Parameters for survey sites."""
 
-    rng_seed: int = Field(description="random number generation seed")
     grid_size: int = Field(default=15, gt=0, description="sample grid size")
     num_sites: int = Field(default=3, gt=0, description="number of sample sites")
     num_specimens: int = Field(
         default=10, gt=0, description="total number of specimens"
     )
-    num_machines: int = Field(default=5, gt=0, description="number of lab machines")
-    num_persons: int = Field(default=5, gt=0, description="number of lab staff")
-    locale: str = Field(default=DEFAULT_LOCALE, description="name generation locale")
-    assays_per_specimen: int = Field(default=2, gt=0, description="assays per specimen")
+
+    model_config = {"extra": "forbid"}
+
+
+class ScenarioParams(BaseModel):
+    """Parameters for entire scenario."""
+
+    rng_seed: int = Field(description="random number generation seed")
     pollution_scale: float = Field(
         default=0.1, ge=0, description="pollution scaling factor"
     )
     delay_scale: float = Field(default=0.05, ge=0, description="delay scaling factor")
+    survey_params: SurveyParams = Field(description="survey parameters")
+    lab_params: LabParams = Field(description="laboratory parameters")
     specimen_params: SpecimenParams = Field(
         description="specimen generation parameters"
     )

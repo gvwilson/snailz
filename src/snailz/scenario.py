@@ -46,15 +46,19 @@ class Scenario(BaseModel):
         Returns:
             (Scenario): all generated data.
         """
-        machines = Machine.generate(params.num_machines)
-        persons = Person.generate(params.locale, params.num_persons)
-        grids = [Grid.generate(params.grid_size) for _ in range(params.num_sites)]
-        specimens = AllSpecimens.generate(params.specimen_params, params.num_specimens)
+        lab_params = params.lab_params
+        machines = Machine.generate(lab_params.num_machines)
+        persons = Person.generate(lab_params.locale, lab_params.num_persons)
+
+        survey_params = params.survey_params
+        grids = [Grid.generate(survey_params.grid_size) for _ in range(survey_params.num_sites)]
+
+        specimens = AllSpecimens.generate(params.specimen_params, survey_params.num_specimens)
         assign_sample_locations(grids, specimens)
 
         assays = []
         for s in specimens.samples:
-            for i in range(params.assays_per_specimen):
+            for i in range(lab_params.assays_per_specimen):
                 assays.append(
                     Assay.generate(
                         params.assay_params,
