@@ -90,6 +90,7 @@ The parameters, their meanings, and their properties are:
 |                   | `num_persons`         | number of lab staff doing assays                  | 5          |
 |                   | `locale`              | locale used for generating staff names            | `et_EE`    |
 |                   | `assays_per_specimen` | number of assays done per specimen                | 2          |
+|                   | `prob_extra_assay`    | probability of one extra assay for a specimen     | 0.1        |
 | `assays_params`   | `plate_size`          | XY dimensions of assay plates                     | 4          |
 |                   | `mean_control`        | mean plate reading for control wells              | 0.0        |
 |                   | `mean_normal`         | mean plate reading for normal specimens           | 2.0        |

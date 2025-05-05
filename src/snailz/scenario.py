@@ -58,7 +58,10 @@ class Scenario(BaseModel):
 
         assays = []
         for s in specimens.samples:
-            for i in range(lab_params.assays_per_specimen):
+            num_assays = lab_params.assays_per_specimen
+            if random.uniform(0.0, 1.0) <= lab_params.prob_extra_assay:
+                num_assays += 1
+            for i in range(num_assays):
                 assays.append(
                     Assay.generate(
                         params.assay_params,

@@ -23,3 +23,7 @@ snailz.zip
 *~
 *.bak
 *.bkp
+*.swp
+
+# MacOS
+.DS_Store
