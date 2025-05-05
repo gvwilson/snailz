@@ -5,10 +5,20 @@ import random
 import pytest
 
 from snailz.assays import Assay
-from snailz.effects import apply_effects, assign_sample_locations, choose_assay_date
+from snailz.effects import (
+    assign_sample_locations,
+    choose_assay_date,
+    randomize_scenario,
+)
 from snailz.grid import Grid
 from snailz.machines import Machine
-from snailz.params import AssayParams, LabParams, ScenarioParams, SpecimenParams, SurveyParams
+from snailz.params import (
+    AssayParams,
+    LabParams,
+    ScenarioParams,
+    SpecimenParams,
+    SurveyParams,
+)
 from snailz.persons import Person
 from snailz.scenario import Scenario
 from snailz.specimens import Specimen, AllSpecimens
@@ -43,6 +53,23 @@ def test_assign_sample_locations():
     assert len(locations) == len(set(locations))
 
 
+def test_calculate_assays_per_specimen():
+    params = ScenarioParams(
+        rng_seed=42,
+        lab_params=LabParams(prob_extra_assay=1.0),
+        survey_params=SurveyParams(),
+        specimen_params=SpecimenParams(),
+        assay_params=AssayParams(),
+    )
+    random.seed(42)
+    scenario = Scenario.generate(params)
+    actual = len(scenario.assays)
+    expected = (params.lab_params.assays_per_specimen + 1) * len(
+        scenario.specimens.samples
+    )
+    assert actual == expected
+
+
 def test_choose_assay_date():
     random.seed(42)
     params = AssayParams(max_delay=7)
@@ -62,7 +89,7 @@ def test_choose_assay_date():
         assert 1 <= days_diff <= params.max_delay
 
 
-def test_apply_effects():
+def test_randomize_scenario():
     random.seed(42)
     params = ScenarioParams(
         rng_seed=42,
@@ -160,7 +187,7 @@ def test_apply_effects():
             initial_readings[(x, y)] = assay.readings[x, y]
 
     # Apply effects
-    apply_effects(scenario)
+    randomize_scenario(scenario)
 
     # Test 1: Normal specimen mass should remain unchanged
     assert normal_specimen.mass == initial_normal_mass

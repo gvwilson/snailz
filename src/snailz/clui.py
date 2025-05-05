@@ -12,7 +12,11 @@ from .utils import json_dump
 
 DEFAULT_SEED = 123456
 DEFAULT_PARAMS = ScenarioParams(
-    rng_seed=DEFAULT_SEED, survey_params=SurveyParams(), lab_params=LabParams(), specimen_params=SpecimenParams(), assay_params=AssayParams()
+    rng_seed=DEFAULT_SEED,
+    survey_params=SurveyParams(),
+    lab_params=LabParams(),
+    specimen_params=SpecimenParams(),
+    assay_params=AssayParams(),
 )
 
 

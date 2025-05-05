@@ -10,7 +10,11 @@ from pydantic import BaseModel, Field
 
 from .params import ScenarioParams
 from .assays import Assay
-from .effects import apply_effects, assign_sample_locations
+from .effects import (
+    assign_sample_locations,
+    calculate_assays_per_specimen,
+    randomize_scenario,
+)
 from .grid import Grid
 from .images import make_image
 from .machines import Machine
@@ -51,17 +55,19 @@ class Scenario(BaseModel):
         persons = Person.generate(lab_params.locale, lab_params.num_persons)
 
         survey_params = params.survey_params
-        grids = [Grid.generate(survey_params.grid_size) for _ in range(survey_params.num_sites)]
+        grids = [
+            Grid.generate(survey_params.grid_size)
+            for _ in range(survey_params.num_sites)
+        ]
 
-        specimens = AllSpecimens.generate(params.specimen_params, survey_params.num_specimens)
+        specimens = AllSpecimens.generate(
+            params.specimen_params, survey_params.num_specimens
+        )
         assign_sample_locations(grids, specimens)
 
         assays = []
         for s in specimens.samples:
-            num_assays = lab_params.assays_per_specimen
-            if random.uniform(0.0, 1.0) <= lab_params.prob_extra_assay:
-                num_assays += 1
-            for i in range(num_assays):
+            for i in range(calculate_assays_per_specimen(lab_params)):
                 assays.append(
                     Assay.generate(
                         params.assay_params,
@@ -84,7 +90,7 @@ class Scenario(BaseModel):
             assays=assays,
             images=images,
         )
-        apply_effects(result)
+        randomize_scenario(result)
         return result
 
     def to_csv(self, root):

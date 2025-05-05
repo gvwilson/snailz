@@ -4,7 +4,35 @@ from datetime import timedelta
 import random
 
 
-def apply_effects(scenario):
+def assign_sample_locations(grids, specimens):
+    """Allocate specimens to grid locations."""
+
+    size = grids[0].size
+    assert all(g.size == size for g in grids), "Grid size(s) mis-match"
+
+    coords = [(g.id, x, y) for g in grids for x in range(size) for y in range(size)]
+    for s in specimens.samples:
+        i = random.randint(0, len(coords) - 1)
+        s.grid, s.x, s.y = coords[i]
+        del coords[i]
+
+
+def calculate_assays_per_specimen(lab_params):
+    """Determine the number of assays for a specimen."""
+
+    result = lab_params.assays_per_specimen
+    if random.uniform(0.0, 1.0) <= lab_params.prob_extra_assay:
+        result += 1
+    return result
+
+
+def choose_assay_date(assay_params, specimen):
+    """Determine date assay performed."""
+
+    return specimen.sampled + timedelta(days=random.randint(1, assay_params.max_delay))
+
+
+def randomize_scenario(scenario):
     """Apply mix of random effects to scenario."""
 
     params = scenario.params
@@ -33,22 +61,3 @@ def apply_effects(scenario):
                     continue
                 drop = assay.readings[x, y] * params.delay_scale * delta
                 assay.readings[x, y] = max(0.0, assay.readings[x, y] - drop)
-
-
-def assign_sample_locations(grids, specimens):
-    """Allocate specimens to grid locations."""
-
-    size = grids[0].size
-    assert all(g.size == size for g in grids), "Grid size(s) mis-match"
-
-    coords = [(g.id, x, y) for g in grids for x in range(size) for y in range(size)]
-    for s in specimens.samples:
-        i = random.randint(0, len(coords) - 1)
-        s.grid, s.x, s.y = coords[i]
-        del coords[i]
-
-
-def choose_assay_date(params, specimen):
-    """Determine date assay performed."""
-
-    return specimen.sampled + timedelta(days=random.randint(1, params.max_delay))

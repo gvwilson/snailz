@@ -3,7 +3,13 @@
 from pathlib import Path
 import random
 
-from snailz.params import AssayParams, LabParams, ScenarioParams, SpecimenParams, SurveyParams
+from snailz.params import (
+    AssayParams,
+    LabParams,
+    ScenarioParams,
+    SpecimenParams,
+    SurveyParams,
+)
 from snailz.scenario import Scenario
 
 
