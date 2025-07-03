@@ -26,9 +26,21 @@ class Parameters(BaseModel):
     pollution_factor: float = Field(
         default=0.3, gt=0, description="pollution effect on mass"
     )
-    clumsy_factor: float = Field(
-        default=0.5, gt=0, description="clumsy operator effect on mass"
+    clumsy_factor: float | None = Field(
+        default=0.5, description="clumsy operator effect on mass (if any)"
     )
+
+    @model_validator(mode="after")
+    def validate_clumsy_factor(self):
+        """Check clumsiness factor."""
+
+        if self.clumsy_factor is None:
+            pass
+        elif self.clumsy_factor > 0:
+            pass
+        else:
+            raise ValueError(f"bad clumsy factor {self.clumsy_factor}")
+        return self
 
     @model_validator(mode="after")
     def validate_locale(self):
@@ -39,17 +51,19 @@ class Parameters(BaseModel):
         return self
 
     @model_validator(mode="after")
+    def validate_sample_date(self):
+        """Check sample dates."""
+
+        if self.sample_date[1] < self.sample_date[0]:
+            raise ValueError(f"invalid sample date bounds {self.sample_date}")
+        return self
+
+    @model_validator(mode="after")
     def validate_sample_mass(self):
         """Check sample mass."""
+
         if 0 < self.sample_mass[0] <= self.sample_mass[1]:
             pass
         else:
             raise ValueError(f"invalid sample size bounds {self.sample_mass}")
-        return self
-
-    @model_validator(mode="after")
-    def validate_sample_date(self):
-        """Check sample dates."""
-        if self.sample_date[1] < self.sample_date[0]:
-            raise ValueError(f"invalid sample date bounds {self.sample_date}")
         return self

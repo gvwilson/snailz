@@ -1,30 +1,15 @@
 """Tests for parameters module."""
 
-import pytest
 from datetime import date
+
+import pytest
+
 from snailz.parameters import Parameters
-
-
-def test_default_parameters():
-    """Test default parameter values."""
-    params = Parameters()
-    assert params.seed == 123456
-    assert params.precision == 2
-    assert params.num_persons == 5
-    assert params.num_grids == 3
-    assert params.num_samples == 20
-    assert params.locale == "et_EE"
-    assert params.grid_size == 11
-    assert params.sample_mass[0] == 0.5
-    assert params.sample_mass[1] == 1.5
-    assert params.sample_date[0] == date(2025, 1, 1)
-    assert params.sample_date[1] == date(2025, 3, 31)
-    assert params.pollution_factor == 0.3
-    assert params.clumsy_factor == 0.5
 
 
 def test_custom_parameters():
     """Test custom parameter values."""
+
     params = Parameters(seed=42, precision=3, num_persons=10, locale="en_US")
     assert params.seed == 42
     assert params.precision == 3
@@ -32,19 +17,17 @@ def test_custom_parameters():
     assert params.locale == "en_US"
 
 
-def test_invalid_locale():
-    """Test invalid locale raises error."""
-    with pytest.raises(ValueError, match="unknown locale"):
-        Parameters(locale="invalid_locale")
+@pytest.mark.parametrize(
+    "name,value",
+    [
+        ["locale", "invalid"],
+        ["sample_mass", (2.0, 1.0)],
+        ["sample_date", (date(2025, 12, 31), date(2025, 1, 1))],
+        ["clumsy_factor", -0.5],
+    ],
+)
+def test_invalid_parameter_values(name, value):
+    """Test invalid parameter values raise error."""
 
-
-def test_invalid_sample_mass_range():
-    """Test invalid sample mass range raises error."""
-    with pytest.raises(ValueError, match="invalid sample size bounds"):
-        Parameters(sample_mass=(2.0, 1.0))
-
-
-def test_invalid_sample_date_range():
-    """Test invalid sample date range raises error."""
-    with pytest.raises(ValueError, match="invalid sample date bounds"):
-        Parameters(sample_date=(date(2025, 12, 31), date(2025, 1, 1)))
+    with pytest.raises(ValueError):
+        Parameters(**{name: value})

@@ -9,6 +9,7 @@ from snailz.sample import Sample
 
 def test_sample_creation(default_params, fx_grids, fx_persons):
     """Test sample creation with default parameters."""
+
     sample = Sample.make(default_params, fx_grids, fx_persons)
     assert sample.id.startswith("S")
     assert len(sample.id) == 5  # S + 4 digits
@@ -26,6 +27,7 @@ def test_sample_creation(default_params, fx_grids, fx_persons):
 )
 def test_sample_parameter_validation(changed):
     """Test invalid sample parameters are rejected."""
+
     values = {
         "id": "",
         "grid": "G0001",
@@ -42,6 +44,7 @@ def test_sample_parameter_validation(changed):
 
 def test_sample_csv_output():
     """Test CSV string output."""
+
     sample = Sample(
         id="S0001",
         grid="G0001",
@@ -57,6 +60,7 @@ def test_sample_csv_output():
 
 def test_sample_unique_ids(default_params, fx_grids, fx_persons):
     """Test that samples get unique IDs."""
+
     sample1 = Sample.make(default_params, fx_grids, fx_persons)
     sample2 = Sample.make(default_params, fx_grids, fx_persons)
     assert sample1.id != sample2.id
@@ -64,6 +68,7 @@ def test_sample_unique_ids(default_params, fx_grids, fx_persons):
 
 def test_sample_id_format(default_params, fx_grids, fx_persons):
     """Test sample ID format is consistent."""
+
     sample = Sample.make(default_params, fx_grids, fx_persons)
     assert sample.id[0] == "S"
     assert sample.id[1:].isdigit()

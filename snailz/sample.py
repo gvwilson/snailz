@@ -26,6 +26,7 @@ class Sample(BaseModel):
     @staticmethod
     def make(params, grids, persons):
         """Make a sample."""
+
         utils.ensure_id_generator(Sample)
         grid = random.choice(grids)
         x = random.randint(0, grid.size - 1)
@@ -46,8 +47,10 @@ class Sample(BaseModel):
     @staticmethod
     def csv_header():
         """Generate header for CSV file."""
+
         return "sample_id,grid_id,x,y,person,when,mass"
 
     def __str__(self):
         """Convert to CSV string."""
+
         return f"{self.id},{self.grid},{self.x},{self.y},{self.person},{self.when},{self.mass}"

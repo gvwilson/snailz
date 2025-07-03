@@ -10,6 +10,7 @@ from snailz.parameters import Parameters
 
 def test_parse_args_defaults():
     """Test argument parsing with default values."""
+
     with patch("sys.argv", ["snailz"]):
         args = _parse_args()
         assert args.defaults is False
@@ -19,6 +20,7 @@ def test_parse_args_defaults():
 
 def test_parse_args_with_options():
     """Test argument parsing with all options."""
+
     with patch(
         "sys.argv",
         ["snailz", "--defaults", "--outdir", "/tmp", "--params", "config.json"],
@@ -31,6 +33,7 @@ def test_parse_args_with_options():
 
 def test_initialize_with_defaults():
     """Test initialization with default parameters."""
+
     args = MagicMock()
     args.params = None
     with patch("random.seed") as mock_seed:
@@ -41,6 +44,7 @@ def test_initialize_with_defaults():
 
 def test_initialize_with_params_file():
     """Test initialization with parameters file."""
+
     args = MagicMock()
     args.params = "test_params.json"
     test_params = {"seed": 42, "num_persons": 10, "locale": "en_US"}
@@ -55,6 +59,7 @@ def test_initialize_with_params_file():
 
 def test_synthesize_data():
     """Test data synthesis function."""
+
     params = Parameters(num_grids=2, num_persons=3, num_samples=5)
     grids, persons, samples = _synthesize(params)
 
@@ -69,6 +74,7 @@ def test_synthesize_data():
 
 def test_save_to_stdout():
     """Test saving data to stdout."""
+
     args = MagicMock()
     args.outdir = "-"
 
@@ -85,6 +91,7 @@ def test_save_to_stdout():
 
 def test_save_to_directory(tmp_path):
     """Test saving data to directory."""
+
     args = MagicMock()
     args.outdir = str(tmp_path)
 
@@ -110,6 +117,7 @@ def test_save_to_directory(tmp_path):
 
 def test_save_creates_directory(tmp_path):
     """Test that save creates output directory if it doesn"t exist."""
+
     new_dir = tmp_path / "new_output"
     args = MagicMock()
     args.outdir = str(new_dir)
@@ -126,6 +134,7 @@ def test_save_creates_directory(tmp_path):
 
 def test_main_with_defaults():
     """Test main function with --defaults flag."""
+
     with (
         patch("sys.argv", ["snailz", "--defaults"]),
         patch("sys.stdout", new_callable=StringIO) as mock_stdout,
@@ -139,8 +148,8 @@ def test_main_with_defaults():
 
 def test_main_full_workflow(tmp_path):
     """Test complete main workflow."""
-    test_params = {"seed": 42, "num_grids": 1, "num_persons": 2, "num_samples": 3}
 
+    test_params = {"seed": 42, "num_grids": 1, "num_persons": 2, "num_samples": 3}
     params_file = tmp_path / "params.json"
     params_file.write_text(json.dumps(test_params))
 

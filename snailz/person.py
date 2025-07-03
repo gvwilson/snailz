@@ -22,6 +22,7 @@ class Person(BaseModel):
     @staticmethod
     def make(params):
         """Make a person."""
+
         utils.ensure_id_generator(Person)
         if not hasattr(Person, "_fake"):
             Person._fake = faker.Faker(params.locale)
@@ -36,8 +37,10 @@ class Person(BaseModel):
     @staticmethod
     def csv_header():
         """Generate header for CSV file."""
+
         return "id,family,personal"
 
     def __str__(self):
         """Convert to CSV string."""
+
         return f"{self.id},{self.family},{self.personal}"

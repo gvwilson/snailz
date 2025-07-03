@@ -1,0 +1,19 @@
+{
+  "seed": 1234567,
+  "precision": 2,
+  "num_persons": 6,
+  "num_grids": 8,
+  "num_samples": 200,
+  "locale": "et_EE",
+  "grid_size": 21,
+  "sample_mass": [
+    0.5,
+    1.5
+  ],
+  "sample_date": [
+    "2025-01-01",
+    "2025-04-30"
+  ],
+  "pollution_factor": 0.3,
+  "clumsy_factor": null
+}

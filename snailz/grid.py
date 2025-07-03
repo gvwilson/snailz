@@ -28,6 +28,7 @@ class Grid(BaseModel):
     @staticmethod
     def make(params):
         """Make a grid."""
+
         utils.ensure_id_generator(Grid)
         grid = Grid(id=next(Grid._id_gen), size=params.grid_size)
         grid.fill()
@@ -35,16 +36,19 @@ class Grid(BaseModel):
 
     def __getitem__(self, key):
         """Get grid element."""
+
         x, y = key
         return self.grid[y * self.size + x]
 
     def __setitem__(self, key, value):
         """Set grid element."""
+
         x, y = key
         self.grid[y * self.size + x] = value
 
     def __str__(self):
         """Convert to CSV string."""
+
         result = []
         for y in range(self.size - 1, -1, -1):
             result.append(",".join([str(self[x, y]) for x in range(self.size)]))
@@ -52,6 +56,7 @@ class Grid(BaseModel):
 
     def fill(self):
         """Fill in a grid."""
+
         center = self.size // 2
         size_1 = self.size - 1
         x, y = center, center

@@ -16,6 +16,7 @@ from . import utils
 
 def main():
     """Main command-line driver."""
+
     args = _parse_args()
 
     if args.defaults:
@@ -33,6 +34,7 @@ def main():
 
 def _initialize(args):
     """Initialize for data synthesis."""
+
     if args.params:
         with open(args.params, "r") as reader:
             params = Parameters.model_validate(json.load(reader))
@@ -46,6 +48,7 @@ def _initialize(args):
 
 def _parse_args():
     """Parse command-line arguments."""
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--defaults", action="store_true", help="show default parameters"
@@ -57,6 +60,7 @@ def _parse_args():
 
 def _save(args, grids, persons, samples, changes):
     """Save synthesized data."""
+
     if args.outdir == "-":
         outdir = None
     else:
@@ -80,6 +84,7 @@ def _save(args, grids, persons, samples, changes):
 
 def _synthesize(params):
     """Synthesize data."""
+
     grids = [Grid.make(params) for _ in range(params.num_grids)]
     persons = [Person.make(params) for _ in range(params.num_persons)]
     samples = [Sample.make(params, grids, persons) for _ in range(params.num_samples)]

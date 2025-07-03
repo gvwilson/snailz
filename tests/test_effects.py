@@ -15,6 +15,7 @@ from snailz.sample import Sample
 
 def test_do_all_effects(default_params, fx_grids, fx_persons, fx_samples):
     """Test that do_all_effects returns changes dictionary."""
+
     changes = do_all_effects(default_params, fx_grids, fx_persons, fx_samples)
     assert isinstance(changes, dict)
     assert "daily" in changes
@@ -23,6 +24,7 @@ def test_do_all_effects(default_params, fx_grids, fx_persons, fx_samples):
 
 def test_do_pollution_effect(fx_grids, fx_persons):
     """Test pollution effect on sample mass."""
+
     params = Parameters(pollution_factor=0.5)
     sample = Sample(
         id="S0001",
@@ -46,6 +48,7 @@ def test_do_pollution_effect(fx_grids, fx_persons):
 
 def test_do_delay_effect():
     """Test delay effect on sample mass."""
+
     params = Parameters(
         sample_date=(date(2025, 1, 1), date(2025, 1, 10)),
         sample_mass=(1.0, 2.0),
@@ -71,6 +74,7 @@ def test_do_delay_effect():
 
 def test_do_person_effect():
     """Test person (clumsy) effect on sample mass."""
+
     params = Parameters(sample_mass=(1.0, 2.0), clumsy_factor=0.3)
     person = Person(id="P0001", family="Smith", personal="John")
 
@@ -94,8 +98,32 @@ def test_do_person_effect():
     assert changes["clumsy"] == person.id
 
 
+def test_do_person_effect_clumsy_none():
+    """Test person effect when clumsy_factor is None."""
+
+    params = Parameters(sample_mass=(1.0, 2.0), clumsy_factor=None)
+    person = Person(id="P0001", family="Smith", personal="John")
+
+    sample = Sample(
+        id="S0001",
+        grid="G0001",
+        x=0,
+        y=0,
+        person=person.id,
+        when=date(2025, 6, 15),
+        mass=2.0,
+    )
+
+    original_mass = sample.mass
+    changes = _do_person(params, [], [person], [sample])
+
+    assert sample.mass == original_mass
+    assert changes == {}
+
+
 def test_do_precision_effect():
     """Test precision rounding effect."""
+
     params = Parameters(precision=2)
 
     sample = Sample(
@@ -117,6 +145,7 @@ def test_do_precision_effect():
 
 def test_effects_order_matters(default_params, fx_grids, fx_persons):
     """Test that effects are applied in the correct order."""
+
     # Create sample with known initial conditions
     sample = Sample(
         id="S0001",
