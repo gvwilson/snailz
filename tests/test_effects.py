@@ -47,10 +47,8 @@ def test_do_pollution_effect(fx_grids, fx_persons):
 def test_do_delay_effect():
     """Test delay effect on sample mass."""
     params = Parameters(
-        sample_date_min=date(2025, 1, 1),
-        sample_date_max=date(2025, 1, 10),
-        sample_mass_min=1.0,
-        sample_mass_max=2.0,
+        sample_date=(date(2025, 1, 1), date(2025, 1, 10)),
+        sample_mass=(1.0, 2.0),
     )
     sample = Sample(
         id="S0001",
@@ -73,7 +71,7 @@ def test_do_delay_effect():
 
 def test_do_person_effect():
     """Test person (clumsy) effect on sample mass."""
-    params = Parameters(sample_mass_min=1.0, clumsy_factor=0.3)
+    params = Parameters(sample_mass=(1.0, 2.0), clumsy_factor=0.3)
     person = Person(id="P0001", family="Smith", personal="John")
 
     sample = Sample(
@@ -90,7 +88,7 @@ def test_do_person_effect():
     changes = _do_person(params, [], [person], [sample])
 
     # Mass should decrease for clumsy person
-    expected_decrease = params.sample_mass_min * params.clumsy_factor
+    expected_decrease = params.sample_mass[0] * params.clumsy_factor
     assert abs(sample.mass - (original_mass - expected_decrease)) < 1e-10
     assert "clumsy" in changes
     assert changes["clumsy"] == person.id
@@ -126,7 +124,7 @@ def test_effects_order_matters(default_params, fx_grids, fx_persons):
         x=0,
         y=0,
         person=fx_persons[0].id,
-        when=default_params.sample_date_min,
+        when=default_params.sample_date[0],
         mass=1.0,
     )
 

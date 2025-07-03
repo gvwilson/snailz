@@ -32,10 +32,6 @@ home = "https://github.com/gvwilson/snailz"
 [project.scripts]
 snailz = "snailz.main:main"
 
-[tool.pytest.ini_options]
-pythonpath = ["snailz"]
-snailz = "snailz.main:main"
-
 [tool.setuptools]
 packages = ["snailz"]
 

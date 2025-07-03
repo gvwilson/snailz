@@ -13,10 +13,10 @@ def do_all_effects(params, grids, persons, samples):
 
 def _do_delay(params, grids, persons, samples):
     """Modify sample mass based on sampling date."""
-    duration = (params.sample_date_max - params.sample_date_min).days
-    daily = (params.sample_mass_max - params.sample_mass_min) / duration
+    duration = (params.sample_date[1] - params.sample_date[0]).days
+    daily = (params.sample_mass[1] - params.sample_mass[0]) / duration
     for s in samples:
-        elapsed = (s.when - params.sample_date_min).days
+        elapsed = (s.when - params.sample_date[0]).days
         growth = elapsed * daily
         s.mass += growth
     return {"daily": daily}
@@ -27,7 +27,7 @@ def _do_person(params, grids, persons, samples):
     clumsy = random.choice(persons)
     for s in samples:
         if s.person == clumsy.id:
-            s.mass -= params.sample_mass_min * params.clumsy_factor
+            s.mass -= params.sample_mass[0] * params.clumsy_factor
     return {"clumsy": clumsy.id}
 
 

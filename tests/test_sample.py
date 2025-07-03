@@ -16,12 +16,8 @@ def test_sample_creation(default_params, fx_grids, fx_persons):
     assert sample.person in [p.id for p in fx_persons]
     assert 0 <= sample.x < fx_grids[0].size
     assert 0 <= sample.y < fx_grids[0].size
-    assert (
-        default_params.sample_date_min <= sample.when <= default_params.sample_date_max
-    )
-    assert (
-        default_params.sample_mass_min <= sample.mass <= default_params.sample_mass_max
-    )
+    assert default_params.sample_date[0] <= sample.when <= default_params.sample_date[1]
+    assert default_params.sample_mass[0] <= sample.mass <= default_params.sample_mass[1]
 
 
 @pytest.mark.parametrize(

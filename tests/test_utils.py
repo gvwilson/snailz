@@ -20,23 +20,21 @@ from snailz.person import Person
 
 def test_random_date():
     """Test random date generation within range."""
-    params = Parameters(
-        sample_date_min=date(2025, 1, 1), sample_date_max=date(2025, 1, 10)
-    )
+    params = Parameters(sample_date=(date(2025, 1, 1), date(2025, 1, 10)))
 
     random.seed(123)
     for _ in range(100):
         random_dt = random_date(params)
-        assert params.sample_date_min <= random_dt <= params.sample_date_max
+        assert params.sample_date[0] <= random_dt <= params.sample_date[1]
 
 
 def test_random_mass():
     """Test random mass generation within range."""
-    params = Parameters(sample_mass_min=0.5, sample_mass_max=2.0)
+    params = Parameters(sample_mass=(0.5, 2.0))
     random.seed(123)
     for _ in range(100):
         mass = random_mass(params)
-        assert params.sample_mass_min <= mass <= params.sample_mass_max
+        assert params.sample_mass[0] <= mass <= params.sample_mass[1]
 
 
 def test_json_dump_with_date():

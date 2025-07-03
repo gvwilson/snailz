@@ -50,15 +50,15 @@ def json_dump(obj, indent=2):
 
 def random_date(params):
     """Select random date in range (inclusive)."""
-    days = (params.sample_date_max - params.sample_date_min).days
-    return params.sample_date_min + timedelta(days=random.randint(0, days))
+    days = (params.sample_date[1] - params.sample_date[0]).days
+    return params.sample_date[0] + timedelta(days=random.randint(0, days))
 
 
 def random_mass(params):
     """Generate random sample mass."""
     return random.uniform(
-        params.sample_mass_min,
-        params.sample_mass_max,
+        params.sample_mass[0],
+        params.sample_mass[1],
     )
 
 

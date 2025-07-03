@@ -16,17 +16,12 @@ class Parameters(BaseModel):
     num_samples: int = Field(default=20, gt=0, description="number of samples")
     locale: str = Field(default="et_EE", description="name generation locale")
     grid_size: int = Field(default=11, gt=0, description="sample grid size")
-    sample_mass_min: float = Field(
-        default=0.5, gt=0, description="minimum sample sample mass"
+    sample_mass: tuple[float, float] = Field(
+        default=(0.5, 1.5), description="sample mass bounds"
     )
-    sample_mass_max: float = Field(
-        default=1.5, gt=0, description="maximum sample sample mass"
-    )
-    sample_date_min: date = Field(
-        default=date(2025, 1, 1), description="sampling start date"
-    )
-    sample_date_max: date = Field(
-        default=date(2025, 3, 31), description="sampling end date"
+    sample_date: tuple[date, date] = Field(
+        default=(date(2025, 1, 1), date(2025, 3, 31)),
+        description="sampling date bounds",
     )
     pollution_factor: float = Field(
         default=0.3, gt=0, description="pollution effect on mass"
@@ -46,17 +41,15 @@ class Parameters(BaseModel):
     @model_validator(mode="after")
     def validate_sample_mass(self):
         """Check sample mass."""
-        if self.sample_mass_max < self.sample_mass_min:
-            raise ValueError(
-                f"invalid sample size limits [{self.sample_mass_min}, {self.sample_mass_max}]"
-            )
+        if 0 < self.sample_mass[0] <= self.sample_mass[1]:
+            pass
+        else:
+            raise ValueError(f"invalid sample size bounds {self.sample_mass}")
         return self
 
     @model_validator(mode="after")
     def validate_sample_date(self):
         """Check sample dates."""
-        if self.sample_date_max < self.sample_date_min:
-            raise ValueError(
-                f"invalid sample date limits [{self.sample_date_min}, {self.sample_date_max}]"
-            )
+        if self.sample_date[1] < self.sample_date[0]:
+            raise ValueError(f"invalid sample date bounds {self.sample_date}")
         return self
