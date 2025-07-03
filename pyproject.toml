@@ -17,6 +17,11 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "coverage",
+    "griffe-fieldz",
+    "markdown-include",
+    "mkdocs",
+    "mkdocs-material",
+    "mkdocstrings[python]",
     "pytest",
     "ruff"
 ]
@@ -27,12 +32,12 @@ home = "https://github.com/gvwilson/snailz"
 [project.scripts]
 snailz = "snailz.main:main"
 
-[tool.uv]
-package = true
-
 [tool.pytest.ini_options]
 pythonpath = ["snailz"]
 snailz = "snailz.main:main"
 
 [tool.setuptools]
 packages = ["snailz"]
+
+[tool.uv]
+package = true

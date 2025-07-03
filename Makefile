@@ -21,6 +21,11 @@ coverage:
 	${PYTHON_M} coverage run -m pytest tests
 	${PYTHON_M} coverage report --show-missing
 
+## docs: generate documentation using MkDocs
+.PHONY: docs
+docs:
+	${PYTHON_M} mkdocs build
+
 ## dryrun: run data generation but do not save results
 dryrun:
 	${SCRIPT} --outdir -

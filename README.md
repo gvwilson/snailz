@@ -1,6 +1,6 @@
 # Snailz
 
-<img src="https://raw.githubusercontent.com/gvwilson/snailz/main/pages/img/snail-logo.svg" alt="snail logo" width="200px">
+<img src="https://raw.githubusercontent.com/gvwilson/snailz/refs/heads/main/pages/img/snailz-logo.svg" alt="snail logo" width="200px">
 
 `snailz` is a synthetic data generator
 that models a study of snails in the Pacific Northwest

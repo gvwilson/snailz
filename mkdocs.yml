@@ -1,0 +1,42 @@
+site_name: "Snailz Docs"
+docs_dir: pages
+site_dir: docs
+nav:
+- Home: index.md
+- Software:
+  - effects.md
+  - grid.md
+  - main.md
+  - parameters.md
+  - person.md
+  - sample.md
+  - utils.md
+- Project:
+  - license.md
+  - conduct.md
+  - contributing.md
+
+extra_css:
+- css/snailz.css
+
+plugins:
+- mkdocstrings:
+    handlers:
+      python:
+        options:
+          extensions:
+          - griffe_fieldz
+          members_order: source
+          filters: []
+
+theme:
+  name: "material"
+
+markdown_extensions:
+- def_list
+- markdown_include.include:
+    base_path: docs
+- footnotes
+
+exclude_docs: >
+  *~
