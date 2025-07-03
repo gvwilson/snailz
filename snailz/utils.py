@@ -1,74 +1,71 @@
-"""Utilities."""
+"""Data generation utilities."""
 
-from datetime import date
+from contextlib import contextmanager
+from datetime import date, timedelta
 import json
+from pathlib import Path
+import random
+import sys
 
-from PIL.Image import Image as PilImage
 from pydantic import BaseModel
 
 
-# Floating point decimals for output
-PRECISION = 2
+def ensure_id_generator(cls):
+    """Ensure class has ID generator."""
+    if not hasattr(cls, "_id_gen"):
+        cls._id_gen = id_gen(cls.id_stem, cls.id_digits)
 
 
-def generic_id_generator(id_func):
-    """Parameterized ID generator.
+@contextmanager
+def file_or_std(parent, filename, mode):
+    """Open file and return handle or return stdin/stdout."""
+    if parent:
+        stream = open(Path(parent, filename), mode)
+        try:
+            yield stream
+        finally:
+            stream.close()
+    elif mode == "r":
+        yield sys.stdin
+    elif mode == "w":
+        yield sys.stdout
+    else:
+        raise ValueError(f"bad filename/mode '{filename}' / '{mode}'")
 
-    Parameters:
-        id_func (callable): function to generate a single ID
 
-    Returns:
-        (generator): ID generator.
-    """
-
-    current = 0
+def id_gen(stem, digits):
+    """Generate unique IDs of the form 'stemDDDD'."""
+    i = 1
     while True:
-        current += 1
-        yield id_func(current)
+        temp = str(i)
+        assert len(temp) <= digits, f"ID generation overflow {stem}: {i}"
+        yield f"{stem}{temp.zfill(digits)}"
+        i += 1
 
 
 def json_dump(obj, indent=2):
-    """Dump as JSON with appropriate settings.
-
-    Parameters:
-        obj (any): The object to serialize
-        indent (int | None): Indentation (None for none)
-
-    Returns:
-        (str): JSON representation of object.
-    """
-
+    """Dump as JSON with custom serializer."""
     return json.dumps(obj, indent=indent, default=_serialize_json)
 
 
-def max_grid_value(grids):
-    """Find maximum value across a list of grids."""
+def random_date(params):
+    """Select random date in range (inclusive)."""
+    days = (params.sample_date_max - params.sample_date_min).days
+    return params.sample_date_min + timedelta(days=random.randint(0, days))
 
-    result = 0.0
-    for g in grids:
-        for x in range(g.size):
-            for y in range(g.size):
-                result = max(result, g[x, y])
-    return result
+
+def random_mass(params):
+    """Generate random sample mass."""
+    return random.uniform(
+        params.sample_mass_min,
+        params.sample_mass_max,
+    )
 
 
 def _serialize_json(obj):
-    """Custom JSON serializer for JSON conversion.
-
-    Parameters:
-        obj (any): The object to serialize
-
-    Returns:
-        (str | None): string representation or None.
-
-    Raises:
-        TypeError: If the object type is not supported for serialization
-    """
-
+    """Custom JSON serializer."""
     if isinstance(obj, date):
         return obj.isoformat()
     if isinstance(obj, BaseModel):
         return obj.model_dump()
-    if isinstance(obj, PilImage):
-        return None
     raise TypeError(f"Type {type(obj)} not serializable")

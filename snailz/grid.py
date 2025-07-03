@@ -1,20 +1,37 @@
-from typing import ClassVar
+"""Sample grids."""
+
 import random
+from typing import ClassVar
 
 from pydantic import BaseModel, Field
 
-from .utils import generic_id_generator
+from . import utils
+
+
+# Legal moves for random walk that fills grid.
+MOVES = [[-1, 0], [1, 0], [0, -1], [0, 1]]
 
 
 class Grid(BaseModel):
-    """Store a grid of numbers."""
+    """Create and fill an integer grid."""
 
-    id: str | None = Field(default=None, description="optional grid ID")
-    size: int = Field(gt=0, description="grid size")
-    grid: list = Field(default_factory=list, description="grid values")
+    id_stem: ClassVar[str] = "G"
+    id_digits: ClassVar[int] = 4
 
-    def model_post_init(self, context):
-        self.grid = [0 for _ in range(self.size * self.size)]
+    id: str = Field(min_length=1, description="unique ID")
+    size: int = Field(
+        gt=0,
+        description="grid size",
+    )
+    grid: list = Field(default=[], description="grid values")
+
+    @staticmethod
+    def make(params):
+        """Make a grid."""
+        utils.ensure_id_generator(Grid)
+        grid = Grid(id=next(Grid._id_gen), size=params.grid_size)
+        grid.fill()
+        return grid
 
     def __getitem__(self, key):
         """Get grid element."""
@@ -27,30 +44,21 @@ class Grid(BaseModel):
         self.grid[y * self.size + x] = value
 
     def __str__(self):
-        """Convert to string."""
+        """Convert to CSV string."""
         result = []
         for y in range(self.size - 1, -1, -1):
             result.append(",".join([str(self[x, y]) for x in range(self.size)]))
         return "\n".join(result)
 
-    _id_generator: ClassVar = generic_id_generator(lambda i: f"G{i:02d}")
-
-    @staticmethod
-    def generate(size):
-        """Make and fill in a grid."""
-        grid = Grid(id=next(Grid._id_generator), size=size)
-
-        moves = [[-1, 0], [1, 0], [0, -1], [0, 1]]
-        center = grid.size // 2
-        size_1 = grid.size - 1
+    def fill(self):
+        """Fill in a grid."""
+        center = self.size // 2
+        size_1 = self.size - 1
         x, y = center, center
-        num = 0
 
+        self.grid = [0 for _ in range(self.size * self.size)]
         while (x != 0) and (y != 0) and (x != size_1) and (y != size_1):
-            grid[x, y] += 1
-            num += 1
-            m = random.choice(moves)
+            self[x, y] += 1
+            m = random.choice(MOVES)
             x += m[0]
             y += m[1]
-
-        return grid

@@ -1,34 +1,63 @@
-"""Test grid functionality."""
+"""Tests for grid module."""
 
+import pytest
 from snailz.grid import Grid
 
 
-def test_grid_creation():
-    grid = Grid(size=3)
-    assert grid.size == 3
-    assert grid[0, 0] == 0
-    assert grid[2, 2] == 0
-
-    grid[1, 2] = 5
-    assert grid[1, 2] == 5
-
-
-def test_grid_generation():
-    grid = Grid.generate(size=5)
-    assert grid.size == 5
+def test_grid_creation(default_params):
+    """Test grid creation with default parameters."""
+    grid = Grid.make(default_params)
     assert grid.id.startswith("G")
+    assert len(grid.id) == 5  # G + 4 digits
+    assert grid.size == default_params.grid_size
+    assert len(grid.grid) == grid.size * grid.size
 
-    has_nonzero = False
+
+@pytest.mark.parametrize("ident,size", [["", 5], ["G0001", 0], ["G0001", -1]])
+def test_grid_parameter_validation(ident, size):
+    """Test invalid grid parameters are rejected."""
+    with pytest.raises(ValueError):
+        Grid(id=ident, size=size)
+
+
+def test_grid_indexing():
+    """Test grid indexing operations."""
+    grid = Grid(id="G0001", size=3)
+    grid.grid = [i for i in range(9)]  # 0-8
+
+    # Test getting values
+    assert grid[0, 0] == 0  # grid[0 + 0*3] = grid[0]
+    assert grid[1, 0] == 1  # grid[1 + 0*3] = grid[1]
+    assert grid[0, 1] == 3  # grid[0 + 1*3] = grid[3]
+    assert grid[2, 2] == 8  # grid[2 + 2*3] = grid[8]
+
+    # Test setting values
+    grid[1, 1] = 99
+    assert grid[1, 1] == 99
+
+
+def test_grid_csv_output():
+    """Test grid CSV string output."""
+    grid = Grid(id="G0001", size=2)
+    grid.grid = [1, 2, 3, 4]  # [[1,2], [3,4]]
+    csv_output = str(grid)
+    lines = csv_output.split("\n")
+    assert len(lines) == 2
+    assert lines[0] == "3,4"  # y=1 row
+    assert lines[1] == "1,2"  # y=0 row
+
+
+def test_grid_unique_ids(default_params):
+    """Test that grids get unique IDs."""
+    grid1 = Grid.make(default_params)
+    grid2 = Grid.make(default_params)
+    assert grid1.id != grid2.id
+
+
+def test_grid_fill_bounds_checking(default_params):
+    """Test that fill stops at grid boundaries."""
+    grid = Grid.make(default_params)
     for x in range(grid.size):
         for y in range(grid.size):
-            has_nonzero = has_nonzero or (grid[x, y] > 0)
-    assert has_nonzero
-
-
-def test_grid_to_string():
-    grid = Grid(size=2)
-    grid[0, 0] = 1
-    grid[0, 1] = 2
-    grid[1, 0] = 3
-    grid[1, 1] = 4
-    assert str(grid) == "2,4\n1,3"
+            if (x == 0) or (y == 0):
+                assert grid[x, y] == 0

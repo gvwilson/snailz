@@ -1,63 +1,47 @@
-"""Apply random effects."""
+"""Apply effects to raw data."""
 
-from datetime import timedelta
 import random
 
 
-def assign_sample_locations(grids, specimens):
-    """Allocate specimens to grid locations."""
-
-    size = grids[0].size
-    assert all(g.size == size for g in grids), "Grid size(s) mis-match"
-
-    coords = [(g.id, x, y) for g in grids for x in range(size) for y in range(size)]
-    for s in specimens.samples:
-        i = random.randint(0, len(coords) - 1)
-        s.grid, s.x, s.y = coords[i]
-        del coords[i]
+def do_all_effects(params, grids, persons, samples):
+    """Apply effects in order."""
+    changes = {}
+    for effect in (_do_pollution, _do_delay, _do_person, _do_precision):
+        changes.update(effect(params, grids, persons, samples))
+    return changes
 
 
-def calculate_assays_per_specimen(lab_params):
-    """Determine the number of assays for a specimen."""
-
-    result = lab_params.assays_per_specimen
-    if random.uniform(0.0, 1.0) <= lab_params.prob_extra_assay:
-        result += 1
-    return result
-
-
-def choose_assay_date(assay_params, specimen):
-    """Determine date assay performed."""
-
-    return specimen.sampled + timedelta(days=random.randint(1, assay_params.max_delay))
+def _do_delay(params, grids, persons, samples):
+    """Modify sample mass based on sampling date."""
+    duration = (params.sample_date_max - params.sample_date_min).days
+    daily = (params.sample_mass_max - params.sample_mass_min) / duration
+    for s in samples:
+        elapsed = (s.when - params.sample_date_min).days
+        growth = elapsed * daily
+        s.mass += growth
+    return {"daily": daily}
 
 
-def randomize_scenario(scenario):
-    """Apply mix of random effects to scenario."""
+def _do_person(params, grids, persons, samples):
+    """Modify sample mass based on the person doing the survey."""
+    clumsy = random.choice(persons)
+    for s in samples:
+        if s.person == clumsy.id:
+            s.mass -= params.sample_mass_min * params.clumsy_factor
+    return {"clumsy": clumsy.id}
 
-    params = scenario.params
-    specimens = scenario.specimens.samples
 
-    # Modify specimen masses based on mutation
-    for s in specimens:
-        if s.is_mutant:
-            s.mass *= params.specimen_params.mut_mass_scale
+def _do_pollution(params, grids, persons, samples):
+    """Modify sample mass based on presence of pollution."""
+    grids = {g.id: g for g in grids}
+    for s in samples:
+        pollution = grids[s.grid][s.x, s.y]
+        s.mass += params.pollution_factor * pollution * s.mass
+    return {}
 
-    # Modify mass based on pollution level
-    grids = {g.id: g for g in scenario.grids}
-    for s in specimens:
-        if not s.is_mutant:
-            continue
-        level = grids[s.grid][s.x, s.y]
-        s.mass += s.mass * params.pollution_scale * level
 
-    # Modify sample readings based on delay in processing
-    lookup = {s.id: s for s in specimens}
-    for assay in scenario.assays:
-        delta = (assay.performed - lookup[assay.specimen_id].sampled).days
-        for x in range(assay.readings.size):
-            for y in range(assay.readings.size):
-                if assay.treatments[x, y] != "S":
-                    continue
-                drop = assay.readings[x, y] * params.delay_scale * delta
-                assay.readings[x, y] = max(0.0, assay.readings[x, y] - drop)
+def _do_precision(params, grids, persons, samples):
+    """Adjust precision of mass measurements."""
+    for s in samples:
+        s.mass = round(s.mass, params.precision)
+    return {}

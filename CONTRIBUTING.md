@@ -1,62 +1,43 @@
 # Contributing
 
-Contributions are very welcome.
-Please file issues or submit pull requests in [our GitHub repository][repo].
-All contributors will be acknowledged, but must abide by our [Code of Conduct][conduct].
+Contributions are very welcome;
+please contact us [by email][email] or by filing an issue in [our repository][repo].
+All contributors must abide by our [Code of Conduct](./CODE_OF_CONDUCT.md).
 
-## Guidelines
+## Setup and Operation
 
--   [Open an issue][repo-issues] *before* creating a pull request
-    so that other contributors can give feedback before you do a lot of work.
-    Please use these labels:
-    - `please-add`: a feature request
-    - `please-cleanup`: request to clean up or refactor
-    - `please-fix`: a bug report
--   Use [Conventional Commits][conventional] style for commits
-    and for the titles of [pull requests][repo-pulls].
-    Please use these labels:
-    - `is-cleanup`: a refactoring (should refer to `please-cleanup` issue)
-    - `is-feature`: a new feature (should refer to `please-add` issue)
-    - `is-fix`: a bug fix (should refer to `is-fix` issue)
+-   Install [uv][uv]
+-   Create a virtual environment by running `uv venv` in the root directory
+-   Activate it by running `source .venv/bin/activate` in your shell
+-   Install dependencies by running `uv pip install -r pyproject.toml`
 
-## Setup
+| make task | effect                                   |
+| --------- | ---------------------------------------- |
+| clean     | clean up                                 |
+| commands  | show available commands (default)        |
+| format    | re-format code                           |
+| lint      | check code and project                   |
 
-1.  Fork or clone [the repository][repo].
-1.  `uv sync --extra dev" to install an editable version of this package
-    along with all its dependencies (including developer dependencies).
-1.  Use <code>uv run <em>COMMAND</em></code> to run commands
-    in the virtual environment.
-    For example,
-    use `uv run doit list` to see available commands
-    and <code>uv run doit <em>COMMAND</em></code> to run a command.
+## FAQ
 
-Alternatively:
+Do you need any help?
+:   Yes—please see the issues in [our repository][repo].
 
-1.  Create a fresh Python environment: `uv venv`
-1.  Activate that environment: `source .venv/bin/activate`
-1.  Install dependencies and editable version of package: `uv pip install -e '.[dev]'`
+What sort of feedback would be useful?
+:   Everything is welcome,
+    from pointing out mistakes in the code to suggestions for better explanations.
 
-## Actions
+How should contributions be formatted?
+:   Please use [Conventional Commits][conventional].
 
-`uv run doit list` prints a list of available commands.
+## <a id="contributors">Contributors</a>
 
-| Command   | Action |
-| --------- | ------ |
-| build     | Build the Python package in the current directory. |
-| coverage  | Run tests with coverage. |
-| docs      | Generate documentation using MkDocs. |
-| format    | Reformat code. |
-| lint      | Check the code format. |
-| params    | Regenerate default parameter filess. |
-| test      | Run tests. |
-| tidy      | Clean all build artifacts. |
+-   [*Greg Wilson*][wilson-greg] is a programmer, author, and educator based in Toronto.
+    He was the co-founder and first Executive Director of Software Carpentry
+    and received ACM SIGSOFT's Influential Educator Award in 2020.
 
-## Publishing
-
-Use `twine upload --verbose -u __token__ -p your-pypi-access-token dist/*`.
-
-[conduct]: https://gvwilson.github.io/snailz/conduct/
 [conventional]: https://www.conventionalcommits.org/
-[repo]: https://github.com/gvwilson/snailz/
-[repo-issues]: https://github.com/gvwilson/snailz/issues/
-[repo-pulls]: https://github.com/gvwilson/snailz/pulls/
+[email]: mailto:gvwilson@third-bit.com
+[repo]: https://github.com/gvwilson/snailz
+[uv]: https://github.com/astral-sh/uv
+[wilson-greg]: https://third-bit.com/

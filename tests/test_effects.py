@@ -1,213 +1,142 @@
-"""Test effects functionality."""
+"""Tests for effects module."""
 
 from datetime import date
-import random
-import pytest
-
-from snailz.assays import Assay
 from snailz.effects import (
-    assign_sample_locations,
-    choose_assay_date,
-    randomize_scenario,
+    do_all_effects,
+    _do_pollution,
+    _do_delay,
+    _do_person,
+    _do_precision,
 )
-from snailz.grid import Grid
-from snailz.machines import Machine
-from snailz.params import (
-    AssayParams,
-    LabParams,
-    ScenarioParams,
-    SpecimenParams,
-    SurveyParams,
-)
-from snailz.persons import Person
-from snailz.scenario import Scenario
-from snailz.specimens import Specimen, AllSpecimens
+from snailz.parameters import Parameters
+from snailz.person import Person
+from snailz.sample import Sample
 
 
-def test_assign_sample_locations():
-    random.seed(42)
-    grid1 = Grid(id="G01", size=3)
-    grid2 = Grid(id="G02", size=3)
-
-    # Create test specimens
-    params = SpecimenParams()
-    specimens = AllSpecimens.generate(params, 5)
-
-    # Before assignment, all specimens should have default location
-    for s in specimens.samples:
-        assert s.grid == ""
-        assert s.x == -1
-        assert s.y == -1
-
-    # Assign locations
-    assign_sample_locations([grid1, grid2], specimens)
-
-    # After assignment, all specimens should have valid locations
-    for s in specimens.samples:
-        assert s.grid in ["G01", "G02"]
-        assert 0 <= s.x < 3
-        assert 0 <= s.y < 3
-
-    # Check that assignments are unique
-    locations = [(s.grid, s.x, s.y) for s in specimens.samples]
-    assert len(locations) == len(set(locations))
+def test_do_all_effects(default_params, fx_grids, fx_persons, fx_samples):
+    """Test that do_all_effects returns changes dictionary."""
+    changes = do_all_effects(default_params, fx_grids, fx_persons, fx_samples)
+    assert isinstance(changes, dict)
+    assert "daily" in changes
+    assert "clumsy" in changes
 
 
-def test_calculate_assays_per_specimen():
-    params = ScenarioParams(
-        rng_seed=42,
-        lab_params=LabParams(prob_extra_assay=1.0),
-        survey_params=SurveyParams(),
-        specimen_params=SpecimenParams(),
-        assay_params=AssayParams(),
-    )
-    random.seed(42)
-    scenario = Scenario.generate(params)
-    actual = len(scenario.assays)
-    expected = (params.lab_params.assays_per_specimen + 1) * len(
-        scenario.specimens.samples
-    )
-    assert actual == expected
-
-
-def test_choose_assay_date():
-    random.seed(42)
-    params = AssayParams(max_delay=7)
-    sample_date = date(2025, 1, 1)
-
-    specimen = Specimen(
-        id="S0001", genome="ACGT", is_mutant=False, mass=10.0, sampled=sample_date
-    )
-
-    # Test that the assay date is after the sampling date
-    for _ in range(10):
-        assay_date = choose_assay_date(params, specimen)
-        assert assay_date > specimen.sampled
-
-        # Test that the assay date is within the max delay
-        days_diff = (assay_date - specimen.sampled).days
-        assert 1 <= days_diff <= params.max_delay
-
-
-def test_randomize_scenario():
-    random.seed(42)
-    params = ScenarioParams(
-        rng_seed=42,
-        lab_params=LabParams(),
-        survey_params=SurveyParams(),
-        specimen_params=SpecimenParams(mut_mass_scale=2.0),
-        assay_params=AssayParams(),
-        pollution_scale=0.1,
-        delay_scale=0.05,
-    )
-
-    # Create grid with pollution levels
-    grid = Grid(id="G01", size=3)
-    for x in range(3):
-        for y in range(3):
-            grid[x, y] = x + y  # Simple pollution gradient
-
-    # Create specimens
-    normal_specimen = Specimen(
+def test_do_pollution_effect(fx_grids, fx_persons):
+    """Test pollution effect on sample mass."""
+    params = Parameters(pollution_factor=0.5)
+    sample = Sample(
         id="S0001",
-        genome="ACGT",
-        is_mutant=False,
-        mass=10.0,
-        grid="G01",
+        grid=fx_grids[0].id,
         x=0,
         y=0,
-        sampled=date(2025, 1, 1),
+        person=fx_persons[0].id,
+        when=date(2025, 6, 15),
+        mass=1.0,
     )
-    mutant_specimen = Specimen(
-        id="S0002",
-        genome="ACGT",
-        is_mutant=True,
-        mass=10.0,
-        grid="G01",
-        x=2,
-        y=2,
-        sampled=date(2025, 1, 1),
+    fx_grids[0][0, 0] = 2
+
+    original_mass = sample.mass
+    changes = _do_pollution(params, fx_grids, fx_persons, [sample])
+
+    # Mass should increase based on pollution
+    expected_increase = params.pollution_factor * 2 * original_mass
+    assert abs(sample.mass - (original_mass + expected_increase)) < 1e-10
+    assert changes == {}
+
+
+def test_do_delay_effect():
+    """Test delay effect on sample mass."""
+    params = Parameters(
+        sample_date_min=date(2025, 1, 1),
+        sample_date_max=date(2025, 1, 10),
+        sample_mass_min=1.0,
+        sample_mass_max=2.0,
     )
-
-    # Create AllSpecimens object
-    specimens = AllSpecimens(
-        params=SpecimenParams(),
-        ref_genome="ACGT",
-        susc_locus=0,
-        susc_base="T",
-        samples=[normal_specimen, mutant_specimen],
-    )
-
-    # Create assay treatments and readings
-    treatments = Grid(size=2)
-    readings = Grid(size=2)
-    treatments[0, 0] = "C"
-    treatments[0, 1] = "S"
-    treatments[1, 0] = "S"
-    treatments[1, 1] = "C"
-    readings[0, 0] = 1.0  # Control
-    readings[0, 1] = 5.0  # Specimen
-    readings[1, 0] = 5.0  # Specimen
-    readings[1, 1] = 1.0  # Control
-
-    # Create an assay with a delay of 5 days
-    assay = Assay(
-        id="A0001",
-        specimen_id="S0002",  # Using the mutant specimen
-        machine_id="M0001",
-        person_id="P0001",
-        performed=date(2025, 1, 6),  # 5 days after sampling
-        treatments=treatments,
-        readings=readings,
+    sample = Sample(
+        id="S0001",
+        grid="G0001",
+        x=0,
+        y=0,
+        person="P0001",
+        when=date(2025, 1, 5),  # 4 days after start
+        mass=1.0,
     )
 
-    # Create a machine and person
-    machine = Machine(id="M0001", name="Test Machine")
-    person = Person(id="P0001", family="Doe", personal="Jane")
+    original_mass = sample.mass
+    changes = _do_delay(params, [], [], [sample])
 
-    # Create scenario
-    scenario = Scenario(
-        params=params,
-        grids=[grid],
-        specimens=specimens,
-        machines=[machine],
-        persons=[person],
-        assays=[assay],
-        images={},  # Empty images dictionary
+    # Check that mass increased
+    assert sample.mass > original_mass
+    assert "daily" in changes
+    assert changes["daily"] > 0
+
+
+def test_do_person_effect():
+    """Test person (clumsy) effect on sample mass."""
+    params = Parameters(sample_mass_min=1.0, clumsy_factor=0.3)
+    person = Person(id="P0001", family="Smith", personal="John")
+
+    sample = Sample(
+        id="S0001",
+        grid="G0001",
+        x=0,
+        y=0,
+        person=person.id,
+        when=date(2025, 6, 15),
+        mass=2.0,
     )
 
-    # Record initial values
-    initial_normal_mass = normal_specimen.mass
-    initial_mutant_mass = mutant_specimen.mass
+    original_mass = sample.mass
+    changes = _do_person(params, [], [person], [sample])
 
-    # Record initial reading values
-    initial_readings = {}
-    for x in range(assay.readings.size):
-        for y in range(assay.readings.size):
-            initial_readings[(x, y)] = assay.readings[x, y]
+    # Mass should decrease for clumsy person
+    expected_decrease = params.sample_mass_min * params.clumsy_factor
+    assert abs(sample.mass - (original_mass - expected_decrease)) < 1e-10
+    assert "clumsy" in changes
+    assert changes["clumsy"] == person.id
 
-    # Apply effects
-    randomize_scenario(scenario)
 
-    # Test 1: Normal specimen mass should remain unchanged
-    assert normal_specimen.mass == initial_normal_mass
+def test_do_precision_effect():
+    """Test precision rounding effect."""
+    params = Parameters(precision=2)
 
-    # Test 2: Mutant specimen mass should increase due to mutation and pollution
-    # Mutation effect multiplies by mut_mass_scale (2.0)
-    # Pollution effect adds mass * pollution_scale * pollution_level
-    # At position (2, 2), pollution level is 4
-    expected_mass = initial_mutant_mass * 2.0  # Mutation effect
-    expected_mass += expected_mass * 0.1 * 4  # Pollution effect
-    assert mutant_specimen.mass == pytest.approx(expected_mass)
+    sample = Sample(
+        id="S0001",
+        grid="G0001",
+        x=0,
+        y=0,
+        person="P0001",
+        when=date(2025, 6, 15),
+        mass=1.23456789,
+    )
 
-    # Test 3: Control readings (C) should remain unchanged
-    assert assay.readings[0, 0] == initial_readings[(0, 0)]
-    assert assay.readings[1, 1] == initial_readings[(1, 1)]
+    changes = _do_precision(params, [], [], [sample])
 
-    # Test 4: Specimen readings (S) should decrease due to delay
-    # Delay is 5 days, and delay_scale is 0.05
-    expected_drop_factor = 5 * 0.05  # 25% drop
-    for x, y in [(0, 1), (1, 0)]:
-        if assay.treatments[x, y] == "S":
-            expected_reading = initial_readings[(x, y)] * (1 - expected_drop_factor)
-            assert assay.readings[x, y] == pytest.approx(expected_reading)
+    # Mass should be rounded to 2 decimal places
+    assert sample.mass == 1.23
+    assert changes == {}
+
+
+def test_effects_order_matters(default_params, fx_grids, fx_persons):
+    """Test that effects are applied in the correct order."""
+    # Create sample with known initial conditions
+    sample = Sample(
+        id="S0001",
+        grid=fx_grids[0].id,
+        x=0,
+        y=0,
+        person=fx_persons[0].id,
+        when=default_params.sample_date_min,
+        mass=1.0,
+    )
+
+    # Set pollution value
+    fx_grids[0][0, 0] = 1
+
+    # Apply all effects
+    do_all_effects(default_params, fx_grids, fx_persons, [sample])
+
+    # Verify that mass was modified and precision was applied last
+    assert isinstance(sample.mass, float)
+    # Mass should be rounded to default precision (2 decimal places)
+    assert sample.mass == round(sample.mass, default_params.precision)

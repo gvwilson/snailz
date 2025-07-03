@@ -1,62 +1,95 @@
-"""Test utility functions."""
+"""Tests for utils module."""
 
 from datetime import date
-
-from PIL import Image
-from pydantic import BaseModel
+from io import StringIO
+import json
+import random
 import pytest
+from unittest.mock import patch
 
-from snailz.grid import Grid
-from snailz.utils import generic_id_generator, json_dump, max_grid_value
-
-
-def test_generic_id_generator():
-    gen = generic_id_generator(lambda i: f"TEST{i}")
-    assert next(gen) == "TEST1"
-    assert next(gen) == "TEST2"
-    assert next(gen) == "TEST3"
-
-
-def test_json_dump_base_model():
-    class TestModel(BaseModel):
-        name: str
-        value: int
-
-    model = TestModel(name="test", value=42)
-    result = json_dump(model)
-
-    assert "name" in result
-    assert "test" in result
-    assert "value" in result
-    assert "42" in result
+from snailz.utils import (
+    json_dump,
+    random_date,
+    random_mass,
+    file_or_std,
+    _serialize_json,
+)
+from snailz.parameters import Parameters
+from snailz.person import Person
 
 
-def test_json_dump_date():
-    test_date = date(2025, 1, 1)
-    result = json_dump({"date": test_date})
+def test_random_date():
+    """Test random date generation within range."""
+    params = Parameters(
+        sample_date_min=date(2025, 1, 1), sample_date_max=date(2025, 1, 10)
+    )
 
-    assert "2025-01-01" in result
-
-
-def test_json_dump_image():
-    img = Image.new("1", (100, 100), 0)
-    assert '"image": null' in json_dump({"image": img})
-
-
-def test_json_dump_unknown():
-    class Unknown:
-        pass
-
-    with pytest.raises(TypeError):
-        json_dump({"unknown": Unknown()})
+    random.seed(123)
+    for _ in range(100):
+        random_dt = random_date(params)
+        assert params.sample_date_min <= random_dt <= params.sample_date_max
 
 
-def test_max_grid_value():
-    grid1 = Grid(size=2)
-    grid2 = Grid(size=2)
-    for x in range(grid1.size):
-        for y in range(grid1.size):
-            grid1[x, y] = x + y
-            grid2[x, y] = 10 * (x + y)
+def test_random_mass():
+    """Test random mass generation within range."""
+    params = Parameters(sample_mass_min=0.5, sample_mass_max=2.0)
+    random.seed(123)
+    for _ in range(100):
+        mass = random_mass(params)
+        assert params.sample_mass_min <= mass <= params.sample_mass_max
 
-    assert max_grid_value([grid1, grid2]) == 20
+
+def test_json_dump_with_date():
+    """Test JSON dump with date serialization."""
+    data = {"date": date(2025, 6, 15)}
+    result = json_dump(data)
+    parsed = json.loads(result)
+    assert parsed == {"date": "2025-06-15"}
+
+
+def test_json_dump_with_basemodel():
+    """Test JSON dump with BaseModel serialization."""
+    person = Person(id="P0001", family="Smith", personal="John")
+    data = {"person": person}
+    result = json_dump(data)
+    parsed = json.loads(result)
+    assert parsed == {"person": {"id": "P0001", "family": "Smith", "personal": "John"}}
+
+
+def test_serialize_json_unsupported_type():
+    """Test JSON serialization raises error for unsupported types."""
+    with pytest.raises(TypeError, match="Type .* not serializable"):
+        _serialize_json({1, 2, 3})
+
+
+def test_file_or_std_with_file(tmp_path):
+    """Test file_or_std context manager with actual file."""
+    test_file = tmp_path / "test.txt"
+    test_content = "Hello, World!"
+    with file_or_std(tmp_path, "test.txt", "w") as f:
+        f.write(test_content)
+    assert test_file.read_text() == test_content
+
+
+def test_file_or_std_with_stdout():
+    """Test file_or_std context manager with stdout."""
+    with patch("sys.stdout", new_callable=StringIO) as mock_stdout:
+        with file_or_std(None, "dummy.txt", "w") as f:
+            f.write("test output")
+        assert mock_stdout.getvalue() == "test output"
+
+
+def test_file_or_std_with_stdin():
+    """Test file_or_std context manager with stdin."""
+    test_input = "test input"
+    with patch("sys.stdin", StringIO(test_input)):
+        with file_or_std(None, "dummy.txt", "r") as f:
+            content = f.read()
+        assert content == test_input
+
+
+def test_file_or_std_invalid_mode():
+    """Test file_or_std with invalid mode raises error."""
+    with pytest.raises(ValueError, match="bad filename/mode"):
+        with file_or_std(None, "test.txt", "x"):
+            pass
