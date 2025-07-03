@@ -16,6 +16,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+    "build",
     "coverage",
     "griffe-fieldz",
     "markdown-include",
@@ -23,7 +24,8 @@ dev = [
     "mkdocs-material",
     "mkdocstrings[python]",
     "pytest",
-    "ruff"
+    "ruff",
+    "twine"
 ]
 
 [project.urls]

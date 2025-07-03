@@ -12,6 +12,11 @@ SCRIPT = snailz
 commands:
 	@grep -h -E '^##' ${MAKEFILE_LIST} | sed -e 's/## //g' | column -t -s ':'
 
+## build: build package
+build: clean
+	${PYTHON_M} build
+	@${PYTHON_M} twine check dist/*
+
 ## clean: clean up build artifacts
 clean:
 	@find . -name '*~' -delete
@@ -37,6 +42,10 @@ format:
 ## lint: check the code format and typing
 lint:
 	${PYTHON_M} ruff check ${SRC} ${TESTS}
+
+## serve: serve documentation website
+serve:
+	${PYTHON_M} mkdocs serve
 
 ## test: run tests
 test:
