@@ -731,9 +731,11 @@
 <span class="normal"> 8</span>
 <span class="normal"> 9</span>
 <span class="normal">10</span>
-<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">do_all_effects</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">grids</span><span class="p">,</span> <span class="n">persons</span><span class="p">,</span> <span class="n">samples</span><span class="p">):</span>
+<span class="normal">11</span>
+<span class="normal">12</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">do_all_effects</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">grids</span><span class="p">,</span> <span class="n">persons</span><span class="p">,</span> <span class="n">samples</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply effects in order.&quot;&quot;&quot;</span>
-    <span class="n">changes</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">changes</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="n">params</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)}</span>
     <span class="k">for</span> <span class="n">effect</span> <span class="ow">in</span> <span class="p">(</span><span class="n">_do_pollution</span><span class="p">,</span> <span class="n">_do_delay</span><span class="p">,</span> <span class="n">_do_person</span><span class="p">,</span> <span class="n">_do_precision</span><span class="p">):</span>
         <span class="n">changes</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">effect</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">grids</span><span class="p">,</span> <span class="n">persons</span><span class="p">,</span> <span class="n">samples</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">changes</span>
@@ -759,16 +761,18 @@
 
             <details class="quote">
               <summary>Source code in <code>snailz/effects.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">14</span>
-<span class="normal">15</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">15</span>
 <span class="normal">16</span>
 <span class="normal">17</span>
 <span class="normal">18</span>
 <span class="normal">19</span>
 <span class="normal">20</span>
 <span class="normal">21</span>
-<span class="normal">22</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_do_delay</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">grids</span><span class="p">,</span> <span class="n">persons</span><span class="p">,</span> <span class="n">samples</span><span class="p">):</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_do_delay</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">grids</span><span class="p">,</span> <span class="n">persons</span><span class="p">,</span> <span class="n">samples</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Modify sample mass based on sampling date.&quot;&quot;&quot;</span>
+
     <span class="n">duration</span> <span class="o">=</span> <span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">sample_date</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">params</span><span class="o">.</span><span class="n">sample_date</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">days</span>
     <span class="n">daily</span> <span class="o">=</span> <span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">sample_mass</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">params</span><span class="o">.</span><span class="n">sample_mass</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">duration</span>
     <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">:</span>
@@ -798,14 +802,20 @@
 
             <details class="quote">
               <summary>Source code in <code>snailz/effects.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">27</span>
 <span class="normal">28</span>
 <span class="normal">29</span>
 <span class="normal">30</span>
-<span class="normal">31</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_do_person</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">grids</span><span class="p">,</span> <span class="n">persons</span><span class="p">,</span> <span class="n">samples</span><span class="p">):</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_do_person</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">grids</span><span class="p">,</span> <span class="n">persons</span><span class="p">,</span> <span class="n">samples</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Modify sample mass based on the person doing the survey.&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">params</span><span class="o">.</span><span class="n">clumsy_factor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{}</span>
     <span class="n">clumsy</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">persons</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">person</span> <span class="o">==</span> <span class="n">clumsy</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
@@ -833,14 +843,16 @@
 
             <details class="quote">
               <summary>Source code in <code>snailz/effects.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_do_pollution</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">grids</span><span class="p">,</span> <span class="n">persons</span><span class="p">,</span> <span class="n">samples</span><span class="p">):</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_do_pollution</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">grids</span><span class="p">,</span> <span class="n">persons</span><span class="p">,</span> <span class="n">samples</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Modify sample mass based on presence of pollution.&quot;&quot;&quot;</span>
+
     <span class="n">grids</span> <span class="o">=</span> <span class="p">{</span><span class="n">g</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="n">g</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">grids</span><span class="p">}</span>
     <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">:</span>
         <span class="n">pollution</span> <span class="o">=</span> <span class="n">grids</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">grid</span><span class="p">][</span><span class="n">s</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">y</span><span class="p">]</span>
@@ -868,12 +880,14 @@
 
             <details class="quote">
               <summary>Source code in <code>snailz/effects.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_do_precision</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">grids</span><span class="p">,</span> <span class="n">persons</span><span class="p">,</span> <span class="n">samples</span><span class="p">):</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_do_precision</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">grids</span><span class="p">,</span> <span class="n">persons</span><span class="p">,</span> <span class="n">samples</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Adjust precision of mass measurements.&quot;&quot;&quot;</span>
+
     <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">:</span>
         <span class="n">s</span><span class="o">.</span><span class="n">mass</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">mass</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">precision</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">{}</span>

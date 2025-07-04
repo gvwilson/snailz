@@ -54,21 +54,19 @@ $ snailz --params params.json --outdir data
 and can generate a file with default parameter values as a starting point.
 The parameters, their meanings, and their properties are:
 
-| Name               | Purpose                                   | Default    |
-| ------------------ | ----------------------------------------- | ---------: |
-| `clumsy_factor`    | personal effect on mass measurement       | 0.5        |
-| `grid_size`        | width and height of (square) survey grids | 11         |
-| `locale`           | locale for person name generation         | et_EE      |
-| `num_grids`        | number of survey grids                    | 3          |
-| `num_persons`      | number of persons                         | 5          |
-| `num_samples`      | number of samples                         | 20         |
-| `pollution_factor` | pollution effect on mass                  | 0.3        |
-| `precision`        | decimal places used to record masses      | 2          |
-| `sample_date_max`  | maximum sample date                       | 2025-03-31 |
-| `sample_date_min`  | minimum sample date                       | 2025-01-01 |
-| `sample_mass_max`  | maximum sample mass                       | 1.5        |
-| `sample_mass_min`  | minimum sample mass                       | 0.5        |
-| `seed`             | random number generation seed             | 123456     |
+| Name               | Purpose                                   | Default                  |
+| ------------------ | ----------------------------------------- | -----------------------: |
+| `clumsy_factor`    | personal effect on mass measurement       | 0.5                      |
+| `grid_size`        | width and height of (square) survey grids | 11                       |
+| `locale`           | locale for person name generation         | et_EE                    |
+| `num_grids`        | number of survey grids                    | 3                        |
+| `num_persons`      | number of persons                         | 5                        |
+| `num_samples`      | number of samples                         | 20                       |
+| `pollution_factor` | pollution effect on mass                  | 0.3                      |
+| `precision`        | decimal places used to record masses      | 2                        |
+| `sample_date`      | min/max sample dates                      | (2025-01-01, 2025-01-01) |
+| `sample_mass`      | min/max sample mass                       | (0.5, 1.5)               |
+| `seed`             | random number generation seed             | 123456                   |
 
 ## Data Dictionary
 
@@ -121,11 +119,11 @@ Its fields are:
 
 `samples.csv` stores information about sampled snails in CSV format (with column headers):
 
-| sample_id | grid_id | x  | y  | person | when       | mass |
-| :-----    | :------ | -: | -: | -----: | ---------: | ---: |
-| S0001     | G0001   | 9  | 8  | P0004  | 2025-01-16 | 1.02 |
-| S0002     | G0001   | 8  | 9  | P0005  | 2025-03-30 | 2.39 |
-| …         | …       | …  | …  | …      | …          | …    |
+| sample_id | grid_id | x  | y  | pollution | person | when       | mass |
+| :-----    | :------ | -: | -: | --------: | -----: | ---------: | ---: |
+| S0001     | G0001   | 9  | 8  | 0         | P0004  | 2025-01-16 | 1.02 |
+| S0002     | G0001   | 8  | 9  | 1         | P0005  | 2025-03-30 | 2.39 |
+| …         | …       | …  | …  | …         | …      | …          | …    |
 
 Its fields are:
 
@@ -135,6 +133,7 @@ Its fields are:
 | `grid_id`   | grid identifie           | text, required         |
 | `x`         | X coordinate in grid     | integer, required      |
 | `y`         | Y coordinate in grid     | integer, required      |
+| `pollution` | pollution at that point  | integer, required      |
 | `person`    | who collected the sample | text, required         |
 | `when`      | date sample collected    | date, required         |
 | `mass`      | sample weight in grams   | real, required         |
