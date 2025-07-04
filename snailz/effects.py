@@ -6,7 +6,7 @@ import random
 def do_all_effects(params, grids, persons, samples):
     """Apply effects in order."""
 
-    changes = {}
+    changes = {"parameters": params.model_dump(mode="json")}
     for effect in (_do_pollution, _do_delay, _do_person, _do_precision):
         changes.update(effect(params, grids, persons, samples))
     return changes
