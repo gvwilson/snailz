@@ -1,23 +1,11 @@
 # Python files
-__pycache__/
-*.py[oc]
-build/
-dist/
-wheels/
 *.egg-info
+*.py[oc]
 .coverage
-
-# Virtual environments
+.pytest_cache/
 .venv
-
-# Parameter file
-params.json
-
-# Sample data files
-data/
-
-# Generated ZIP file
-snailz.zip
+__pycache__/
+dist/
 
 # Editor backup files
 *~

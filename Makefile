@@ -20,6 +20,10 @@ build: clean
 ## clean: clean up build artifacts
 clean:
 	@find . -name '*~' -delete
+	@rm -rf .coverage
+	@rm -rf .pytest_cache
+	@rm -rf dist
+	@rm -rf snailz.egg-info
 
 ## coverage: run tests with coverage
 coverage:
@@ -42,6 +46,10 @@ format:
 ## lint: check the code format and typing
 lint:
 	${PYTHON_M} ruff check ${SRC} ${TESTS}
+
+## publish: publish package (needs TOKEN defined on command line)
+publish:
+	@${PYTHON_M} twine upload --verbose -u __token__ -p ${TOKEN} dist/*
 
 ## serve: serve documentation website
 serve:
