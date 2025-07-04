@@ -17,13 +17,14 @@ def test_sample_creation(default_params, fx_grids, fx_persons):
     assert sample.person in [p.id for p in fx_persons]
     assert 0 <= sample.x < fx_grids[0].size
     assert 0 <= sample.y < fx_grids[0].size
+    assert sample.pollution >= 0
     assert default_params.sample_date[0] <= sample.when <= default_params.sample_date[1]
     assert default_params.sample_mass[0] <= sample.mass <= default_params.sample_mass[1]
 
 
 @pytest.mark.parametrize(
     "changed",
-    [{"id": ""}, {"grid": ""}, {"x": -1}, {"y": -1}, {"mass": 0}, {"mass": -1}],
+    [{"id": ""}, {"grid": ""}, {"x": -1}, {"y": -1}, {"pollution": -1}, {"mass": 0}, {"mass": -1}],
 )
 def test_sample_parameter_validation(changed):
     """Test invalid sample parameters are rejected."""
@@ -33,6 +34,7 @@ def test_sample_parameter_validation(changed):
         "grid": "G0001",
         "x": 5,
         "y": 3,
+        "pollution": 10,
         "person": "P0001",
         "when": date(2025, 6, 15),
         "mass": 1.23,
@@ -50,12 +52,13 @@ def test_sample_csv_output():
         grid="G0001",
         x=5,
         y=3,
+        pollution=10,
         person="P0001",
         when=date(2025, 6, 15),
         mass=1.23,
     )
     csv_output = str(sample)
-    assert csv_output == "S0001,G0001,5,3,P0001,2025-06-15,1.23"
+    assert csv_output == "S0001,G0001,5,3,10,P0001,2025-06-15,1.23"
 
 
 def test_sample_unique_ids(default_params, fx_grids, fx_persons):
