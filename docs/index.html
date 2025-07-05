@@ -850,6 +850,69 @@ A typical file is:</p>
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </code></pre>
+<p>The pollution readings are also stored in tidy format <code>grids.csv</code>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">grid_id</th>
+<th style="text-align: right;">x</th>
+<th style="text-align: right;">y</th>
+<th style="text-align: right;">pollution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">G0001</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td style="text-align: left;">G0001</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td style="text-align: left;">…</td>
+<td style="text-align: right;">…</td>
+<td style="text-align: right;">…</td>
+<td style="text-align: right;">…</td>
+</tr>
+</tbody>
+</table>
+<p>Its fields are:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Purpose</th>
+<th>Properties</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grid_id</code></td>
+<td>identifier</td>
+<td>text, unique, required</td>
+</tr>
+<tr>
+<td><code>x</code></td>
+<td>X coordinate in grid</td>
+<td>integer, required</td>
+</tr>
+<tr>
+<td><code>y</code></td>
+<td>Y coordinate in grid</td>
+<td>integer, required</td>
+</tr>
+<tr>
+<td><code>pollution</code></td>
+<td>pollution at that point</td>
+<td>integer, required</td>
+</tr>
+</tbody>
+</table>
 <h3 id="persons">Persons</h3>
 <p><code>persons.csv</code> stores the scientists performing the study in CSV format (with column headers):</p>
 <table>

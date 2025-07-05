@@ -103,6 +103,7 @@ def test_save_to_directory(tmp_path):
 
     # Check that files were created
     assert (tmp_path / f"{grids[0].id}.csv").exists()
+    assert (tmp_path / "grids.csv").exists()
     assert (tmp_path / "persons.csv").exists()
     assert (tmp_path / "samples.csv").exists()
     assert (tmp_path / "changes.json").exists()

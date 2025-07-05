@@ -72,6 +72,9 @@ def _save(args, grids, persons, samples, changes):
         with utils.file_or_std(outdir, f"{g.id}.csv", "w") as writer:
             print(g, file=writer)
 
+    with utils.file_or_std(outdir, "grids.csv", "w") as writer:
+        print(Grid.tidy(grids), file=writer)
+
     for name, cls, data in (("persons", Person, persons), ("samples", Sample, samples)):
         with utils.file_or_std(outdir, f"{name}.csv", "w") as writer:
             print(cls.csv_header(), file=writer)

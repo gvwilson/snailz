@@ -34,6 +34,17 @@ class Grid(BaseModel):
         grid.fill()
         return grid
 
+    @staticmethod
+    def tidy(grids):
+        """Convert all grids to tidy table."""
+
+        result = ["grid_id,x,y,pollution"]
+        for g in grids:
+            for x in range(g.size):
+                for y in range(g.size):
+                    result.append(f"{g.id},{x},{y},{g[x, y]}")
+        return "\n".join(result)
+
     def __getitem__(self, key):
         """Get grid element."""
 

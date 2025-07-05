@@ -97,6 +97,23 @@ A typical file is:
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 ```
 
+The pollution readings are also stored in tidy format `grids.csv`:
+
+| grid_id | x  | y  | pollution |
+| :------ | -: | -: | --------: |
+| G0001   |  0 |  0 |         0 |
+| G0001   |  0 |  1 |         0 |
+| …       | …  | …  | …         |
+
+Its fields are:
+
+| Field       | Purpose                  | Properties             |
+| ----------- | -------------            | ---------------------- |
+| `grid_id`   | identifier               | text, unique, required |
+| `x`         | X coordinate in grid     | integer, required      |
+| `y`         | Y coordinate in grid     | integer, required      |
+| `pollution` | pollution at that point  | integer, required      |
+
 ### Persons
 
 `persons.csv` stores the scientists performing the study in CSV format (with column headers):
@@ -127,7 +144,7 @@ Its fields are:
 
 Its fields are:
 
-| Field       | Purpose | Properties |
+| Field       | Purpose                  | Properties             |
 | ----------- | ------------------------ | ---------------------- |
 | `sample_id` | specimen identifier      | text, unique, required |
 | `grid_id`   | grid identifie           | text, required         |
