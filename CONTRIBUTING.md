@@ -30,14 +30,7 @@ What sort of feedback would be useful?
 How should contributions be formatted?
 :   Please use [Conventional Commits][conventional].
 
-## <a id="contributors">Contributors</a>
-
--   [*Greg Wilson*][wilson-greg] is a programmer, author, and educator based in Toronto.
-    He was the co-founder and first Executive Director of Software Carpentry
-    and received ACM SIGSOFT's Influential Educator Award in 2020.
-
 [conventional]: https://www.conventionalcommits.org/
 [email]: mailto:gvwilson@third-bit.com
 [repo]: https://github.com/gvwilson/snailz
 [uv]: https://github.com/astral-sh/uv
-[wilson-greg]: https://third-bit.com/

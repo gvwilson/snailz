@@ -166,14 +166,20 @@ and the ID of the clumsy scientist whose measurements have systematic errors.
 and by conversations with [Rohan Alexander][alexander-rohan]
 about his book [*Telling Stories with Data*][telling-stories].
 
-The snail logo was created by [sunar.ko][snail-logo].
-
 My thanks to everyone who built the tools this project relies on, including:
 
 -   [`pydantic`][pydantic] for storing and validating data (including parameters).
 -   [`pytest`][pytest] and [`faker`][faker] for testing.
 -   [`ruff`][ruff] for checking the code.
 -   [`uv`][uv] for managing packages and the virtual environment.
+
+The snail logo was created by [sunar.ko][snail-logo].
+
+## Acknowledgments {: #acknowledgments}
+
+-   [*Greg Wilson*][wilson-greg] is a programmer, author, and educator based in Toronto.
+    He was the co-founder and first Executive Director of Software Carpentry
+    and received ACM SIGSOFT's Influential Educator Award in 2020.
 
 [alexander-rohan]: https://rohanalexander.com/
 [faker]: https://faker.readthedocs.io/
@@ -185,3 +191,4 @@ My thanks to everyone who built the tools this project relies on, including:
 [snail-logo]: https://www.vecteezy.com/vector-art/7319786-snails-logo-vector-on-white-background
 [telling-stories]: https://tellingstorieswithdata.com/
 [uv]: https://docs.astral.sh/uv/
+[wilson-greg]: https://third-bit.com/
