@@ -24,7 +24,15 @@ def test_sample_creation(default_params, fx_grids, fx_persons):
 
 @pytest.mark.parametrize(
     "changed",
-    [{"id": ""}, {"grid": ""}, {"x": -1}, {"y": -1}, {"pollution": -1}, {"mass": 0}, {"mass": -1}],
+    [
+        {"id": ""},
+        {"grid": ""},
+        {"x": -1},
+        {"y": -1},
+        {"pollution": -1},
+        {"mass": 0},
+        {"mass": -1},
+    ],
 )
 def test_sample_parameter_validation(changed):
     """Test invalid sample parameters are rejected."""
