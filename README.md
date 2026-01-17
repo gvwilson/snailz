@@ -97,7 +97,7 @@ A typical file is:
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 ```
 
-The pollution readings are also stored in tidy format `grids.csv`:
+The pollution readings are also stored in tidy format in `grids.csv`:
 
 | grid_id | x  | y  | pollution |
 | :------ | -: | -: | --------: |
@@ -168,14 +168,17 @@ about his book [*Telling Stories with Data*][telling-stories].
 
 My thanks to everyone who built the tools this project relies on, including:
 
+-   [`faker`][faker] for data generation.
+-   [`mkdocs`][mkdocs] for documentation.
 -   [`pydantic`][pydantic] for storing and validating data (including parameters).
--   [`pytest`][pytest] and [`faker`][faker] for testing.
+-   [`pytest`][pytest] for testing.
 -   [`ruff`][ruff] for checking the code.
+-   [`taskipy`][taskipy] for running tasks.
 -   [`uv`][uv] for managing packages and the virtual environment.
 
 The snail logo was created by [sunar.ko][snail-logo].
 
-## Acknowledgments {: #acknowledgments}
+## Acknowledgments
 
 -   [*Greg Wilson*][wilson-greg] is a programmer, author, and educator based in Toronto.
     He was the co-founder and first Executive Director of Software Carpentry
@@ -183,12 +186,14 @@ The snail logo was created by [sunar.ko][snail-logo].
 
 [alexander-rohan]: https://rohanalexander.com/
 [faker]: https://faker.readthedocs.io/
+[mkdocs]: https://www.mkdocs.org/
 [penguins]: https://allisonhorst.github.io/palmerpenguins/
 [pydantic]: https://docs.pydantic.dev/
 [pyfakefs]: https://pypi.org/project/pyfakefs/
 [pytest]: https://docs.pytest.org/
 [ruff]: https://docs.astral.sh/ruff/
 [snail-logo]: https://www.vecteezy.com/vector-art/7319786-snails-logo-vector-on-white-background
+[taskipy]: https://pypi.org/project/taskipy/
 [telling-stories]: https://tellingstorieswithdata.com/
 [uv]: https://docs.astral.sh/uv/
 [wilson-greg]: https://third-bit.com/
