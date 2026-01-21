@@ -10,6 +10,7 @@ import sys
 
 from .effects import do_all_effects
 from .grid import Grid
+from .machines import Machine
 from .parameters import Parameters
 from .person import Person
 from .sample import Sample
@@ -43,8 +44,6 @@ CREATE_SAMPLE = """\
 create table sample (
     sample_id text not null primary key,
     grid_id text not null,
-    x integer not null,
-    y integer not null,
     lat real not null,
     lon real not null,
     pollution integer not null,
@@ -54,7 +53,7 @@ create table sample (
 );
 """
 INSERT_SAMPLE = """\
-insert into sample values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+insert into sample values (?, ?, ?, ?, ?, ?, ?, ?);
 """
 
 
@@ -68,10 +67,10 @@ def main():
         return 0
 
     params = _initialize(args)
-    grids, persons, samples = _synthesize(params)
+    grids, persons, samples, machines = _synthesize(params)
     changes = do_all_effects(params, grids, persons, samples)
     if args.outdir:
-        _save(args, grids, persons, samples, changes)
+        _save(args, grids, persons, samples, machines, changes)
 
     return 0
 
@@ -102,7 +101,7 @@ def _parse_args():
     return parser.parse_args()
 
 
-def _save(args, grids, persons, samples, changes):
+def _save(args, grids, persons, samples, machines, changes):
     """Save synthesized data."""
 
     if args.outdir == "-":
@@ -119,11 +118,13 @@ def _save(args, grids, persons, samples, changes):
     with utils.file_or_std(outdir, "grids.csv", "w") as writer:
         print(Grid.tidy(grids), file=writer)
 
-    for name, cls, data in (("persons", Person, persons), ("samples", Sample, samples)):
+    for name, cls, data in (
+        ("machines", Machine, machines),
+        ("persons", Person, persons),
+        ("samples", Sample, samples),
+    ):
         with utils.file_or_std(outdir, f"{name}.csv", "w") as writer:
-            print(cls.csv_header(), file=writer)
-            for record in data:
-                print(record, file=writer)
+            utils.model_to_csv(writer, data)
 
     with utils.file_or_std(outdir, "changes.json", "w") as writer:
         json.dump(changes, writer)
@@ -144,17 +145,16 @@ def _save(args, grids, persons, samples, changes):
                 cur.executemany(insert, rows[1:])
         cnx.commit()
         cnx.close()
-                
 
 
 def _synthesize(params):
     """Synthesize data."""
 
-    grid_origins = utils.grid_origins(params)
-    grids = [Grid.make(params, lat0, lon0) for lat0, lon0 in grid_origins]
-    persons = [Person.make(params) for _ in range(params.num_persons)]
-    samples = [Sample.make(params, grids, persons) for _ in range(params.num_samples)]
-    return grids, persons, samples
+    grids = Grid.make(params)
+    persons = Person.make(params)
+    samples = Sample.make(params, grids, persons)
+    machines = Machine.make(params)
+    return grids, persons, samples, machines
 
 
 if __name__ == "__main__":

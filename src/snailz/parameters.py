@@ -1,7 +1,6 @@
 """Data generation parameters."""
 
 from datetime import date
-
 from faker.config import AVAILABLE_LOCALES
 from pydantic import BaseModel, Field, model_validator
 
@@ -18,8 +17,15 @@ class Parameters(BaseModel):
     grid_size: int = Field(default=11, gt=0, description="sample grid size")
     grid_spacing: float = Field(default=20.0, gt=0, description="grid cell spacing (m)")
     grid_gap_m: float = Field(default=1000.0, gt=0, description="gap between grids")
-    lat0: float = Field(default=48.8666632, ge=-90.0, le=90.0, description="grid reference latitude")
-    lon0: float = Field(default=-124.1999992, ge=-180.0, le=180.0, description="grid reference longitude")
+    lat0: float = Field(
+        default=48.8666632, ge=-90.0, le=90.0, description="grid reference latitude"
+    )
+    lon0: float = Field(
+        default=-124.1999992,
+        ge=-180.0,
+        le=180.0,
+        description="grid reference longitude",
+    )
     sample_mass: tuple[float, float] = Field(
         default=(0.5, 1.5), description="sample mass bounds"
     )
@@ -33,6 +39,7 @@ class Parameters(BaseModel):
     clumsy_factor: float | None = Field(
         default=0.5, description="clumsy operator effect on mass (if any)"
     )
+    num_machines: int = Field(default=5, gt=0, description="number of machines")
 
     @model_validator(mode="after")
     def validate_clumsy_factor(self):

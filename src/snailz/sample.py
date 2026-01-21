@@ -1,11 +1,11 @@
 """Samples."""
 
 from datetime import date
+from pydantic import BaseModel, Field
 import random
 from typing import ClassVar
 
-from pydantic import BaseModel, Field
-
+from .grid import grid_lat_lon
 from . import utils
 
 
@@ -15,10 +15,10 @@ class Sample(BaseModel):
     id_stem: ClassVar[str] = "S"
     id_digits: ClassVar[int] = 4
 
-    id: str = Field(min_length=1, description="unique ID")
-    grid: str = Field(min_length=1, description="grid ID")
-    x: int = Field(ge=0, description="X coordinate")
-    y: int = Field(ge=0, description="Y coordinate")
+    sample_id: str = Field(min_length=1, description="unique ID")
+    grid_id: str = Field(min_length=1, description="grid ID")
+    x_: int = Field(ge=0, description="X coordinate")
+    y_: int = Field(ge=0, description="Y coordinate")
     lat: float = Field(description="latitude")
     lon: float = Field(description="longitude")
     pollution: int = Field(ge=0, description="pollution reading at grid cell")
@@ -31,34 +31,29 @@ class Sample(BaseModel):
         """Make a sample."""
 
         utils.ensure_id_generator(Sample)
-        grid = random.choice(grids)
-        x = random.randint(0, grid.size - 1)
-        y = random.randint(0, grid.size - 1)
-        lat, lon = utils.grid_lat_lon(params, grid, x, y)
-        pollution = grid[x, y]
-        person = random.choice(persons)
-        timestamp = utils.random_date(params)
-        mass = utils.random_mass(params)
-        return Sample(
-            id=next(Sample._id_gen),
-            grid=grid.grid_id,
-            x=x,
-            y=y,
-            lat=lat,
-            lon=lon,
-            pollution=pollution,
-            person=person.person_id,
-            timestamp=timestamp,
-            mass=mass,
-        )
+        result = []
+        for _ in range(params.num_samples):
+            grid = random.choice(grids)
+            x = random.randint(0, grid.size - 1)
+            y = random.randint(0, grid.size - 1)
+            lat, lon = grid_lat_lon(params, grid, x, y)
+            pollution = grid[x, y]
+            person = random.choice(persons)
+            timestamp = utils.random_date(params)
+            mass = utils.random_mass(params)
+            result.append(
+                Sample(
+                    sample_id=next(Sample._id_gen),
+                    grid_id=grid.grid_id,
+                    x_=x,
+                    y_=y,
+                    lat=lat,
+                    lon=lon,
+                    pollution=pollution,
+                    person=person.person_id,
+                    timestamp=timestamp,
+                    mass=mass,
+                )
+            )
 
-    @staticmethod
-    def csv_header():
-        """Generate header for CSV file."""
-
-        return "sample_id,grid_id,x,y,lat,lon,pollution,person,timestamp,mass"
-
-    def __str__(self):
-        """Convert to CSV string."""
-
-        return f"{self.id},{self.grid},{self.x},{self.y},{self.lat},{self.lon},{self.pollution},{self.person},{self.timestamp},{self.mass}"
+        return result

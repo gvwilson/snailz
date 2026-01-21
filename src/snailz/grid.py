@@ -1,12 +1,15 @@
 """Sample grids."""
 
+import math
+from pydantic import BaseModel, Field
 import random
 from typing import ClassVar
 
-from pydantic import BaseModel, Field
-
 from . import utils
 
+
+# Convert lat/lon to distances.
+METERS_PER_DEGREE_LAT = 111_320.0
 
 # Legal moves for random walk that fills grid.
 MOVES = [[-1, 0], [1, 0], [0, -1], [0, 1]]
@@ -25,13 +28,19 @@ class Grid(BaseModel):
     lon0: float = Field(descrpiption="westernmost longitude")
 
     @staticmethod
-    def make(params, lat0, lon0):
-        """Make a grid."""
+    def make(params):
+        """Make grids."""
 
         utils.ensure_id_generator(Grid)
-        grid = Grid(grid_id=next(Grid._id_gen), size=params.grid_size, lat0=lat0, lon0=lon0)
-        grid.fill()
-        return grid
+        origins = _grid_origins(params)
+        result = []
+        for lat0, lon0 in origins:
+            grid = Grid(
+                grid_id=next(Grid._id_gen), size=params.grid_size, lat0=lat0, lon0=lon0
+            )
+            grid.fill()
+            result.append(grid)
+        return result
 
     @staticmethod
     def tidy(grids):
@@ -78,3 +87,36 @@ class Grid(BaseModel):
             m = random.choice(MOVES)
             x += m[0]
             y += m[1]
+
+
+def grid_lat_lon(params, grid, x, y):
+    """Calculate latitude and longitude of grid cell."""
+
+    lat = grid.lat0 + (y * params.grid_spacing) / METERS_PER_DEGREE_LAT
+    meters_per_degree_lon = METERS_PER_DEGREE_LAT * math.cos(math.radians(grid.lat0))
+    lon = grid.lon0 + (x * params.grid_spacing) / meters_per_degree_lon
+    return lat, lon
+
+
+def _grid_origins(params):
+    """
+    Generate non-overlapping lower-left (lat, lon) corners for grids.
+    """
+
+    grid_width_m = params.grid_size * params.grid_spacing
+    stride_m = grid_width_m + params.grid_gap_m
+    cols = math.ceil(math.sqrt(params.num_grids))
+    meters_per_degree_lon = METERS_PER_DEGREE_LAT * math.cos(math.radians(params.lat0))
+
+    origins = []
+    for i in range(params.num_grids):
+        dx = (i % cols) * stride_m
+        dy = (i // cols) * stride_m
+        origins.append(
+            (
+                params.lat0 + dy / METERS_PER_DEGREE_LAT,
+                params.lon0 + dx / meters_per_degree_lon,
+            )
+        )
+
+    return origins

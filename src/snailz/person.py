@@ -1,10 +1,9 @@
 """Represent scientific staff."""
 
-import random
-from typing import ClassVar
-
 import faker
 from pydantic import BaseModel, Field
+import random
+from typing import ClassVar
 
 from . import utils
 
@@ -21,18 +20,21 @@ class Person(BaseModel):
 
     @staticmethod
     def make(params):
-        """Make a person."""
+        """Make persons."""
 
         utils.ensure_id_generator(Person)
         if not hasattr(Person, "_fake"):
             Person._fake = faker.Faker(params.locale)
             Person._fake.seed_instance(random.randint(0, 1_000_000))
 
-        return Person(
-            person_id=next(Person._id_gen),
-            family=Person._fake.last_name(),
-            personal=Person._fake.first_name(),
-        )
+        return [
+            Person(
+                person_id=next(Person._id_gen),
+                family=Person._fake.last_name(),
+                personal=Person._fake.first_name(),
+            )
+            for _ in range(params.num_persons)
+        ]
 
     @staticmethod
     def csv_header():
