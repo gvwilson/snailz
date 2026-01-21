@@ -23,7 +23,7 @@ class Sample(BaseModel):
     lon: float = Field(description="longitude")
     pollution: int = Field(ge=0, description="pollution reading at grid cell")
     person: str = Field(description="collector")
-    when: date = Field(description="when sample was collected")
+    timestamp: date = Field(description="when sample was collected")
     mass: float = Field(gt=0.0, description="sample mass")
 
     @staticmethod
@@ -37,18 +37,18 @@ class Sample(BaseModel):
         lat, lon = utils.grid_lat_lon(params, grid, x, y)
         pollution = grid[x, y]
         person = random.choice(persons)
-        when = utils.random_date(params)
+        timestamp = utils.random_date(params)
         mass = utils.random_mass(params)
         return Sample(
             id=next(Sample._id_gen),
-            grid=grid.id,
+            grid=grid.grid_id,
             x=x,
             y=y,
             lat=lat,
             lon=lon,
             pollution=pollution,
-            person=person.id,
-            when=when,
+            person=person.person_id,
+            timestamp=timestamp,
             mass=mass,
         )
 
@@ -56,9 +56,9 @@ class Sample(BaseModel):
     def csv_header():
         """Generate header for CSV file."""
 
-        return "sample_id,grid_id,x,y,lat,lon,pollution,person,when,mass"
+        return "sample_id,grid_id,x,y,lat,lon,pollution,person,timestamp,mass"
 
     def __str__(self):
         """Convert to CSV string."""
 
-        return f"{self.id},{self.grid},{self.x},{self.y},{self.lat},{self.lon},{self.pollution},{self.person},{self.when},{self.mass}"
+        return f"{self.id},{self.grid},{self.x},{self.y},{self.lat},{self.lon},{self.pollution},{self.person},{self.timestamp},{self.mass}"

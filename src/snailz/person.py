@@ -15,7 +15,7 @@ class Person(BaseModel):
     id_stem: ClassVar[str] = "P"
     id_digits: ClassVar[int] = 4
 
-    id: str = Field(min_length=1, description="unique identifier")
+    person_id: str = Field(min_length=1, description="unique identifier")
     family: str = Field(min_length=1, description="family name")
     personal: str = Field(min_length=1, description="personal name")
 
@@ -29,7 +29,7 @@ class Person(BaseModel):
             Person._fake.seed_instance(random.randint(0, 1_000_000))
 
         return Person(
-            id=next(Person._id_gen),
+            person_id=next(Person._id_gen),
             family=Person._fake.last_name(),
             personal=Person._fake.first_name(),
         )
@@ -38,9 +38,9 @@ class Person(BaseModel):
     def csv_header():
         """Generate header for CSV file."""
 
-        return "id,family,personal"
+        return "person_id,family,personal"
 
     def __str__(self):
         """Convert to CSV string."""
 
-        return f"{self.id},{self.family},{self.personal}"
+        return f"{self.person_id},{self.family},{self.personal}"

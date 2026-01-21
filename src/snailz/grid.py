@@ -18,7 +18,7 @@ class Grid(BaseModel):
     id_stem: ClassVar[str] = "G"
     id_digits: ClassVar[int] = 4
 
-    id: str = Field(min_length=1, description="unique ID")
+    grid_id: str = Field(min_length=1, description="unique ID")
     size: int = Field(gt=0, description="grid size")
     grid: list = Field(default=[], description="grid values")
     lat0: float = Field(description="southernmost latitude")
@@ -29,7 +29,7 @@ class Grid(BaseModel):
         """Make a grid."""
 
         utils.ensure_id_generator(Grid)
-        grid = Grid(id=next(Grid._id_gen), size=params.grid_size, lat0=lat0, lon0=lon0)
+        grid = Grid(grid_id=next(Grid._id_gen), size=params.grid_size, lat0=lat0, lon0=lon0)
         grid.fill()
         return grid
 
@@ -41,7 +41,8 @@ class Grid(BaseModel):
         for g in grids:
             for x in range(g.size):
                 for y in range(g.size):
-                    result.append(f"{g.id},{x},{y},{g[x, y]}")
+                    if g[x, y] > 0:
+                        result.append(f"{g.grid_id},{x},{y},{g[x, y]}")
         return "\n".join(result)
 
     def __getitem__(self, key):
