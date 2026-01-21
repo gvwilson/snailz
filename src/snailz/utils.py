@@ -3,11 +3,14 @@
 from contextlib import contextmanager
 from datetime import date, timedelta
 import json
+import math
 from pathlib import Path
 import random
 import sys
 
 from pydantic import BaseModel
+
+METERS_PER_DEGREE_LAT = 111_320.0
 
 
 def ensure_id_generator(cls):
@@ -33,6 +36,36 @@ def file_or_std(parent, filename, mode):
         yield sys.stdout
     else:
         raise ValueError(f"bad filename/mode '{filename}' / '{mode}'")
+
+
+def grid_lat_lon(params, grid, x, y):
+    """Calculate latitude and longitude of grid cell."""
+
+    lat = grid.lat0 + (y * params.grid_spacing) / METERS_PER_DEGREE_LAT
+    meters_per_degree_lon = METERS_PER_DEGREE_LAT * math.cos(math.radians(grid.lat0))
+    lon = grid.lon0 + (x * params.grid_spacing) / meters_per_degree_lon
+    return lat, lon
+
+
+def grid_origins(params):
+    """
+    Generate non-overlapping lower-left (lat, lon) corners for grids.
+    """
+
+    grid_width_m = params.grid_size * params.grid_spacing
+    stride_m = grid_width_m + params.grid_gap_m
+    cols = math.ceil(math.sqrt(params.num_grids))
+    meters_per_degree_lon = METERS_PER_DEGREE_LAT * math.cos(math.radians(params.lat0))
+
+    origins = []
+    for i in range(params.num_grids):
+        dx = (i % cols) * stride_m
+        dy = (i // cols) * stride_m
+        origins.append(
+            (params.lat0 + dy / METERS_PER_DEGREE_LAT, params.lon0 + dx / meters_per_degree_lon)
+        )
+
+    return origins
 
 
 def id_gen(stem, digits):

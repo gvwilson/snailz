@@ -19,6 +19,8 @@ class Sample(BaseModel):
     grid: str = Field(min_length=1, description="grid ID")
     x: int = Field(ge=0, description="X coordinate")
     y: int = Field(ge=0, description="Y coordinate")
+    lat: float = Field(description="latitude")
+    lon: float = Field(description="longitude")
     pollution: int = Field(ge=0, description="pollution reading at grid cell")
     person: str = Field(description="collector")
     when: date = Field(description="when sample was collected")
@@ -32,6 +34,7 @@ class Sample(BaseModel):
         grid = random.choice(grids)
         x = random.randint(0, grid.size - 1)
         y = random.randint(0, grid.size - 1)
+        lat, lon = utils.grid_lat_lon(params, grid, x, y)
         pollution = grid[x, y]
         person = random.choice(persons)
         when = utils.random_date(params)
@@ -41,6 +44,8 @@ class Sample(BaseModel):
             grid=grid.id,
             x=x,
             y=y,
+            lat=lat,
+            lon=lon,
             pollution=pollution,
             person=person.id,
             when=when,
@@ -51,9 +56,9 @@ class Sample(BaseModel):
     def csv_header():
         """Generate header for CSV file."""
 
-        return "sample_id,grid_id,x,y,pollution,person,when,mass"
+        return "sample_id,grid_id,x,y,lat,lon,pollution,person,when,mass"
 
     def __str__(self):
         """Convert to CSV string."""
 
-        return f"{self.id},{self.grid},{self.x},{self.y},{self.pollution},{self.person},{self.when},{self.mass}"
+        return f"{self.id},{self.grid},{self.x},{self.y},{self.lat},{self.lon},{self.pollution},{self.person},{self.when},{self.mass}"

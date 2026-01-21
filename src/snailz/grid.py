@@ -19,18 +19,17 @@ class Grid(BaseModel):
     id_digits: ClassVar[int] = 4
 
     id: str = Field(min_length=1, description="unique ID")
-    size: int = Field(
-        gt=0,
-        description="grid size",
-    )
+    size: int = Field(gt=0, description="grid size")
     grid: list = Field(default=[], description="grid values")
+    lat0: float = Field(description="southernmost latitude")
+    lon0: float = Field(descrpiption="westernmost longitude")
 
     @staticmethod
-    def make(params):
+    def make(params, lat0, lon0):
         """Make a grid."""
 
         utils.ensure_id_generator(Grid)
-        grid = Grid(id=next(Grid._id_gen), size=params.grid_size)
+        grid = Grid(id=next(Grid._id_gen), size=params.grid_size, lat0=lat0, lon0=lon0)
         grid.fill()
         return grid
 

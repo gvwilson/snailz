@@ -88,7 +88,8 @@ def _save(args, grids, persons, samples, changes):
 def _synthesize(params):
     """Synthesize data."""
 
-    grids = [Grid.make(params) for _ in range(params.num_grids)]
+    grid_origins = utils.grid_origins(params)
+    grids = [Grid.make(params, lat0, lon0) for lat0, lon0 in grid_origins]
     persons = [Person.make(params) for _ in range(params.num_persons)]
     samples = [Sample.make(params, grids, persons) for _ in range(params.num_samples)]
     return grids, persons, samples
