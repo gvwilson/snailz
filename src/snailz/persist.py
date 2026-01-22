@@ -2,7 +2,6 @@
 
 import datetime
 import csv
-import sqlite3
 import typing
 
 
@@ -11,11 +10,11 @@ SQLITE_TYPE = {
     float: "real",
     bool: "integer",
     datetime.date: "date",
-    str: "text"
+    str: "text",
 }
 
 
-def models_to_csv(stream, objects):
+def objects_to_csv(stream, objects):
     """Dump a list of Pydantic objects of the same class to a CSV."""
 
     assert len(objects) > 0
@@ -26,28 +25,41 @@ def models_to_csv(stream, objects):
         writer.writerow(obj.model_dump(include=fields))
 
 
-def models_to_db(cnx, table_name, objects):
+def objects_to_db(cnx, table_name, objects):
     if not objects:
         return
 
-    model_cls = type(objects[0])
-    fields = _select_fields(objects[0])
-    cols = [f"{f} {_sqlite_type(model_cls, f)}" for f in fields]
+    exemplar = objects[0]
+    cls = exemplar.__class__
+    fields = _select_fields(exemplar)
+    cols = [f"{f} {_sqlite_type(cls, f)}" for f in fields]
+    foreign_keys = _get_foreign_keys(cls)
 
-    create_sql = f"create table if not exists {table_name} ({', '.join(cols)})"
+    create_sql = f"create table if not exists {table_name} (\n  {',\n  '.join(cols)}{foreign_keys}\n)"
     cnx.execute(create_sql)
 
     placeholders = ", ".join(["?"] * len(fields))
-    insert_sql = f"insert into {table_name} ({', '.join(fields)}) values ({placeholders})"
+    insert_sql = (
+        f"insert into {table_name} ({', '.join(fields)}) values ({placeholders})"
+    )
 
     field_set = set(fields)
     rows = [
-        tuple(obj.model_dump(include=field_set)[f] for f in fields)
-        for obj in objects
+        tuple(obj.model_dump(include=field_set)[f] for f in fields) for obj in objects
     ]
 
     cnx.executemany(insert_sql, rows)
     cnx.commit()
+
+
+def _get_foreign_keys(cls):
+    keys = cls.model_config.get("json_schema_extra", {}).get("foreign_key", None)
+    if keys is None:
+        return ""
+    return ",\n  " + ",\n  ".join(
+        f"foreign key({key}) references {table}({other})"
+        for key, (table, other) in keys.items()
+    )
 
 
 def _select_fields(obj):
@@ -55,9 +67,19 @@ def _select_fields(obj):
 
 
 def _sqlite_type(cls, field_name):
-    annotation = cls.model_fields[field_name].annotation
+    field = cls.model_fields[field_name]
+
+    annotation = field.annotation
     args = typing.get_args(annotation)
     types = args if args else (annotation,)
+    nullness = " not null" if type(None) not in types else ""
     types = [t for t in types if t is not type(None)]
     assert len(types) == 1
-    return SQLITE_TYPE[types[0]]
+
+    keyness = (
+        " primary key"
+        if (field.json_schema_extra or {}).get("primary_key", False)
+        else ""
+    )
+
+    return f"{SQLITE_TYPE[types[0]]}{nullness}{keyness}"

@@ -1,7 +1,6 @@
 """Synthesize data."""
 
 import argparse
-import csv
 import json
 from pathlib import Path
 import random
@@ -12,7 +11,7 @@ from .effect import do_all_effects
 from .grid import Grid
 from .machine import Machine
 from .parameters import Parameters
-from .persist import models_to_csv, models_to_db
+from .persist import objects_to_csv, objects_to_db
 from .person import Person
 from .rating import Rating
 from .sample import Sample
@@ -94,7 +93,7 @@ def _save_csv(args, grids, persons, samples, machines, ratings, changes):
         ("samples", Sample, samples),
     ):
         with utils.file_or_std(outdir, f"{name}.csv", "w") as writer:
-            models_to_csv(writer, data)
+            objects_to_csv(writer, data)
 
     with utils.file_or_std(outdir, "changes.json", "w") as writer:
         json.dump(changes, writer)
@@ -120,7 +119,7 @@ def _save_db(args, grids, persons, samples, machines, ratings):
         ("rating", ratings),
         ("sample", samples),
     ):
-        models_to_db(cnx, table, data)
+        objects_to_db(cnx, table, data)
 
     cnx.close()
 

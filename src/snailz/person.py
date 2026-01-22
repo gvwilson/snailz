@@ -14,7 +14,11 @@ class Person(BaseModel):
     id_stem: ClassVar[str] = "P"
     id_digits: ClassVar[int] = 4
 
-    person_id: str = Field(min_length=1, description="unique identifier")
+    person_id: str = Field(
+        min_length=1,
+        description="unique identifier",
+        json_schema_extra={"primary_key": True},
+    )
     family: str = Field(min_length=1, description="family name")
     personal: str = Field(min_length=1, description="personal name")
 

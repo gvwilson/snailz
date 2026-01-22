@@ -1,7 +1,7 @@
 """Samples."""
 
 from datetime import date
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 import random
 from typing import ClassVar
 
@@ -15,7 +15,18 @@ class Sample(BaseModel):
     id_stem: ClassVar[str] = "S"
     id_digits: ClassVar[int] = 4
 
-    sample_id: str = Field(min_length=1, description="unique ID")
+    model_config = ConfigDict(
+        json_schema_extra={
+            "foreign_key": {
+                "grid_id": ("grid", "grid_id"),
+                "person_id": ("person", "person_id"),
+            }
+        }
+    )
+
+    sample_id: str = Field(
+        min_length=1, description="unique ID", json_schema_extra={"primary_key": True}
+    )
     grid_id: str = Field(min_length=1, description="grid ID")
     x_: int = Field(default=0, ge=0, description="X coordinate")
     y_: int = Field(default=0, ge=0, description="Y coordinate")

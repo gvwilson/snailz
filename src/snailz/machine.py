@@ -51,7 +51,9 @@ class Machine(BaseModel):
     id_stem: ClassVar[str] = "M"
     id_digits: ClassVar[int] = 4
 
-    machine_id: str = Field(description="machine ID")
+    machine_id: str = Field(
+        description="machine ID", json_schema_extra={"primary_key": True}
+    )
     name: str = Field(description="machine name")
 
     @staticmethod

@@ -21,7 +21,9 @@ class Grid(BaseModel):
     id_stem: ClassVar[str] = "G"
     id_digits: ClassVar[int] = 4
 
-    grid_id: str = Field(min_length=1, description="unique ID")
+    grid_id: str = Field(
+        min_length=1, description="unique ID", json_schema_extra={"primary_key": True}
+    )
     size: int = Field(gt=0, description="grid size")
     grid: list = Field(default_factory=list, description="grid values")
     lat0: float = Field(default=0.0, description="southernmost latitude")
