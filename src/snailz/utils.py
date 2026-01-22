@@ -1,7 +1,6 @@
 """Data generation utilities."""
 
 from contextlib import contextmanager
-import csv
 from datetime import date, timedelta
 import json
 from pathlib import Path
@@ -50,19 +49,6 @@ def json_dump(obj, indent=2):
     """Dump as JSON with custom serializer."""
 
     return json.dumps(obj, indent=indent, default=_serialize_json)
-
-
-def model_to_csv(stream, objects):
-    """Dump a list of Pydantic objects of the same class to a CSV."""
-
-    assert len(objects) > 0
-    fields = [
-        f for f in objects[0].__class__.model_fields.keys() if not f.endswith("_")
-    ]
-    writer = csv.DictWriter(stream, fieldnames=fields)
-    writer.writeheader()
-    for obj in objects:
-        writer.writerow(obj.model_dump(include=fields))
 
 
 def random_date(params):
