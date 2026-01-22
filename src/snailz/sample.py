@@ -22,7 +22,7 @@ class Sample(BaseModel):
     lat: float = Field(description="latitude")
     lon: float = Field(description="longitude")
     pollution: int = Field(ge=0, description="pollution reading at grid cell")
-    person: str = Field(description="collector")
+    person_id: str = Field(description="collector")
     timestamp: date = Field(description="when sample was collected")
     mass: float = Field(gt=0.0, description="sample mass")
 
@@ -50,7 +50,7 @@ class Sample(BaseModel):
                     lat=lat,
                     lon=lon,
                     pollution=pollution,
-                    person=person.person_id,
+                    person_id=person.person_id,
                     timestamp=timestamp,
                     mass=mass,
                 )

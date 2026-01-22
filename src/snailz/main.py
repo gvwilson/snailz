@@ -59,7 +59,7 @@ create table sample (
     lat real not null,
     lon real not null,
     pollution integer not null,
-    person text not null,
+    person_id text not null,
     timestamp date,
     mass real
 );

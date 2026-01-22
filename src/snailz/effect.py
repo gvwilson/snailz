@@ -31,7 +31,7 @@ def _do_person(params, grids, persons, samples):
         return {}
     clumsy = random.choice(persons)
     for s in samples:
-        if s.person == clumsy.person_id:
+        if s.person_id == clumsy.person_id:
             s.mass -= params.sample_mass[0] * params.clumsy_factor
     return {"clumsy": clumsy.person_id}
 
