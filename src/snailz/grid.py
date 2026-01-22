@@ -25,7 +25,7 @@ class Grid(BaseModel):
     size: int = Field(gt=0, description="grid size")
     grid: list = Field(default=[], description="grid values")
     lat0: float = Field(description="southernmost latitude")
-    lon0: float = Field(descrpiption="westernmost longitude")
+    lon0: float = Field(description="westernmost longitude")
 
     @staticmethod
     def make(params):

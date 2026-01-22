@@ -51,11 +51,11 @@ def test_json_dump_with_date():
 def test_json_dump_with_basemodel():
     """Test JSON dump with BaseModel serialization."""
 
-    person = Person(id="P0001", family="Smith", personal="John")
+    person = Person(person_id="P0001", family="Smith", personal="John")
     data = {"person": person}
     result = json_dump(data)
     parsed = json.loads(result)
-    assert parsed == {"person": {"id": "P0001", "family": "Smith", "personal": "John"}}
+    assert parsed == {"person": {"person_id": "P0001", "family": "Smith", "personal": "John"}}
 
 
 def test_serialize_json_unsupported_type():
