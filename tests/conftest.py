@@ -18,18 +18,21 @@ def default_params():
 def fx_persons(default_params):
     """Sample persons for testing."""
 
-    return [Person.make(default_params) for _ in range(3)]
+    default_params.num_persons = 3
+    return Person.make(default_params)
 
 
 @pytest.fixture
 def fx_grids(default_params):
     """Sample grids for testing."""
 
-    return [Grid.make(default_params) for _ in range(2)]
+    default_params.num_grids = 2
+    return Grid.make(default_params)
 
 
 @pytest.fixture
 def fx_samples(default_params, fx_grids, fx_persons):
     """Sample samples for testing."""
 
-    return [Sample.make(default_params, fx_grids, fx_persons) for _ in range(5)]
+    default_params.num_samples = 5
+    return Sample.make(default_params, fx_grids, fx_persons)

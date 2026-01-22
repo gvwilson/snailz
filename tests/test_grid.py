@@ -7,9 +7,9 @@ from snailz.grid import Grid
 def test_grid_creation(default_params):
     """Test grid creation with default parameters."""
 
-    grid = Grid.make(default_params)
-    assert grid.id.startswith("G")
-    assert len(grid.id) == 5  # G + 4 digits
+    grid = Grid.make(default_params)[0]
+    assert grid.grid_id.startswith("G")
+    assert len(grid.grid_id) == 5  # G + 4 digits
     assert grid.size == default_params.grid_size
     assert len(grid.grid) == grid.size * grid.size
 
@@ -19,13 +19,13 @@ def test_grid_parameter_validation(ident, size):
     """Test invalid grid parameters are rejected."""
 
     with pytest.raises(ValueError):
-        Grid(id=ident, size=size)
+        Grid(grid_id=ident, size=size)
 
 
 def test_grid_indexing():
     """Test grid indexing operations."""
 
-    grid = Grid(id="G0001", size=3)
+    grid = Grid(grid_id="G0001", size=3)
     grid.grid = [i for i in range(9)]  # 0-8
 
     # Getting values
@@ -42,7 +42,7 @@ def test_grid_indexing():
 def test_grid_csv_output():
     """Test grid CSV string output."""
 
-    grid = Grid(id="G0001", size=2)
+    grid = Grid(grid_id="G0001", size=2)
     grid.grid = [1, 2, 3, 4]  # [[1,2], [3,4]]
     csv_output = str(grid)
     lines = csv_output.split("\n")
@@ -54,15 +54,15 @@ def test_grid_csv_output():
 def test_grid_unique_ids(default_params):
     """Test that grids get unique IDs."""
 
-    grid1 = Grid.make(default_params)
-    grid2 = Grid.make(default_params)
-    assert grid1.id != grid2.id
+    grid1 = Grid.make(default_params)[0]
+    grid2 = Grid.make(default_params)[0]
+    assert grid1.grid_id != grid2.grid_id
 
 
 def test_grid_fill_bounds_checking(default_params):
     """Test that fill stops at grid boundaries."""
 
-    grid = Grid.make(default_params)
+    grid = Grid.make(default_params)[0]
     for x in range(grid.size):
         for y in range(grid.size):
             if (x == 0) or (y == 0):

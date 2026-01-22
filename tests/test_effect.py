@@ -1,7 +1,7 @@
 """Tests for effects module."""
 
 from datetime import date
-from snailz.effects import (
+from snailz.effect import (
     do_all_effects,
     _do_pollution,
     _do_delay,
@@ -27,13 +27,11 @@ def test_do_pollution_effect(fx_grids, fx_persons):
 
     params = Parameters(pollution_factor=0.5)
     sample = Sample(
-        id="S0001",
-        grid=fx_grids[0].id,
-        x=0,
-        y=0,
+        sample_id="S0001",
+        grid_id=fx_grids[0].grid_id,
         pollution=2,
-        person=fx_persons[0].id,
-        when=date(2025, 6, 15),
+        person_id=fx_persons[0].person_id,
+        timestamp=date(2025, 6, 15),
         mass=1.0,
     )
     fx_grids[0][0, 0] = 2
@@ -55,13 +53,11 @@ def test_do_delay_effect():
         sample_mass=(1.0, 2.0),
     )
     sample = Sample(
-        id="S0001",
-        grid="G0001",
-        x=0,
-        y=0,
+        sample_id="S0001",
+        grid_id="G0001",
         pollution=0,
-        person="P0001",
-        when=date(2025, 1, 5),  # 4 days after start
+        person_id="P0001",
+        timestamp=date(2025, 1, 5),  # 4 days after start
         mass=1.0,
     )
 
@@ -78,16 +74,14 @@ def test_do_person_effect():
     """Test person (clumsy) effect on sample mass."""
 
     params = Parameters(sample_mass=(1.0, 2.0), clumsy_factor=0.3)
-    person = Person(id="P0001", family="Smith", personal="John")
+    person = Person(person_id="P0001", family="Smith", personal="John")
 
     sample = Sample(
-        id="S0001",
-        grid="G0001",
-        x=0,
-        y=0,
+        sample_id="S0001",
+        grid_id="G0001",
         pollution=0,
-        person=person.id,
-        when=date(2025, 6, 15),
+        person_id=person.person_id,
+        timestamp=date(2025, 6, 15),
         mass=2.0,
     )
 
@@ -98,23 +92,21 @@ def test_do_person_effect():
     expected_decrease = params.sample_mass[0] * params.clumsy_factor
     assert abs(sample.mass - (original_mass - expected_decrease)) < 1e-10
     assert "clumsy" in changes
-    assert changes["clumsy"] == person.id
+    assert changes["clumsy"] == person.person_id
 
 
 def test_do_person_effect_clumsy_none():
     """Test person effect when clumsy_factor is None."""
 
     params = Parameters(sample_mass=(1.0, 2.0), clumsy_factor=None)
-    person = Person(id="P0001", family="Smith", personal="John")
+    person = Person(person_id="P0001", family="Smith", personal="John")
 
     sample = Sample(
-        id="S0001",
-        grid="G0001",
-        x=0,
-        y=0,
+        sample_id="S0001",
+        grid_id="G0001",
         pollution=0,
-        person=person.id,
-        when=date(2025, 6, 15),
+        person_id=person.person_id,
+        timestamp=date(2025, 6, 15),
         mass=2.0,
     )
 
@@ -131,13 +123,11 @@ def test_do_precision_effect():
     params = Parameters(precision=2)
 
     sample = Sample(
-        id="S0001",
-        grid="G0001",
-        x=0,
-        y=0,
+        sample_id="S0001",
+        grid_id="G0001",
         pollution=0,
-        person="P0001",
-        when=date(2025, 6, 15),
+        person_id="P0001",
+        timestamp=date(2025, 6, 15),
         mass=1.23456789,
     )
 
@@ -153,13 +143,11 @@ def test_effects_order_matters(default_params, fx_grids, fx_persons):
 
     # Create sample with known initial conditions
     sample = Sample(
-        id="S0001",
-        grid=fx_grids[0].id,
-        x=0,
-        y=0,
+        sample_id="S0001",
+        grid_id=fx_grids[0].grid_id,
         pollution=1,
-        person=fx_persons[0].id,
-        when=default_params.sample_date[0],
+        person_id=fx_persons[0].person_id,
+        timestamp=default_params.sample_date[0],
         mass=1.0,
     )
 

@@ -56,7 +56,7 @@ def model_to_csv(stream, objects):
     """Dump a list of Pydantic objects of the same class to a CSV."""
 
     assert len(objects) > 0
-    fields = [f for f in objects[0].model_fields.keys() if not f.endswith("_")]
+    fields = [f for f in objects[0].__class__.model_fields.keys() if not f.endswith("_")]
     writer = csv.DictWriter(stream, fieldnames=fields)
     writer.writeheader()
     for obj in objects:

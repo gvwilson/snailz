@@ -61,15 +61,15 @@ def test_synthesize_data():
     """Test data synthesis function."""
 
     params = Parameters(num_grids=2, num_persons=3, num_samples=5)
-    grids, persons, samples = _synthesize(params)
+    grids, persons, samples, machines, ratings = _synthesize(params)
 
     assert len(grids) == 2
     assert len(persons) == 3
     assert len(samples) == 5
 
-    assert all(g.id.startswith("G") for g in grids)
-    assert all(p.id.startswith("P") for p in persons)
-    assert all(s.id.startswith("S") for s in samples)
+    assert all(g.grid_id.startswith("G") for g in grids)
+    assert all(p.person_id.startswith("P") for p in persons)
+    assert all(s.sample_id.startswith("S") for s in samples)
 
 
 def test_save_to_stdout():
@@ -79,14 +79,14 @@ def test_save_to_stdout():
     args.outdir = "-"
 
     params = Parameters(num_grids=1, num_persons=1, num_samples=1)
-    grids, persons, samples = _synthesize(params)
+    grids, persons, samples, machines, ratings = _synthesize(params)
     changes = {"test": "data"}
 
     with patch("sys.stdout", new_callable=StringIO) as mock_stdout:
-        _save(args, grids, persons, samples, changes)
+        _save(args, grids, persons, samples, machines, ratings, changes)
         output = mock_stdout.getvalue().split("\n")
         assert len([ln for ln in output if ln.startswith("S")]) == 1
-        assert len([ln for ln in output if ln.startswith("P")]) == 1
+        assert len([ln for ln in output if ln.startswith("P")]) == 2
 
 
 def test_save_to_directory(tmp_path):
@@ -96,13 +96,13 @@ def test_save_to_directory(tmp_path):
     args.outdir = str(tmp_path)
 
     params = Parameters(num_grids=1, num_persons=1, num_samples=1)
-    grids, persons, samples = _synthesize(params)
+    grids, persons, samples, machines, ratings = _synthesize(params)
     changes = {"test": "data"}
 
-    _save(args, grids, persons, samples, changes)
+    _save(args, grids, persons, samples, machines, ratings, changes)
 
     # Check that files were created
-    assert (tmp_path / f"{grids[0].id}.csv").exists()
+    assert (tmp_path / f"{grids[0].grid_id}.csv").exists()
     assert (tmp_path / "grids.csv").exists()
     assert (tmp_path / "persons.csv").exists()
     assert (tmp_path / "samples.csv").exists()
@@ -113,7 +113,7 @@ def test_save_to_directory(tmp_path):
     assert "id,family,personal" in persons_content
 
     samples_content = (tmp_path / "samples.csv").read_text()
-    assert "sample_id,grid_id,x,y,pollution,person,when,mass" in samples_content
+    assert "sample_id,grid_id,lat,lon,pollution,person_id,timestamp,mass" in samples_content
 
 
 def test_save_creates_directory(tmp_path):
@@ -124,10 +124,10 @@ def test_save_creates_directory(tmp_path):
     args.outdir = str(new_dir)
 
     params = Parameters(num_grids=1, num_persons=1, num_samples=1)
-    grids, persons, samples = _synthesize(params)
+    grids, persons, samples, machines, ratings = _synthesize(params)
     changes = {}
 
-    _save(args, grids, persons, samples, changes)
+    _save(args, grids, persons, samples, machines, ratings, changes)
 
     assert new_dir.exists()
     assert new_dir.is_dir()
