@@ -16,7 +16,11 @@ def test_sample_creation(default_params, fx_grids, fx_persons):
     assert sample.grid_id in [g.grid_id for g in fx_grids]
     assert sample.person_id in [p.person_id for p in fx_persons]
     assert sample.pollution >= 0
-    assert default_params.sample_date[0] <= sample.timestamp <= default_params.sample_date[1]
+    assert (
+        default_params.sample_date[0]
+        <= sample.timestamp
+        <= default_params.sample_date[1]
+    )
     assert default_params.sample_mass[0] <= sample.mass <= default_params.sample_mass[1]
 
 

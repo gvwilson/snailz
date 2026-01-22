@@ -113,7 +113,10 @@ def test_save_to_directory(tmp_path):
     assert "id,family,personal" in persons_content
 
     samples_content = (tmp_path / "samples.csv").read_text()
-    assert "sample_id,grid_id,lat,lon,pollution,person_id,timestamp,mass" in samples_content
+    assert (
+        "sample_id,grid_id,lat,lon,pollution,person_id,timestamp,mass"
+        in samples_content
+    )
 
 
 def test_save_creates_directory(tmp_path):

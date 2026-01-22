@@ -55,7 +55,9 @@ def test_json_dump_with_basemodel():
     data = {"person": person}
     result = json_dump(data)
     parsed = json.loads(result)
-    assert parsed == {"person": {"person_id": "P0001", "family": "Smith", "personal": "John"}}
+    assert parsed == {
+        "person": {"person_id": "P0001", "family": "Smith", "personal": "John"}
+    }
 
 
 def test_serialize_json_unsupported_type():
