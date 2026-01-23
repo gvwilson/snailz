@@ -4,6 +4,22 @@ import datetime
 import csv
 import typing
 
+from . import utils
+
+
+GRID_CREATE = """
+create table grid (
+  grid_id text not null,
+  x integer not null,
+  y integer not null,
+  pollution integer not null
+)
+"""
+
+GRID_INSERT = """
+insert into grid(grid_id, x, y, pollution) values(?, ?, ?, ?)
+"""
+
 
 SQLITE_TYPE = {
     int: "integer",
@@ -12,6 +28,26 @@ SQLITE_TYPE = {
     datetime.date: "date",
     str: "text",
 }
+
+
+def grids_to_csv(outdir, grids, tidy_grids):
+    """Save grids as CSV."""
+
+    for g in grids:
+        with utils.file_or_std(outdir, f"{g.grid_id}.csv", "w") as writer:
+            print(g, file=writer)
+
+    with utils.file_or_std(outdir, "grids.csv", "w") as stream:
+        writer = csv.writer(stream)
+        writer.writerows(tidy_grids)
+
+
+def grids_to_db(cnx, tidy_grids):
+    """Save all interesting grid cells in database."""
+
+    cnx.execute(GRID_CREATE)
+    cnx.executemany(GRID_INSERT, tidy_grids)
+    cnx.commit()
 
 
 def objects_to_csv(stream, objects):
@@ -35,7 +71,7 @@ def objects_to_db(cnx, table_name, objects):
     cols = [f"{f} {_sqlite_type(cls, f)}" for f in fields]
     foreign_keys = _get_foreign_keys(cls)
 
-    create_sql = f"create table if not exists {table_name} (\n  {',\n  '.join(cols)}{foreign_keys}\n)"
+    create_sql = f"create table {table_name} (\n  {',\n  '.join(cols)}{foreign_keys}\n)"
     cnx.execute(create_sql)
 
     placeholders = ", ".join(["?"] * len(fields))

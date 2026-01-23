@@ -48,13 +48,13 @@ class Grid(BaseModel):
     def tidy(grids):
         """Convert all grids to tidy table."""
 
-        result = ["grid_id,x,y,pollution"]
+        result = [["grid_id","x","y","pollution"]]
         for g in grids:
             for x in range(g.size):
                 for y in range(g.size):
                     if g[x, y] > 0:
-                        result.append(f"{g.grid_id},{x},{y},{g[x, y]}")
-        return "\n".join(result)
+                        result.append([g.grid_id, x, y, g[x, y]])
+        return result
 
     def __getitem__(self, key):
         """Get grid element."""

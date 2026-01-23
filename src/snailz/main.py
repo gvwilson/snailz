@@ -1,6 +1,7 @@
 """Synthesize data."""
 
 import argparse
+import csv
 import json
 from pathlib import Path
 import random
@@ -11,10 +12,10 @@ from .effect import do_all_effects
 from .grid import Grid
 from .machine import Machine
 from .parameters import Parameters
-from .persist import objects_to_csv, objects_to_db
 from .person import Person
 from .rating import Rating
 from .sample import Sample
+from . import persist
 from . import utils
 
 
@@ -33,8 +34,10 @@ def main():
     params = _initialize(args)
     grids, persons, samples, machines, ratings = _synthesize(params)
     changes = do_all_effects(params, grids, persons, samples)
-    _save_csv(args, grids, persons, samples, machines, ratings, changes)
-    _save_db(args, grids, persons, samples, machines, ratings)
+
+    tidy_grids = Grid.tidy(grids)
+    _save_csv(args, grids, tidy_grids, persons, samples, machines, ratings, changes)
+    _save_db(args, grids, tidy_grids, persons, samples, machines, ratings)
 
     return 0
 
@@ -65,7 +68,7 @@ def _parse_args():
     return parser.parse_args()
 
 
-def _save_csv(args, grids, persons, samples, machines, ratings, changes):
+def _save_csv(args, grids, tidy_grids, persons, samples, machines, ratings, changes):
     """Save synthesized data as CSV."""
 
     if not args.outdir:
@@ -79,13 +82,7 @@ def _save_csv(args, grids, persons, samples, machines, ratings, changes):
         if not outdir.is_dir():
             outdir.mkdir(exist_ok=True)
 
-    for g in grids:
-        with utils.file_or_std(outdir, f"{g.grid_id}.csv", "w") as writer:
-            print(g, file=writer)
-
-    with utils.file_or_std(outdir, "grids.csv", "w") as writer:
-        print(Grid.tidy(grids), file=writer)
-
+    persist.grids_to_csv(outdir, grids, tidy_grids)
     for name, cls, data in (
         ("machines", Machine, machines),
         ("persons", Person, persons),
@@ -93,13 +90,13 @@ def _save_csv(args, grids, persons, samples, machines, ratings, changes):
         ("samples", Sample, samples),
     ):
         with utils.file_or_std(outdir, f"{name}.csv", "w") as writer:
-            objects_to_csv(writer, data)
+            persist.objects_to_csv(writer, data)
 
     with utils.file_or_std(outdir, "changes.json", "w") as writer:
         json.dump(changes, writer)
 
 
-def _save_db(args, grids, persons, samples, machines, ratings):
+def _save_db(args, grids, tidy_grids, persons, samples, machines, ratings):
     """Save synthesized data as CSV."""
 
     if (not args.outdir) or (args.outdir == "-"):
@@ -119,7 +116,9 @@ def _save_db(args, grids, persons, samples, machines, ratings):
         ("rating", ratings),
         ("sample", samples),
     ):
-        objects_to_db(cnx, table, data)
+        persist.objects_to_db(cnx, table, data)
+
+    persist.grids_to_db(cnx, tidy_grids)
 
     cnx.close()
 
