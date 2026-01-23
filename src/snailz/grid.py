@@ -48,7 +48,7 @@ class Grid(BaseModel):
     def tidy(params, grids):
         """Convert all grids to tidy table."""
 
-        result = [["grid_id","x","y","lat","lon","pollution"]]
+        result = [["grid_id", "x", "y", "lat", "lon", "pollution"]]
         for g in grids:
             for x in range(g.size):
                 for y in range(g.size):

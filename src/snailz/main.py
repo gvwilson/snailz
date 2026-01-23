@@ -1,7 +1,6 @@
 """Synthesize data."""
 
 import argparse
-import csv
 import json
 from pathlib import Path
 import random

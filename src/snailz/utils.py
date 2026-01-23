@@ -58,13 +58,12 @@ def random_date(params):
     return params.sample_date[0] + timedelta(days=random.randint(0, days))
 
 
-def random_mass(params):
-    """Generate random sample mass."""
+def random_size(params):
+    """Generate random sample mass and diameter."""
 
-    return random.uniform(
-        params.sample_mass[0],
-        params.sample_mass[1],
-    )
+    mass = random.normalvariate(*params.sample_size)
+    diameter = random.normalvariate(mass / 2.0, params.sample_size[1] / 5.0)
+    return mass, diameter
 
 
 def _serialize_json(obj):

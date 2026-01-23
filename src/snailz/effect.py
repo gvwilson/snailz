@@ -16,7 +16,7 @@ def _do_delay(params, grids, persons, samples):
     """Modify sample mass based on sampling date."""
 
     duration = (params.sample_date[1] - params.sample_date[0]).days
-    daily = (params.sample_mass[1] - params.sample_mass[0]) / duration
+    daily = params.sample_size[1] / duration
     for s in samples:
         elapsed = (s.timestamp - params.sample_date[0]).days
         growth = elapsed * daily
@@ -32,7 +32,7 @@ def _do_person(params, grids, persons, samples):
     clumsy = random.choice(persons)
     for s in samples:
         if s.person_id == clumsy.person_id:
-            s.mass -= params.sample_mass[0] * params.clumsy_factor
+            s.mass *= 1 + params.clumsy_factor
     return {"clumsy": clumsy.person_id}
 
 
@@ -42,7 +42,8 @@ def _do_pollution(params, grids, persons, samples):
     grids = {g.grid_id: g for g in grids}
     for s in samples:
         pollution = grids[s.grid_id][s.x, s.y]
-        s.mass += params.pollution_factor * pollution * s.mass
+        s.mass *= 1.0 + params.pollution_factor * pollution
+        s.diameter *= 1.0 + params.pollution_factor * pollution
     return {}
 
 
@@ -51,4 +52,5 @@ def _do_precision(params, grids, persons, samples):
 
     for s in samples:
         s.mass = round(s.mass, params.precision)
+        s.diameter = round(s.diameter, params.precision)
     return {}

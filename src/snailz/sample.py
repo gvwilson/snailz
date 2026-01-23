@@ -5,7 +5,6 @@ from pydantic import BaseModel, ConfigDict, Field
 import random
 from typing import ClassVar
 
-from .grid import grid_lat_lon
 from . import utils
 
 
@@ -33,6 +32,7 @@ class Sample(BaseModel):
     person_id: str = Field(description="collector")
     timestamp: date = Field(description="when sample was collected")
     mass: float = Field(gt=0.0, description="sample mass")
+    diameter: float = Field(gt=0.0, description="sample diameter")
 
     @staticmethod
     def make(params, grids, persons):
@@ -46,7 +46,7 @@ class Sample(BaseModel):
             y = random.randint(0, grid.size - 1)
             person = random.choice(persons)
             timestamp = utils.random_date(params)
-            mass = utils.random_mass(params)
+            mass, diameter = utils.random_size(params)
             result.append(
                 Sample(
                     sample_id=next(Sample._id_gen),
@@ -56,6 +56,7 @@ class Sample(BaseModel):
                     person_id=person.person_id,
                     timestamp=timestamp,
                     mass=mass,
+                    diameter=diameter,
                 )
             )
 

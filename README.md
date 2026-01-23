@@ -75,7 +75,7 @@ The parameters, their meanings, and their properties are:
 | `pollution_factor` | pollution effect on mass                  | 0.3                      |
 | `precision`        | decimal places used to record masses      | 2                        |
 | `sample_date`      | min/max sample dates (YYYY-MM-DD)         | (2025-01-01, 2025-01-01) |
-| `sample_mass`      | min/max sample mass (g)                   | (50, 150)                |
+| `sample_size`      | sample mass mean and std. dev. (g)        | (50, 10)                 |
 | `seed`             | random number generation seed             | 123456                   |
 
 ## Data Dictionary
@@ -151,10 +151,10 @@ Its fields are:
 
 `samples.csv` stores information about sampled snails in CSV format (with column headers):
 
-| sample_id | grid_id | x  | y  | pollution | person_id | timestamp  | mass |
-| :-----    | :------ | -: | -: | --------: | --------: | ---------: | ---: |
-| S0001     | G0001   | 9  | 8  | 0         | P0004     | 2025-01-16 | 1.02 |
-| S0002     | G0001   | 8  | 9  | 1         | P0005     | 2025-03-30 | 2.39 |
+| sample_id | grid_id | x  | y  | pollution | person_id | timestamp  | mass | diameter |
+| :-----    | :------ | -: | -: | --------: | --------: | ---------: | ---: | -------: |
+| S0001     | G0001   | 9  | 8  | 0         | P0004     | 2025-01-16 | 71.5 | 29.6     |
+| S0002     | G0001   | 8  | 9  | 1         | P0005     | 2025-03-30 | 62.1 | 28.9     |
 | …         | …       | …  | …  | …         | …         | …          | …    |
 
 Its fields are:
@@ -168,7 +168,8 @@ Its fields are:
 | `pollution` | pollution at that point  | integer, required      |
 | `person_id` | who collected the sample | text, required         |
 | `timestamp` | date sample collected    | date, required         |
-| `mass`      | sample weight in grams   | real, required         |
+| `mass`      | sample weight (g)        | real, required         |
+| `diameter`  | sample diameter (mm)     | real, required         |
 
 ### Machines
 
