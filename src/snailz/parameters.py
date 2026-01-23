@@ -16,7 +16,7 @@ class Parameters(BaseModel):
     locale: str = Field(default="et_EE", description="name generation locale")
     grid_size: int = Field(default=11, gt=0, description="sample grid size")
     grid_spacing: float = Field(default=20.0, gt=0, description="grid cell spacing (m)")
-    grid_gap_m: float = Field(default=1000.0, gt=0, description="gap between grids")
+    grid_gap: float = Field(default=1000.0, gt=0, description="gap between grids")
     lat0: float = Field(
         default=48.8666632, ge=-90.0, le=90.0, description="grid reference latitude"
     )
@@ -27,7 +27,7 @@ class Parameters(BaseModel):
         description="grid reference longitude",
     )
     sample_mass: tuple[float, float] = Field(
-        default=(0.5, 1.5), description="sample mass bounds"
+        default=(50, 150), description="sample mass bounds"
     )
     sample_date: tuple[date, date] = Field(
         default=(date(2025, 1, 1), date(2025, 3, 31)),

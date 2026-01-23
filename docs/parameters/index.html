@@ -1073,7 +1073,7 @@
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>grid_gap_m</code>
+                <code>grid_gap</code>
             </td>
             <td>
                   <code><span title="float">float</span></code>
@@ -1132,7 +1132,7 @@
               </div>
             </td>
             <td>
-                  <code>(0.5, 1.5)</code>
+                  <code>(50, 150)</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -1294,7 +1294,7 @@
     <span class="n">locale</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;et_EE&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;name generation locale&quot;</span><span class="p">)</span>
     <span class="n">grid_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;sample grid size&quot;</span><span class="p">)</span>
     <span class="n">grid_spacing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">20.0</span><span class="p">,</span> <span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;grid cell spacing (m)&quot;</span><span class="p">)</span>
-    <span class="n">grid_gap_m</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1000.0</span><span class="p">,</span> <span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;gap between grids&quot;</span><span class="p">)</span>
+    <span class="n">grid_gap</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1000.0</span><span class="p">,</span> <span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;gap between grids&quot;</span><span class="p">)</span>
     <span class="n">lat0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="mf">48.8666632</span><span class="p">,</span> <span class="n">ge</span><span class="o">=-</span><span class="mf">90.0</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="mf">90.0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;grid reference latitude&quot;</span>
     <span class="p">)</span>
@@ -1305,7 +1305,7 @@
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;grid reference longitude&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">sample_mass</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;sample mass bounds&quot;</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">150</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;sample mass bounds&quot;</span>
     <span class="p">)</span>
     <span class="n">sample_date</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">date</span><span class="p">,</span> <span class="n">date</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">31</span><span class="p">)),</span>

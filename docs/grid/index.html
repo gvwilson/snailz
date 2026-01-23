@@ -1621,7 +1621,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">grid_width_m</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">grid_size</span> <span class="o">*</span> <span class="n">params</span><span class="o">.</span><span class="n">grid_spacing</span>
-    <span class="n">stride_m</span> <span class="o">=</span> <span class="n">grid_width_m</span> <span class="o">+</span> <span class="n">params</span><span class="o">.</span><span class="n">grid_gap_m</span>
+    <span class="n">stride_m</span> <span class="o">=</span> <span class="n">grid_width_m</span> <span class="o">+</span> <span class="n">params</span><span class="o">.</span><span class="n">grid_gap</span>
     <span class="n">cols</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">num_grids</span><span class="p">))</span>
     <span class="n">meters_per_degree_lon</span> <span class="o">=</span> <span class="n">METERS_PER_DEGREE_LAT</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">lat0</span><span class="p">))</span>
 

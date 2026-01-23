@@ -107,7 +107,7 @@ def _grid_origins(params):
     """
 
     grid_width_m = params.grid_size * params.grid_spacing
-    stride_m = grid_width_m + params.grid_gap_m
+    stride_m = grid_width_m + params.grid_gap
     cols = math.ceil(math.sqrt(params.num_grids))
     meters_per_degree_lon = METERS_PER_DEGREE_LAT * math.cos(math.radians(params.lat0))
 

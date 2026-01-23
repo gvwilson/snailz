@@ -82,7 +82,7 @@ def _save_csv(args, data):
         if not outdir.is_dir():
             outdir.mkdir(exist_ok=True)
 
-    persist.grids_to_csv(outdir, data["grids"], ["tidy_grids"])
+    persist.grids_to_csv(outdir, data["grids"], data["tidy_grids"])
     for name, cls in (
         ("machines", Machine),
         ("persons", Person),

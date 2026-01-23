@@ -1143,7 +1143,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">outdir</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
             <span class="n">outdir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="n">persist</span><span class="o">.</span><span class="n">grids_to_csv</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;grids&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;tidy_grids&quot;</span><span class="p">])</span>
+    <span class="n">persist</span><span class="o">.</span><span class="n">grids_to_csv</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;grids&quot;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;tidy_grids&quot;</span><span class="p">])</span>
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="p">(</span>
         <span class="p">(</span><span class="s2">&quot;machines&quot;</span><span class="p">,</span> <span class="n">Machine</span><span class="p">),</span>
         <span class="p">(</span><span class="s2">&quot;persons&quot;</span><span class="p">,</span> <span class="n">Person</span><span class="p">),</span>
