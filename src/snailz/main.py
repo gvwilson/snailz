@@ -33,7 +33,7 @@ def main():
     params = _initialize(args)
     data = _synthesize(params)
     data["changes"] = do_all_effects(params, data)
-    data["tidy_grids"] = Grid.tidy(data["grids"])
+    data["tidy_grids"] = Grid.tidy(params, data["grids"])
     _save_csv(args, data)
     _save_db(args, data)
 

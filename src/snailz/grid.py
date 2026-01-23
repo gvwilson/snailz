@@ -45,15 +45,16 @@ class Grid(BaseModel):
         return result
 
     @staticmethod
-    def tidy(grids):
+    def tidy(params, grids):
         """Convert all grids to tidy table."""
 
-        result = [["grid_id","x","y","pollution"]]
+        result = [["grid_id","x","y","lat","lon","pollution"]]
         for g in grids:
             for x in range(g.size):
                 for y in range(g.size):
                     if g[x, y] > 0:
-                        result.append([g.grid_id, x, y, g[x, y]])
+                        lat, lon = grid_lat_lon(params, g, x, y)
+                        result.append([g.grid_id, x, y, lat, lon, g[x, y]])
         return result
 
     def __getitem__(self, key):

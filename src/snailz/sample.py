@@ -28,11 +28,8 @@ class Sample(BaseModel):
         min_length=1, description="unique ID", json_schema_extra={"primary_key": True}
     )
     grid_id: str = Field(min_length=1, description="grid ID")
-    x_: int = Field(default=0, ge=0, description="X coordinate")
-    y_: int = Field(default=0, ge=0, description="Y coordinate")
-    lat: float = Field(default=0.0, description="latitude")
-    lon: float = Field(default=0.0, description="longitude")
-    pollution: int = Field(ge=0, description="pollution reading at grid cell")
+    x: int = Field(default=0, ge=0, description="X coordinate")
+    y: int = Field(default=0, ge=0, description="Y coordinate")
     person_id: str = Field(description="collector")
     timestamp: date = Field(description="when sample was collected")
     mass: float = Field(gt=0.0, description="sample mass")
@@ -47,8 +44,6 @@ class Sample(BaseModel):
             grid = random.choice(grids)
             x = random.randint(0, grid.size - 1)
             y = random.randint(0, grid.size - 1)
-            lat, lon = grid_lat_lon(params, grid, x, y)
-            pollution = grid[x, y]
             person = random.choice(persons)
             timestamp = utils.random_date(params)
             mass = utils.random_mass(params)
@@ -56,11 +51,8 @@ class Sample(BaseModel):
                 Sample(
                     sample_id=next(Sample._id_gen),
                     grid_id=grid.grid_id,
-                    x_=x,
-                    y_=y,
-                    lat=lat,
-                    lon=lon,
-                    pollution=pollution,
+                    x=x,
+                    y=y,
                     person_id=person.person_id,
                     timestamp=timestamp,
                     mass=mass,

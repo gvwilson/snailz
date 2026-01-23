@@ -12,12 +12,14 @@ create table grid (
   grid_id text not null,
   x integer not null,
   y integer not null,
+  lat real not null,
+  lon real not null,
   pollution integer not null
 )
 """
 
 GRID_INSERT = """
-insert into grid(grid_id, x, y, pollution) values(?, ?, ?, ?)
+insert into grid(grid_id, x, y, lat, lon, pollution) values(?, ?, ?, ?, ?, ?)
 """
 
 

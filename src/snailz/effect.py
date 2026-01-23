@@ -41,7 +41,7 @@ def _do_pollution(params, grids, persons, samples):
 
     grids = {g.grid_id: g for g in grids}
     for s in samples:
-        pollution = grids[s.grid_id][s.x_, s.y_]
+        pollution = grids[s.grid_id][s.x, s.y]
         s.mass += params.pollution_factor * pollution * s.mass
     return {}
 
