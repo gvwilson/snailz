@@ -33,9 +33,11 @@ def main():
     params = _initialize(args)
     data = _synthesize(params)
     data["changes"] = do_all_effects(params, data)
+
     data["tidy_grids"] = Grid.tidy(params, data["grids"])
     _save_csv(args, data)
     _save_db(args, data)
+    _save_params(args, params)
 
     return 0
 
@@ -119,6 +121,15 @@ def _save_db(args, data):
     persist.grids_to_db(cnx, data["tidy_grids"])
 
     cnx.close()
+
+
+def _save_params(args, params):
+    """Save parameters."""
+    if (args.outdir is None) or (args.outdir == "-"):
+        return
+
+    with open(Path(args.outdir, "params.json"), "w") as writer:
+        writer.write(utils.json_dump(Parameters()))
 
 
 def _synthesize(params):
