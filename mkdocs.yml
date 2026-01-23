@@ -9,7 +9,10 @@ nav:
   - grid.md
   - person.md
   - sample.md
-  - effects.md
+  - effect.md
+  - machine.md
+  - rating.md
+  - persist.md
   - utils.md
 - Project:
   - license.md

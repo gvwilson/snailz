@@ -12,7 +12,7 @@
         <link rel="prev" href="../person/">
       
       
-        <link rel="next" href="../effects/">
+        <link rel="next" href="../effect/">
       
       
         
@@ -437,28 +437,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#snailz.sample.Sample.csv_header" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        csv_header
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#snailz.sample.Sample.__str__" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        __str__
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -480,14 +458,98 @@
   
   
     <li class="md-nav__item">
-      <a href="../effects/" class="md-nav__link">
+      <a href="../effect/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Effects
+    Effect
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../machine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Machine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rating
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../persist/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Persist
   
 
     
@@ -732,28 +794,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#snailz.sample.Sample.csv_header" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        csv_header
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#snailz.sample.Sample.__str__" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        __str__
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -839,7 +879,7 @@
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>id</code>
+                <code>sample_id</code>
             </td>
             <td>
                   <code><span title="str">str</span></code>
@@ -855,7 +895,7 @@
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>grid</code>
+                <code>grid_id</code>
             </td>
             <td>
                   <code><span title="str">str</span></code>
@@ -882,7 +922,7 @@
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>0</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -898,28 +938,12 @@
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>0</code>
             </td>
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>pollution</code>
-            </td>
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>pollution reading at grid cell</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>person</code>
+                <code>person_id</code>
             </td>
             <td>
                   <code><span title="str">str</span></code>
@@ -935,7 +959,7 @@
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>when</code>
+                <code>timestamp</code>
             </td>
             <td>
                   <code><span title="datetime.date">date</span></code>
@@ -1024,19 +1048,32 @@
 <span class="normal">56</span>
 <span class="normal">57</span>
 <span class="normal">58</span>
-<span class="normal">59</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Sample</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Sample</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represent a single sample.&quot;&quot;&quot;</span>
 
     <span class="n">id_stem</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;S&quot;</span>
     <span class="n">id_digits</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span>
 
-    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;unique ID&quot;</span><span class="p">)</span>
-    <span class="n">grid</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;grid ID&quot;</span><span class="p">)</span>
-    <span class="n">x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;X coordinate&quot;</span><span class="p">)</span>
-    <span class="n">y</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Y coordinate&quot;</span><span class="p">)</span>
-    <span class="n">pollution</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;pollution reading at grid cell&quot;</span><span class="p">)</span>
-    <span class="n">person</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;collector&quot;</span><span class="p">)</span>
-    <span class="n">when</span><span class="p">:</span> <span class="n">date</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;when sample was collected&quot;</span><span class="p">)</span>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span>
+        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;foreign_key&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;grid_id&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;grid&quot;</span><span class="p">,</span> <span class="s2">&quot;grid_id&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;person_id&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;person&quot;</span><span class="p">,</span> <span class="s2">&quot;person_id&quot;</span><span class="p">),</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="n">sample_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;unique ID&quot;</span><span class="p">,</span> <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;primary_key&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">grid_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;grid ID&quot;</span><span class="p">)</span>
+    <span class="n">x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;X coordinate&quot;</span><span class="p">)</span>
+    <span class="n">y</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Y coordinate&quot;</span><span class="p">)</span>
+    <span class="n">person_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;collector&quot;</span><span class="p">)</span>
+    <span class="n">timestamp</span><span class="p">:</span> <span class="n">date</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;when sample was collected&quot;</span><span class="p">)</span>
     <span class="n">mass</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">gt</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;sample mass&quot;</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
@@ -1044,34 +1081,27 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Make a sample.&quot;&quot;&quot;</span>
 
         <span class="n">utils</span><span class="o">.</span><span class="n">ensure_id_generator</span><span class="p">(</span><span class="n">Sample</span><span class="p">)</span>
-        <span class="n">grid</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">grids</span><span class="p">)</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">grid</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">grid</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">pollution</span> <span class="o">=</span> <span class="n">grid</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span>
-        <span class="n">person</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">persons</span><span class="p">)</span>
-        <span class="n">when</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">random_date</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
-        <span class="n">mass</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">random_mass</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">Sample</span><span class="p">(</span>
-            <span class="nb">id</span><span class="o">=</span><span class="nb">next</span><span class="p">(</span><span class="n">Sample</span><span class="o">.</span><span class="n">_id_gen</span><span class="p">),</span>
-            <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
-            <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
-            <span class="n">pollution</span><span class="o">=</span><span class="n">pollution</span><span class="p">,</span>
-            <span class="n">person</span><span class="o">=</span><span class="n">person</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="n">when</span><span class="o">=</span><span class="n">when</span><span class="p">,</span>
-            <span class="n">mass</span><span class="o">=</span><span class="n">mass</span><span class="p">,</span>
-        <span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">num_samples</span><span class="p">):</span>
+            <span class="n">grid</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">grids</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">grid</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">grid</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">person</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">persons</span><span class="p">)</span>
+            <span class="n">timestamp</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">random_date</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+            <span class="n">mass</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">random_mass</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">Sample</span><span class="p">(</span>
+                    <span class="n">sample_id</span><span class="o">=</span><span class="nb">next</span><span class="p">(</span><span class="n">Sample</span><span class="o">.</span><span class="n">_id_gen</span><span class="p">),</span>
+                    <span class="n">grid_id</span><span class="o">=</span><span class="n">grid</span><span class="o">.</span><span class="n">grid_id</span><span class="p">,</span>
+                    <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+                    <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+                    <span class="n">person_id</span><span class="o">=</span><span class="n">person</span><span class="o">.</span><span class="n">person_id</span><span class="p">,</span>
+                    <span class="n">timestamp</span><span class="o">=</span><span class="n">timestamp</span><span class="p">,</span>
+                    <span class="n">mass</span><span class="o">=</span><span class="n">mass</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
 
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">csv_header</span><span class="p">():</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate header for CSV file.&quot;&quot;&quot;</span>
-
-        <span class="k">return</span> <span class="s2">&quot;sample_id,grid_id,x,y,pollution,person,when,mass&quot;</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert to CSV string.&quot;&quot;&quot;</span>
-
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pollution</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">person</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">when</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mass</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">result</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -1108,17 +1138,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/snailz/sample.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">37</span>
 <span class="normal">38</span>
 <span class="normal">39</span>
 <span class="normal">40</span>
@@ -1129,92 +1149,46 @@
 <span class="normal">45</span>
 <span class="normal">46</span>
 <span class="normal">47</span>
-<span class="normal">48</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">grids</span><span class="p">,</span> <span class="n">persons</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Make a sample.&quot;&quot;&quot;</span>
 
     <span class="n">utils</span><span class="o">.</span><span class="n">ensure_id_generator</span><span class="p">(</span><span class="n">Sample</span><span class="p">)</span>
-    <span class="n">grid</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">grids</span><span class="p">)</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">grid</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">grid</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">pollution</span> <span class="o">=</span> <span class="n">grid</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span>
-    <span class="n">person</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">persons</span><span class="p">)</span>
-    <span class="n">when</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">random_date</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
-    <span class="n">mass</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">random_mass</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">Sample</span><span class="p">(</span>
-        <span class="nb">id</span><span class="o">=</span><span class="nb">next</span><span class="p">(</span><span class="n">Sample</span><span class="o">.</span><span class="n">_id_gen</span><span class="p">),</span>
-        <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-        <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
-        <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
-        <span class="n">pollution</span><span class="o">=</span><span class="n">pollution</span><span class="p">,</span>
-        <span class="n">person</span><span class="o">=</span><span class="n">person</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-        <span class="n">when</span><span class="o">=</span><span class="n">when</span><span class="p">,</span>
-        <span class="n">mass</span><span class="o">=</span><span class="n">mass</span><span class="p">,</span>
-    <span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">num_samples</span><span class="p">):</span>
+        <span class="n">grid</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">grids</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">grid</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">grid</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">person</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">persons</span><span class="p">)</span>
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">random_date</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+        <span class="n">mass</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">random_mass</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">Sample</span><span class="p">(</span>
+                <span class="n">sample_id</span><span class="o">=</span><span class="nb">next</span><span class="p">(</span><span class="n">Sample</span><span class="o">.</span><span class="n">_id_gen</span><span class="p">),</span>
+                <span class="n">grid_id</span><span class="o">=</span><span class="n">grid</span><span class="o">.</span><span class="n">grid_id</span><span class="p">,</span>
+                <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+                <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+                <span class="n">person_id</span><span class="o">=</span><span class="n">person</span><span class="o">.</span><span class="n">person_id</span><span class="p">,</span>
+                <span class="n">timestamp</span><span class="o">=</span><span class="n">timestamp</span><span class="p">,</span>
+                <span class="n">mass</span><span class="o">=</span><span class="n">mass</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
 
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="snailz.sample.Sample.csv_header" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">csv_header</span><span class="p">()</span></code>
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
-  </span>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Generate header for CSV file.</p>
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/snailz/sample.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">csv_header</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate header for CSV file.&quot;&quot;&quot;</span>
-
-    <span class="k">return</span> <span class="s2">&quot;sample_id,grid_id,x,y,pollution,person,when,mass&quot;</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="snailz.sample.Sample.__str__" class="doc doc-heading">
-            <code class="highlight language-python"><span class="fm">__str__</span><span class="p">()</span></code>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Convert to CSV string.</p>
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/snailz/sample.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert to CSV string.&quot;&quot;&quot;</span>
-
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pollution</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">person</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">when</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mass</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="n">result</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
