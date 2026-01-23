@@ -10,7 +10,7 @@ class Parameters(BaseModel):
 
     seed: int = Field(default=123456, description="RNG seed", gt=0)
     precision: int = Field(default=2, gt=0, description="floating point digits")
-    num_persons: int = Field(default=5, description="number of persons")
+    num_persons: int = Field(default=6, description="number of persons")
     num_grids: int = Field(default=3, gt=0, description="number of sample grids")
     num_samples: int = Field(default=20, gt=0, description="number of samples")
     locale: str = Field(default="et_EE", description="name generation locale")
