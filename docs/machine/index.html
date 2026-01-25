@@ -942,13 +942,10 @@
 <span class="normal">66</span>
 <span class="normal">67</span>
 <span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Machine</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="normal">69</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Machine</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A piece of experimental machinery.&quot;&quot;&quot;</span>
 
-    <span class="n">id_stem</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;M&quot;</span>
-    <span class="n">id_digits</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">_id_gen</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">utils</span><span class="o">.</span><span class="n">id_gen</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">id_gen</span><span class="p">(</span><span class="s2">&quot;M&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 
     <span class="n">machine_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;machine ID&quot;</span><span class="p">,</span> <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;primary_key&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
@@ -962,7 +959,6 @@
         <span class="k">assert</span> <span class="n">params</span><span class="o">.</span><span class="n">num_machines</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">PREFIX</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">SUFFIX</span><span class="p">),</span> <span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;cannot generate </span><span class="si">{</span><span class="n">params</span><span class="o">.</span><span class="n">num_machines</span><span class="si">}</span><span class="s2"> machine names&quot;</span>
         <span class="p">)</span>
-        <span class="n">utils</span><span class="o">.</span><span class="n">ensure_id_generator</span><span class="p">(</span><span class="n">Machine</span><span class="p">)</span>
         <span class="n">pairs</span> <span class="o">=</span> <span class="p">[(</span><span class="n">p</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PREFIX</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">SUFFIX</span><span class="p">]</span>
         <span class="k">return</span> <span class="p">[</span>
             <span class="n">Machine</span><span class="p">(</span><span class="n">machine_id</span><span class="o">=</span><span class="nb">next</span><span class="p">(</span><span class="n">Machine</span><span class="o">.</span><span class="n">_id_gen</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -1004,7 +1000,8 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/snailz/machine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">59</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">58</span>
+<span class="normal">59</span>
 <span class="normal">60</span>
 <span class="normal">61</span>
 <span class="normal">62</span>
@@ -1014,16 +1011,13 @@
 <span class="normal">66</span>
 <span class="normal">67</span>
 <span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">69</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a list of machines.&quot;&quot;&quot;</span>
 
     <span class="k">assert</span> <span class="n">params</span><span class="o">.</span><span class="n">num_machines</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">PREFIX</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">SUFFIX</span><span class="p">),</span> <span class="p">(</span>
         <span class="sa">f</span><span class="s2">&quot;cannot generate </span><span class="si">{</span><span class="n">params</span><span class="o">.</span><span class="n">num_machines</span><span class="si">}</span><span class="s2"> machine names&quot;</span>
     <span class="p">)</span>
-    <span class="n">utils</span><span class="o">.</span><span class="n">ensure_id_generator</span><span class="p">(</span><span class="n">Machine</span><span class="p">)</span>
     <span class="n">pairs</span> <span class="o">=</span> <span class="p">[(</span><span class="n">p</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PREFIX</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">SUFFIX</span><span class="p">]</span>
     <span class="k">return</span> <span class="p">[</span>
         <span class="n">Machine</span><span class="p">(</span><span class="n">machine_id</span><span class="o">=</span><span class="nb">next</span><span class="p">(</span><span class="n">Machine</span><span class="o">.</span><span class="n">_id_gen</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
