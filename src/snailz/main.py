@@ -32,13 +32,23 @@ def main():
     params = _initialize(args)
     data = _synthesize(params)
     data["changes"] = do_all_effects(params, data)
+    data["tidy_grids"] = Grid.tidy(data["grids"])
 
-    data["tidy_grids"] = Grid.tidy(params, data["grids"])
-    _save_csv(args, data)
-    _save_db(args, data)
-    _save_params(args, params)
+    if args.outdir is not None:
+        _save_params(args.outdir, params)
+        _save_csv(args.outdir, data)
+        if args.outdir != "-":
+            _save_db(args.outdir, data)
 
     return 0
+
+
+def _ensure_dir(dirname):
+    """Ensure directory exists."""
+
+    dirpath = Path(dirname)
+    if not dirpath.is_dir():
+        dirpath.mkdir(exist_ok=True)
 
 
 def _initialize(args):
@@ -67,19 +77,13 @@ def _parse_args():
     return parser.parse_args()
 
 
-def _save_csv(args, data):
+def _save_csv(outdir, data):
     """Save synthesized data as CSV."""
 
-    if not args.outdir:
-        return
-
-    elif args.outdir == "-":
+    if outdir == "-":
         outdir = None
-
     else:
-        outdir = Path(args.outdir)
-        if not outdir.is_dir():
-            outdir.mkdir(exist_ok=True)
+        _ensure_dir(Path(outdir))
 
     persist.grids_to_csv(outdir, data["grids"], data["tidy_grids"])
     for name, cls in (
@@ -95,15 +99,10 @@ def _save_csv(args, data):
         json.dump(data["changes"], writer)
 
 
-def _save_db(args, data):
+def _save_db(outdir, data):
     """Save synthesized data as CSV."""
 
-    if (not args.outdir) or (args.outdir == "-"):
-        return
-
-    outdir = Path(args.outdir)
-    if not outdir.is_dir():
-        outdir.mkdir(exist_ok=True)
+    _ensure_dir(outdir)
     dbpath = outdir / DB_FILE
     dbpath.unlink(missing_ok=True)
 
@@ -122,13 +121,15 @@ def _save_db(args, data):
     cnx.close()
 
 
-def _save_params(args, params):
+def _save_params(outdir, params):
     """Save parameters."""
-    if (args.outdir is None) or (args.outdir == "-"):
-        return
 
-    with open(Path(args.outdir, "params.json"), "w") as writer:
-        writer.write(utils.json_dump(Parameters()))
+    if outdir == "-":
+        sys.stdout.write(utils.json_dump(params))
+    else:
+        _ensure_dir(Path(outdir))
+        with open(Path(outdir, "params.json"), "w") as writer:
+            writer.write(utils.json_dump(params))
 
 
 def _synthesize(params):

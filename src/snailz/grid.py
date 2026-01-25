@@ -18,13 +18,13 @@ MOVES = [[-1, 0], [1, 0], [0, -1], [0, 1]]
 class Grid(BaseModel):
     """Create and fill an integer grid."""
 
-    id_stem: ClassVar[str] = "G"
-    id_digits: ClassVar[int] = 4
+    _id_gen: ClassVar[utils.id_gen] = utils.id_gen("G", 4)
 
     grid_id: str = Field(
         min_length=1, description="unique ID", json_schema_extra={"primary_key": True}
     )
-    size: int = Field(gt=0, description="grid size")
+    size: int = Field(gt=0, description="grid XY size")
+    spacing_: float = Field(gt=0, description="grid cell spacing")
     grid: list = Field(default_factory=list, description="grid values")
     lat0: float = Field(default=0.0, description="southernmost latitude")
     lon0: float = Field(default=0.0, description="westernmost longitude")
@@ -33,19 +33,22 @@ class Grid(BaseModel):
     def make(params):
         """Make grids."""
 
-        utils.ensure_id_generator(Grid)
         origins = _grid_origins(params)
         result = []
         for lat0, lon0 in origins:
             grid = Grid(
-                grid_id=next(Grid._id_gen), size=params.grid_size, lat0=lat0, lon0=lon0
+                grid_id=next(Grid._id_gen),
+                size=params.grid_size,
+                spacing_=params.grid_spacing,
+                lat0=lat0,
+                lon0=lon0
             )
             grid.fill()
             result.append(grid)
         return result
 
     @staticmethod
-    def tidy(params, grids):
+    def tidy(grids):
         """Convert all grids to tidy table."""
 
         result = [["grid_id", "x", "y", "lat", "lon", "pollution"]]
@@ -53,7 +56,7 @@ class Grid(BaseModel):
             for x in range(g.size):
                 for y in range(g.size):
                     if g[x, y] > 0:
-                        lat, lon = grid_lat_lon(params, g, x, y)
+                        lat, lon = g.lat_lon(x, y)
                         result.append([g.grid_id, x, y, lat, lon, g[x, y]])
         return result
 
@@ -92,13 +95,13 @@ class Grid(BaseModel):
             y += m[1]
 
 
-def grid_lat_lon(params, grid, x, y):
-    """Calculate latitude and longitude of grid cell."""
+    def lat_lon(self, x, y):
+        """Calculate latitude and longitude of grid cell."""
 
-    lat = grid.lat0 + (y * params.grid_spacing) / METERS_PER_DEGREE_LAT
-    meters_per_degree_lon = METERS_PER_DEGREE_LAT * math.cos(math.radians(grid.lat0))
-    lon = grid.lon0 + (x * params.grid_spacing) / meters_per_degree_lon
-    return lat, lon
+        lat = self.lat0 + (y * self.spacing_) / METERS_PER_DEGREE_LAT
+        meters_per_degree_lon = METERS_PER_DEGREE_LAT * math.cos(math.radians(self.lat0))
+        lon = self.lon0 + (x * self.spacing_) / meters_per_degree_lon
+        return lat, lon
 
 
 def _grid_origins(params):

@@ -61,8 +61,8 @@ def random_date(params):
 def random_size(params):
     """Generate random sample mass and diameter."""
 
-    mass = random.normalvariate(*params.sample_size)
-    diameter = random.normalvariate(mass / 2.0, params.sample_size[1] / 5.0)
+    mass = random.normalvariate(*params.sample_mass)
+    diameter = random.normalvariate(mass / 2.0, params.sample_mass[1] / 5.0)
     return mass, diameter
 
 

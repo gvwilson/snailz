@@ -16,7 +16,7 @@ def _do_delay(params, grids, persons, samples):
     """Modify sample mass based on sampling date."""
 
     duration = (params.sample_date[1] - params.sample_date[0]).days
-    daily = params.sample_size[1] / duration
+    daily = params.sample_mass[1] / duration
     for s in samples:
         elapsed = (s.timestamp - params.sample_date[0]).days
         growth = elapsed * daily

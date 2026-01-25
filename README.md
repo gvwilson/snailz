@@ -75,7 +75,7 @@ The parameters, their meanings, and their properties are:
 | `pollution_factor` | pollution effect on mass                  | 0.3                      |
 | `precision`        | decimal places used to record masses      | 2                        |
 | `sample_date`      | min/max sample dates (YYYY-MM-DD)         | (2025-01-01, 2025-01-01) |
-| `sample_size`      | sample mass mean and std. dev. (g)        | (50, 10)                 |
+| `sample_mass`      | sample mass mean and std. dev. (g)        | (50, 10)                 |
 | `seed`             | random number generation seed             | 123456                   |
 
 ## Data Dictionary

@@ -26,7 +26,7 @@ class Parameters(BaseModel):
         le=180.0,
         description="grid reference longitude",
     )
-    sample_size: tuple[float, float] = Field(
+    sample_mass: tuple[float, float] = Field(
         default=(50, 10), description="sample mass mean and stdev"
     )
     sample_date: tuple[date, date] = Field(
