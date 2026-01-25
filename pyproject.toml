@@ -37,7 +37,8 @@ dev = [
 ]
 
 [project.urls]
-home = "https://github.com/gvwilson/snailz"
+Repository = "https://github.com/gvwilson/snailz"
+Documentation = "https://snailz.readthedocs.org"
 
 [project.scripts]
 snailz = "snailz.main:main"
