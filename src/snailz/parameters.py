@@ -33,25 +33,13 @@ class Parameters(BaseModel):
         default=(date(2025, 1, 1), date(2025, 3, 31)),
         description="sampling date bounds",
     )
-    pollution_factor: float = Field(
-        default=0.3, gt=0, description="pollution effect on sample size"
+    machine_factor: float = Field(
+        default=0.5, ge=0, description="machine measurement effect on sample mass"
     )
-    clumsy_factor: float | None = Field(
-        default=0.5, description="clumsy operator effect on mass (if any)"
+    pollution_factor: float = Field(
+        default=0.3, gt=0, description="pollution effect on sample mass"
     )
     num_machines: int = Field(default=5, gt=0, description="number of machines")
-
-    @model_validator(mode="after")
-    def validate_clumsy_factor(self):
-        """Check clumsiness factor."""
-
-        if self.clumsy_factor is None:
-            pass
-        elif self.clumsy_factor > 0:
-            pass
-        else:
-            raise ValueError(f"bad clumsy factor {self.clumsy_factor}")
-        return self
 
     @model_validator(mode="after")
     def validate_locale(self):

@@ -103,7 +103,7 @@ def _save_db(outdir, data):
     """Save synthesized data as CSV."""
 
     _ensure_dir(outdir)
-    dbpath = outdir / DB_FILE
+    dbpath = Path(outdir, DB_FILE)
     dbpath.unlink(missing_ok=True)
 
     cnx = sqlite3.connect(dbpath)
@@ -137,8 +137,8 @@ def _synthesize(params):
 
     grids = Grid.make(params)
     persons = Person.make(params)
-    samples = Sample.make(params, grids, persons)
     machines = Machine.make(params)
+    samples = Sample.make(params, grids, persons, machines)
     ratings = Rating.make(persons, machines)
     return {
         "grids": grids,

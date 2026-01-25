@@ -1247,7 +1247,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Save synthesized data as CSV.&quot;&quot;&quot;</span>
 
     <span class="n">_ensure_dir</span><span class="p">(</span><span class="n">outdir</span><span class="p">)</span>
-    <span class="n">dbpath</span> <span class="o">=</span> <span class="n">outdir</span> <span class="o">/</span> <span class="n">DB_FILE</span>
+    <span class="n">dbpath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="n">DB_FILE</span><span class="p">)</span>
     <span class="n">dbpath</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">missing_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="n">cnx</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dbpath</span><span class="p">)</span>
@@ -1343,8 +1343,8 @@
 
     <span class="n">grids</span> <span class="o">=</span> <span class="n">Grid</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
     <span class="n">persons</span> <span class="o">=</span> <span class="n">Person</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
-    <span class="n">samples</span> <span class="o">=</span> <span class="n">Sample</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">grids</span><span class="p">,</span> <span class="n">persons</span><span class="p">)</span>
     <span class="n">machines</span> <span class="o">=</span> <span class="n">Machine</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="n">Sample</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">grids</span><span class="p">,</span> <span class="n">persons</span><span class="p">,</span> <span class="n">machines</span><span class="p">)</span>
     <span class="n">ratings</span> <span class="o">=</span> <span class="n">Rating</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">persons</span><span class="p">,</span> <span class="n">machines</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">&quot;grids&quot;</span><span class="p">:</span> <span class="n">grids</span><span class="p">,</span>

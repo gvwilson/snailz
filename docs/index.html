@@ -1056,11 +1056,6 @@ The parameters, their meanings, and their properties are:</p>
 </thead>
 <tbody>
 <tr>
-<td><code>clumsy_factor</code></td>
-<td>personal effect on mass measurement</td>
-<td style="text-align: right;">0.5</td>
-</tr>
-<tr>
 <td><code>grid_gap</code></td>
 <td>minimum spacing between grids (m)</td>
 <td style="text-align: right;">1000.0</td>
@@ -1109,6 +1104,11 @@ The parameters, their meanings, and their properties are:</p>
 <td><code>num_samples</code></td>
 <td>number of samples</td>
 <td style="text-align: right;">20</td>
+</tr>
+<tr>
+<td><code>machine_factor</code></td>
+<td>machine bias effect on mass</td>
+<td style="text-align: right;">0.5</td>
 </tr>
 <tr>
 <td><code>pollution_factor</code></td>
@@ -1318,6 +1318,7 @@ A typical file is:</p>
 <th style="text-align: right;">y</th>
 <th style="text-align: right;">pollution</th>
 <th style="text-align: right;">person_id</th>
+<th style="text-align: right;">machine_id</th>
 <th style="text-align: right;">timestamp</th>
 <th style="text-align: right;">mass</th>
 <th style="text-align: right;">diameter</th>
@@ -1331,6 +1332,7 @@ A typical file is:</p>
 <td style="text-align: right;">8</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">P0004</td>
+<td style="text-align: right;">M0001</td>
 <td style="text-align: right;">2025-01-16</td>
 <td style="text-align: right;">71.5</td>
 <td style="text-align: right;">29.6</td>
@@ -1342,6 +1344,7 @@ A typical file is:</p>
 <td style="text-align: right;">9</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">P0005</td>
+<td style="text-align: right;">M0003</td>
 <td style="text-align: right;">2025-03-30</td>
 <td style="text-align: right;">62.1</td>
 <td style="text-align: right;">28.9</td>
@@ -1355,7 +1358,8 @@ A typical file is:</p>
 <td style="text-align: right;">…</td>
 <td style="text-align: right;">…</td>
 <td style="text-align: right;">…</td>
-<td style="text-align: right;"></td>
+<td style="text-align: right;">…</td>
+<td style="text-align: right;">…</td>
 </tr>
 </tbody>
 </table>
@@ -1397,6 +1401,11 @@ A typical file is:</p>
 <tr>
 <td><code>person_id</code></td>
 <td>who collected the sample</td>
+<td>text, required</td>
+</tr>
+<tr>
+<td><code>machine_id</code></td>
+<td>machine used to measure mass</td>
 <td>text, required</td>
 </tr>
 <tr>

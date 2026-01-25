@@ -61,7 +61,6 @@ The parameters, their meanings, and their properties are:
 
 | Name               | Purpose                                   | Default                  |
 | ------------------ | ----------------------------------------- | -----------------------: |
-| `clumsy_factor`    | personal effect on mass measurement       | 0.5                      |
 | `grid_gap`         | minimum spacing between grids (m)         | 1000.0                   |
 | `grid_size`        | width and height of (square) survey grids | 11                       |
 | `grid_spacing`     | size of survey grid cell (m)              | 20                       |
@@ -72,6 +71,7 @@ The parameters, their meanings, and their properties are:
 | `num_machines`     | number of pieces of laboratory equipment  | 5                        |
 | `num_persons`      | number of persons                         | 6                        |
 | `num_samples`      | number of samples                         | 20                       |
+| `machine_factor`   | machine bias effect on mass               | 0.5                      |
 | `pollution_factor` | pollution effect on mass                  | 0.3                      |
 | `precision`        | decimal places used to record masses      | 2                        |
 | `sample_date`      | min/max sample dates (YYYY-MM-DD)         | (2025-01-01, 2025-01-01) |
@@ -151,25 +151,26 @@ Its fields are:
 
 `samples.csv` stores information about sampled snails in CSV format (with column headers):
 
-| sample_id | grid_id | x  | y  | pollution | person_id | timestamp  | mass | diameter |
-| :-----    | :------ | -: | -: | --------: | --------: | ---------: | ---: | -------: |
-| S0001     | G0001   | 9  | 8  | 0         | P0004     | 2025-01-16 | 71.5 | 29.6     |
-| S0002     | G0001   | 8  | 9  | 1         | P0005     | 2025-03-30 | 62.1 | 28.9     |
-| …         | …       | …  | …  | …         | …         | …          | …    |
+| sample_id | grid_id | x  | y  | pollution | person_id | machine_id | timestamp  | mass | diameter |
+| :-----    | :------ | -: | -: | --------: | --------: | ---------: | ---------: | ---: | -------: |
+| S0001     | G0001   | 9  | 8  | 0         | P0004     | M0001      | 2025-01-16 | 71.5 | 29.6     |
+| S0002     | G0001   | 8  | 9  | 1         | P0005     | M0003      | 2025-03-30 | 62.1 | 28.9     |
+| …         | …       | …  | …  | …         | …         | …          | …          | …    | …        |
 
 Its fields are:
 
-| Field       | Purpose                  | Properties             |
-| ----------- | ------------------------ | ---------------------- |
-| `sample_id` | specimen identifier      | text, unique, required |
-| `grid_id`   | grid identifier          | text, required         |
-| `x`         | X coordinate in grid     | integer, required      |
-| `y`         | Y coordinate in grid     | integer, required      |
-| `pollution` | pollution at that point  | integer, required      |
-| `person_id` | who collected the sample | text, required         |
-| `timestamp` | date sample collected    | date, required         |
-| `mass`      | sample weight (g)        | real, required         |
-| `diameter`  | sample diameter (mm)     | real, required         |
+| Field        | Purpose                      | Properties             |
+| ------------ | ---------------------------- | ---------------------- |
+| `sample_id`  | specimen identifier          | text, unique, required |
+| `grid_id`    | grid identifier              | text, required         |
+| `x`          | X coordinate in grid         | integer, required      |
+| `y`          | Y coordinate in grid         | integer, required      |
+| `pollution`  | pollution at that point      | integer, required      |
+| `person_id`  | who collected the sample     | text, required         |
+| `machine_id` | machine used to measure mass | text, required         |
+| `timestamp`  | date sample collected        | date, required         |
+| `mass`       | sample weight (g)            | real, required         |
+| `diameter`   | sample diameter (mm)         | real, required         |
 
 ### Machines
 

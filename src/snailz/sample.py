@@ -17,6 +17,7 @@ class Sample(BaseModel):
         json_schema_extra={
             "foreign_key": {
                 "grid_id": ("grid", "grid_id"),
+                "machine_id": ("machine", "machine_id"),
                 "person_id": ("person", "person_id"),
             }
         }
@@ -29,12 +30,13 @@ class Sample(BaseModel):
     x: int = Field(default=0, ge=0, description="X coordinate")
     y: int = Field(default=0, ge=0, description="Y coordinate")
     person_id: str = Field(description="collector")
+    machine_id: str = Field(description="machine used to measure mass")
     timestamp: date = Field(description="when sample was collected")
     mass: float = Field(gt=0.0, description="sample mass")
     diameter: float = Field(gt=0.0, description="sample diameter")
 
     @staticmethod
-    def make(params, grids, persons):
+    def make(params, grids, persons, machines):
         """Make a sample."""
 
         result = []
@@ -43,6 +45,7 @@ class Sample(BaseModel):
             x = random.randint(0, grid.size - 1)
             y = random.randint(0, grid.size - 1)
             person = random.choice(persons)
+            machine = random.choice(machines)
             timestamp = utils.random_date(params)
             mass, diameter = utils.random_size(params)
             result.append(
@@ -52,6 +55,7 @@ class Sample(BaseModel):
                     x=x,
                     y=y,
                     person_id=person.person_id,
+                    machine_id=machine.machine_id,
                     timestamp=timestamp,
                     mass=mass,
                     diameter=diameter,
