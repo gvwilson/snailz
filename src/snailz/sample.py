@@ -11,8 +11,7 @@ from . import utils
 class Sample(BaseModel):
     """Represent a single sample."""
 
-    id_stem: ClassVar[str] = "S"
-    id_digits: ClassVar[int] = 4
+    _id_gen: ClassVar[utils.id_gen] = utils.id_gen("S", 4)
 
     model_config = ConfigDict(
         json_schema_extra={
@@ -38,7 +37,6 @@ class Sample(BaseModel):
     def make(params, grids, persons):
         """Make a sample."""
 
-        utils.ensure_id_generator(Sample)
         result = []
         for _ in range(params.num_samples):
             grid = random.choice(grids)

@@ -14,8 +14,7 @@ SUPERVISOR_RATIO = 3
 class Person(BaseModel):
     """A single person."""
 
-    id_stem: ClassVar[str] = "P"
-    id_digits: ClassVar[int] = 4
+    _id_gen: ClassVar[utils.id_gen] = utils.id_gen("P", 4)
 
     model_config = ConfigDict(
         json_schema_extra={
@@ -38,7 +37,6 @@ class Person(BaseModel):
     def make(params):
         """Make persons."""
 
-        utils.ensure_id_generator(Person)
         if not hasattr(Person, "_fake"):
             Person._fake = faker.Faker(params.locale)
             Person._fake.seed_instance(random.randint(0, 1_000_000))
@@ -70,14 +68,3 @@ class Person(BaseModel):
                 person.supervisor_id = supervisors[-1].person_id
 
         return staff + supervisors
-
-    @staticmethod
-    def csv_header():
-        """Generate header for CSV file."""
-
-        return "person_id,family,personal"
-
-    def __str__(self):
-        """Convert to CSV string."""
-
-        return f"{self.person_id},{self.family},{self.personal}"

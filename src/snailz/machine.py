@@ -48,8 +48,7 @@ SUFFIX = [
 class Machine(BaseModel):
     """A piece of experimental machinery."""
 
-    id_stem: ClassVar[str] = "M"
-    id_digits: ClassVar[int] = 4
+    _id_gen: ClassVar[utils.id_gen] = utils.id_gen("M", 4)
 
     machine_id: str = Field(
         description="machine ID", json_schema_extra={"primary_key": True}
@@ -63,7 +62,6 @@ class Machine(BaseModel):
         assert params.num_machines <= len(PREFIX) * len(SUFFIX), (
             f"cannot generate {params.num_machines} machine names"
         )
-        utils.ensure_id_generator(Machine)
         pairs = [(p, s) for p in PREFIX for s in SUFFIX]
         return [
             Machine(machine_id=next(Machine._id_gen), name=f"{p} {s}")

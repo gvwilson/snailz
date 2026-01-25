@@ -9,13 +9,6 @@ import random
 import sys
 
 
-def ensure_id_generator(cls):
-    """Ensure class has ID generator."""
-
-    if not hasattr(cls, "_id_gen"):
-        cls._id_gen = id_gen(cls.id_stem, cls.id_digits)
-
-
 @contextmanager
 def file_or_std(parent, filename, mode):
     """Open file and return handle or return stdin/stdout."""
