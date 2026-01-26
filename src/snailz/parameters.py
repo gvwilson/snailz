@@ -16,7 +16,6 @@ class Parameters(BaseModel):
     locale: str = Field(default="et_EE", description="name generation locale")
     grid_size: int = Field(default=11, gt=0, description="sample grid size")
     grid_spacing: float = Field(default=20.0, gt=0, description="grid cell spacing (m)")
-    grid_gap: float = Field(default=1000.0, gt=0, description="gap between grids")
     lat0: float = Field(
         default=48.8666632, ge=-90.0, le=90.0, description="grid reference latitude"
     )

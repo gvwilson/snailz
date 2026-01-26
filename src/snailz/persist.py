@@ -14,7 +14,7 @@ create table grid (
   y integer not null,
   lat real not null,
   lon real not null,
-  pollution integer not null
+  pollution real not null
 )
 """
 
@@ -48,7 +48,7 @@ def grids_to_db(cnx, tidy_grids):
     """Save all interesting grid cells in database."""
 
     cnx.execute(GRID_CREATE)
-    cnx.executemany(GRID_INSERT, tidy_grids)
+    cnx.executemany(GRID_INSERT, tidy_grids[1:])
     cnx.commit()
 
 

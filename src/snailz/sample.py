@@ -37,7 +37,7 @@ class Sample(BaseModel):
 
     @staticmethod
     def make(params, grids, persons, machines):
-        """Make a sample."""
+        """Make all samples."""
 
         result = []
         for _ in range(params.num_samples):

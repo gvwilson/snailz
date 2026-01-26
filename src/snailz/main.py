@@ -86,12 +86,7 @@ def _save_csv(outdir, data):
         _ensure_dir(Path(outdir))
 
     persist.grids_to_csv(outdir, data["grids"], data["tidy_grids"])
-    for name, cls in (
-        ("machines", Machine),
-        ("persons", Person),
-        ("ratings", Rating),
-        ("samples", Sample),
-    ):
+    for name in ("machines", "persons", "ratings", "samples"):
         with utils.file_or_std(outdir, f"{name}.csv", "w") as writer:
             persist.objects_to_csv(writer, data[name])
 

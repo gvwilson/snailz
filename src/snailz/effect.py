@@ -51,4 +51,9 @@ def _do_precision(params, data):
     for s in data["samples"]:
         s.mass = round(s.mass, params.precision)
         s.diameter = round(s.diameter, params.precision)
+
+    for g in data["grids"]:
+        for i, val in enumerate(g.grid):
+            g.grid[i] = round(val, params.precision)
+
     return {}

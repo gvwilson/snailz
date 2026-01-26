@@ -29,7 +29,7 @@ class Rating(BaseModel):
 
         pairs = [(p, m) for p in persons for m in machines]
         num_ratings = int(RATINGS_FRACTION * len(pairs))
-        ratings = [None, 1, 1, 1, 1, 2, 2, 2, 3, 3]
+        ratings = [None, 1, 1, 1, 2, 2, 3]
         return [
             Rating(
                 person_id=p.person_id,
