@@ -923,7 +923,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Save all interesting grid cells in database.&quot;&quot;&quot;</span>
 
     <span class="n">cnx</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">GRID_CREATE</span><span class="p">)</span>
-    <span class="n">cnx</span><span class="o">.</span><span class="n">executemany</span><span class="p">(</span><span class="n">GRID_INSERT</span><span class="p">,</span> <span class="n">tidy_grids</span><span class="p">)</span>
+    <span class="n">cnx</span><span class="o">.</span><span class="n">executemany</span><span class="p">(</span><span class="n">GRID_INSERT</span><span class="p">,</span> <span class="n">tidy_grids</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
     <span class="n">cnx</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>

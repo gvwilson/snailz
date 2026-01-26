@@ -81,7 +81,9 @@ The parameters, their meanings, and their properties are:
 ## Data Dictionary
 
 All of the generated data is stored in CSV files
-and in a SQLite database.
+and in a SQLite database with the schema shown below.
+
+<img src="https://raw.githubusercontent.com/gvwilson/snailz/refs/heads/main/pages/img/schema.svg" alt="snailz schema">
 
 ### Grids
 
