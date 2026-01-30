@@ -7,18 +7,11 @@ from pathlib import Path
 import pytest
 from sqlite_utils import Database
 from snailz import Grid, Parameters
-from snailz.utils import LAT_LON_PRECISION
 
 
 @pytest.fixture
 def small_grid(seeded_rng):
-    return Grid(
-        size=5,
-        spacing=10.0,
-        lat0=45.0,
-        lon0=-75.0,
-        params=Parameters()
-    )
+    return Grid(size=5, spacing=10.0, lat0=45.0, lon0=-75.0, params=Parameters())
 
 
 def test_grid_minimal(seeded_rng):
@@ -61,8 +54,8 @@ def test_grid_randomize_respects_std_dev(seeded_rng):
 
 def test_grid_lat_lon_corner(small_grid):
     lat, lon = small_grid.lat_lon(0, 0)
-    assert lat == round(small_grid.lat0, LAT_LON_PRECISION)
-    assert lon == round(small_grid.lon0, LAT_LON_PRECISION)
+    assert lat == small_grid.lat0
+    assert lon == small_grid.lon0
 
 
 def test_grid_as_json(small_grid):

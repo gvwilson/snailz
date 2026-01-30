@@ -4,7 +4,7 @@ from dataclasses import dataclass
 import itertools
 import random
 from typing import ClassVar
-from .utils import BaseMixin
+from ._base_mixin import BaseMixin
 
 
 RATINGS = {

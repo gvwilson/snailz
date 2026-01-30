@@ -5,7 +5,8 @@ from datetime import date
 from pathlib import Path
 import random
 from typing import ClassVar, Generator
-from .utils import BaseMixin, id_generator, random_date
+from ._base_mixin import BaseMixin
+from ._utils import id_generator, random_date
 
 
 ASSAY_PRECISION = 2

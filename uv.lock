@@ -515,15 +515,6 @@ wheels = [
 ]
 
 [[package]]
-name = "pip"
-version = "25.3"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/fe/6e/74a3f0179a4a73a53d66ce57fdb4de0080a8baa1de0063de206d6167acc2/pip-25.3.tar.gz", hash = "sha256:8d0538dbbd7babbd207f261ed969c65de439f6bc9e5dbd3b3b9a77f25d95f343", size = 1803014, upload-time = "2025-10-25T00:55:41.394Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/44/3c/d717024885424591d5376220b5e836c2d5293ce2011523c9de23ff7bf068/pip-25.3-py3-none-any.whl", hash = "sha256:9655943313a94722b7774661c21049070f6bbb0a1516bf02f7c8d5d9201514cd", size = 1778622, upload-time = "2025-10-25T00:55:39.247Z" },
-]
-
-[[package]]
 name = "platformdirs"
 version = "4.5.1"
 source = { registry = "https://pypi.org/simple" }
@@ -747,7 +738,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "faker", specifier = ">=40.1.2" },
-    { name = "sqlite-utils", specifier = ">=3.39" },
+    { name = "sqlite-utils", specifier = "==4.0a1" },
 ]
 
 [package.metadata.requires-dev]
@@ -773,20 +764,19 @@ wheels = [
 
 [[package]]
 name = "sqlite-utils"
-version = "3.39"
+version = "4.0a1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
     { name = "click-default-group" },
-    { name = "pip" },
     { name = "pluggy" },
     { name = "python-dateutil" },
     { name = "sqlite-fts4" },
     { name = "tabulate" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/b3/e3/6b1106349e2576c18409b27bd3b16f193b1cf38220d98ad22aa454c5e075/sqlite_utils-3.39.tar.gz", hash = "sha256:bfa2eac29b3e3eb5c9647283797527febcf4efd4a9bbb31d979a14a11ef9dbcd", size = 215324, upload-time = "2025-11-24T18:45:49.91Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/0e/57/67bf0a3c70049d9523fd739036a2f85e7ea40459f8a2b6d5c03a06c86ce2/sqlite_utils-4.0a1.tar.gz", hash = "sha256:b271d910a67861b55541c6e98dbb5c27797dd0964ac3940fe99e71aa5ea55a5d", size = 220723, upload-time = "2025-11-24T06:36:32.268Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/51/33/7e01d2f6b8c778529dfae9045c4f46b33ba145c3d401fa95b07f599e7403/sqlite_utils-3.39-py3-none-any.whl", hash = "sha256:349c099c0cd60d4ee9139a24d5c9cb64af3906c3e90832fcbbd74da49333374d", size = 68451, upload-time = "2025-11-24T18:45:48.366Z" },
+    { url = "https://files.pythonhosted.org/packages/0a/59/f7087735f7328998be9ad26bd33b42c9145ddb83458e48e1ef4fe6e7e05b/sqlite_utils-4.0a1-py3-none-any.whl", hash = "sha256:7f3876d00156b18e5c661e2f519747aee489462896753e8b49c72377a12e5092", size = 70793, upload-time = "2025-11-24T06:36:31.289Z" },
 ]
 
 [[package]]

@@ -3,7 +3,8 @@
 from dataclasses import dataclass
 from datetime import date
 from faker.config import AVAILABLE_LOCALES
-from .utils import BaseMixin, validate, validate_lat_lon
+from ._base_mixin import BaseMixin
+from ._utils import validate, validate_lat_lon
 
 
 @dataclass

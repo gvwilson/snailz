@@ -5,14 +5,17 @@ from datetime import date
 import math
 import random
 from typing import ClassVar, Generator
-from .utils import (
-    SPECIMEN_PRECISION,
-    BaseMixin,
+from ._base_mixin import BaseMixin
+from ._utils import (
     id_generator,
     random_date,
     validate,
     validate_lat_lon,
 )
+
+
+# Mass and diameter precision.
+SPECIMEN_PRECISION = 1
 
 
 @dataclass

@@ -5,7 +5,6 @@ from faker import Faker
 import json
 from pathlib import Path
 import random
-from sqlite_utils import Database
 import sys
 
 from .assay import Assay
@@ -16,6 +15,7 @@ from .person import Person
 from .rating import Rating
 from .species import Species
 from .specimen import Specimen
+from ._utils import UnquotedDatabase
 
 
 DB_FILE = "snailz.db"
@@ -110,7 +110,7 @@ def _save_db(outdir, classes, data):
     dbpath = Path(outdir, DB_FILE)
     dbpath.unlink(missing_ok=True)
 
-    db = Database(dbpath)
+    db = UnquotedDatabase(dbpath)
     for cls in classes:
         cls.save_db(db, data[cls])
 

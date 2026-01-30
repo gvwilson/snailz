@@ -3,7 +3,8 @@
 from dataclasses import dataclass
 import random
 from typing import ClassVar, Generator
-from .utils import BaseMixin, id_generator, validate
+from ._base_mixin import BaseMixin
+from ._utils import id_generator, validate
 
 
 PREFIX = [

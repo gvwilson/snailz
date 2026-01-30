@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 import random
 from typing import ClassVar
-from .utils import BaseMixin
+from ._base_mixin import BaseMixin
 
 
 BASES = {

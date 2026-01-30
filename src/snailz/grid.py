@@ -5,14 +5,14 @@ import itertools
 from pathlib import Path
 import random
 from typing import ClassVar, Generator
-from .parameters import Parameters
-from .utils import (
-    BaseMixin,
+from ._base_mixin import BaseMixin
+from ._utils import (
     id_generator,
     lat_lon,
     validate,
     validate_lat_lon,
 )
+from .parameters import Parameters
 
 
 # Legal moves for random walk that fills grid.
