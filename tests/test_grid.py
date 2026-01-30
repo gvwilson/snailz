@@ -1,69 +1,98 @@
-"""Tests for grid module."""
+"""Test grid generation."""
 
+from dataclasses import fields
+import json
 import pytest
-from snailz.grid import Grid
+from sqlite_utils import Database
+from snailz import Grid, Parameters
+from snailz.utils import LAT_LON_PRECISION
 
 
-def test_grid_creation(default_params):
-    """Test grid creation with default parameters."""
-
-    grid = Grid.make(default_params)[0]
-    assert grid.grid_id.startswith("G")
-    assert len(grid.grid_id) == 5  # G + 4 digits
-    assert grid.size == default_params.grid_size
-    assert len(grid.grid) == grid.size * grid.size
-
-
-@pytest.mark.parametrize("ident,size", [["", 5], ["G0001", 0], ["G0001", -1]])
-def test_grid_parameter_validation(ident, size):
-    """Test invalid grid parameters are rejected."""
-
-    with pytest.raises(ValueError):
-        Grid(grid_id=ident, size=size)
+@pytest.fixture
+def small_grid(seeded_rng):
+    return Grid(
+        size=5,
+        spacing=10.0,
+        lat0=45.0,
+        lon0=-75.0,
+    )
 
 
-def test_grid_indexing():
-    """Test grid indexing operations."""
-
-    grid = Grid(grid_id="G0001", size=3)
-    grid.grid = [i for i in range(9)]  # 0-8
-
-    # Getting values
-    assert grid[0, 0] == 0
-    assert grid[1, 0] == 1
-    assert grid[0, 1] == 3
-    assert grid[2, 2] == 8
-
-    # Setting values
-    grid[1, 1] = 99
-    assert grid[1, 1] == 99
+def test_grid_minimal(seeded_rng):
+    g = Grid(size=1, spacing=1.0, lat0=0.0, lon0=0.0)
+    assert g.size == 1
+    assert len(g.cells) == 1
+    assert g.cells[0] >= 0
 
 
-def test_grid_csv_output():
-    """Test grid CSV string output."""
-
-    grid = Grid(grid_id="G0001", size=2)
-    grid.grid = [1, 2, 3, 4]  # [[1,2], [3,4]]
-    csv_output = str(grid)
-    lines = csv_output.split("\n")
-    assert len(lines) == 2
-    assert lines[0] == "3,4"
-    assert lines[1] == "1,2"
+def test_grid_ident_is_unique(seeded_rng):
+    g1 = Grid(size=3, spacing=1.0, lat0=0.0, lon0=0.0)
+    g2 = Grid(size=3, spacing=1.0, lat0=0.0, lon0=0.0)
+    assert g1.ident != g2.ident
+    assert g1.ident.startswith("G")
+    assert g2.ident.startswith("G")
 
 
-def test_grid_unique_ids(default_params):
-    """Test that grids get unique IDs."""
+def test_grid_initialization(small_grid):
+    assert small_grid.size == 5
+    assert small_grid.spacing == 10.0
+    assert small_grid.lat0 == 45.0
+    assert small_grid.lon0 == -75.0
+    assert len(small_grid.cells) == 25
 
-    grid1 = Grid.make(default_params)[0]
-    grid2 = Grid.make(default_params)[0]
-    assert grid1.grid_id != grid2.grid_id
+
+def test_grid_get_and_set_item(small_grid):
+    small_grid[2, 3] = 42.0
+    assert small_grid[2, 3] == 42.0
 
 
-def test_grid_fill_bounds_checking(default_params):
-    """Test that fill stops at grid boundaries."""
+def test_grid_fill_creates_nonzero_values(small_grid):
+    assert all(v >= 0 for v in small_grid.cells)
 
-    grid = Grid.make(default_params)[0]
-    for x in range(grid.size):
-        for y in range(grid.size):
-            if (x == 0) or (y == 0):
-                assert grid[x, y] == 0
+
+def test_grid_randomize_respects_std_dev(seeded_rng):
+    g = Grid(size=5, spacing=1.0, lat0=0.0, lon0=0.0)
+    assert len(set(g.cells)) > 1
+
+
+def test_grid_lat_lon_corner(small_grid):
+    lat, lon = small_grid.lat_lon(0, 0)
+    assert lat == round(small_grid.lat0, LAT_LON_PRECISION)
+    assert lon == round(small_grid.lon0, LAT_LON_PRECISION)
+
+
+def test_grid_as_json(small_grid):
+    data = small_grid.as_json()
+    assert isinstance(data, str)
+    data = json.loads(data)
+    assert set(data.keys()) == {"ident", "size", "spacing", "lat0", "lon0"}
+
+
+def test_grid_make():
+    grids = Grid.make(
+        Parameters(num_grids=3, grid_size=2, grid_spacing=1.0, lat0=0.0, lon0=0.0)
+    )
+    assert len(grids) == 3
+    assert all(isinstance(g, Grid) for g in grids)
+    assert all(g.size == 2 for g in grids)
+    assert len({g.ident for g in grids}) == 3
+
+
+def test_grid_separation():
+    grids = Grid.make(
+        Parameters(num_grids=10, grid_size=2, grid_spacing=1.0, lat0=0.0, lon0=0.0)
+    )
+    assert len({(g.lat0, g.lon0) for g in grids}) == len(grids)
+
+
+def test_grid_persist_to_db(fake):
+    db = Database(memory=True)
+    grids = Grid.make(
+        Parameters(num_grids=3, grid_size=2, grid_spacing=1.0, lat0=0.0, lon0=0.0)
+    )
+    Grid.save_db(db, grids)
+
+    rows = list(db[Grid.table_name].rows)
+    assert set(r["ident"] for r in rows) == set(g.ident for g in grids)
+    field_names = {f.name for f in fields(grids[0])}
+    assert set(rows[0].keys()).issubset(field_names)

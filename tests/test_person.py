@@ -1,62 +1,52 @@
-"""Tests for person module."""
+"""Test person generation."""
 
+from dataclasses import fields
 import pytest
-from snailz.person import Person
-from snailz.parameters import Parameters
+from sqlite_utils import Database
+from snailz import Parameters, Person
 
 
-def test_person_creation(default_params):
-    """Test person creation with default parameters."""
-
-    person = Person.make(default_params)[0]
-    assert person.person_id.startswith("P")
-    assert len(person.person_id) == 5  # P + 4 digits
-    assert len(person.family) > 0
-    assert len(person.personal) > 0
+def test_person_creation_assigns_id():
+    p = Person(family="A", personal="B")
+    assert isinstance(p.ident, str)
+    assert len(p.ident) == 5
+    assert p.ident.startswith("P")
+    assert p.ident[1:].isdigit()
 
 
-def test_person_empty_id_validation():
-    """Test empty ID validation fails."""
-
+def test_person_ident_cannot_be_set():
     with pytest.raises(ValueError):
-        Person(person_id="", family="Smith", personal="John")
+        Person(ident="abc", family="A", personal="B")
 
 
-def test_person_empty_family_validation():
-    """Test empty family name validation fails."""
+def test_person_idents_are_unique(fake):
+    people = Person.make(Parameters(num_persons=3), fake)
+    assert len(people) == len({p.ident for p in people})
 
+
+def test_person_family_is_required():
     with pytest.raises(ValueError):
-        Person(person_id="P0001", family="", personal="John")
+        Person(family="", personal="B")
 
 
-def test_person_empty_personal_validation():
-    """Test empty personal name validation fails."""
-
+def test_person_personal_is_required():
     with pytest.raises(ValueError):
-        Person(person_id="P0001", family="Smith", personal="")
+        Person(family="A", personal="")
 
 
-def test_person_csv_output():
-    """Test CSV string output."""
-
-    person = Person(person_id="P0001", family="Smith", personal="John")
-    csv_output = str(person)
-    assert csv_output == "P0001,Smith,John"
-
-
-def test_person_unique_ids(default_params):
-    """Test that persons get unique IDs."""
-
-    num_persons = 100
-    default_params.num_persons = num_persons
-    person_ids = {p.person_id for p in Person.make(default_params)}
-    assert len(person_ids) == num_persons
+def test_person_make_creates_supervisors(fake):
+    people = Person.make(Parameters(num_persons=3), fake)
+    assert len(people) == 3
+    assert all(p.supervisor_id == people[-1].ident for p in people[:-1])
+    assert people[-1].supervisor_id is None
 
 
-def test_person_with_custom_locale():
-    """Test person creation with custom locale."""
-
-    params = Parameters(locale="en_US")
-    persons = Person.make(params)
-    assert all(len(p.family) > 0 for p in persons)
-    assert all(len(p.personal) > 0 for p in persons)
+def test_person_persist_to_db(fake):
+    db = Database(memory=True)
+    persons = Person.make(Parameters(num_persons=3), fake)
+    Person.save_db(db, persons)
+    rows = list(db[Person.table_name].rows)
+    assert set(r["ident"] for r in rows) == set(p.ident for p in persons)
+    field_names = {f.name for f in fields(persons[0])}
+    assert all(len(r) == len(field_names) for r in rows)
+    assert set(rows[0].keys()) == field_names

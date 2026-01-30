@@ -1,57 +1,38 @@
 """Data generation parameters."""
 
+from dataclasses import dataclass
 from datetime import date
 from faker.config import AVAILABLE_LOCALES
-from pydantic import BaseModel, Field, model_validator
+from .utils import BaseMixin, validate, validate_lat_lon
 
 
-class Parameters(BaseModel):
+@dataclass
+class Parameters(BaseMixin):
     """Store all data generation parameters."""
 
-    seed: int = Field(default=123456, description="RNG seed", gt=0)
-    precision: int = Field(default=1, gt=0, description="floating point digits")
-    num_persons: int = Field(default=6, description="number of persons")
-    num_grids: int = Field(default=3, gt=0, description="number of sample grids")
-    num_samples: int = Field(default=20, gt=0, description="number of samples")
-    locale: str = Field(default="et_EE", description="name generation locale")
-    grid_size: int = Field(default=11, gt=0, description="sample grid size")
-    grid_spacing: float = Field(default=20.0, gt=0, description="grid cell spacing (m)")
-    lat0: float = Field(
-        default=48.8666632, ge=-90.0, le=90.0, description="grid reference latitude"
-    )
-    lon0: float = Field(
-        default=-124.1999992,
-        ge=-180.0,
-        le=180.0,
-        description="grid reference longitude",
-    )
-    sample_mass: tuple[float, float] = Field(
-        default=(50, 10), description="sample mass mean and stdev"
-    )
-    sample_date: tuple[date, date] = Field(
-        default=(date(2025, 1, 1), date(2025, 3, 31)),
-        description="sampling date bounds",
-    )
-    machine_factor: float = Field(
-        default=0.5, ge=0, description="machine measurement effect on sample mass"
-    )
-    pollution_factor: float = Field(
-        default=0.3, gt=0, description="pollution effect on sample mass"
-    )
-    num_machines: int = Field(default=5, gt=0, description="number of machines")
+    seed: int = 12345
+    num_grids: int = 1
+    grid_size: int = 1
+    grid_spacing: float = 10.0
+    lat0: float = 48.8666632
+    lon0: float = -124.1999992
+    num_persons: int = 1
+    locale: str = "et_EE"
+    num_machines: int = 1
+    genome_length: int = 1
+    num_loci: int = 1
+    p_mutation: float = 0.5
+    num_specimens: int = 1
+    mass_beta_0: float = 3.0
+    mass_beta_1: float = 0.5
+    mass_sigma: float = 0.3
+    diam_ratio: float = 0.7
+    diam_sigma: float = 0.7
+    survey_start: date = date(2026, 3, 1)
+    survey_end: date = date(2026, 5, 31)
 
-    @model_validator(mode="after")
-    def validate_locale(self):
+    def __post_init__(self):
         """Check locale."""
 
-        if self.locale not in AVAILABLE_LOCALES:
-            raise ValueError(f"unknown locale {self.locale}")
-        return self
-
-    @model_validator(mode="after")
-    def validate_sample_date(self):
-        """Check sample dates."""
-
-        if self.sample_date[1] < self.sample_date[0]:
-            raise ValueError(f"invalid sample date bounds {self.sample_date}")
-        return self
+        validate(self.locale in AVAILABLE_LOCALES, f"unknown locale {self.locale}")
+        validate_lat_lon("parameters", self.lat0, self.lon0)

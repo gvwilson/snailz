@@ -1,3 +1,37 @@
+[project]
+name = "snailz"
+description = "Synthetic data generator for snail mutation survey"
+keywords = ["open science", "synthetic data"]
+readme = "README.md"
+authors = [
+    {name = "Greg Wilson", email = "gvwilson@third-bit.com"}
+]
+
+version = "5.0.0"
+requires-python = ">=3.12"
+dependencies = [
+    "faker>=40.1.2",
+    "sqlite-utils>=3.39",
+]
+
+[project.urls]
+Repository = "https://github.com/gvwilson/snailz"
+
+[project.scripts]
+snailz = "snailz.main:main"
+
+[dependency-groups]
+dev = [
+    "build>=1.4.0",
+    "coverage>=7.13.1",
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.7.1",
+    "mkdocstrings[python]>=1.0.0",
+    "pytest>=9.0.2",
+    "ruff>=0.14.13",
+    "taskipy>=1.14.1"
+]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
@@ -5,66 +39,34 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["src/snailz"]
 
-[project]
-name = "snailz"
-description = "Synthetic data generator for snail mutation survey"
-keywords = ["open science", "synthetic data"]
-readme = "README.md"
-authors = [
-    { name = "Greg Wilson", email = "gvwilson@third-bit.com" }
-]
-
-version = "4.3.0"
-requires-python = ">=3.12"
-dependencies = [
-    "faker>=40.1.2",
-    "pydantic>=2.12.5"
-]
-
-[project.optional-dependencies]
-dev = [
-    "build>=1.4.0",
-    "coverage>=7.13.1",
-    "griffe-fieldz>=0.4.0",
-    "markdown-include>=0.8.1",
-    "mkdocs>=1.6.1",
-    "mkdocs-material>=9.7.1",
-    "mkdocstrings[python]>=1.0.0",
-    "pytest>=9.0.2",
-    "ruff>=0.14.13",
-    "taskipy>=1.14.1",
-    "twine>=6.2.0"
-]
-
-[project.urls]
-Repository = "https://github.com/gvwilson/snailz"
-Documentation = "https://snailz.readthedocs.org"
-
-[project.scripts]
-snailz = "snailz.main:main"
-
 [tool.taskipy.tasks]
 build = {help = "build package", cmd = " python -m build "}
 check = {help = "check code issues", cmd = "ruff check ."}
 clean = {help = "clean up", cmd = """
 rm -rf ./dist &&
-find . -path './.venv' -prune -o -type d -name '__pycache__' -exec rm -rf {} + &&
-find . -path './.venv' -prune -o -type f -name '*~' -exec rm {} + &&
+find . -path './.venv' -prune -o -type f -name '.DS_Store' -exec rm {} + &&
+find . -path './.venv' -prune -o -type d -name '.cache' -exec rm {} + &&
+find . -path './.venv' -prune -o -type f -name '.coverage' -exec rm {} + &&
 find . -path './.venv' -prune -o -type d -name '.pytest_cache' -exec rm -rf {} + &&
-find . -path './.venv' -prune -o -type d -name '.coverage' -exec rm {} +
+find . -path './.venv' -prune -o -type d -name '.ruff_cache' -exec rm -rf {} + &&
+find . -path './.venv' -prune -o -type d -name '__pycache__' -exec rm -rf {} + &&
+find . -path './.venv' -prune -o -type f -name '*~' -exec rm {} +
 """}
 coverage = {help = "run tests with coverage", cmd = """
 python -m coverage run -m pytest tests
 python -m coverage report --show-missing
 """}
 docs = {help = "build documentation", cmd = """
+mkdir -p pages &&
+cp README.md pages/index.md &&
+cp LICENSE.md pages/license.md &&
+cp CODE_OF_CONDUCT.md pages/conduct.md &&
+cp CONTRIBUTING.md pages/contributing.md &&
 mkdocs build &&
 touch docs/.nojekyll &&
 cp docs-requirements.txt docs/requirements.txt
 """}
-dryrun = {help = "run data generation but do not save results", cmd = "snailz --outdir -"}
 fix = {help = "fix code issues", cmd = "ruff check --fix ."}
 format = {help = "format code", cmd = "ruff format ."}
-publish = {help = "publish using ~/.pypirc credentials", cmd = "twine upload --verbose dist/*"}
 serve = {help = "serve documentation", cmd = "python -m http.server -d docs"}
-test = {help = "run tests", cmd = "python -m pytest tests"}
+test = {help = "run tests", cmd = "pytest tests"}

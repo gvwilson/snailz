@@ -1,21 +1,20 @@
 """Synthesize data."""
 
 import argparse
+from faker import Faker
 import json
 from pathlib import Path
 import random
-import sqlite3
+from sqlite_utils import Database
 import sys
 
-from .effect import do_all_effects
 from .grid import Grid
 from .machine import Machine
 from .parameters import Parameters
 from .person import Person
 from .rating import Rating
-from .sample import Sample
-from . import persist
-from . import utils
+from .species import Species
+from .specimen import Specimen
 
 
 DB_FILE = "snailz.db"
@@ -26,19 +25,14 @@ def main():
 
     args = _parse_args()
     if args.defaults:
-        print(utils.json_dump(Parameters()))
+        print(Parameters().as_json())
         return 0
 
     params = _initialize(args)
     data = _synthesize(params)
-    data["changes"] = do_all_effects(params, data)
-    data["tidy_grids"] = Grid.tidy(data["grids"])
 
-    if args.outdir is not None:
-        _save_params(args.outdir, params)
-        _save_csv(args.outdir, data)
-        if args.outdir != "-":
-            _save_db(args.outdir, data)
+    _save_params(args.outdir, params)
+    _save_db(args.outdir, data)
 
     return 0
 
@@ -60,6 +54,14 @@ def _initialize(args):
     else:
         params = Parameters()
 
+    for ov in args.override:
+        fields = ov.split("=")
+        assert len(fields) == 2, f"malformed override {ov}"
+        key, value = fields
+        assert hasattr(params, key), f"unknown override key {key}"
+        prior = getattr(params, key)
+        setattr(params, key, type(prior)(value))
+
     random.seed(params.seed)
 
     return params
@@ -73,74 +75,58 @@ def _parse_args():
         "--defaults", action="store_true", help="show default parameters"
     )
     parser.add_argument("--outdir", default=None, help="output directory")
+    parser.add_argument(
+        "--override", default=[], nargs="+", help="name=value parameters"
+    )
     parser.add_argument("--params", default=None, help="JSON parameter file")
     return parser.parse_args()
-
-
-def _save_csv(outdir, data):
-    """Save synthesized data as CSV."""
-
-    if outdir == "-":
-        outdir = None
-    else:
-        _ensure_dir(Path(outdir))
-
-    persist.grids_to_csv(outdir, data["grids"], data["tidy_grids"])
-    for name in ("machines", "persons", "ratings", "samples"):
-        with utils.file_or_std(outdir, f"{name}.csv", "w") as writer:
-            persist.objects_to_csv(writer, data[name])
-
-    with utils.file_or_std(outdir, "changes.json", "w") as writer:
-        json.dump(data["changes"], writer)
 
 
 def _save_db(outdir, data):
     """Save synthesized data as CSV."""
 
+    if (outdir is None) or (outdir == "-"):
+        return
+
     _ensure_dir(outdir)
     dbpath = Path(outdir, DB_FILE)
     dbpath.unlink(missing_ok=True)
 
-    cnx = sqlite3.connect(dbpath)
-
-    for table, name in (
-        ("machine", "machines"),
-        ("person", "persons"),
-        ("rating", "ratings"),
-        ("sample", "samples"),
-    ):
-        persist.objects_to_db(cnx, table, data[name])
-
-    persist.grids_to_db(cnx, data["tidy_grids"])
-
-    cnx.close()
+    db = Database(dbpath)
+    for cls in (Grid, Machine, Person, Rating, Species, Specimen):
+        cls.save_db(db, data[cls.table_name])
 
 
 def _save_params(outdir, params):
     """Save parameters."""
 
+    if outdir is None:
+        return
+
     if outdir == "-":
-        sys.stdout.write(utils.json_dump(params))
+        sys.stdout.write(params.as_json())
     else:
         _ensure_dir(Path(outdir))
         with open(Path(outdir, "params.json"), "w") as writer:
-            writer.write(utils.json_dump(params))
+            writer.write(params.as_json())
 
 
 def _synthesize(params):
     """Synthesize data."""
 
     grids = Grid.make(params)
-    persons = Person.make(params)
+    persons = Person.make(params, Faker(params.locale))
     machines = Machine.make(params)
-    samples = Sample.make(params, grids, persons, machines)
     ratings = Rating.make(persons, machines)
+    species = Species.make(params)
+    specimens = Specimen.make(params, grids, species)
     return {
-        "grids": grids,
-        "persons": persons,
-        "samples": samples,
-        "machines": machines,
-        "ratings": ratings,
+        Grid.table_name: grids,
+        Person.table_name: persons,
+        Machine.table_name: machines,
+        Rating.table_name: ratings,
+        Species.table_name: species,
+        Specimen.table_name: specimens,
     }
 
 

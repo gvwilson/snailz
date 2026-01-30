@@ -1,44 +1,32 @@
 site_name: "Snailz Docs"
 docs_dir: pages
 site_dir: docs
+
 nav:
 - Home: index.md
 - Software:
-  - main.md
-  - parameters.md
   - grid.md
-  - person.md
-  - sample.md
-  - effect.md
   - machine.md
+  - person.md
   - rating.md
-  - persist.md
+  - species.md
+  - specimen.md
   - utils.md
 - Project:
   - license.md
   - conduct.md
   - contributing.md
 
-extra_css:
-- css/snailz.css
-
 plugins:
 - mkdocstrings:
     handlers:
-      python:
-        options:
-          extensions:
-          - griffe_fieldz
-          members_order: source
-          filters: []
+      python: {}
 
 theme:
   name: "material"
 
 markdown_extensions:
 - def_list
-- markdown_include.include:
-    base_path: docs
 - footnotes
 
 exclude_docs: >

@@ -1,33 +1,59 @@
-"""Data generation utilities."""
+"""Utilities."""
 
-from contextlib import contextmanager
 from datetime import date, timedelta
 import json
-from pathlib import Path
-from pydantic import BaseModel
+import math
 import random
-import sys
 
 
-@contextmanager
-def file_or_std(parent, filename, mode):
-    """Open file and return handle or return stdin/stdout."""
+# Convert lat/lon to distances.
+METERS_PER_DEGREE_LAT = 111_320.0
 
-    if parent:
-        stream = open(Path(parent, filename), mode)
-        try:
-            yield stream
-        finally:
-            stream.close()
-    elif mode == "r":
-        yield sys.stdin
-    elif mode == "w":
-        yield sys.stdout
-    else:
-        raise ValueError(f"bad filename/mode '{filename}' / '{mode}'")
+# Make lat/lon realistic by rounding to 5 decimal places (2m accuracy).
+LAT_LON_PRECISION = 5
+
+# Mass and diameter precision.
+SPECIMEN_PRECISION = 1
+
+# Indentation for JSON output.
+JSON_INDENT = 2
 
 
-def id_gen(stem, digits):
+class BaseMixin:
+    """Mixin base for dataclasses."""
+
+    def as_json(self, indent=JSON_INDENT):
+        return json.dumps(self.persist(), indent=indent, default=_serialize_json)
+
+    def persist(self):
+        if hasattr(self.__class__, "pivot_keys"):
+            return {
+                key: value
+                for key, value in self.__dict__.items()
+                if key not in self.__class__.pivot_keys
+            }
+        else:
+            return self.__dict__
+
+    @classmethod
+    def save_db(cls, db, thing):
+        """Save objects to database."""
+
+        if isinstance(thing, (list, tuple)):
+            assert len(thing) > 0, "cannot persist no objects"
+        else:
+            thing = [thing]
+        table = db[cls.table_name]
+        primary_key = getattr(cls, "primary_key", None)
+        foreign_keys = getattr(cls, "foreign_keys", [])
+        table.insert_all(
+            (t.persist() for t in thing),
+            pk=primary_key,
+            foreign_keys=foreign_keys,
+        )
+
+
+def id_generator(stem, digits):
     """Generate unique IDs of the form 'stemDDDD'."""
 
     i = 1
@@ -38,32 +64,38 @@ def id_gen(stem, digits):
         i += 1
 
 
-def json_dump(obj, indent=2):
-    """Dump as JSON with custom serializer."""
+def lat_lon(lat0, lon0, x_offset_m, y_offset_m):
+    """Calculate latitude and longitude."""
 
-    return json.dumps(obj, indent=indent, default=_serialize_json)
+    lat = lat0 + y_offset_m / METERS_PER_DEGREE_LAT
+    m_per_deg_lon = METERS_PER_DEGREE_LAT * math.cos(math.radians(lat0))
+    lon = lon0 + x_offset_m / m_per_deg_lon
+    return round(lat, LAT_LON_PRECISION), round(lon, LAT_LON_PRECISION)
 
 
-def random_date(params):
+def random_date(min_date, max_date):
     """Select random date in range (inclusive)."""
 
-    days = (params.sample_date[1] - params.sample_date[0]).days
-    return params.sample_date[0] + timedelta(days=random.randint(0, days))
+    days = (max_date - min_date).days
+    return min_date + timedelta(days=random.randint(0, days))
 
 
-def random_size(params):
-    """Generate random sample mass and diameter."""
+def validate(cond, msg):
+    """Validate a constructor condition."""
 
-    mass = random.normalvariate(*params.sample_mass)
-    diameter = random.normalvariate(mass / 2.0, params.sample_mass[1] / 5.0)
-    return mass, diameter
+    if not cond:
+        raise ValueError(msg)
+
+
+def validate_lat_lon(caller, lat, lon):
+    """Validate latitude and longitude."""
+
+    validate(-90.0 <= lat <= 90.0, f"invalid {caller} latitutde {lat}")
+    validate(-180.0 <= lon <= 180.0, f"invalid {caller} longitude {lon}")
 
 
 def _serialize_json(obj):
     """Custom JSON serializer."""
 
-    if isinstance(obj, date):
-        return obj.isoformat()
-    if isinstance(obj, BaseModel):
-        return obj.model_dump()
-    raise TypeError(f"Type {type(obj)} not serializable")
+    assert isinstance(obj, date)
+    return obj.isoformat()

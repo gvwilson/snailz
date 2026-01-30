@@ -1,5 +1,3 @@
-griffe-fieldz
-markdown-include
 mkdocs
 mkdocs-material
 mkdocstrings[python]

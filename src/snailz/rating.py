@@ -1,40 +1,43 @@
 """Ratings on machinery."""
 
-from pydantic import BaseModel, ConfigDict, Field
+from dataclasses import dataclass
+import itertools
 import random
+from typing import ClassVar
+from .utils import BaseMixin
 
 
-RATINGS_FRACTION = 0.25
+RATINGS = {
+    "novice": 0.7,
+    "expert": 0.3,
+}
+
+RATINGS_FRAC = 2
 
 
-class Rating(BaseModel):
-    """A person's rating on a kind of machine."""
+@dataclass
+class Rating(BaseMixin):
+    """A person's rating on a machine."""
 
-    model_config = ConfigDict(
-        json_schema_extra={
-            "foreign_key": {
-                "person_id": ("person", "person_id"),
-                "machine_id": ("machine", "machine_id"),
-            }
-        }
-    )
+    table_name: ClassVar[str] = "rating"
+    foreign_keys: ClassVar[list[tuple[str, str, str]]] = [
+        ("person_id", "person", "ident"),
+        ("machine_id", "machine", "ident"),
+    ]
 
-    person_id: str = Field(description="person ID")
-    machine_id: str = Field(description="machine ID")
-    rating: int | None = Field(description="rating")
+    person_id: str = ""
+    machine_id: str = ""
+    rating: str | None = None
 
-    @staticmethod
-    def make(persons, machines):
+    @classmethod
+    def make(cls, persons, machines, *, rand=random):
         """Generate ratings."""
 
-        pairs = [(p, m) for p in persons for m in machines]
-        num_ratings = int(RATINGS_FRACTION * len(pairs))
-        ratings = [None, 1, 1, 1, 2, 2, 3]
+        num = max(1, len(persons) * len(machines) // RATINGS_FRAC)
+        values = list(RATINGS.keys())
+        weights = list(RATINGS.values())
+        ratings = rand.choices(values, weights=weights, k=num)
         return [
-            Rating(
-                person_id=p.person_id,
-                machine_id=m.machine_id,
-                rating=random.choice(ratings),
-            )
-            for p, m in random.sample(pairs, k=num_ratings)
+            Rating(person_id=p.ident, machine_id=m.ident, rating=r)
+            for ((p, m), r) in zip(itertools.product(persons, machines), ratings)
         ]

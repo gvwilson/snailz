@@ -1,10 +1,9 @@
 """Laboratory machinery."""
 
-from pydantic import BaseModel, Field
+from dataclasses import dataclass
 import random
-from typing import ClassVar
-
-from . import utils
+from typing import ClassVar, Generator
+from .utils import BaseMixin, id_generator, validate
 
 
 PREFIX = [
@@ -45,25 +44,35 @@ SUFFIX = [
 ]
 
 
-class Machine(BaseModel):
+@dataclass
+class Machine(BaseMixin):
     """A piece of experimental machinery."""
 
-    _id_gen: ClassVar[utils.id_gen] = utils.id_gen("M", 4)
+    primary_key: ClassVar[str] = "ident"
+    foreign_keys: ClassVar[list[tuple[str, str, str]]] = []
+    table_name: ClassVar[str] = "machine"
+    _next_id: ClassVar[Generator[str, None, None]] = id_generator("M", 4)
 
-    machine_id: str = Field(
-        description="machine ID", json_schema_extra={"primary_key": True}
-    )
-    name: str = Field(description="machine name")
+    ident: str = ""
+    name: str = ""
 
-    @staticmethod
-    def make(params):
-        """Generate a list of machines."""
+    def __post_init__(self):
+        """Validate and fill in."""
+
+        validate(self.ident == "", "machine ID cannot be set externally")
+        validate(len(self.name) > 0, "name cannot be empty")
+
+        self.ident = next(self._next_id)
+
+    @classmethod
+    def make(cls, params):
+        """Make machines."""
 
         assert params.num_machines <= len(PREFIX) * len(SUFFIX), (
             f"cannot generate {params.num_machines} machine names"
         )
         pairs = [(p, s) for p in PREFIX for s in SUFFIX]
         return [
-            Machine(machine_id=next(Machine._id_gen), name=f"{p} {s}")
-            for i, (p, s) in enumerate(random.sample(pairs, k=params.num_machines))
+            Machine(name=f"{p} {s}")
+            for (p, s) in random.sample(pairs, k=params.num_machines)
         ]
