@@ -2,7 +2,7 @@
 
 import itertools
 
-from snailz import Machine, Person, Rating
+from snailz import Machine, Parameters, Person, Rating
 
 
 class RandChoice:
@@ -24,10 +24,11 @@ def test_rating_model_fields():
 
 
 def test_make_ratings_for_every_pair():
+    params = Parameters(ratings_frac=1.0)
     persons = [Person(family="A", personal="B"), Person(family="C", personal="D")]
     machines = [Machine(name="some machine")]
-    ratings = Rating.make(persons, machines, rand=RandChoice("novice"))
-    allowed = {(p.ident, m.ident) for p, m in itertools.product(persons, machines)}
+    ratings = Rating.make(params, persons, machines, rand=RandChoice("novice"))
+    expected = {(p.ident, m.ident) for p, m in itertools.product(persons, machines)}
     actual = {(r.person_id, r.machine_id) for r in ratings}
-    assert actual.issubset(allowed)
+    assert actual == expected
     assert all(r.rating == "novice" for r in ratings)

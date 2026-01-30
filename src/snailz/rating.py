@@ -12,8 +12,6 @@ RATINGS = {
     "expert": 0.3,
 }
 
-RATINGS_FRAC = 2
-
 
 @dataclass
 class Rating(BaseMixin):
@@ -30,10 +28,10 @@ class Rating(BaseMixin):
     rating: str | None = None
 
     @classmethod
-    def make(cls, persons, machines, *, rand=random):
+    def make(cls, params, persons, machines, *, rand=random):
         """Generate ratings."""
 
-        num = max(1, len(persons) * len(machines) // RATINGS_FRAC)
+        num = max(1, int(params.ratings_frac * len(persons) * len(machines)))
         values = list(RATINGS.keys())
         weights = list(RATINGS.values())
         ratings = rand.choices(values, weights=weights, k=num)
