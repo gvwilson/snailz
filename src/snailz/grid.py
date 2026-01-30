@@ -30,7 +30,7 @@ class Grid(BaseMixin):
     """Create and fill a grid."""
 
     primary_key: ClassVar[str] = "ident"
-    pivot_keys: ClassVar[list[str]] = ["cells"]
+    pivot_keys: ClassVar[set[str]] = {"cells"}
     table_name: ClassVar[str] = "grid"
     _next_id: ClassVar[Generator[str, None, None]] = id_generator("G", 4)
 

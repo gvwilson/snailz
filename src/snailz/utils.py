@@ -32,10 +32,16 @@ class BaseMixin:
 
         return {key: self.__dict__[key] for key in self.persistable_keys()}
 
+    def not_null_keys(self):
+        """Generate list of non-null keys for object."""
+
+        nullable_keys = getattr(self, "nullable_keys", set())
+        return {key for key in self.persistable_keys() if key not in nullable_keys}
+
     def persistable_keys(self):
         """Generate list of keys to persist for object."""
 
-        pivot_keys = getattr(self, "pivot_keys", [])
+        pivot_keys = getattr(self, "pivot_keys", set())
         return [key for key in self.__dict__.keys() if key not in pivot_keys]
 
     @classmethod
@@ -61,6 +67,7 @@ class BaseMixin:
             pk=primary_key,
             foreign_keys=foreign_keys,
         )
+        table.transform(not_null=objects[0].not_null_keys())
 
     @classmethod
     def _csv_dict_writer(cls, stream, fieldnames):

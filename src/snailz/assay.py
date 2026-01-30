@@ -16,7 +16,7 @@ class Assay(BaseMixin):
     """A single pollution assay."""
 
     primary_key: ClassVar[str] = "ident"
-    pivot_keys: ClassVar[list[str]] = ["contents", "readings"]
+    pivot_keys: ClassVar[set[str]] = {"contents", "readings"}
     table_name: ClassVar[str] = "assay"
     _next_id: ClassVar[Generator[str, None, None]] = id_generator("A", 4)
 

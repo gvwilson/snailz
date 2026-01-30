@@ -19,7 +19,7 @@ BASES = {
 class Species(BaseMixin):
     """A set of generated specimens."""
 
-    pivot_keys: ClassVar[list[str]] = ["loci"]
+    pivot_keys: ClassVar[set[str]] = {"loci"}
     table_name: ClassVar[str] = "species"
 
     reference: str = ""

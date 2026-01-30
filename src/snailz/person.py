@@ -14,6 +14,7 @@ class Person(BaseMixin):
     foreign_keys: ClassVar[list[tuple[str, str, str]]] = [
         ("supervisor_id", "person", "ident")
     ]
+    nullable_keys: ClassVar[set[str]] = {"supervisor_id"}
     table_name: ClassVar[str] = "person"
     _next_id: ClassVar[Generator[str, None, None]] = id_generator("P", 4)
 
