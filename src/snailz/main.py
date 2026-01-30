@@ -93,6 +93,10 @@ def _save_csv(outdir, data):
     for cls in (Grid, Machine, Person, Rating, Species, Specimen):
         cls.save_csv(outdir, data[cls.table_name])
 
+    for g in data[Grid.table_name]:
+        with open(Path(outdir, f"{g.ident}.csv"), "w") as writer:
+            print(g, file=writer)
+
 
 def _save_db(outdir, data):
     """Save synthesized data to database."""

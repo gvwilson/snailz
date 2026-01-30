@@ -17,6 +17,9 @@ GRID_STD_DEV = 0.5
 # Grid separation as a multiple of total grid size.
 GRID_SEP = 4
 
+# Decimal places in grid values.
+GRID_PRECISION = 2
+
 
 @dataclass
 class Grid(BaseMixin):
@@ -103,6 +106,12 @@ class Grid(BaseMixin):
             for y in range(g.size)
         ]
 
+    def __str__(self):
+        """Convert grid values to headerless CSV text."""
+        return "\n".join(
+            ",".join(str(self[x, y]) for x in range(self.size))
+            for y in range(self.size - 1, -1, -1)
+        )
 
     def __getitem__(self, key):
         """Get grid element."""
@@ -143,7 +152,7 @@ class Grid(BaseMixin):
 
         for i, val in enumerate(self.cells):
             if val > 0.0:
-                self.cells[i] = abs(random.normalvariate(self.cells[i], GRID_STD_DEV))
+                self.cells[i] = round(abs(random.normalvariate(self.cells[i], GRID_STD_DEV)), GRID_PRECISION)
             else:
                 self.cells[i] = 0.0
 
