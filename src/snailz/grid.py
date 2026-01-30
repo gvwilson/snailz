@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass, field
 import itertools
+from pathlib import Path
 import random
 from typing import ClassVar, Generator
 from .utils import BaseMixin, id_generator, lat_lon, validate, validate_lat_lon
@@ -64,23 +65,44 @@ class Grid(BaseMixin):
         ]
 
     @classmethod
+    def save_csv(cls, outdir, objects):
+        """Save objects as CSV."""
+
+        super().save_csv(outdir, objects)
+
+        with open(Path(outdir, f"grid_cells.csv"), "w", newline="") as stream:
+            objects = cls._ensure_iterable(objects)
+            objects = cls._grid_cells(objects)
+            exemplar = objects[0]
+            writer = cls._csv_dict_writer(stream, list(exemplar.keys()))
+            for obj in objects:
+                writer.writerow(obj)
+
+
+    @classmethod
     def save_db(cls, db, objects):
         """Save objects to database."""
 
         super().save_db(db, objects)
 
         table = db["grid_cells"]
-        values = [
+        table.insert_all(
+            cls._grid_cells(objects),
+            pk=("grid_id", "lat", "lon"),
+            foreign_keys=[("grid_id", "grid", "ident")],
+        )
+
+    @classmethod
+    def _grid_cells(cls, objects):
+        """Get grid cells in long format for persistence."""
+
+        return [
             {"grid_id": g.ident, **g.lat_lon(x, y, True), "value": g[x, y]}
             for g in objects
             for x in range(g.size)
             for y in range(g.size)
         ]
-        table.insert_all(
-            values,
-            pk=("grid_id", "lat", "lon"),
-            foreign_keys=[("grid_id", "grid", "ident")],
-        )
+
 
     def __getitem__(self, key):
         """Get grid element."""

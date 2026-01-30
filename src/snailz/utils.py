@@ -1,8 +1,10 @@
 """Utilities."""
 
+import csv
 from datetime import date, timedelta
 import json
 import math
+from pathlib import Path
 import random
 
 
@@ -23,34 +25,60 @@ class BaseMixin:
     """Mixin base for dataclasses."""
 
     def as_json(self, indent=JSON_INDENT):
-        return json.dumps(self.persist(), indent=indent, default=_serialize_json)
+        return json.dumps(self.persistable(), indent=indent, default=_serialize_json)
 
-    def persist(self):
-        if hasattr(self.__class__, "pivot_keys"):
-            return {
-                key: value
-                for key, value in self.__dict__.items()
-                if key not in self.__class__.pivot_keys
-            }
-        else:
-            return self.__dict__
+    def persistable(self):
+        """Create persistable dictionary from object."""
+
+        return {key: self.__dict__[key] for key in self.persistable_keys()}
+
+    def persistable_keys(self):
+        """Generate list of keys to persist for object."""
+
+        pivot_keys = getattr(self, "pivot_keys", [])
+        return [key for key in self.__dict__.keys() if key not in pivot_keys]
+
+    @classmethod
+    def save_csv(cls, outdir, thing):
+        """Save objects as CSV."""
+
+        with open(Path(outdir, f"{cls.table_name}.csv"), "w", newline="") as stream:
+            thing = cls._ensure_iterable(thing)
+            exemplar = thing[0]
+            writer = cls._csv_dict_writer(stream, exemplar.persistable_keys())
+            for t in thing:
+                writer.writerow(t.persistable())
 
     @classmethod
     def save_db(cls, db, thing):
         """Save objects to database."""
 
-        if isinstance(thing, (list, tuple)):
-            assert len(thing) > 0, "cannot persist no objects"
-        else:
-            thing = [thing]
+        thing = cls._ensure_iterable(thing)
         table = db[cls.table_name]
         primary_key = getattr(cls, "primary_key", None)
         foreign_keys = getattr(cls, "foreign_keys", [])
         table.insert_all(
-            (t.persist() for t in thing),
+            (t.persistable() for t in thing),
             pk=primary_key,
             foreign_keys=foreign_keys,
         )
+
+    @classmethod
+    def _csv_dict_writer(cls, stream, fieldnames):
+        """Construct a CSV dict writer with default properties"""
+
+        writer = csv.DictWriter(stream, fieldnames=fieldnames, lineterminator="\n")
+        writer.writeheader()
+        return writer
+
+    @classmethod
+    def _ensure_iterable(cls, thing):
+        """Make sure thing is list-like and non-empty."""
+
+        if isinstance(thing, (list, tuple)):
+            assert len(thing) > 0, "cannot persist no objects"
+            return thing
+        return [thing]
 
 
 def id_generator(stem, digits):

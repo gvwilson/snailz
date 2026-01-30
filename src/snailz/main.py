@@ -32,6 +32,7 @@ def main():
     data = _synthesize(params)
 
     _save_params(args.outdir, params)
+    _save_csv(args.outdir, data)
     _save_db(args.outdir, data)
 
     return 0
@@ -82,8 +83,19 @@ def _parse_args():
     return parser.parse_args()
 
 
-def _save_db(outdir, data):
+def _save_csv(outdir, data):
     """Save synthesized data as CSV."""
+
+    if (outdir is None) or (outdir == "-"):
+        return
+
+    _ensure_dir(outdir)
+    for cls in (Grid, Machine, Person, Rating, Species, Specimen):
+        cls.save_csv(outdir, data[cls.table_name])
+
+
+def _save_db(outdir, data):
+    """Save synthesized data to database."""
 
     if (outdir is None) or (outdir == "-"):
         return
@@ -117,7 +129,7 @@ def _synthesize(params):
     grids = Grid.make(params)
     persons = Person.make(params, Faker(params.locale))
     machines = Machine.make(params)
-    ratings = Rating.make(persons, machines)
+    ratings = Rating.make(params, persons, machines)
     species = Species.make(params)
     specimens = Specimen.make(params, grids, species)
     return {

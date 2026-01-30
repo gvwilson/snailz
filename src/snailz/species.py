@@ -1,6 +1,7 @@
 """Details of snail species."""
 
 from dataclasses import dataclass, field
+from pathlib import Path
 import random
 from typing import ClassVar
 from .utils import BaseMixin
@@ -27,6 +28,19 @@ class Species(BaseMixin):
     susc_base: str = ""
 
     @classmethod
+    def save_csv(cls, outdir, species):
+        """Save objects as CSV."""
+
+        super().save_csv(outdir, species)
+
+        with open(Path(outdir, f"species_loci.csv"), "w", newline="") as stream:
+            objects = cls._loci(species)
+            writer = cls._csv_dict_writer(stream, list(objects[0].keys()))
+            for obj in objects:
+                writer.writerow(obj)
+
+
+    @classmethod
     def save_db(cls, db, species):
         """Save objects to database."""
 
@@ -35,10 +49,7 @@ class Species(BaseMixin):
         super().save_db(db, species)
 
         table = db["species_loci"]
-        values = [
-            {"ident": i + 1, "locus": locus} for i, locus in enumerate(species.loci)
-        ]
-        table.insert_all(values, pk="ident")
+        table.insert_all(cls._loci(species), pk="ident")
 
     @classmethod
     def make(cls, params):
@@ -75,3 +86,11 @@ class Species(BaseMixin):
             if random.random() < params.p_mutation:
                 genome[loc] = random.choice(BASES[genome[loc]])
         return "".join(genome)
+
+    @classmethod
+    def _loci(cls, species):
+        """Convert mutation loci into dictionaries."""
+
+        return [
+            {"ident": i + 1, "locus": locus} for i, locus in enumerate(species.loci)
+        ]
