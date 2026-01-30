@@ -1,7 +1,9 @@
 """Test grid generation."""
 
+import csv
 from dataclasses import fields
 import json
+from pathlib import Path
 import pytest
 from sqlite_utils import Database
 from snailz import Grid, Parameters
@@ -85,7 +87,22 @@ def test_grid_separation():
     assert len({(g.lat0, g.lon0) for g in grids}) == len(grids)
 
 
-def test_grid_persist_to_db(fake):
+def test_grid_persist_to_csv(tmp_path):
+    grids = Grid.make(
+        Parameters(num_grids=3, grid_size=2, grid_spacing=1.0, lat0=0.0, lon0=0.0)
+    )
+    Grid.save_csv(tmp_path, grids)
+
+    with open(Path(tmp_path, f"{Grid.table_name}.csv"), "r") as reader:
+        rows = list(csv.reader(reader))
+        assert len(rows) == 4
+
+    with open(Path(tmp_path, f"grid_cells.csv"), "r") as reader:
+        rows = list(csv.reader(reader))
+        assert len(rows) == 1 + (3 * 2 * 2)
+
+
+def test_grid_persist_to_db():
     db = Database(memory=True)
     grids = Grid.make(
         Parameters(num_grids=3, grid_size=2, grid_spacing=1.0, lat0=0.0, lon0=0.0)
@@ -96,3 +113,11 @@ def test_grid_persist_to_db(fake):
     assert set(r["ident"] for r in rows) == set(g.ident for g in grids)
     field_names = {f.name for f in fields(grids[0])}
     assert set(rows[0].keys()).issubset(field_names)
+
+
+def test_grid_to_str():
+    g = Grid(size=2, spacing=1.0, lat0=0.0, lon0=0.0)
+    text = str(g)
+    rows = text.split("\n")
+    assert len(rows) == 2
+    assert all(len(r.split(",")) == 2 for r in rows)

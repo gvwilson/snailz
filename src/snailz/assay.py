@@ -65,10 +65,8 @@ class Assay(BaseMixin):
         super().save_csv(outdir, objects)
 
         with open(Path(outdir, f"assay_readings.csv"), "w", newline="") as stream:
-            objects = cls._ensure_iterable(objects)
             objects = cls._assay_readings(objects)
-            exemplar = objects[0]
-            writer = cls._csv_dict_writer(stream, list(exemplar.keys()))
+            writer = cls._csv_dict_writer(stream, list(objects[0].keys()))
             for obj in objects:
                 writer.writerow(obj)
 

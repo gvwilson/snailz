@@ -31,10 +31,11 @@ class Species(BaseMixin):
     def save_csv(cls, outdir, species):
         """Save objects as CSV."""
 
+        assert isinstance(species, list)
         super().save_csv(outdir, species)
 
         with open(Path(outdir, f"species_loci.csv"), "w", newline="") as stream:
-            objects = cls._loci(species)
+            objects = cls._loci(species[0])
             writer = cls._csv_dict_writer(stream, list(objects[0].keys()))
             for obj in objects:
                 writer.writerow(obj)
@@ -44,12 +45,10 @@ class Species(BaseMixin):
     def save_db(cls, db, species):
         """Save objects to database."""
 
-        assert isinstance(species, Species), "can only save one species"
-
+        assert isinstance(species, list)
         super().save_db(db, species)
-
         table = db["species_loci"]
-        table.insert_all(cls._loci(species), pk="ident")
+        table.insert_all(cls._loci(species[0]), pk="ident")
 
     @classmethod
     def make(cls, params):
@@ -57,9 +56,9 @@ class Species(BaseMixin):
         loci = cls.random_loci(params, reference)
         susc_locus = random.choice(loci)
         susc_base = random.choice(BASES[reference[susc_locus]])
-        return Species(
+        return [Species(
             reference=reference, loci=loci, susc_locus=susc_locus, susc_base=susc_base
-        )
+        )]
 
     @classmethod
     def reference_genome(cls, params):

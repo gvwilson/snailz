@@ -71,10 +71,8 @@ class Grid(BaseMixin):
         super().save_csv(outdir, objects)
 
         with open(Path(outdir, f"grid_cells.csv"), "w", newline="") as stream:
-            objects = cls._ensure_iterable(objects)
             objects = cls._grid_cells(objects)
-            exemplar = objects[0]
-            writer = cls._csv_dict_writer(stream, list(exemplar.keys()))
+            writer = cls._csv_dict_writer(stream, list(objects[0].keys()))
             for obj in objects:
                 writer.writerow(obj)
 

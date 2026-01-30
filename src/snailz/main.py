@@ -138,7 +138,7 @@ def _synthesize(params):
     ratings = Rating.make(params, persons, machines)
     assays = Assay.make(params, grids, ratings)
     species = Species.make(params)
-    specimens = Specimen.make(params, grids, species)
+    specimens = Specimen.make(params, grids, species[0])
     return {
         Assay: assays,
         Grid: grids,

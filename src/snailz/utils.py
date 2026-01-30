@@ -42,26 +42,25 @@ class BaseMixin:
         return [key for key in self.__dict__.keys() if key not in pivot_keys]
 
     @classmethod
-    def save_csv(cls, outdir, thing):
+    def save_csv(cls, outdir, objects):
         """Save objects as CSV."""
 
+        assert all(isinstance(obj, cls) for obj in objects)
         with open(Path(outdir, f"{cls.table_name}.csv"), "w", newline="") as stream:
-            thing = cls._ensure_iterable(thing)
-            exemplar = thing[0]
-            writer = cls._csv_dict_writer(stream, exemplar.persistable_keys())
-            for t in thing:
-                writer.writerow(t.persistable())
+            writer = cls._csv_dict_writer(stream, objects[0].persistable_keys())
+            for obj in objects:
+                writer.writerow(obj.persistable())
 
     @classmethod
-    def save_db(cls, db, thing):
+    def save_db(cls, db, objects):
         """Save objects to database."""
 
-        thing = cls._ensure_iterable(thing)
+        assert all(isinstance(obj, cls) for obj in objects)
         table = db[cls.table_name]
         primary_key = getattr(cls, "primary_key", None)
         foreign_keys = getattr(cls, "foreign_keys", [])
         table.insert_all(
-            (t.persistable() for t in thing),
+            (obj.persistable() for obj in objects),
             pk=primary_key,
             foreign_keys=foreign_keys,
         )
@@ -73,15 +72,6 @@ class BaseMixin:
         writer = csv.DictWriter(stream, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         return writer
-
-    @classmethod
-    def _ensure_iterable(cls, thing):
-        """Make sure thing is list-like and non-empty."""
-
-        if isinstance(thing, (list, tuple)):
-            assert len(thing) > 0, "cannot persist no objects"
-            return thing
-        return [thing]
 
 
 def id_generator(stem, digits):
