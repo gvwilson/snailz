@@ -59,7 +59,7 @@ class Specimen(BaseMixin):
             genome = species.random_genome(params)
             mass = cls.random_mass(params, g[x, y])
             diameter = cls.random_diameter(params, mass)
-            collected = random_date(params.survey_start, params.survey_end)
+            collected = random_date(params.start_date, params.end_date)
             result.append(
                 Specimen(
                     lat=lat,

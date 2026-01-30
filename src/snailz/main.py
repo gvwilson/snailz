@@ -8,6 +8,7 @@ import random
 from sqlite_utils import Database
 import sys
 
+from .assay import Assay
 from .grid import Grid
 from .machine import Machine
 from .parameters import Parameters
@@ -32,8 +33,9 @@ def main():
     data = _synthesize(params)
 
     _save_params(args.outdir, params)
-    _save_csv(args.outdir, data)
-    _save_db(args.outdir, data)
+    classes = (Grid, Machine, Person, Rating, Assay, Species, Specimen)
+    _save_csv(args.outdir, classes, data)
+    _save_db(args.outdir, classes, data)
 
     return 0
 
@@ -83,22 +85,22 @@ def _parse_args():
     return parser.parse_args()
 
 
-def _save_csv(outdir, data):
+def _save_csv(outdir, classes, data):
     """Save synthesized data as CSV."""
 
     if (outdir is None) or (outdir == "-"):
         return
 
     _ensure_dir(outdir)
-    for cls in (Grid, Machine, Person, Rating, Species, Specimen):
-        cls.save_csv(outdir, data[cls.table_name])
+    for cls in classes:
+        cls.save_csv(outdir, data[cls])
 
-    for g in data[Grid.table_name]:
+    for g in data[Grid]:
         with open(Path(outdir, f"{g.ident}.csv"), "w") as writer:
             print(g, file=writer)
 
 
-def _save_db(outdir, data):
+def _save_db(outdir, classes, data):
     """Save synthesized data to database."""
 
     if (outdir is None) or (outdir == "-"):
@@ -109,8 +111,8 @@ def _save_db(outdir, data):
     dbpath.unlink(missing_ok=True)
 
     db = Database(dbpath)
-    for cls in (Grid, Machine, Person, Rating, Species, Specimen):
-        cls.save_db(db, data[cls.table_name])
+    for cls in classes:
+        cls.save_db(db, data[cls])
 
 
 def _save_params(outdir, params):
@@ -134,15 +136,17 @@ def _synthesize(params):
     persons = Person.make(params, Faker(params.locale))
     machines = Machine.make(params)
     ratings = Rating.make(params, persons, machines)
+    assays = Assay.make(params, grids, ratings)
     species = Species.make(params)
     specimens = Specimen.make(params, grids, species)
     return {
-        Grid.table_name: grids,
-        Person.table_name: persons,
-        Machine.table_name: machines,
-        Rating.table_name: ratings,
-        Species.table_name: species,
-        Specimen.table_name: specimens,
+        Assay: assays,
+        Grid: grids,
+        Person: persons,
+        Machine: machines,
+        Rating: ratings,
+        Species: species,
+        Specimen: specimens,
     }
 
 

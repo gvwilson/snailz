@@ -8,6 +8,9 @@ from pathlib import Path
 import random
 
 
+# Standard deviation for randomization.
+GRID_STD_DEV = 0.5
+
 # Convert lat/lon to distances.
 METERS_PER_DEGREE_LAT = 111_320.0
 

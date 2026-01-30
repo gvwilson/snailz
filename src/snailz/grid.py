@@ -5,14 +5,11 @@ import itertools
 from pathlib import Path
 import random
 from typing import ClassVar, Generator
-from .utils import BaseMixin, id_generator, lat_lon, validate, validate_lat_lon
+from .utils import GRID_STD_DEV, BaseMixin, id_generator, lat_lon, validate, validate_lat_lon
 
 
 # Legal moves for random walk that fills grid.
 MOVES = [[-1, 0], [1, 0], [0, -1], [0, 1]]
-
-# Standard deviation for randomization.
-GRID_STD_DEV = 0.5
 
 # Grid separation as a multiple of total grid size.
 GRID_SEP = 4

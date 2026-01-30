@@ -21,6 +21,8 @@ class Parameters(BaseMixin):
     locale: str = "et_EE"
     num_machines: int = 1
     ratings_frac: float = 0.5
+    num_assays: int = 1
+    assay_size: int = 2
     genome_length: int = 1
     num_loci: int = 1
     p_mutation: float = 0.5
@@ -30,8 +32,8 @@ class Parameters(BaseMixin):
     mass_sigma: float = 0.3
     diam_ratio: float = 0.7
     diam_sigma: float = 0.7
-    survey_start: date = date(2026, 3, 1)
-    survey_end: date = date(2026, 5, 31)
+    start_date: date = date(2026, 3, 1)
+    end_date: date = date(2026, 5, 31)
 
     def __post_init__(self):
         """Check locale."""
@@ -45,8 +47,10 @@ class Parameters(BaseMixin):
         validate(self.locale in AVAILABLE_LOCALES, f"unknown locale {self.locale}")
         validate(self.num_machines > 0, "require positive number of machines")
         validate(0.0 <= self.ratings_frac <= 1.0, "require ratings fraction in [0..1]")
+        validate(self.num_assays >= 1, "require at least one assay")
+        validate(self.assay_size >= 2, "require assay size at least two")
         validate(self.genome_length > 0, "require positive genome length")
         validate(self.num_loci >= 0, "require non-negative number of loci")
         validate(0.0 <= self.p_mutation <= 1.0, "require mutation probability in [0..1]")
         validate(self.num_specimens > 0, "require positive number of specimens")
-        validate(self.survey_start <= self.survey_end, "require non-negative survey date range")
+        validate(self.start_date <= self.end_date, "require non-negative survey date range")
