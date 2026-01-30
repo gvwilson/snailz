@@ -35,8 +35,6 @@ class Person(BaseMixin):
     def make(cls, params, fake):
         """Make persons."""
 
-        validate(params.num_persons > 0, "can only make positive number of persons")
-        validate(params.supervisor_frac >= 0.0, "require non-negative supervisor fraction")
         num_supervisors = max(1, int(params.supervisor_frac * params.num_persons))
         num_staff = params.num_persons - num_supervisors
 
