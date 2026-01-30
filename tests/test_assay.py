@@ -39,7 +39,7 @@ def test_assay_assay_readings_long_format():
 
 def test_assay_make_creates_assays():
     params = Parameters(num_assays=2)
-    grid = Grid(size=1, spacing=1.0)
+    grid = Grid(size=1, spacing=1.0, params=params)
     rating = Rating(person_id="P1", machine_id="M1", rating="normal")
     assays = Assay.make(params, [grid], [rating])
     assert len(assays) == 2
@@ -52,7 +52,7 @@ def test_assay_make_creates_assays():
 
 def test_assay_persist_to_csv(tmp_path):
     params = Parameters(num_assays=2, assay_size=3)
-    grid = Grid(size=1, spacing=1.0)
+    grid = Grid(size=1, spacing=1.0, params=params)
     rating = Rating(person_id="P1", machine_id="M1", rating="normal")
     assays = Assay.make(params, [grid], [rating])
     Assay.save_csv(tmp_path, assays)
@@ -68,13 +68,13 @@ def test_assay_persist_to_csv(tmp_path):
 
 def test_assay_persist_to_db():
     db = Database(memory=True)
-    grid = Grid(size=1, spacing=1.0)
+    params = Parameters(num_assays=2)
+    grid = Grid(size=1, spacing=1.0, params=params)
     persons = [Person(family="A", personal="B")]
     machines = [Machine(name="M1")]
     rating = Rating(
         person_id=persons[0].ident, machine_id=machines[0].ident, rating="normal"
     )
-    params = Parameters(num_assays=2)
     assays = Assay.make(params, [grid], [rating])
 
     Person.save_db(db, persons)

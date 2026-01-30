@@ -14,6 +14,7 @@ class Parameters(BaseMixin):
     num_grids: int = 1
     grid_size: int = 1
     grid_spacing: float = 10.0
+    grid_std_dev: float = 0.5
     lat0: float = 48.8666632
     lon0: float = -124.1999992
     num_persons: int = 1

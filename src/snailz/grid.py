@@ -1,12 +1,12 @@
 """Sampling grids."""
 
-from dataclasses import dataclass, field
+from dataclasses import InitVar, dataclass, field
 import itertools
 from pathlib import Path
 import random
 from typing import ClassVar, Generator
+from .parameters import Parameters
 from .utils import (
-    GRID_STD_DEV,
     BaseMixin,
     id_generator,
     lat_lon,
@@ -40,8 +40,9 @@ class Grid(BaseMixin):
     lat0: float = 0.0
     lon0: float = 0.0
     cells: list = field(default_factory=list)
+    params: InitVar[Parameters] = None
 
-    def __post_init__(self):
+    def __post_init__(self, params):
         """Validate and fill in."""
 
         validate(self.ident == "", "grid ID cannot be set externally")
@@ -50,11 +51,12 @@ class Grid(BaseMixin):
             self.spacing > 0.0, f"grid spacing must be positive not {self.spacing}"
         )
         validate_lat_lon("grid", self.lat0, self.lon0)
+        validate(params is not None, "params required for initializing grid")
 
         self.ident = next(self._next_id)
         self.cells = [0 for _ in range(self.size * self.size)]
         self.fill()
-        self.randomize()
+        self.randomize(params)
 
     @classmethod
     def make(cls, params):
@@ -67,6 +69,7 @@ class Grid(BaseMixin):
                 spacing=params.grid_spacing,
                 lat0=origin[0],
                 lon0=origin[1],
+                params=params,
             )
             for origin in origins
         ]
@@ -148,13 +151,13 @@ class Grid(BaseMixin):
         else:
             return lat, lon
 
-    def randomize(self):
+    def randomize(self, params):
         """Randomize values in grid."""
 
         for i, val in enumerate(self.cells):
             if val > 0.0:
                 self.cells[i] = round(
-                    abs(random.normalvariate(self.cells[i], GRID_STD_DEV)),
+                    abs(random.normalvariate(self.cells[i], params.grid_std_dev)),
                     GRID_PRECISION,
                 )
             else:

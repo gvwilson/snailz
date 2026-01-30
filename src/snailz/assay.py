@@ -5,7 +5,7 @@ from datetime import date
 from pathlib import Path
 import random
 from typing import ClassVar, Generator
-from .utils import GRID_STD_DEV, BaseMixin, id_generator, random_date
+from .utils import BaseMixin, id_generator, random_date
 
 
 ASSAY_PRECISION = 2
@@ -112,7 +112,7 @@ class Assay(BaseMixin):
     def _random_readings(cls, params, contents, target):
         """Generate random readings with predetermined mean."""
 
-        raw = [random.gauss(0, GRID_STD_DEV) for _ in contents]
+        raw = [random.gauss(0, params.grid_std_dev) for _ in contents]
         return [
             round(abs(r + target) if c == "T" else abs(r), ASSAY_PRECISION)
             for r, c in zip(raw, contents)

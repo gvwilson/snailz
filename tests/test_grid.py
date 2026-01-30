@@ -17,19 +17,21 @@ def small_grid(seeded_rng):
         spacing=10.0,
         lat0=45.0,
         lon0=-75.0,
+        params=Parameters()
     )
 
 
 def test_grid_minimal(seeded_rng):
-    g = Grid(size=1, spacing=1.0, lat0=0.0, lon0=0.0)
+    g = Grid(size=1, spacing=1.0, lat0=0.0, lon0=0.0, params=Parameters())
     assert g.size == 1
     assert len(g.cells) == 1
     assert g.cells[0] >= 0
 
 
 def test_grid_ident_is_unique(seeded_rng):
-    g1 = Grid(size=3, spacing=1.0, lat0=0.0, lon0=0.0)
-    g2 = Grid(size=3, spacing=1.0, lat0=0.0, lon0=0.0)
+    params = Parameters()
+    g1 = Grid(size=3, spacing=1.0, lat0=0.0, lon0=0.0, params=params)
+    g2 = Grid(size=3, spacing=1.0, lat0=0.0, lon0=0.0, params=params)
     assert g1.ident != g2.ident
     assert g1.ident.startswith("G")
     assert g2.ident.startswith("G")
@@ -53,7 +55,7 @@ def test_grid_fill_creates_nonzero_values(small_grid):
 
 
 def test_grid_randomize_respects_std_dev(seeded_rng):
-    g = Grid(size=5, spacing=1.0, lat0=0.0, lon0=0.0)
+    g = Grid(size=5, spacing=1.0, lat0=0.0, lon0=0.0, params=Parameters())
     assert len(set(g.cells)) > 1
 
 
@@ -116,7 +118,7 @@ def test_grid_persist_to_db():
 
 
 def test_grid_to_str():
-    g = Grid(size=2, spacing=1.0, lat0=0.0, lon0=0.0)
+    g = Grid(size=2, spacing=1.0, lat0=0.0, lon0=0.0, params=Parameters())
     text = str(g)
     rows = text.split("\n")
     assert len(rows) == 2

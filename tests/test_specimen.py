@@ -8,7 +8,7 @@ from snailz import Grid, Parameters, Specimen
 
 @pytest.fixture
 def a_grid(seeded_rng):
-    return Grid(size=5, spacing=1.0, lat0=0.0, lon0=0.0)
+    return Grid(size=5, spacing=1.0, lat0=0.0, lon0=0.0, params=Parameters())
 
 
 class DummySpecies:
