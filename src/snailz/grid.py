@@ -5,7 +5,14 @@ import itertools
 from pathlib import Path
 import random
 from typing import ClassVar, Generator
-from .utils import GRID_STD_DEV, BaseMixin, id_generator, lat_lon, validate, validate_lat_lon
+from .utils import (
+    GRID_STD_DEV,
+    BaseMixin,
+    id_generator,
+    lat_lon,
+    validate,
+    validate_lat_lon,
+)
 
 
 # Legal moves for random walk that fills grid.
@@ -70,12 +77,11 @@ class Grid(BaseMixin):
 
         super().save_csv(outdir, objects)
 
-        with open(Path(outdir, f"grid_cells.csv"), "w", newline="") as stream:
+        with open(Path(outdir, "grid_cells.csv"), "w", newline="") as stream:
             objects = cls._grid_cells(objects)
             writer = cls._csv_dict_writer(stream, list(objects[0].keys()))
             for obj in objects:
                 writer.writerow(obj)
-
 
     @classmethod
     def save_db(cls, db, objects):
@@ -147,7 +153,10 @@ class Grid(BaseMixin):
 
         for i, val in enumerate(self.cells):
             if val > 0.0:
-                self.cells[i] = round(abs(random.normalvariate(self.cells[i], GRID_STD_DEV)), GRID_PRECISION)
+                self.cells[i] = round(
+                    abs(random.normalvariate(self.cells[i], GRID_STD_DEV)),
+                    GRID_PRECISION,
+                )
             else:
                 self.cells[i] = 0.0
 

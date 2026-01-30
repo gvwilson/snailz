@@ -814,7 +814,10 @@
 
               <details class="mkdocstrings-source">
                 <summary>Source code in <code>src/snailz/person.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">12</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
 <span class="normal">13</span>
 <span class="normal">14</span>
 <span class="normal">15</span>
@@ -862,13 +865,7 @@
 <span class="normal">57</span>
 <span class="normal">58</span>
 <span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="normal">60</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Person</span><span class="p">(</span><span class="n">BaseMixin</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A single person.&quot;&quot;&quot;</span>
 
@@ -894,13 +891,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ident</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_next_id</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">fake</span><span class="p">,</span> <span class="n">supervisor_fraction</span><span class="o">=</span><span class="n">SUPERVISOR_FRACTION</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">fake</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Make persons.&quot;&quot;&quot;</span>
 
-        <span class="n">validate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">num_persons</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;can only make positive number of persons&quot;</span><span class="p">)</span>
-
-        <span class="n">validate</span><span class="p">(</span><span class="n">supervisor_fraction</span> <span class="o">&gt;=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;require non-negative supervisor fraction&quot;</span><span class="p">)</span>
-        <span class="n">num_supervisors</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">supervisor_fraction</span> <span class="o">*</span> <span class="n">params</span><span class="o">.</span><span class="n">num_persons</span><span class="p">))</span>
+        <span class="n">num_supervisors</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">supervisor_frac</span> <span class="o">*</span> <span class="n">params</span><span class="o">.</span><span class="n">num_persons</span><span class="p">))</span>
         <span class="n">num_staff</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">num_persons</span> <span class="o">-</span> <span class="n">num_supervisors</span>
 
         <span class="n">staff</span> <span class="o">=</span> <span class="p">[</span>
@@ -955,14 +949,14 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/snailz/person.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">28</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
 <span class="normal">29</span>
 <span class="normal">30</span>
 <span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">32</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate and fill in.&quot;&quot;&quot;</span>
 
     <span class="n">validate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ident</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;person ID cannot be set externally&quot;</span><span class="p">)</span>
@@ -980,7 +974,7 @@
 
 
 <h3 id="snailz.person.Person.make" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">make</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">fake</span><span class="p">,</span> <span class="n">supervisor_fraction</span><span class="o">=</span><span class="n">SUPERVISOR_FRACTION</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">make</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">fake</span><span class="p">)</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
@@ -996,7 +990,10 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/snailz/person.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">37</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
 <span class="normal">38</span>
 <span class="normal">39</span>
 <span class="normal">40</span>
@@ -1019,20 +1016,11 @@
 <span class="normal">57</span>
 <span class="normal">58</span>
 <span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">fake</span><span class="p">,</span> <span class="n">supervisor_fraction</span><span class="o">=</span><span class="n">SUPERVISOR_FRACTION</span><span class="p">):</span>
+<span class="normal">60</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">fake</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Make persons.&quot;&quot;&quot;</span>
 
-    <span class="n">validate</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">num_persons</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;can only make positive number of persons&quot;</span><span class="p">)</span>
-
-    <span class="n">validate</span><span class="p">(</span><span class="n">supervisor_fraction</span> <span class="o">&gt;=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;require non-negative supervisor fraction&quot;</span><span class="p">)</span>
-    <span class="n">num_supervisors</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">supervisor_fraction</span> <span class="o">*</span> <span class="n">params</span><span class="o">.</span><span class="n">num_persons</span><span class="p">))</span>
+    <span class="n">num_supervisors</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">supervisor_frac</span> <span class="o">*</span> <span class="n">params</span><span class="o">.</span><span class="n">num_persons</span><span class="p">))</span>
     <span class="n">num_staff</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">num_persons</span> <span class="o">-</span> <span class="n">num_supervisors</span>
 
     <span class="n">staff</span> <span class="o">=</span> <span class="p">[</span>

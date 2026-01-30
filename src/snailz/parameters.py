@@ -43,7 +43,9 @@ class Parameters(BaseMixin):
         validate(self.grid_spacing > 0, "require positive grid spacing")
         validate_lat_lon("parameters", self.lat0, self.lon0)
         validate(self.num_persons > 0, "require positive number of persons")
-        validate(self.supervisor_frac >= 0.0, "require non-negative supervisor fraction")
+        validate(
+            self.supervisor_frac >= 0.0, "require non-negative supervisor fraction"
+        )
         validate(self.locale in AVAILABLE_LOCALES, f"unknown locale {self.locale}")
         validate(self.num_machines > 0, "require positive number of machines")
         validate(0.0 <= self.ratings_frac <= 1.0, "require ratings fraction in [0..1]")
@@ -51,6 +53,10 @@ class Parameters(BaseMixin):
         validate(self.assay_size >= 2, "require assay size at least two")
         validate(self.genome_length > 0, "require positive genome length")
         validate(self.num_loci >= 0, "require non-negative number of loci")
-        validate(0.0 <= self.p_mutation <= 1.0, "require mutation probability in [0..1]")
+        validate(
+            0.0 <= self.p_mutation <= 1.0, "require mutation probability in [0..1]"
+        )
         validate(self.num_specimens > 0, "require positive number of specimens")
-        validate(self.start_date <= self.end_date, "require non-negative survey date range")
+        validate(
+            self.start_date <= self.end_date, "require non-negative survey date range"
+        )

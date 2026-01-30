@@ -54,7 +54,7 @@ def test_species_persist_to_csv(tmp_path):
         rows = list(csv.reader(reader))
         assert len(rows) == 2
 
-    with open(Path(tmp_path, f"species_loci.csv"), "r") as reader:
+    with open(Path(tmp_path, "species_loci.csv"), "r") as reader:
         rows = list(csv.reader(reader))
         assert len(rows) == 9
 

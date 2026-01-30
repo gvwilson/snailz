@@ -5,7 +5,7 @@ from datetime import date
 from pathlib import Path
 import random
 from typing import ClassVar, Generator
-from .utils import GRID_STD_DEV, BaseMixin, id_generator, random_date, validate
+from .utils import GRID_STD_DEV, BaseMixin, id_generator, random_date
 
 
 ASSAY_PRECISION = 2
@@ -47,15 +47,17 @@ class Assay(BaseMixin):
             performed = random_date(params.start_date, params.end_date)
             contents = cls._random_contents(params)
             readings = cls._random_readings(params, contents, g[x, y])
-            result.append(Assay(
-                lat=lat,
-                lon=lon,
-                person_id=r.person_id,
-                machine_id=r.machine_id,
-                performed=performed,
-                contents=contents,
-                readings=readings,
-            ))
+            result.append(
+                Assay(
+                    lat=lat,
+                    lon=lon,
+                    person_id=r.person_id,
+                    machine_id=r.machine_id,
+                    performed=performed,
+                    contents=contents,
+                    readings=readings,
+                )
+            )
         return result
 
     @classmethod
@@ -64,12 +66,11 @@ class Assay(BaseMixin):
 
         super().save_csv(outdir, objects)
 
-        with open(Path(outdir, f"assay_readings.csv"), "w", newline="") as stream:
+        with open(Path(outdir, "assay_readings.csv"), "w", newline="") as stream:
             objects = cls._assay_readings(objects)
             writer = cls._csv_dict_writer(stream, list(objects[0].keys()))
             for obj in objects:
                 writer.writerow(obj)
-
 
     @classmethod
     def save_db(cls, db, objects):
@@ -81,7 +82,10 @@ class Assay(BaseMixin):
         table.insert_all(
             cls._assay_readings(objects),
             pk=("ident"),
-            foreign_keys=[("person_id", "person", "ident"), ("machine_id", "machine", "ident")],
+            foreign_keys=[
+                ("person_id", "person", "ident"),
+                ("machine_id", "machine", "ident"),
+            ],
         )
 
     @classmethod
@@ -107,7 +111,7 @@ class Assay(BaseMixin):
     @classmethod
     def _random_readings(cls, params, contents, target):
         """Generate random readings with predetermined mean."""
-        
+
         raw = [random.gauss(0, GRID_STD_DEV) for _ in contents]
         return [
             round(abs(r + target) if c == "T" else abs(r), ASSAY_PRECISION)

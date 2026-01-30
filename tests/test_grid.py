@@ -97,7 +97,7 @@ def test_grid_persist_to_csv(tmp_path):
         rows = list(csv.reader(reader))
         assert len(rows) == 4
 
-    with open(Path(tmp_path, f"grid_cells.csv"), "r") as reader:
+    with open(Path(tmp_path, "grid_cells.csv"), "r") as reader:
         rows = list(csv.reader(reader))
         assert len(rows) == 1 + (3 * 2 * 2)
 

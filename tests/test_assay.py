@@ -2,9 +2,7 @@
 
 import csv
 from dataclasses import fields
-from datetime import date
 from pathlib import Path
-import pytest
 from sqlite_utils import Database
 
 from snailz import Assay, Grid, Machine, Parameters, Person, Rating
@@ -63,7 +61,7 @@ def test_assay_persist_to_csv(tmp_path):
         rows = list(csv.reader(reader))
         assert len(rows) == 3
 
-    with open(Path(tmp_path, f"assay_readings.csv"), "r") as reader:
+    with open(Path(tmp_path, "assay_readings.csv"), "r") as reader:
         rows = list(csv.reader(reader))
         assert len(rows) == 7
 
@@ -73,7 +71,9 @@ def test_assay_persist_to_db():
     grid = Grid(size=1, spacing=1.0)
     persons = [Person(family="A", personal="B")]
     machines = [Machine(name="M1")]
-    rating = Rating(person_id=persons[0].ident, machine_id=machines[0].ident, rating="normal")
+    rating = Rating(
+        person_id=persons[0].ident, machine_id=machines[0].ident, rating="normal"
+    )
     params = Parameters(num_assays=2)
     assays = Assay.make(params, [grid], [rating])
 
