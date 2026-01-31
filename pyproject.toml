@@ -14,6 +14,7 @@ dependencies = [
     "numpy>=2.4.1",
     "pillow>=12.1.0",
     "sqlite-utils==4.0a1",
+    "twine>=6.2.0",
 ]
 
 [project.urls]
@@ -70,5 +71,6 @@ cp docs-requirements.txt docs/requirements.txt
 """}
 fix = {help = "fix code issues", cmd = "ruff check --fix ."}
 format = {help = "format code", cmd = "ruff format ."}
+publish = {help = "publish using ~/.pypirc credentials", cmd = "twine upload --verbose dist/*"}
 serve = {help = "serve documentation", cmd = "python -m http.server -d docs"}
 test = {help = "run tests", cmd = "pytest tests"}
