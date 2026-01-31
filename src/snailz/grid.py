@@ -2,7 +2,10 @@
 
 from dataclasses import InitVar, dataclass, field
 import itertools
+import math
+import numpy as np
 from pathlib import Path
+from PIL import Image
 import random
 from typing import ClassVar, Generator
 from ._base_mixin import BaseMixin
@@ -23,6 +26,12 @@ GRID_SEP = 4
 
 # Decimal places in grid values.
 GRID_PRECISION = 2
+
+# Image parameters.
+BLACK = 0
+WHITE = 255
+BORDER_WIDTH = 8
+CELL_SIZE = 32
 
 
 @dataclass
@@ -173,3 +182,23 @@ class Grid(BaseMixin):
         actual = random.sample(possible, k=params.num_grids)
         dim = params.grid_size * params.grid_spacing * GRID_SEP
         return [lat_lon(params.lat0, params.lon0, x * dim, y * dim) for x, y in actual]
+
+    def as_image(self, scale):
+        """Convert to image."""
+
+        if scale == 0.0:
+            scale = 1.0
+        img_size = (self.size * CELL_SIZE) + ((self.size + 1) * BORDER_WIDTH)
+        array = np.full((img_size, img_size), WHITE, dtype=np.uint8)
+        spacing = CELL_SIZE + BORDER_WIDTH
+        for ix, x in enumerate(range(BORDER_WIDTH, img_size, spacing)):
+            for iy, y in enumerate(range(BORDER_WIDTH, img_size, spacing)):
+                color = WHITE - math.floor(WHITE * self[ix, iy] / scale)
+                array[y : y + CELL_SIZE + 1, x : x + CELL_SIZE + 1] = color
+
+        return Image.fromarray(array)
+
+    def min_max(self):
+        """Smallest and largest values in grid."""
+
+        return min(self.cells), max(self.cells)

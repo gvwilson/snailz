@@ -36,6 +36,7 @@ def main():
     classes = (Grid, Machine, Person, Rating, Assay, Species, Specimen)
     _save_csv(args.outdir, classes, data)
     _save_db(args.outdir, classes, data)
+    _save_images(args.outdir, data[Grid])
 
     return 0
 
@@ -113,6 +114,14 @@ def _save_db(outdir, classes, data):
     db = UnquotedDatabase(dbpath)
     for cls in classes:
         cls.save_db(db, data[cls])
+
+
+def _save_images(outdir, grids):
+    """Save grids as images."""
+
+    scale = max(g.min_max()[1] for g in grids)
+    for g in grids:
+        g.as_image(scale).save(Path(outdir, f"{g.ident}.png"))
 
 
 def _save_params(outdir, params):
