@@ -36,7 +36,7 @@ def main():
 
     _save_params(args.outdir, params)
     classes = (Grid, Machine, Person, Rating, Assay, Species, Specimen)
-    _save_csv(args.outdir, data)
+    _save_csv(args.outdir, classes, data)
     _save_db(args.outdir, classes, data)
     _save_images(args.outdir, data[Grid])
 
