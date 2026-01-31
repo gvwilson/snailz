@@ -1,9 +1,12 @@
 """Synthesize data."""
 
 import argparse
+from contextlib import contextmanager
+import cProfile
 from faker import Faker
 import json
 from pathlib import Path
+import pstats
 import random
 import sys
 from typing import Any
@@ -31,14 +34,16 @@ def main():
         print(Parameters().as_json())
         return 0
 
-    params = _initialize(args)
-    data = _synthesize(params)
+    with _profile_context(enabled=args.profile):
+        params = _initialize(args)
+        data = _synthesize(params)
 
-    _save_params(args.outdir, params)
-    classes = (Grid, Machine, Person, Rating, Assay, Species, Specimen)
-    _save_csv(args.outdir, classes, data)
-    _save_db(args.outdir, classes, data)
-    _save_images(args.outdir, data[Grid])
+        _save_params(args.outdir, params)
+        if args.outdir not in (None, "-"):
+            classes = (Grid, Machine, Person, Rating, Assay, Species, Specimen)
+            _save_csv(args.outdir, classes, data)
+            _save_db(args.outdir, classes, data)
+            _save_images(args.outdir, data[Grid])
 
     return 0
 
@@ -103,7 +108,28 @@ def _parse_args() -> argparse.Namespace:
         "--override", default=[], nargs="+", help="name=value parameters"
     )
     parser.add_argument("--params", default=None, help="JSON parameter file")
+    parser.add_argument("--profile", action="store_true", help="enable profiling")
     return parser.parse_args()
+
+
+@contextmanager
+def _profile_context(enabled=False, num_stats=20):
+    """
+    Context manager for optional profiling.
+    """
+
+    if enabled:
+        profiler = cProfile.Profile()
+        profiler.enable()
+        try:
+            yield profiler
+        finally:
+            profiler.disable()
+            stats = pstats.Stats(profiler)
+            stats.sort_stats(pstats.SortKey.CUMULATIVE)
+            stats.print_stats(num_stats)
+    else:
+        yield None
 
 
 def _save_csv(outdir: Path | str, classes: list[BaseMixin], data: dict[BaseMixin, Any]):
@@ -115,9 +141,6 @@ def _save_csv(outdir: Path | str, classes: list[BaseMixin], data: dict[BaseMixin
         classes: Ordered list of classes to save.
         data: Class-to-data dictionary of values to save.
     """
-
-    if (outdir is None) or (outdir == "-"):
-        return
 
     _ensure_dir(outdir)
     for cls in classes:
@@ -137,9 +160,6 @@ def _save_db(outdir: Path | str, classes: list[BaseMixin], data: dict[BaseMixin,
         classes: Ordered list of classes to save.
         data: Class-to-data dictionary of values to save.
     """
-
-    if (outdir is None) or (outdir == "-"):
-        return
 
     _ensure_dir(outdir)
     dbpath = Path(outdir, DB_FILE)

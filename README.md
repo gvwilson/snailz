@@ -20,6 +20,26 @@ while learners can test their analysis pipelines using datasets they generate th
 > Your team is now collecting and analyzing specimens from affected regions
 > to determine if exposure to pollution is responsible.
 
+## Usage:
+
+```
+usage: snailz [-h]
+              [--defaults]
+	      [--outdir OUTDIR]
+              [--override OVERRIDE [OVERRIDE ...]]
+	      [--params PARAMS]
+              [--profile]
+
+options:
+  -h, --help            show this help message and exit
+  --defaults            show default parameters as JSON
+  --outdir OUTDIR       output directory
+  --override OVERRIDE [OVERRIDE ...]
+                        name=value parameters to override defaults
+  --params PARAMS       specify JSON parameter file
+  --profile             enable profiling
+```
+
 ## Schema
 
 <img src="https://raw.githubusercontent.com/gvwilson/snailz/refs/heads/main/pages/img/schema.svg" alt="snailz schema">
