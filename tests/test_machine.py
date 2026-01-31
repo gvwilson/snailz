@@ -1,8 +1,8 @@
 """Test machine generation."""
 
 from dataclasses import fields
-from sqlite_utils import Database
 from snailz import Machine, Parameters
+from snailz._utils import UnquotedDatabase
 
 
 def test_machine_creation_requires_name():
@@ -35,7 +35,7 @@ def test_machine_make_names_are_unique():
 
 
 def test_machine_persist_to_db():
-    db = Database(memory=True)
+    db = UnquotedDatabase(memory=True)
     machines = Machine.make(Parameters(num_machines=3))
     Machine.save_db(db, machines)
     rows = list(db[Machine.table_name].rows)

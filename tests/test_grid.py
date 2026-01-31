@@ -4,6 +4,7 @@ import csv
 from dataclasses import fields
 import json
 from pathlib import Path
+from PIL import Image
 import pytest
 from sqlite_utils import Database
 from snailz import Grid, Parameters
@@ -110,9 +111,16 @@ def test_grid_persist_to_db():
     assert set(rows[0].keys()).issubset(field_names)
 
 
-def test_grid_to_str():
-    g = Grid(size=2, spacing=1.0, lat0=0.0, lon0=0.0, params=Parameters())
-    text = str(g)
+def test_grid_to_image(small_grid):
+    assert isinstance(small_grid.as_image(max(small_grid.cells)), Image.Image)
+
+
+def test_grid_to_image_zero_scale(small_grid):
+    assert isinstance(small_grid.as_image(0.0), Image.Image)
+
+
+def test_grid_to_str(small_grid):
+    text = str(small_grid)
     rows = text.split("\n")
-    assert len(rows) == 2
-    assert all(len(r.split(",")) == 2 for r in rows)
+    assert len(rows) == small_grid.size
+    assert all(len(r.split(",")) == small_grid.size for r in rows)

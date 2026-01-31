@@ -187,7 +187,7 @@ class Grid(BaseMixin):
         """Convert to image."""
 
         if scale == 0.0:
-            scale = 1.0
+            scale = self.min_max()[1]
         img_size = (self.size * CELL_SIZE) + ((self.size + 1) * BORDER_WIDTH)
         array = np.full((img_size, img_size), WHITE, dtype=np.uint8)
         spacing = CELL_SIZE + BORDER_WIDTH
