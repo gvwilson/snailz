@@ -20,6 +20,10 @@ while learners can test their analysis pipelines using datasets they generate th
 > Your team is now collecting and analyzing specimens from affected regions
 > to determine if exposure to pollution is responsible.
 
+## Schema
+
+<img src="https://raw.githubusercontent.com/gvwilson/snailz/refs/heads/main/pages/img/schema.svg" alt="snailz schema">
+
 ## Colophon
 
 `snailz` was inspired by the [Palmer Penguins][penguins] dataset
