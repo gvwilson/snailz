@@ -44,16 +44,16 @@ class Assay(BaseMixin):
             g = random.choice(grids)
             x, y = random.randint(0, g.size - 1), random.randint(0, g.size - 1)
             lat, lon = g.lat_lon(x, y)
-            r = random.choice(ratings)
+            rat = random.choice(ratings)
             performed = random_date(params.start_date, params.end_date)
             contents = cls._random_contents(params)
-            readings = cls._random_readings(params, contents, g[x, y])
+            readings = cls._random_readings(params, contents, g[x, y], rat.certified)
             result.append(
                 Assay(
                     lat=lat,
                     lon=lon,
-                    person_id=r.person_id,
-                    machine_id=r.machine_id,
+                    person_id=rat.person_id,
+                    machine_id=rat.machine_id,
                     performed=performed,
                     contents=contents,
                     readings=readings,
@@ -110,10 +110,11 @@ class Assay(BaseMixin):
         return "".join(contents)
 
     @classmethod
-    def _random_readings(cls, params, contents, target):
+    def _random_readings(cls, params, contents, target, certified):
         """Generate random readings with predetermined mean."""
 
-        raw = [random.gauss(0, params.grid_std_dev) for _ in contents]
+        scale = params.assay_certified if certified else 1.0
+        raw = [random.gauss(0, params.grid_std_dev) / scale for _ in contents]
         return [
             round(abs(r + target) if c == "T" else abs(r), ASSAY_PRECISION)
             for r, c in zip(raw, contents)

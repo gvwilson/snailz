@@ -23,8 +23,10 @@ class Parameters(BaseMixin):
     locale: str = "et_EE"
     num_machines: int = 1
     ratings_frac: float = 0.5
+    p_certified: float = 0.3
     num_assays: int = 1
     assay_size: int = 2
+    assay_certified: float = 3.0
     genome_length: int = 1
     num_loci: int = 1
     p_mutation: float = 0.5

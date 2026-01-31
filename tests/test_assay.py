@@ -23,7 +23,7 @@ def test_assay_random_contents_size_and_balance():
 
 def test_assay_random_readings_length_and_precision():
     contents = "CTTC"
-    readings = Assay._random_readings(Parameters(), contents, target=10.0)
+    readings = Assay._random_readings(Parameters(), contents, 10.0, True)
     assert len(readings) == len(contents)
     assert all(isinstance(r, float) for r in readings)
 
@@ -40,7 +40,7 @@ def test_assay_assay_readings_long_format():
 def test_assay_make_creates_assays():
     params = Parameters(num_assays=2)
     grid = Grid(size=1, spacing=1.0, params=params)
-    rating = Rating(person_id="P1", machine_id="M1", rating="normal")
+    rating = Rating(person_id="P1", machine_id="M1", certified=False)
     assays = Assay.make(params, [grid], [rating])
     assert len(assays) == 2
     for a in assays:
@@ -53,7 +53,7 @@ def test_assay_make_creates_assays():
 def test_assay_persist_to_csv(tmp_path):
     params = Parameters(num_assays=2, assay_size=3)
     grid = Grid(size=1, spacing=1.0, params=params)
-    rating = Rating(person_id="P1", machine_id="M1", rating="normal")
+    rating = Rating(person_id="P1", machine_id="M1", certified=False)
     assays = Assay.make(params, [grid], [rating])
     Assay.save_csv(tmp_path, assays)
 
@@ -73,7 +73,7 @@ def test_assay_persist_to_db():
     persons = [Person(family="A", personal="B")]
     machines = [Machine(name="M1")]
     rating = Rating(
-        person_id=persons[0].ident, machine_id=machines[0].ident, rating="normal"
+        person_id=persons[0].ident, machine_id=machines[0].ident, certified=True
     )
     assays = Assay.make(params, [grid], [rating])
 

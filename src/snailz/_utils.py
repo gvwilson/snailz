@@ -16,7 +16,7 @@ LAT_LON_PRECISION = 5
 class UnquotedDatabase(sqlite_utils.Database):
     def execute(self, sql, parameters=None):
         if sql.strip().upper().startswith("CREATE"):
-            sql = sql.replace('"', '')
+            sql = sql.replace('"', "")
         return super().execute(sql, parameters)
 
 
