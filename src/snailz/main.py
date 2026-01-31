@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import random
 import sys
+from typing import Any
 
 from .assay import Assay
 from .grid import Grid
@@ -15,6 +16,7 @@ from .person import Person
 from .rating import Rating
 from .species import Species
 from .specimen import Specimen
+from ._base_mixin import BaseMixin
 from ._utils import UnquotedDatabase
 
 
@@ -34,23 +36,36 @@ def main():
 
     _save_params(args.outdir, params)
     classes = (Grid, Machine, Person, Rating, Assay, Species, Specimen)
-    _save_csv(args.outdir, classes, data)
+    _save_csv(args.outdir, data)
     _save_db(args.outdir, classes, data)
     _save_images(args.outdir, data[Grid])
 
     return 0
 
 
-def _ensure_dir(dirname):
-    """Ensure directory exists."""
+def _ensure_dir(dirname: str):
+    """
+    Ensure directory exists.
+
+    Args:
+        dirname: Path to directory.
+    """
 
     dirpath = Path(dirname)
     if not dirpath.is_dir():
         dirpath.mkdir(exist_ok=True)
 
 
-def _initialize(args):
-    """Initialize for data synthesis."""
+def _initialize(args: argparse.Namespace) -> Parameters:
+    """
+    Initialize for data synthesis.
+
+    Args:
+        args: Taken from command-line arguments.
+
+    Returns:
+        Data synthesis parameters object.
+    """
 
     if args.params:
         with open(args.params, "r") as reader:
@@ -71,8 +86,13 @@ def _initialize(args):
     return params
 
 
-def _parse_args():
-    """Parse command-line arguments."""
+def _parse_args() -> argparse.Namespace:
+    """
+    Parse command-line arguments.
+
+    Returns:
+        Object holding values from command-line arguments.
+    """
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -86,8 +106,15 @@ def _parse_args():
     return parser.parse_args()
 
 
-def _save_csv(outdir, classes, data):
-    """Save synthesized data as CSV."""
+def _save_csv(outdir: Path | str, classes: list[BaseMixin], data: dict[BaseMixin, Any]):
+    """
+    Save synthesized data as CSV.
+
+    Args:
+        outdir: Output directory.
+        classes: Ordered list of classes to save.
+        data: Class-to-data dictionary of values to save.
+    """
 
     if (outdir is None) or (outdir == "-"):
         return
@@ -101,8 +128,15 @@ def _save_csv(outdir, classes, data):
             print(g, file=writer)
 
 
-def _save_db(outdir, classes, data):
-    """Save synthesized data to database."""
+def _save_db(outdir: Path | str, classes: list[BaseMixin], data: dict[BaseMixin, Any]):
+    """
+    Save synthesized data to database.
+
+    Args:
+        outdir: Output directory.
+        classes: Ordered list of classes to save.
+        data: Class-to-data dictionary of values to save.
+    """
 
     if (outdir is None) or (outdir == "-"):
         return
@@ -116,16 +150,28 @@ def _save_db(outdir, classes, data):
         cls.save_db(db, data[cls])
 
 
-def _save_images(outdir, grids):
-    """Save grids as images."""
+def _save_images(outdir: Path | str, grids: list[Grid]):
+    """
+    Save grids as images.
+
+    Args:
+        outdir: Output directory.
+        grids: Grids to save.
+    """
 
     scale = max(g.min_max()[1] for g in grids)
     for g in grids:
         g.as_image(scale).save(Path(outdir, f"{g.ident}.png"))
 
 
-def _save_params(outdir, params):
-    """Save parameters."""
+def _save_params(outdir: Path | str, params: Parameters):
+    """
+    Save parameters as JSON.
+
+    Args:
+        outdir: Output directory.
+        params: Parameters to save.
+    """
 
     if outdir is None:
         return
@@ -138,8 +184,16 @@ def _save_params(outdir, params):
             writer.write(params.as_json())
 
 
-def _synthesize(params):
-    """Synthesize data."""
+def _synthesize(params: Parameters) -> dict[BaseMixin, Any]:
+    """
+    Synthesize data.
+
+    Args:
+        params: Data synthesis parameters.
+
+    Returns:
+        Dictionary mapping classes to generated data.
+    """
 
     grids = Grid.make(params)
     persons = Person.make(params, Faker(params.locale))

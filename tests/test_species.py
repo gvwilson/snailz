@@ -15,7 +15,7 @@ def a_species():
 
 
 def test_species_reference_genome_length_and_bases(seeded_rng):
-    genome = Species.reference_genome(Parameters(genome_length=50))
+    genome = Species._reference_genome(Parameters(genome_length=50))
     assert len(genome) == 50
     assert set(genome).issubset(set(BASES.keys()))
 

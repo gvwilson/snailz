@@ -38,11 +38,11 @@ Run `task --list` for a list of available actions.
 ├── mkdocs.yml          # MkDocs configuration file
 ├── pages               # Markdown source for site
 │   ├── *.md            # top-level pages
-│   ├── img/            # site image files
-│   └── tutorial/       # source for tutorial
+│   └── img/*.*         # image files
 ├── pyproject.toml      # Python project file
 ├── src/                # source directory
-│   └── snailz/         # package directory
+│   └── snailz/*.py     # package directory
+├── tests/*.py          # test files
 └── uv.lock             # dependency lock file: do not edit
 ```
 

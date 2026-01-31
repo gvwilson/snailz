@@ -234,6 +234,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../assay/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assay
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../base_mixin/" class="md-nav__link">
         
   
@@ -453,32 +481,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#snailz.species.Species.random_genome" class="md-nav__link">
+  <a href="#snailz.species.Species.make" class="md-nav__link">
     <span class="md-ellipsis">
       
-        random_genome
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#snailz.species.Species.random_loci" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        random_loci
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#snailz.species.Species.reference_genome" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        reference_genome
+        make
       
     </span>
   </a>
@@ -501,6 +507,17 @@
     <span class="md-ellipsis">
       
         save_db
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#snailz.species.Species.random_genome" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        random_genome
       
     </span>
   </a>
@@ -770,32 +787,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#snailz.species.Species.random_genome" class="md-nav__link">
+  <a href="#snailz.species.Species.make" class="md-nav__link">
     <span class="md-ellipsis">
       
-        random_genome
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#snailz.species.Species.random_loci" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        random_loci
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#snailz.species.Species.reference_genome" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        reference_genome
+        make
       
     </span>
   </a>
@@ -818,6 +813,17 @@
     <span class="md-ellipsis">
       
         save_db
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#snailz.species.Species.random_genome" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        random_genome
       
     </span>
   </a>
@@ -900,6 +906,64 @@
         <p>A set of generated specimens.</p>
 
 
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><span title="snailz.species.Species.reference">reference</span></code></td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>reference genome</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="snailz.species.Species.loci">loci</span></code></td>
+            <td>
+                  <code><span title="list">list</span>[<span title="int">int</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>locations within genome of possible mutations</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="snailz.species.Species.susc_locus">susc_locus</span></code></td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>locus of susceptibility mutation</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="snailz.species.Species.susc_base">susc_base</span></code></td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>base at <code>susc_locus</code> conferring mutation</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
 
 
 
@@ -908,30 +972,384 @@
 
               <details class="mkdocstrings-source">
                 <summary>Source code in <code>src/snailz/species.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 21</span>
+<span class="normal"> 22</span>
+<span class="normal"> 23</span>
+<span class="normal"> 24</span>
+<span class="normal"> 25</span>
+<span class="normal"> 26</span>
+<span class="normal"> 27</span>
+<span class="normal"> 28</span>
+<span class="normal"> 29</span>
+<span class="normal"> 30</span>
+<span class="normal"> 31</span>
+<span class="normal"> 32</span>
+<span class="normal"> 33</span>
+<span class="normal"> 34</span>
+<span class="normal"> 35</span>
+<span class="normal"> 36</span>
+<span class="normal"> 37</span>
+<span class="normal"> 38</span>
+<span class="normal"> 39</span>
+<span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Species</span><span class="p">(</span><span class="n">BaseMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A set of generated specimens.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        reference: reference genome</span>
+<span class="sd">        loci: locations within genome of possible mutations</span>
+<span class="sd">        susc_locus: locus of susceptibility mutation</span>
+<span class="sd">        susc_base: base at `susc_locus` conferring mutation</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">pivot_keys</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;loci&quot;</span><span class="p">}</span>
+    <span class="n">table_name</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;species&quot;</span>
+
+    <span class="n">reference</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">loci</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">susc_locus</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">susc_base</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Parameters</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct a list containing a single species. (The result</span>
+<span class="sd">        is returned in a list to be consistent with other classes&#39;</span>
+<span class="sd">        `make` methods.)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            params: Parameters object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List containin a single `Species`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">reference</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_reference_genome</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+        <span class="n">loci</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_random_loci</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">reference</span><span class="p">)</span>
+        <span class="n">susc_locus</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">loci</span><span class="p">)</span>
+        <span class="n">susc_base</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">BASES</span><span class="p">[</span><span class="n">reference</span><span class="p">[</span><span class="n">susc_locus</span><span class="p">]])</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">Species</span><span class="p">(</span>
+                <span class="n">reference</span><span class="o">=</span><span class="n">reference</span><span class="p">,</span>
+                <span class="n">loci</span><span class="o">=</span><span class="n">loci</span><span class="p">,</span>
+                <span class="n">susc_locus</span><span class="o">=</span><span class="n">susc_locus</span><span class="p">,</span>
+                <span class="n">susc_base</span><span class="o">=</span><span class="n">susc_base</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">]</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_csv</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">outdir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">species</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Self</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save species as CSV. `species` must be passed in a list to be</span>
+<span class="sd">        consistent with other classes&#39; `save_csv` methods. Scalar</span>
+<span class="sd">        properties of the species are saved in one file; mutation loci</span>
+<span class="sd">        values are pivoted to long form and saved in a separate file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            outdir: Output directory.</span>
+<span class="sd">            species: List containing `Species` to save.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">species</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save_csv</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="n">species</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="s2">&quot;species_loci.csv&quot;</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+            <span class="n">objects</span> <span class="o">=</span> <span class="n">species</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_loci_to_dict</span><span class="p">()</span>
+            <span class="n">writer</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_csv_dict_writer</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">objects</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+            <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">:</span>
+                <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_db</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Database</span><span class="p">,</span> <span class="n">species</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Self</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save species to database. `species` must be passed in a</span>
+<span class="sd">        list to be consistent with other classes&#39; `save_csv` methods.</span>
+<span class="sd">        Scalar properties of the species are saved in one table;</span>
+<span class="sd">        mutation loci values are pivoted to long form and saved in a</span>
+<span class="sd">        separate table.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            db: Database connector.</span>
+<span class="sd">            species: List containing `Species` to save.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">species</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save_db</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">species</span><span class="p">)</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="n">db</span><span class="p">[</span><span class="s2">&quot;species_loci&quot;</span><span class="p">]</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">insert_all</span><span class="p">(</span><span class="n">species</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_loci_to_dict</span><span class="p">(),</span> <span class="n">pk</span><span class="o">=</span><span class="s2">&quot;ident&quot;</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_random_loci</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Parameters</span><span class="p">,</span> <span class="n">reference</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate random loci for mutations.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            params: Parameters object.</span>
+<span class="sd">            reference: Reference genome.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List of indices of locations where mutations might occur.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">params</span><span class="o">.</span><span class="n">num_loci</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">reference</span><span class="p">),</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;cannot generate </span><span class="si">{</span><span class="n">params</span><span class="o">.</span><span class="n">num_loci</span><span class="si">}</span><span class="s2"> loci for genome of length </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="n">locations</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">reference</span><span class="p">))),</span> <span class="n">params</span><span class="o">.</span><span class="n">num_loci</span><span class="p">)</span>
+        <span class="n">locations</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">locations</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_reference_genome</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Parameters</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Make a random reference genome.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            params: Parameters object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            String of ACGT bases.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">BASES</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="n">k</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">genome_length</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">random_genome</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Parameters</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Make a random genome based on a reference genome.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            params: Parameters object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            String of ACGT bases.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">genome</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reference</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loci</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">params</span><span class="o">.</span><span class="n">p_mutation</span><span class="p">:</span>
+                <span class="n">genome</span><span class="p">[</span><span class="n">loc</span><span class="p">]</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">BASES</span><span class="p">[</span><span class="n">genome</span><span class="p">[</span><span class="n">loc</span><span class="p">]])</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">genome</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_loci_to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert mutation loci into dictionaries for persistence.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">[{</span><span class="s2">&quot;ident&quot;</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;locus&quot;</span><span class="p">:</span> <span class="n">locus</span><span class="p">}</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">locus</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loci</span><span class="p">)]</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="snailz.species.Species.make" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">make</span><span class="p">(</span><span class="n">params</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Construct a list containing a single species. (The result
+is returned in a list to be consistent with other classes'
+<code>make</code> methods.)</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>params</code>
+            </td>
+            <td>
+                  <code><span title="snailz.parameters.Parameters">Parameters</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Parameters object.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span>[<span title="typing.Self">Self</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>List containin a single <code>Species</code>.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/snailz/species.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">41</span>
 <span class="normal">42</span>
 <span class="normal">43</span>
 <span class="normal">44</span>
@@ -955,249 +1373,31 @@
 <span class="normal">62</span>
 <span class="normal">63</span>
 <span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span>
-<span class="normal">95</span>
-<span class="normal">96</span>
-<span class="normal">97</span>
-<span class="normal">98</span>
-<span class="normal">99</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Species</span><span class="p">(</span><span class="n">BaseMixin</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A set of generated specimens.&quot;&quot;&quot;</span>
+<span class="normal">65</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Parameters</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Construct a list containing a single species. (The result</span>
+<span class="sd">    is returned in a list to be consistent with other classes&#39;</span>
+<span class="sd">    `make` methods.)</span>
 
-    <span class="n">pivot_keys</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;loci&quot;</span><span class="p">}</span>
-    <span class="n">table_name</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;species&quot;</span>
+<span class="sd">    Args:</span>
+<span class="sd">        params: Parameters object.</span>
 
-    <span class="n">reference</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="n">loci</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
-    <span class="n">susc_locus</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">susc_base</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">save_csv</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">outdir</span><span class="p">,</span> <span class="n">species</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save objects as CSV.&quot;&quot;&quot;</span>
-
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">species</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save_csv</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="n">species</span><span class="p">)</span>
-
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="s2">&quot;species_loci.csv&quot;</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
-            <span class="n">objects</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_loci</span><span class="p">(</span><span class="n">species</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="n">writer</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_csv_dict_writer</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">objects</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
-            <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">:</span>
-                <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">save_db</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">species</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save objects to database.&quot;&quot;&quot;</span>
-
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">species</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save_db</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">species</span><span class="p">)</span>
-        <span class="n">table</span> <span class="o">=</span> <span class="n">db</span><span class="p">[</span><span class="s2">&quot;species_loci&quot;</span><span class="p">]</span>
-        <span class="n">table</span><span class="o">.</span><span class="n">insert_all</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_loci</span><span class="p">(</span><span class="n">species</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">pk</span><span class="o">=</span><span class="s2">&quot;ident&quot;</span><span class="p">)</span>
-
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
-        <span class="n">reference</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">reference_genome</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
-        <span class="n">loci</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">random_loci</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">reference</span><span class="p">)</span>
-        <span class="n">susc_locus</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">loci</span><span class="p">)</span>
-        <span class="n">susc_base</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">BASES</span><span class="p">[</span><span class="n">reference</span><span class="p">[</span><span class="n">susc_locus</span><span class="p">]])</span>
-        <span class="k">return</span> <span class="p">[</span>
-            <span class="n">Species</span><span class="p">(</span>
-                <span class="n">reference</span><span class="o">=</span><span class="n">reference</span><span class="p">,</span>
-                <span class="n">loci</span><span class="o">=</span><span class="n">loci</span><span class="p">,</span>
-                <span class="n">susc_locus</span><span class="o">=</span><span class="n">susc_locus</span><span class="p">,</span>
-                <span class="n">susc_base</span><span class="o">=</span><span class="n">susc_base</span><span class="p">,</span>
-            <span class="p">)</span>
-        <span class="p">]</span>
-
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">reference_genome</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Make a random reference genome.&quot;&quot;&quot;</span>
-
-        <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">BASES</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="n">k</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">genome_length</span><span class="p">))</span>
-
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">random_loci</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Make random loci for mutations.&quot;&quot;&quot;</span>
-
-        <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">params</span><span class="o">.</span><span class="n">num_loci</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">reference</span><span class="p">),</span> <span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;cannot generate </span><span class="si">{</span><span class="n">params</span><span class="o">.</span><span class="n">num_loci</span><span class="si">}</span><span class="s2"> loci for genome of length </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        List containin a single `Species`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_reference_genome</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">loci</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_random_loci</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">reference</span><span class="p">)</span>
+    <span class="n">susc_locus</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">loci</span><span class="p">)</span>
+    <span class="n">susc_base</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">BASES</span><span class="p">[</span><span class="n">reference</span><span class="p">[</span><span class="n">susc_locus</span><span class="p">]])</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="n">Species</span><span class="p">(</span>
+            <span class="n">reference</span><span class="o">=</span><span class="n">reference</span><span class="p">,</span>
+            <span class="n">loci</span><span class="o">=</span><span class="n">loci</span><span class="p">,</span>
+            <span class="n">susc_locus</span><span class="o">=</span><span class="n">susc_locus</span><span class="p">,</span>
+            <span class="n">susc_base</span><span class="o">=</span><span class="n">susc_base</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">locations</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">reference</span><span class="p">))),</span> <span class="n">params</span><span class="o">.</span><span class="n">num_loci</span><span class="p">)</span>
-        <span class="n">locations</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">locations</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">random_genome</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct a random genome.&quot;&quot;&quot;</span>
-
-        <span class="n">genome</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reference</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loci</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">params</span><span class="o">.</span><span class="n">p_mutation</span><span class="p">:</span>
-                <span class="n">genome</span><span class="p">[</span><span class="n">loc</span><span class="p">]</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">BASES</span><span class="p">[</span><span class="n">genome</span><span class="p">[</span><span class="n">loc</span><span class="p">]])</span>
-        <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">genome</span><span class="p">)</span>
-
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_loci</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">species</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert mutation loci into dictionaries.&quot;&quot;&quot;</span>
-
-        <span class="k">return</span> <span class="p">[</span>
-            <span class="p">{</span><span class="s2">&quot;ident&quot;</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;locus&quot;</span><span class="p">:</span> <span class="n">locus</span><span class="p">}</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">locus</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">species</span><span class="o">.</span><span class="n">loci</span><span class="p">)</span>
-        <span class="p">]</span>
-</code></pre></div></td></tr></table></div>
-              </details>
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="snailz.species.Species.random_genome" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">random_genome</span><span class="p">(</span><span class="n">params</span><span class="p">)</span></code>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Construct a random genome.</p>
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/snailz/species.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">random_genome</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct a random genome.&quot;&quot;&quot;</span>
-
-    <span class="n">genome</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reference</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loci</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">params</span><span class="o">.</span><span class="n">p_mutation</span><span class="p">:</span>
-            <span class="n">genome</span><span class="p">[</span><span class="n">loc</span><span class="p">]</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">BASES</span><span class="p">[</span><span class="n">genome</span><span class="p">[</span><span class="n">loc</span><span class="p">]])</span>
-    <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">genome</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="snailz.species.Species.random_loci" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">random_loci</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">reference</span><span class="p">)</span></code>
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
-  </span>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Make random loci for mutations.</p>
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/snailz/species.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">random_loci</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make random loci for mutations.&quot;&quot;&quot;</span>
-
-    <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">params</span><span class="o">.</span><span class="n">num_loci</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">reference</span><span class="p">),</span> <span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;cannot generate </span><span class="si">{</span><span class="n">params</span><span class="o">.</span><span class="n">num_loci</span><span class="si">}</span><span class="s2"> loci for genome of length </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
-    <span class="p">)</span>
-    <span class="n">locations</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">reference</span><span class="p">))),</span> <span class="n">params</span><span class="o">.</span><span class="n">num_loci</span><span class="p">)</span>
-    <span class="n">locations</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">locations</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="snailz.species.Species.reference_genome" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">reference_genome</span><span class="p">(</span><span class="n">params</span><span class="p">)</span></code>
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
-  </span>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Make a random reference genome.</p>
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/snailz/species.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">reference_genome</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make a random reference genome.&quot;&quot;&quot;</span>
-
-    <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">BASES</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="n">k</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">genome_length</span><span class="p">))</span>
+    <span class="p">]</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -1219,31 +1419,101 @@
 
     <div class="doc doc-contents ">
 
-        <p>Save objects as CSV.</p>
+        <p>Save species as CSV. <code>species</code> must be passed in a list to be
+consistent with other classes' <code>save_csv</code> methods. Scalar
+properties of the species are saved in one file; mutation loci
+values are pivoted to long form and saved in a separate file.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>outdir</code>
+            </td>
+            <td>
+                  <code><span title="pathlib.Path">Path</span> | <span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Output directory.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>species</code>
+            </td>
+            <td>
+                  <code><span title="list">list</span>[<span title="typing.Self">Self</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>List containing <code>Species</code> to save.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/snailz/species.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">save_csv</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">outdir</span><span class="p">,</span> <span class="n">species</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Save objects as CSV.&quot;&quot;&quot;</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">save_csv</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">outdir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">species</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Self</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Save species as CSV. `species` must be passed in a list to be</span>
+<span class="sd">    consistent with other classes&#39; `save_csv` methods. Scalar</span>
+<span class="sd">    properties of the species are saved in one file; mutation loci</span>
+<span class="sd">    values are pivoted to long form and saved in a separate file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        outdir: Output directory.</span>
+<span class="sd">        species: List containing `Species` to save.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">species</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save_csv</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="n">species</span><span class="p">)</span>
 
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="s2">&quot;species_loci.csv&quot;</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
-        <span class="n">objects</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_loci</span><span class="p">(</span><span class="n">species</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">objects</span> <span class="o">=</span> <span class="n">species</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_loci_to_dict</span><span class="p">()</span>
         <span class="n">writer</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_csv_dict_writer</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">objects</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
         <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">:</span>
             <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
@@ -1268,26 +1538,204 @@
 
     <div class="doc doc-contents ">
 
-        <p>Save objects to database.</p>
+        <p>Save species to database. <code>species</code> must be passed in a
+list to be consistent with other classes' <code>save_csv</code> methods.
+Scalar properties of the species are saved in one table;
+mutation loci values are pivoted to long form and saved in a
+separate table.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>db</code>
+            </td>
+            <td>
+                  <code><span title="sqlite_utils.Database">Database</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Database connector.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>species</code>
+            </td>
+            <td>
+                  <code><span title="list">list</span>[<span title="typing.Self">Self</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>List containing <code>Species</code> to save.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/snailz/species.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">save_db</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">species</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Save objects to database.&quot;&quot;&quot;</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">save_db</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Database</span><span class="p">,</span> <span class="n">species</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Self</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Save species to database. `species` must be passed in a</span>
+<span class="sd">    list to be consistent with other classes&#39; `save_csv` methods.</span>
+<span class="sd">    Scalar properties of the species are saved in one table;</span>
+<span class="sd">    mutation loci values are pivoted to long form and saved in a</span>
+<span class="sd">    separate table.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        db: Database connector.</span>
+<span class="sd">        species: List containing `Species` to save.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">species</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save_db</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">species</span><span class="p">)</span>
     <span class="n">table</span> <span class="o">=</span> <span class="n">db</span><span class="p">[</span><span class="s2">&quot;species_loci&quot;</span><span class="p">]</span>
-    <span class="n">table</span><span class="o">.</span><span class="n">insert_all</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_loci</span><span class="p">(</span><span class="n">species</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">pk</span><span class="o">=</span><span class="s2">&quot;ident&quot;</span><span class="p">)</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">insert_all</span><span class="p">(</span><span class="n">species</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_loci_to_dict</span><span class="p">(),</span> <span class="n">pk</span><span class="o">=</span><span class="s2">&quot;ident&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="snailz.species.Species.random_genome" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">random_genome</span><span class="p">(</span><span class="n">params</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Make a random genome based on a reference genome.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>params</code>
+            </td>
+            <td>
+                  <code><span title="snailz.parameters.Parameters">Parameters</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Parameters object.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>String of ACGT bases.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/snailz/species.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">random_genome</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Parameters</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Make a random genome based on a reference genome.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        params: Parameters object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        String of ACGT bases.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">genome</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reference</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loci</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">params</span><span class="o">.</span><span class="n">p_mutation</span><span class="p">:</span>
+            <span class="n">genome</span><span class="p">[</span><span class="n">loc</span><span class="p">]</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">BASES</span><span class="p">[</span><span class="n">genome</span><span class="p">[</span><span class="n">loc</span><span class="p">]])</span>
+    <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">genome</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

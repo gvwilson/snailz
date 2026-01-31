@@ -3,8 +3,11 @@
 from dataclasses import dataclass, field
 from pathlib import Path
 import random
-from typing import ClassVar
+from sqlite_utils import Database
+from typing import ClassVar, Self
+
 from ._base_mixin import BaseMixin
+from .parameters import Parameters
 
 
 BASES = {
@@ -17,7 +20,15 @@ BASES = {
 
 @dataclass
 class Species(BaseMixin):
-    """A set of generated specimens."""
+    """
+    A set of generated specimens.
+
+    Attributes:
+        reference: reference genome
+        loci: locations within genome of possible mutations
+        susc_locus: locus of susceptibility mutation
+        susc_base: base at `susc_locus` conferring mutation
+    """
 
     pivot_keys: ClassVar[set[str]] = {"loci"}
     table_name: ClassVar[str] = "species"
@@ -28,31 +39,20 @@ class Species(BaseMixin):
     susc_base: str = ""
 
     @classmethod
-    def save_csv(cls, outdir, species):
-        """Save objects as CSV."""
+    def make(cls, params: Parameters) -> list[Self]:
+        """
+        Construct a list containing a single species. (The result
+        is returned in a list to be consistent with other classes'
+        `make` methods.)
 
-        assert isinstance(species, list)
-        super().save_csv(outdir, species)
+        Args:
+            params: Parameters object.
 
-        with open(Path(outdir, "species_loci.csv"), "w", newline="") as stream:
-            objects = cls._loci(species[0])
-            writer = cls._csv_dict_writer(stream, list(objects[0].keys()))
-            for obj in objects:
-                writer.writerow(obj)
-
-    @classmethod
-    def save_db(cls, db, species):
-        """Save objects to database."""
-
-        assert isinstance(species, list)
-        super().save_db(db, species)
-        table = db["species_loci"]
-        table.insert_all(cls._loci(species[0]), pk="ident")
-
-    @classmethod
-    def make(cls, params):
-        reference = cls.reference_genome(params)
-        loci = cls.random_loci(params, reference)
+        Returns:
+            List containin a single `Species`.
+        """
+        reference = cls._reference_genome(params)
+        loci = cls._random_loci(params, reference)
         susc_locus = random.choice(loci)
         susc_base = random.choice(BASES[reference[susc_locus]])
         return [
@@ -65,14 +65,59 @@ class Species(BaseMixin):
         ]
 
     @classmethod
-    def reference_genome(cls, params):
-        """Make a random reference genome."""
+    def save_csv(cls, outdir: Path | str, species: list[Self]):
+        """
+        Save species as CSV. `species` must be passed in a list to be
+        consistent with other classes' `save_csv` methods. Scalar
+        properties of the species are saved in one file; mutation loci
+        values are pivoted to long form and saved in a separate file.
 
-        return "".join(random.choices(list(BASES.keys()), k=params.genome_length))
+        Args:
+            outdir: Output directory.
+            species: List containing `Species` to save.
+
+        """
+
+        assert isinstance(species, list)
+        super().save_csv(outdir, species)
+
+        with open(Path(outdir, "species_loci.csv"), "w", newline="") as stream:
+            objects = species[0]._loci_to_dict()
+            writer = cls._csv_dict_writer(stream, list(objects[0].keys()))
+            for obj in objects:
+                writer.writerow(obj)
 
     @classmethod
-    def random_loci(cls, params, reference):
-        """Make random loci for mutations."""
+    def save_db(cls, db: Database, species: list[Self]):
+        """
+        Save species to database. `species` must be passed in a
+        list to be consistent with other classes' `save_csv` methods.
+        Scalar properties of the species are saved in one table;
+        mutation loci values are pivoted to long form and saved in a
+        separate table.
+
+        Args:
+            db: Database connector.
+            species: List containing `Species` to save.
+        """
+
+        assert isinstance(species, list)
+        super().save_db(db, species)
+        table = db["species_loci"]
+        table.insert_all(species[0]._loci_to_dict(), pk="ident")
+
+    @classmethod
+    def _random_loci(cls, params: Parameters, reference: str) -> list[int]:
+        """
+        Generate random loci for mutations.
+
+        Args:
+            params: Parameters object.
+            reference: Reference genome.
+
+        Returns:
+            List of indices of locations where mutations might occur.
+        """
 
         assert 0 <= params.num_loci <= len(reference), (
             f"cannot generate {params.num_loci} loci for genome of length {len(reference)}"
@@ -81,8 +126,30 @@ class Species(BaseMixin):
         locations.sort()
         return locations
 
-    def random_genome(self, params):
-        """Construct a random genome."""
+    @classmethod
+    def _reference_genome(cls, params: Parameters) -> str:
+        """
+        Make a random reference genome.
+
+        Args:
+            params: Parameters object.
+
+        Returns:
+            String of ACGT bases.
+        """
+
+        return "".join(random.choices(list(BASES.keys()), k=params.genome_length))
+
+    def random_genome(self, params: Parameters) -> str:
+        """
+        Make a random genome based on a reference genome.
+
+        Args:
+            params: Parameters object.
+
+        Returns:
+            String of ACGT bases.
+        """
 
         genome = list(self.reference)
         for loc in self.loci:
@@ -90,10 +157,7 @@ class Species(BaseMixin):
                 genome[loc] = random.choice(BASES[genome[loc]])
         return "".join(genome)
 
-    @classmethod
-    def _loci(cls, species):
-        """Convert mutation loci into dictionaries."""
+    def _loci_to_dict(self):
+        """Convert mutation loci into dictionaries for persistence."""
 
-        return [
-            {"ident": i + 1, "locus": locus} for i, locus in enumerate(species.loci)
-        ]
+        return [{"ident": i + 1, "locus": locus} for i, locus in enumerate(self.loci)]

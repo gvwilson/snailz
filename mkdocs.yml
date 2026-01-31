@@ -5,6 +5,7 @@ site_dir: docs
 nav:
 - Home: index.md
 - Software:
+  - assay.md
   - base_mixin.md
   - grid.md
   - machine.md
@@ -21,7 +22,10 @@ nav:
 plugins:
 - mkdocstrings:
     handlers:
-      python: {}
+      python:
+        options:
+          members_order: source
+          show_docstring_attributes: true
 
 theme:
   name: "material"

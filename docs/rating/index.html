@@ -234,6 +234,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../assay/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assay
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../base_mixin/" class="md-nav__link">
         
   
@@ -812,6 +840,53 @@
         <p>A person's rating on a machine.</p>
 
 
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><span title="snailz.rating.Rating.person_id">person_id</span></code></td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>person identifier (in persons)</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="snailz.rating.Rating.machine_id">machine_id</span></code></td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>machine identifier (in machines)</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="snailz.rating.Rating.certified">certified</span></code></td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>whether person is certified on machine</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
 
 
 
@@ -820,7 +895,8 @@
 
               <details class="mkdocstrings-source">
                 <summary>Source code in <code>src/snailz/rating.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">16</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">15</span>
+<span class="normal">16</span>
 <span class="normal">17</span>
 <span class="normal">18</span>
 <span class="normal">19</span>
@@ -845,31 +921,72 @@
 <span class="normal">38</span>
 <span class="normal">39</span>
 <span class="normal">40</span>
-<span class="normal">41</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Rating</span><span class="p">(</span><span class="n">BaseMixin</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A person&#39;s rating on a machine.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A person&#39;s rating on a machine.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        person_id: person identifier (in persons)</span>
+<span class="sd">        machine_id: machine identifier (in machines)</span>
+<span class="sd">        certified: whether person is certified on machine</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">table_name</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;rating&quot;</span>
-    <span class="n">foreign_keys</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">foreign_keys</span><span class="p">:</span> <span class="n">ForeignKeysType</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">(</span><span class="s2">&quot;person_id&quot;</span><span class="p">,</span> <span class="s2">&quot;person&quot;</span><span class="p">,</span> <span class="s2">&quot;ident&quot;</span><span class="p">),</span>
         <span class="p">(</span><span class="s2">&quot;machine_id&quot;</span><span class="p">,</span> <span class="s2">&quot;machine&quot;</span><span class="p">,</span> <span class="s2">&quot;ident&quot;</span><span class="p">),</span>
     <span class="p">]</span>
 
     <span class="n">person_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="n">machine_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="n">rating</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">certified</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">persons</span><span class="p">,</span> <span class="n">machines</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">rand</span><span class="o">=</span><span class="n">random</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate ratings.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Parameters</span><span class="p">,</span> <span class="n">persons</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Person</span><span class="p">],</span> <span class="n">machines</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Machine</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct multiple ratings.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            params: Data generation parameters.</span>
+<span class="sd">            persons: list of people who have ratings.</span>
+<span class="sd">            machines: list of machines that people are rated for.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List of ratings.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">num</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">ratings_frac</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">persons</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">machines</span><span class="p">)))</span>
-        <span class="n">values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">RATINGS</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">weights</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">RATINGS</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-        <span class="n">ratings</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">num</span><span class="p">)</span>
+        <span class="n">possible</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">persons</span><span class="p">,</span> <span class="n">machines</span><span class="p">))</span>
+        <span class="n">actual</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">possible</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">num</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span>
-            <span class="n">Rating</span><span class="p">(</span><span class="n">person_id</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">ident</span><span class="p">,</span> <span class="n">machine_id</span><span class="o">=</span><span class="n">m</span><span class="o">.</span><span class="n">ident</span><span class="p">,</span> <span class="n">rating</span><span class="o">=</span><span class="n">r</span><span class="p">)</span>
-            <span class="k">for</span> <span class="p">((</span><span class="n">p</span><span class="p">,</span> <span class="n">m</span><span class="p">),</span> <span class="n">r</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">persons</span><span class="p">,</span> <span class="n">machines</span><span class="p">),</span> <span class="n">ratings</span><span class="p">)</span>
+            <span class="n">Rating</span><span class="p">(</span>
+                <span class="n">person_id</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">ident</span><span class="p">,</span>
+                <span class="n">machine_id</span><span class="o">=</span><span class="n">m</span><span class="o">.</span><span class="n">ident</span><span class="p">,</span>
+                <span class="n">certified</span><span class="o">=</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">params</span><span class="o">.</span><span class="n">p_certified</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="ow">in</span> <span class="n">actual</span>
         <span class="p">]</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -891,7 +1008,7 @@
 
 
 <h3 id="snailz.rating.Rating.make" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">make</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">persons</span><span class="p">,</span> <span class="n">machines</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">rand</span><span class="o">=</span><span class="n">random</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">make</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">persons</span><span class="p">,</span> <span class="n">machines</span><span class="p">)</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
@@ -902,33 +1019,157 @@
 
     <div class="doc doc-contents ">
 
-        <p>Generate ratings.</p>
+        <p>Construct multiple ratings.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>params</code>
+            </td>
+            <td>
+                  <code><span title="snailz.parameters.Parameters">Parameters</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Data generation parameters.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>persons</code>
+            </td>
+            <td>
+                  <code><span title="list">list</span>[<a class="autorefs autorefs-internal" title="Person
+
+
+  
+      dataclass
+   (snailz.person.Person)" href="../person/#snailz.person.Person">Person</a>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>list of people who have ratings.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>machines</code>
+            </td>
+            <td>
+                  <code><span title="list">list</span>[<a class="autorefs autorefs-internal" title="Machine
+
+
+  
+      dataclass
+   (snailz.machine.Machine)" href="../machine/#snailz.machine.Machine">Machine</a>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>list of machines that people are rated for.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span>[<span title="typing.Self">Self</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>List of ratings.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/snailz/rating.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">36</span>
 <span class="normal">37</span>
 <span class="normal">38</span>
 <span class="normal">39</span>
 <span class="normal">40</span>
-<span class="normal">41</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">persons</span><span class="p">,</span> <span class="n">machines</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">rand</span><span class="o">=</span><span class="n">random</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate ratings.&quot;&quot;&quot;</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span>
+    <span class="bp">cls</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Parameters</span><span class="p">,</span> <span class="n">persons</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Person</span><span class="p">],</span> <span class="n">machines</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Machine</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct multiple ratings.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        params: Data generation parameters.</span>
+<span class="sd">        persons: list of people who have ratings.</span>
+<span class="sd">        machines: list of machines that people are rated for.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List of ratings.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">num</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">ratings_frac</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">persons</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">machines</span><span class="p">)))</span>
-    <span class="n">values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">RATINGS</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-    <span class="n">weights</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">RATINGS</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-    <span class="n">ratings</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">num</span><span class="p">)</span>
+    <span class="n">possible</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">persons</span><span class="p">,</span> <span class="n">machines</span><span class="p">))</span>
+    <span class="n">actual</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">possible</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">num</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">[</span>
-        <span class="n">Rating</span><span class="p">(</span><span class="n">person_id</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">ident</span><span class="p">,</span> <span class="n">machine_id</span><span class="o">=</span><span class="n">m</span><span class="o">.</span><span class="n">ident</span><span class="p">,</span> <span class="n">rating</span><span class="o">=</span><span class="n">r</span><span class="p">)</span>
-        <span class="k">for</span> <span class="p">((</span><span class="n">p</span><span class="p">,</span> <span class="n">m</span><span class="p">),</span> <span class="n">r</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">persons</span><span class="p">,</span> <span class="n">machines</span><span class="p">),</span> <span class="n">ratings</span><span class="p">)</span>
+        <span class="n">Rating</span><span class="p">(</span>
+            <span class="n">person_id</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">ident</span><span class="p">,</span>
+            <span class="n">machine_id</span><span class="o">=</span><span class="n">m</span><span class="o">.</span><span class="n">ident</span><span class="p">,</span>
+            <span class="n">certified</span><span class="o">=</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">params</span><span class="o">.</span><span class="n">p_certified</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="ow">in</span> <span class="n">actual</span>
     <span class="p">]</span>
 </code></pre></div></td></tr></table></div>
             </details>

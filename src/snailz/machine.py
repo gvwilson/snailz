@@ -2,9 +2,11 @@
 
 from dataclasses import dataclass
 import random
-from typing import ClassVar, Generator
+from typing import ClassVar, Self
+
 from ._base_mixin import BaseMixin
-from ._utils import id_generator, validate
+from ._utils import IdGeneratorType, id_generator, validate
+from .parameters import Parameters
 
 
 PREFIX = [
@@ -47,18 +49,23 @@ SUFFIX = [
 
 @dataclass
 class Machine(BaseMixin):
-    """A piece of experimental machinery."""
+    """
+    A piece of experimental machinery.
+
+    Attributes:
+        ident: unique identifier
+        name: machine name
+    """
 
     primary_key: ClassVar[str] = "ident"
-    foreign_keys: ClassVar[list[tuple[str, str, str]]] = []
     table_name: ClassVar[str] = "machine"
-    _next_id: ClassVar[Generator[str, None, None]] = id_generator("M", 4)
+    _next_id: IdGeneratorType = id_generator("M", 4)
 
     ident: str = ""
     name: str = ""
 
     def __post_init__(self):
-        """Validate and fill in."""
+        """Validate fields and generate unique identifier."""
 
         validate(self.ident == "", "machine ID cannot be set externally")
         validate(len(self.name) > 0, "name cannot be empty")
@@ -66,8 +73,16 @@ class Machine(BaseMixin):
         self.ident = next(self._next_id)
 
     @classmethod
-    def make(cls, params):
-        """Make machines."""
+    def make(cls, params: Parameters) -> list[Self]:
+        """
+        Construct multiple machines.
+
+        Returns:
+            List of machines.
+
+        Args:
+            params: Parameters object.
+        """
 
         assert params.num_machines <= len(PREFIX) * len(SUFFIX), (
             f"cannot generate {params.num_machines} machine names"

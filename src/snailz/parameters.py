@@ -3,16 +3,21 @@
 from dataclasses import dataclass
 from datetime import date
 from faker.config import AVAILABLE_LOCALES
+
 from ._base_mixin import BaseMixin
 from ._utils import validate, validate_lat_lon
 
 
 @dataclass
 class Parameters(BaseMixin):
-    """Store all data generation parameters."""
+    """
+    Store all data generation parameters.  See the main documentation page
+    for a description of parameters' meanings.
+    """
 
     seed: int = 12345
     num_grids: int = 1
+    grid_separation: int = 4
     grid_size: int = 1
     grid_spacing: float = 10.0
     grid_std_dev: float = 0.5
@@ -40,7 +45,7 @@ class Parameters(BaseMixin):
     end_date: date = date(2026, 5, 31)
 
     def __post_init__(self):
-        """Check locale."""
+        """Validate fields."""
 
         validate(self.num_grids > 0, "require positive number of grids")
         validate(self.grid_size > 0, "require positive grid size")
