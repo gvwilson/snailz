@@ -40,6 +40,9 @@ options:
   --profile             enable profiling
 ```
 
+See the documentation of the `Parameters` class
+for a description of data generation parameters.
+
 ## Schema
 
 <img src="https://raw.githubusercontent.com/gvwilson/snailz/refs/heads/main/pages/img/schema.svg" alt="snailz schema">

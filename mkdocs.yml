@@ -9,6 +9,7 @@ nav:
   - base_mixin.md
   - grid.md
   - machine.md
+  - parameters.md
   - person.md
   - rating.md
   - species.md
