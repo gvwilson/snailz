@@ -38,7 +38,7 @@ def test_machine_persist_to_db():
     db = UnquotedDatabase(memory=True)
     machines = Machine.make(Parameters(num_machines=3))
     Machine.save_db(db, machines)
-    rows = list(db[Machine.table_name].rows)
+    rows = list(db[Machine.table_name()].rows)
     assert set(r["ident"] for r in rows) == set(p.ident for p in machines)
     field_names = {f.name for f in fields(machines[0])}
     assert all(len(r) == len(field_names) for r in rows)

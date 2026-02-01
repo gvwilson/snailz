@@ -9,7 +9,7 @@ from pathlib import Path
 import pstats
 import random
 import sys
-from typing import Any
+from typing import Any, Type
 
 from .assay import Assay
 from .grid import Grid
@@ -40,7 +40,7 @@ def main():
 
         _save_params(args.outdir, params)
         if args.outdir not in (None, "-"):
-            classes = (Grid, Machine, Person, Rating, Assay, Species, Specimen)
+            classes = [Grid, Machine, Person, Rating, Assay, Species, Specimen]
             _save_csv(args.outdir, classes, data)
             _save_db(args.outdir, classes, data)
             _save_images(args.outdir, data[Grid])
@@ -48,7 +48,7 @@ def main():
     return 0
 
 
-def _ensure_dir(dirname: str):
+def _ensure_dir(dirname: Path | str):
     """
     Ensure directory exists.
 
@@ -74,7 +74,7 @@ def _initialize(args: argparse.Namespace) -> Parameters:
 
     if args.params:
         with open(args.params, "r") as reader:
-            params = Parameters.model_validate(json.load(reader))
+            params = Parameters(**json.load(reader))
     else:
         params = Parameters()
 
@@ -132,7 +132,9 @@ def _profile_context(enabled=False, num_stats=20):
         yield None
 
 
-def _save_csv(outdir: Path | str, classes: list[BaseMixin], data: dict[BaseMixin, Any]):
+def _save_csv(
+    outdir: Path | str, classes: list[Type[BaseMixin]], data: dict[Type[BaseMixin], Any]
+):
     """
     Save synthesized data as CSV.
 
@@ -151,7 +153,9 @@ def _save_csv(outdir: Path | str, classes: list[BaseMixin], data: dict[BaseMixin
             print(g, file=writer)
 
 
-def _save_db(outdir: Path | str, classes: list[BaseMixin], data: dict[BaseMixin, Any]):
+def _save_db(
+    outdir: Path | str, classes: list[Type[BaseMixin]], data: dict[Type[BaseMixin], Any]
+):
     """
     Save synthesized data to database.
 
@@ -204,7 +208,7 @@ def _save_params(outdir: Path | str, params: Parameters):
             writer.write(params.as_json())
 
 
-def _synthesize(params: Parameters) -> dict[BaseMixin, Any]:
+def _synthesize(params: Parameters) -> dict[Type[BaseMixin], Any]:
     """
     Synthesize data.
 

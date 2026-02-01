@@ -2,7 +2,6 @@
 
 import csv
 from dataclasses import fields
-import json
 from pathlib import Path
 from PIL import Image
 import pytest
@@ -59,13 +58,6 @@ def test_grid_lat_lon_corner(small_grid):
     assert lon == small_grid.lon0
 
 
-def test_grid_as_json(small_grid):
-    data = small_grid.as_json()
-    assert isinstance(data, str)
-    data = json.loads(data)
-    assert set(data.keys()) == {"ident", "size", "spacing", "lat0", "lon0"}
-
-
 def test_grid_make():
     grids = Grid.make(
         Parameters(num_grids=3, grid_size=2, grid_spacing=1.0, lat0=0.0, lon0=0.0)
@@ -89,7 +81,7 @@ def test_grid_persist_to_csv(tmp_path):
     )
     Grid.save_csv(tmp_path, grids)
 
-    with open(Path(tmp_path, f"{Grid.table_name}.csv"), "r") as reader:
+    with open(Path(tmp_path, f"{Grid.table_name()}.csv"), "r") as reader:
         rows = list(csv.reader(reader))
         assert len(rows) == 4
 
@@ -105,7 +97,7 @@ def test_grid_persist_to_db():
     )
     Grid.save_db(db, grids)
 
-    rows = list(db[Grid.table_name].rows)
+    rows = list(db[Grid.table_name()].rows)
     assert set(r["ident"] for r in rows) == set(g.ident for g in grids)
     field_names = {f.name for f in fields(grids[0])}
     assert set(rows[0].keys()).issubset(field_names)

@@ -46,7 +46,7 @@ def test_person_make_creates_supervisors(fake):
 def test_person_persist_to_csv(fake, tmp_path):
     persons = Person.make(Parameters(num_persons=2), fake)
     Person.save_csv(tmp_path, persons)
-    with open(Path(tmp_path, f"{Person.table_name}.csv"), "r") as reader:
+    with open(Path(tmp_path, f"{Person.table_name()}.csv"), "r") as reader:
         rows = list(csv.reader(reader))
         assert len(rows) == 3
         assert set(rows[0]) == {"ident", "family", "personal", "supervisor_id"}
@@ -56,7 +56,7 @@ def test_person_persist_to_db(fake):
     db = Database(memory=True)
     persons = Person.make(Parameters(num_persons=3), fake)
     Person.save_db(db, persons)
-    rows = list(db[Person.table_name].rows)
+    rows = list(db[Person.table_name()].rows)
     assert set(r["ident"] for r in rows) == set(p.ident for p in persons)
     field_names = {f.name for f in fields(persons[0])}
     assert all(len(r) == len(field_names) for r in rows)

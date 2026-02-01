@@ -4,7 +4,7 @@ from datetime import date, timedelta
 import math
 import random
 from sqlite_utils import Database
-from typing import Any, ClassVar, Generator
+from typing import Any, Generator
 
 
 # Convert lat/lon to distances.
@@ -14,8 +14,8 @@ METERS_PER_DEGREE_LAT = 111_320.0
 LAT_LON_PRECISION = 5
 
 # Type definitions.
-IdGeneratorType = ClassVar[Generator[str, None, None]]
-ForeignKeysType = ClassVar[list[tuple[str, str, str]]]
+IdGeneratorType = Generator[str, None, None]
+ForeignKeysType = list[tuple[str, str, str]]
 
 
 class UnquotedDatabase(Database):
@@ -38,7 +38,7 @@ class UnquotedDatabase(Database):
         return super().execute(sql, parameters)
 
 
-def id_generator(stem: str, digits: int) -> str:
+def id_generator(stem: str, digits: int) -> IdGeneratorType:
     """
     Generate unique IDs of the form 'stemDDDD'.
 

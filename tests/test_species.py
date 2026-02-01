@@ -50,7 +50,7 @@ def test_species_persist_to_csv(tmp_path):
     species = Species.make(params)
     Species.save_csv(tmp_path, species)
 
-    with open(Path(tmp_path, f"{Species.table_name}.csv"), "r") as reader:
+    with open(Path(tmp_path, f"{Species.table_name()}.csv"), "r") as reader:
         rows = list(csv.reader(reader))
         assert len(rows) == 2
 
@@ -63,7 +63,7 @@ def test_grid_persist_to_db(a_species):
     db = Database(memory=True)
     Species.save_db(db, [a_species])
 
-    rows = list(db[Species.table_name].rows)
+    rows = list(db[Species.table_name()].rows)
     assert len(rows) == 1
     field_names = {f.name for f in fields(a_species)}
     assert set(rows[0].keys()).issubset(field_names)

@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 from faker import Faker
 import random
-from typing import ClassVar, Self
+from typing import ClassVar
 
 from ._base_mixin import BaseMixin
 from ._utils import IdGeneratorType, ForeignKeysType, id_generator, validate
@@ -23,10 +23,9 @@ class Person(BaseMixin):
     """
 
     primary_key: ClassVar[str] = "ident"
-    foreign_keys: ForeignKeysType = [("supervisor_id", "person", "ident")]
+    foreign_keys: ClassVar[ForeignKeysType] = [("supervisor_id", "person", "ident")]
     nullable_keys: ClassVar[set[str]] = {"supervisor_id"}
-    table_name: ClassVar[str] = "person"
-    _next_id: IdGeneratorType = id_generator("P", 4)
+    _next_id: ClassVar[IdGeneratorType] = id_generator("P", 4)
 
     ident: str = ""
     family: str = ""
@@ -48,7 +47,7 @@ class Person(BaseMixin):
         self.ident = next(self._next_id)
 
     @classmethod
-    def make(cls, params: Parameters, fake: Faker) -> list[Self]:
+    def make(cls, params: Parameters, fake: Faker) -> list["Person"]:
         """
         Construct multiple persons, some of whom have other persons
         as supervisors.
@@ -84,3 +83,9 @@ class Person(BaseMixin):
             person.supervisor_id = random.choice(supervisors).ident
 
         return staff + supervisors
+
+    @classmethod
+    def table_name(cls) -> str:
+        """Database table name."""
+
+        return "person"

@@ -2,6 +2,7 @@
 
 from datetime import date
 import pytest
+from sqlite_utils import Database
 
 from snailz import Grid, Parameters, Specimen
 
@@ -61,3 +62,13 @@ def test_specimen_make_coordinates_within_grid(a_grid):
     )
     assert all(0.0 <= s.lat < 10.0 for s in specimens)
     assert all(0.0 <= s.lon < 10.0 for s in specimens)
+
+
+def test_specimen_persist_to_db(a_grid):
+    db = Database(memory=True)
+    species = DummySpecies(genome="ACGT")
+    params = Parameters(num_specimens=20, p_mutation=0.2)
+    specimens = Specimen.make(params, [a_grid], species)
+    Specimen.save_db(db, specimens)
+    rows = list(db[Specimen.table_name()].rows)
+    assert len(rows) == params.num_specimens

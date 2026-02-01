@@ -1,6 +1,7 @@
 """Test person-machine ratings."""
 
 import itertools
+from sqlite_utils import Database
 
 from snailz import Machine, Parameters, Person, Rating
 
@@ -22,3 +23,16 @@ def test_rating_make_for_every_pair():
     actual = {(r.person_id, r.machine_id) for r in ratings}
     assert actual == expected
     assert all(r.certified for r in ratings)
+
+
+def test_rating_persist_to_db():
+    db = Database(memory=True)
+    params = Parameters(ratings_frac=1.0, p_certified=1.0)
+    persons = [Person(family="A", personal="B"), Person(family="C", personal="D")]
+    Person.save_db(db, persons)
+    machines = [Machine(name="some machine")]
+    Machine.save_db(db, machines)
+    ratings = Rating.make(params, persons, machines)
+    Rating.save_db(db, ratings)
+    rows = list(db[Rating.table_name()].rows)
+    assert len(rows) == len(persons) * len(machines)

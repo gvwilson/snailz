@@ -8,7 +8,7 @@ from pathlib import Path
 from PIL import Image
 import random
 from sqlite_utils import Database
-from typing import Any, ClassVar, Self
+from typing import Any, ClassVar
 
 from ._base_mixin import BaseMixin
 from ._utils import (
@@ -50,8 +50,7 @@ class Grid(BaseMixin):
 
     primary_key: ClassVar[str] = "ident"
     pivot_keys: ClassVar[set[str]] = {"cells"}
-    table_name: ClassVar[str] = "grid"
-    _next_id: IdGeneratorType = id_generator("G", 4)
+    _next_id: ClassVar[IdGeneratorType] = id_generator("G", 4)
 
     ident: str = ""
     size: int = 0
@@ -59,9 +58,9 @@ class Grid(BaseMixin):
     lat0: float = 0.0
     lon0: float = 0.0
     cells: list[float] = field(default_factory=list)
-    params: InitVar[Parameters] = None
+    params: InitVar[Parameters | None] = None
 
-    def __post_init__(self, params: Parameters):
+    def __post_init__(self, params: Parameters | None):
         """
         Validate fields, generate unique identifier, and fill in cells.
 
@@ -72,6 +71,7 @@ class Grid(BaseMixin):
             ValueError: If validation fails.
         """
 
+        validate(params is not None, "params required to initialize grid")
         validate(self.ident == "", "grid ID cannot be set externally")
         validate(self.size > 0, f"grid size must be positive not {self.size}")
         validate(
@@ -132,7 +132,7 @@ class Grid(BaseMixin):
         self.cells[x * self.size + y] = value
 
     @classmethod
-    def make(cls, params: Parameters) -> list[Self]:
+    def make(cls, params: Parameters) -> list["Grid"]:
         """
         Construct multiple grids.
 
@@ -156,7 +156,7 @@ class Grid(BaseMixin):
         ]
 
     @classmethod
-    def save_csv(cls, outdir: Path | str, grids: list[Self]):
+    def save_csv(cls, outdir: Path | str, objects: list):
         """
         Save grids as CSV. Scalar properties of all grids are saved in
         one file; grid cell values are pivoted to long form and saved
@@ -164,19 +164,19 @@ class Grid(BaseMixin):
 
         Args:
             outdir: Output directory.
-            grids: `Grid` objects to save.
+            objects: `Grid` objects to save.
         """
 
-        super().save_csv(outdir, grids)
+        super().save_csv(outdir, objects)
 
         with open(Path(outdir, "grid_cells.csv"), "w", newline="") as stream:
-            objects = cls._grid_cells(grids)
-            writer = cls._csv_dict_writer(stream, list(objects[0].keys()))
-            for obj in objects:
+            pivoted = cls._grid_cells(objects)
+            writer = cls._csv_dict_writer(stream, list(pivoted[0].keys()))
+            for obj in pivoted:
                 writer.writerow(obj)
 
     @classmethod
-    def save_db(cls, db: Database, grids: list[Self]):
+    def save_db(cls, db: Database, objects: list):
         """
         Save grids to database. Scalar properties of all grids are
         saved in one table; grid cell values are pivoted to long form
@@ -184,17 +184,23 @@ class Grid(BaseMixin):
 
         Args:
             db: Database connector.
-            grids: `Grid` objects to save.
+            objects: `Grid` objects to save.
         """
 
-        super().save_db(db, grids)
+        super().save_db(db, objects)
 
         table = db["grid_cells"]
-        table.insert_all(
-            cls._grid_cells(grids),
+        table.insert_all(  # type: ignore[possibly-missing-attribute]
+            cls._grid_cells(objects),
             pk=("grid_id", "lat", "lon"),
             foreign_keys=[("grid_id", "grid", "ident")],
         )
+
+    @classmethod
+    def table_name(cls) -> str:
+        """Database table name."""
+
+        return "grid"
 
     @classmethod
     def _grid_cells(cls, grids):
@@ -298,7 +304,7 @@ class Grid(BaseMixin):
             x += m[0]
             y += m[1]
 
-    def _randomize(self, params: Parameters):
+    def _randomize(self, params: Parameters | None):
         """
         Randomize values in grid after filling.
 
@@ -306,6 +312,7 @@ class Grid(BaseMixin):
             params: Parameters object.
         """
 
+        assert params is not None
         for i, val in enumerate(self.cells):
             if val > 0.0:
                 self.cells[i] = round(

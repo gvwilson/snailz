@@ -57,7 +57,7 @@ def test_assay_persist_to_csv(tmp_path):
     assays = Assay.make(params, [grid], [rating])
     Assay.save_csv(tmp_path, assays)
 
-    with open(Path(tmp_path, f"{Assay.table_name}.csv"), "r") as reader:
+    with open(Path(tmp_path, f"{Assay.table_name()}.csv"), "r") as reader:
         rows = list(csv.reader(reader))
         assert len(rows) == 3
 
@@ -81,7 +81,7 @@ def test_assay_persist_to_db():
     Machine.save_db(db, machines)
     Assay.save_db(db, assays)
 
-    rows = list(db[Assay.table_name].rows)
+    rows = list(db[Assay.table_name()].rows)
     assert set(r["ident"] for r in rows) == set(a.ident for a in assays)
     field_names = {f.name for f in fields(assays[0])}
     assert set(rows[0].keys()).issubset(field_names)

@@ -7,7 +7,7 @@ authors = [
     {name = "Greg Wilson", email = "gvwilson@third-bit.com"}
 ]
 
-version = "5.0.1"
+version = "5.1.0"
 requires-python = ">=3.12"
 dependencies = [
     "faker>=40.1.2",
@@ -15,6 +15,7 @@ dependencies = [
     "pillow>=12.1.0",
     "sqlite-utils==4.0a1",
     "twine>=6.2.0",
+    "ty>=0.0.14",
 ]
 
 [project.urls]
@@ -38,6 +39,11 @@ dev = [
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.coverage.report]
+exclude_lines = [
+    "@abstractmethod"
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/snailz"]
@@ -71,6 +77,8 @@ cp docs-requirements.txt docs/requirements.txt
 """}
 fix = {help = "fix code issues", cmd = "ruff check --fix ."}
 format = {help = "format code", cmd = "ruff format ."}
+lint = {help = "run all checks", cmd = "task check && task types && task test"}
 publish = {help = "publish using ~/.pypirc credentials", cmd = "twine upload --verbose dist/*"}
 serve = {help = "serve documentation", cmd = "python -m http.server -d docs"}
 test = {help = "run tests", cmd = "pytest tests"}
+types = {help = "check types", cmd = "ty check src"}

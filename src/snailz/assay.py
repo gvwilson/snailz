@@ -35,8 +35,7 @@ class Assay(BaseMixin):
 
     primary_key: ClassVar[str] = "ident"
     pivot_keys: ClassVar[set[str]] = {"contents", "readings"}
-    table_name: ClassVar[str] = "assay"
-    _next_id: IdGeneratorType = id_generator("A", 4)
+    _next_id: ClassVar[IdGeneratorType] = id_generator("A", 4)
 
     ident: str = ""
     lat: float = 0.0
@@ -57,7 +56,7 @@ class Assay(BaseMixin):
     @classmethod
     def make(
         cls, params: Parameters, grids: list[Grid], ratings: list[Rating]
-    ) -> list[Self]:
+    ) -> list["Assay"]:
         """
         Construct multiple assays.
 
@@ -93,7 +92,7 @@ class Assay(BaseMixin):
         return result
 
     @classmethod
-    def save_csv(cls, outdir: Path | str, assays: list[Self]):
+    def save_csv(cls, outdir: Path | str, objects: list):
         """
         Save assays as CSV. Scalar properties of all assays are saved in
         one file; assay measurements are pivoted to long form and saved
@@ -101,19 +100,19 @@ class Assay(BaseMixin):
 
         Args:
             outdir: Output directory.
-            assays: `Assay` objects to save.
+            objects: `Assay` objects to save.
         """
 
-        super().save_csv(outdir, assays)
+        super().save_csv(outdir, objects)
 
         with open(Path(outdir, "assay_readings.csv"), "w", newline="") as stream:
-            objects = cls._assay_readings(assays)
-            writer = cls._csv_dict_writer(stream, list(objects[0].keys()))
-            for obj in objects:
+            pivoted = cls._assay_readings(objects)
+            writer = cls._csv_dict_writer(stream, list(pivoted[0].keys()))
+            for obj in pivoted:
                 writer.writerow(obj)
 
     @classmethod
-    def save_db(cls, db: Database, assays: list[Self]):
+    def save_db(cls, db: Database, objects: list):
         """
         Save assays to database. Scalar properties of all assays are
         saved in one table; assay readings are pivoted to long form
@@ -121,20 +120,26 @@ class Assay(BaseMixin):
 
         Args:
             db: Database connector.
-            assays: `Assay` objects to save.
+            objects: `Assay` objects to save.
         """
 
-        super().save_db(db, assays)
+        super().save_db(db, objects)
 
         table = db["assay_readings"]
-        table.insert_all(
-            cls._assay_readings(assays),
+        table.insert_all(  # type: ignore[possibly-missing-attribute]
+            cls._assay_readings(objects),
             pk=("ident"),
             foreign_keys=[
                 ("person_id", "person", "ident"),
                 ("machine_id", "machine", "ident"),
             ],
         )
+
+    @classmethod
+    def table_name(cls) -> str:
+        """Database table name."""
+
+        return "assay"
 
     @classmethod
     def _assay_readings(cls, assays: list[Self]) -> list[dict[str, str | float]]:

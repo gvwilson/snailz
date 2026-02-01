@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 import random
-from typing import ClassVar, Self
+from typing import ClassVar
 
 from ._base_mixin import BaseMixin
 from ._utils import IdGeneratorType, id_generator, validate
@@ -58,8 +58,7 @@ class Machine(BaseMixin):
     """
 
     primary_key: ClassVar[str] = "ident"
-    table_name: ClassVar[str] = "machine"
-    _next_id: IdGeneratorType = id_generator("M", 4)
+    _next_id: ClassVar[IdGeneratorType] = id_generator("M", 4)
 
     ident: str = ""
     name: str = ""
@@ -73,7 +72,7 @@ class Machine(BaseMixin):
         self.ident = next(self._next_id)
 
     @classmethod
-    def make(cls, params: Parameters) -> list[Self]:
+    def make(cls, params: Parameters) -> list["Machine"]:
         """
         Construct multiple machines.
 
@@ -92,3 +91,9 @@ class Machine(BaseMixin):
             Machine(name=f"{p} {s}")
             for (p, s) in random.sample(pairs, k=params.num_machines)
         ]
+
+    @classmethod
+    def table_name(cls) -> str:
+        """Database table name."""
+
+        return "machine"

@@ -3,13 +3,18 @@
 from dataclasses import dataclass
 from datetime import date
 from faker.config import AVAILABLE_LOCALES
+import json
+from typing import Any
 
-from ._base_mixin import BaseMixin
 from ._utils import validate, validate_lat_lon
 
 
+# Indentation for JSON output.
+JSON_INDENT = 2
+
+
 @dataclass
-class Parameters(BaseMixin):
+class Parameters:
     """
     Store all data generation parameters.  See the main documentation page
     for a description of parameters' meanings.
@@ -69,3 +74,30 @@ class Parameters(BaseMixin):
         validate(
             self.start_date <= self.end_date, "require non-negative survey date range"
         )
+
+    def as_json(self, indent: int = JSON_INDENT) -> str:
+        """
+        Convert parameters to a JSON string.
+
+        Args:
+            indent: Indentation.
+
+        Returns:
+            JSON string representation of persistable fields.
+        """
+        return json.dumps(self.__dict__, indent=indent, default=_serialize_json)
+
+
+def _serialize_json(obj: Any) -> str:
+    """
+    Custom JSON serializer.
+
+    Args:
+        obj: What to persist.
+
+    Returns:
+        String representation of object.
+    """
+
+    assert isinstance(obj, date)
+    return obj.isoformat()

@@ -446,6 +446,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#snailz.person.Person.table_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        table_name
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -786,6 +797,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#snailz.person.Person.table_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        table_name
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1001,7 +1023,12 @@
 <span class="normal">83</span>
 <span class="normal">84</span>
 <span class="normal">85</span>
-<span class="normal">86</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Person</span><span class="p">(</span><span class="n">BaseMixin</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A single person.</span>
@@ -1014,10 +1041,9 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">primary_key</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;ident&quot;</span>
-    <span class="n">foreign_keys</span><span class="p">:</span> <span class="n">ForeignKeysType</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;supervisor_id&quot;</span><span class="p">,</span> <span class="s2">&quot;person&quot;</span><span class="p">,</span> <span class="s2">&quot;ident&quot;</span><span class="p">)]</span>
+    <span class="n">foreign_keys</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">ForeignKeysType</span><span class="p">]</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;supervisor_id&quot;</span><span class="p">,</span> <span class="s2">&quot;person&quot;</span><span class="p">,</span> <span class="s2">&quot;ident&quot;</span><span class="p">)]</span>
     <span class="n">nullable_keys</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;supervisor_id&quot;</span><span class="p">}</span>
-    <span class="n">table_name</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;person&quot;</span>
-    <span class="n">_next_id</span><span class="p">:</span> <span class="n">IdGeneratorType</span> <span class="o">=</span> <span class="n">id_generator</span><span class="p">(</span><span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">_next_id</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">IdGeneratorType</span><span class="p">]</span> <span class="o">=</span> <span class="n">id_generator</span><span class="p">(</span><span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 
     <span class="n">ident</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="n">family</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -1039,7 +1065,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ident</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_next_id</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Parameters</span><span class="p">,</span> <span class="n">fake</span><span class="p">:</span> <span class="n">Faker</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Parameters</span><span class="p">,</span> <span class="n">fake</span><span class="p">:</span> <span class="n">Faker</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Person&quot;</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct multiple persons, some of whom have other persons</span>
 <span class="sd">        as supervisors.</span>
@@ -1075,6 +1101,12 @@
             <span class="n">person</span><span class="o">.</span><span class="n">supervisor_id</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">supervisors</span><span class="p">)</span><span class="o">.</span><span class="n">ident</span>
 
         <span class="k">return</span> <span class="n">staff</span> <span class="o">+</span> <span class="n">supervisors</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">table_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Database table name.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="s2">&quot;person&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -1130,7 +1162,8 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/snailz/person.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">36</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">35</span>
+<span class="normal">36</span>
 <span class="normal">37</span>
 <span class="normal">38</span>
 <span class="normal">39</span>
@@ -1141,8 +1174,7 @@
 <span class="normal">44</span>
 <span class="normal">45</span>
 <span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">47</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Validate fields and generate unique identifier.</span>
 
@@ -1238,7 +1270,12 @@ as supervisors.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="list">list</span>[<span title="typing.Self">Self</span>]</code>
+                  <code><span title="list">list</span>[<a class="autorefs autorefs-internal" title="Person
+
+
+  
+      dataclass
+   (snailz.person.Person)" href="#snailz.person.Person">Person</a>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1252,7 +1289,8 @@ as supervisors.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/snailz/person.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">50</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">49</span>
+<span class="normal">50</span>
 <span class="normal">51</span>
 <span class="normal">52</span>
 <span class="normal">53</span>
@@ -1287,9 +1325,8 @@ as supervisors.</p>
 <span class="normal">82</span>
 <span class="normal">83</span>
 <span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Parameters</span><span class="p">,</span> <span class="n">fake</span><span class="p">:</span> <span class="n">Faker</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span>
+<span class="normal">85</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Parameters</span><span class="p">,</span> <span class="n">fake</span><span class="p">:</span> <span class="n">Faker</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Person&quot;</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Construct multiple persons, some of whom have other persons</span>
 <span class="sd">    as supervisors.</span>
@@ -1325,6 +1362,41 @@ as supervisors.</p>
         <span class="n">person</span><span class="o">.</span><span class="n">supervisor_id</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">supervisors</span><span class="p">)</span><span class="o">.</span><span class="n">ident</span>
 
     <span class="k">return</span> <span class="n">staff</span> <span class="o">+</span> <span class="n">supervisors</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="snailz.person.Person.table_name" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">table_name</span><span class="p">()</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Database table name.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/snailz/person.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">table_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Database table name.&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="s2">&quot;person&quot;</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

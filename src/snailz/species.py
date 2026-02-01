@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 import random
 from sqlite_utils import Database
-from typing import ClassVar, Self
+from typing import ClassVar
 
 from ._base_mixin import BaseMixin
 from .parameters import Parameters
@@ -31,7 +31,6 @@ class Species(BaseMixin):
     """
 
     pivot_keys: ClassVar[set[str]] = {"loci"}
-    table_name: ClassVar[str] = "species"
 
     reference: str = ""
     loci: list[int] = field(default_factory=list)
@@ -39,7 +38,7 @@ class Species(BaseMixin):
     susc_base: str = ""
 
     @classmethod
-    def make(cls, params: Parameters) -> list[Self]:
+    def make(cls, params: Parameters) -> list["Species"]:
         """
         Construct a list containing a single species. (The result
         is returned in a list to be consistent with other classes'
@@ -65,32 +64,32 @@ class Species(BaseMixin):
         ]
 
     @classmethod
-    def save_csv(cls, outdir: Path | str, species: list[Self]):
+    def save_csv(cls, outdir: Path | str, objects: list):
         """
-        Save species as CSV. `species` must be passed in a list to be
+        Save species as CSV. `objects` must be passed in a list to be
         consistent with other classes' `save_csv` methods. Scalar
         properties of the species are saved in one file; mutation loci
         values are pivoted to long form and saved in a separate file.
 
         Args:
             outdir: Output directory.
-            species: List containing `Species` to save.
+            objects: List containing `Species` to save.
 
         """
 
-        assert isinstance(species, list)
-        super().save_csv(outdir, species)
+        assert isinstance(objects, list)
+        super().save_csv(outdir, objects)
 
         with open(Path(outdir, "species_loci.csv"), "w", newline="") as stream:
-            objects = species[0]._loci_to_dict()
-            writer = cls._csv_dict_writer(stream, list(objects[0].keys()))
-            for obj in objects:
+            pivoted = objects[0]._loci_to_dict()
+            writer = cls._csv_dict_writer(stream, list(pivoted[0].keys()))
+            for obj in pivoted:
                 writer.writerow(obj)
 
     @classmethod
-    def save_db(cls, db: Database, species: list[Self]):
+    def save_db(cls, db: Database, objects: list):
         """
-        Save species to database. `species` must be passed in a
+        Save species to database. `objects` must be passed in a
         list to be consistent with other classes' `save_csv` methods.
         Scalar properties of the species are saved in one table;
         mutation loci values are pivoted to long form and saved in a
@@ -98,13 +97,21 @@ class Species(BaseMixin):
 
         Args:
             db: Database connector.
-            species: List containing `Species` to save.
+            objects: List containing `Species` to save.
         """
 
-        assert isinstance(species, list)
-        super().save_db(db, species)
+        assert isinstance(objects, list)
+        super().save_db(db, objects)
         table = db["species_loci"]
-        table.insert_all(species[0]._loci_to_dict(), pk="ident")
+        table.insert_all(  # type: ignore[possibly-missing-attribute]
+            objects[0]._loci_to_dict(), pk="ident"
+        )
+
+    @classmethod
+    def table_name(cls) -> str:
+        """Database table name."""
+
+        return "species"
 
     @classmethod
     def _random_loci(cls, params: Parameters, reference: str) -> list[int]:

@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from datetime import date
 import math
 import random
-from typing import ClassVar, Self
+from typing import ClassVar
 
 from ._base_mixin import BaseMixin
 from ._utils import (
@@ -38,8 +38,7 @@ class Specimen(BaseMixin):
         collected: date specimen was collected
     """
 
-    table_name: ClassVar[str] = "specimen"
-    _next_id: IdGeneratorType = id_generator("S", 4)
+    _next_id: ClassVar[IdGeneratorType] = id_generator("S", 4)
 
     ident: str = ""
     lat: float = 0.0
@@ -71,7 +70,9 @@ class Specimen(BaseMixin):
         self.diameter = round(self.diameter, SPECIMEN_PRECISION)
 
     @classmethod
-    def make(cls, params: Parameters, grids: list[Grid], species: Species) -> list[Self]:
+    def make(
+        cls, params: Parameters, grids: list[Grid], species: Species
+    ) -> list["Specimen"]:
         """
         Construct multiple specimens.
 
@@ -138,3 +139,9 @@ class Specimen(BaseMixin):
         mu = params.mass_beta_0 + params.mass_beta_1 * pollution
         log_mass = random.gauss(mu, params.mass_sigma)
         return math.exp(log_mass)
+
+    @classmethod
+    def table_name(cls) -> str:
+        """Database table name."""
+
+        return "specimen"

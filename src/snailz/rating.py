@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 import itertools
 import random
-from typing import ClassVar, Self
+from typing import ClassVar
 
 from ._base_mixin import BaseMixin
 from ._utils import ForeignKeysType
@@ -23,8 +23,7 @@ class Rating(BaseMixin):
         certified: whether person is certified on machine
     """
 
-    table_name: ClassVar[str] = "rating"
-    foreign_keys: ForeignKeysType = [
+    foreign_keys: ClassVar[ForeignKeysType] = [
         ("person_id", "person", "ident"),
         ("machine_id", "machine", "ident"),
     ]
@@ -36,7 +35,7 @@ class Rating(BaseMixin):
     @classmethod
     def make(
         cls, params: Parameters, persons: list[Person], machines: list[Machine]
-    ) -> list[Self]:
+    ) -> list["Rating"]:
         """Construct multiple ratings.
 
         Args:
@@ -59,3 +58,9 @@ class Rating(BaseMixin):
             )
             for (p, m) in actual
         ]
+
+    @classmethod
+    def table_name(cls) -> str:
+        """Database table name."""
+
+        return "rating"

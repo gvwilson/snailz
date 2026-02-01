@@ -1,31 +1,14 @@
 """Utility base class for dataclasses."""
 
+from abc import ABC, abstractmethod
 from csv import DictWriter
-from datetime import date
-import json
 from pathlib import Path
 from sqlite_utils import Database
-from typing import Any, TextIO
+from typing import TextIO
 
 
-# Indentation for JSON output.
-JSON_INDENT = 2
-
-
-class BaseMixin:
+class BaseMixin(ABC):
     """Mixin base class for dataclasses."""
-
-    def as_json(self, indent: int = JSON_INDENT) -> str:
-        """
-        Convert this object to a JSON string.
-
-        Args:
-            indent: Indentation.
-
-        Returns:
-            JSON string representation of persistable fields.
-        """
-        return json.dumps(self.persistable(), indent=indent, default=_serialize_json)
 
     def persistable(self) -> dict:
         """
@@ -51,7 +34,7 @@ class BaseMixin:
         return [key for key in self.__dict__.keys() if key not in pivot_keys]
 
     @classmethod
-    def save_csv(cls, outdir: Path | str, objects: list[Any]):
+    def save_csv(cls, outdir: Path | str, objects: list):
         """
         Save objects of derived class as CSV. Derived classes should
         override this and up-call to save scalar properties, then save
@@ -63,13 +46,13 @@ class BaseMixin:
         """
 
         assert all(isinstance(obj, cls) for obj in objects)
-        with open(Path(outdir, f"{cls.table_name}.csv"), "w", newline="") as stream:
+        with open(Path(outdir, f"{cls.table_name()}.csv"), "w", newline="") as stream:
             writer = cls._csv_dict_writer(stream, objects[0].persistable_keys())
             for obj in objects:
                 writer.writerow(obj.persistable())
 
     @classmethod
-    def save_db(cls, db: Database, objects: list[Any]):
+    def save_db(cls, db: Database, objects: list):
         """
         Save objects of derived class to database. Derived classes should
         override this and up-call to save scalar properties, then save
@@ -81,15 +64,23 @@ class BaseMixin:
         """
 
         assert all(isinstance(obj, cls) for obj in objects)
-        table = db[cls.table_name]
+        table = db[cls.table_name()]
         primary_key = getattr(cls, "primary_key", None)
         foreign_keys = getattr(cls, "foreign_keys", [])
-        table.insert_all(
+        table.insert_all(  # type: ignore[possibly-missing-attribute]
             (obj.persistable() for obj in objects),
             pk=primary_key,
             foreign_keys=foreign_keys,
         )
-        table.transform(not_null=objects[0].not_null_keys())
+        table.transform(  # type: ignore[possibly-missing-attribute]
+            not_null=objects[0].not_null_keys()
+        )
+
+    @classmethod
+    @abstractmethod
+    def table_name(cls) -> str:
+        """Database table name."""
+        pass
 
     @classmethod
     def _csv_dict_writer(cls, stream: TextIO, fieldnames: list[str]) -> DictWriter:
@@ -107,18 +98,3 @@ class BaseMixin:
         writer = DictWriter(stream, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         return writer
-
-
-def _serialize_json(obj: Any) -> Any:
-    """
-    Custom JSON serializer.
-
-    Args:
-        obj: What to persist.
-
-    Returns:
-        String representation of object.
-    """
-
-    assert isinstance(obj, date)
-    return obj.isoformat()
