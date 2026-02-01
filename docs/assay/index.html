@@ -1220,7 +1220,10 @@
 <span class="normal">199</span>
 <span class="normal">200</span>
 <span class="normal">201</span>
-<span class="normal">202</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Assay</span><span class="p">(</span><span class="n">BaseMixin</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A single pollution assay.</span>
@@ -1237,6 +1240,12 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">primary_key</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;ident&quot;</span>
+    <span class="n">foreign_keys</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">ForeignKeysType</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;lat&quot;</span><span class="p">,</span> <span class="s2">&quot;grid_cells&quot;</span><span class="p">,</span> <span class="s2">&quot;lat&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;lon&quot;</span><span class="p">,</span> <span class="s2">&quot;grid_cells&quot;</span><span class="p">,</span> <span class="s2">&quot;lon&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;person_id&quot;</span><span class="p">,</span> <span class="s2">&quot;person&quot;</span><span class="p">,</span> <span class="s2">&quot;ident&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;machine_id&quot;</span><span class="p">,</span> <span class="s2">&quot;machine&quot;</span><span class="p">,</span> <span class="s2">&quot;ident&quot;</span><span class="p">),</span>
+    <span class="p">]</span>
     <span class="n">pivot_keys</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;contents&quot;</span><span class="p">,</span> <span class="s2">&quot;readings&quot;</span><span class="p">}</span>
     <span class="n">_next_id</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">IdGeneratorType</span><span class="p">]</span> <span class="o">=</span> <span class="n">id_generator</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 
@@ -1331,11 +1340,8 @@
         <span class="n">table</span> <span class="o">=</span> <span class="n">db</span><span class="p">[</span><span class="s2">&quot;assay_readings&quot;</span><span class="p">]</span>
         <span class="n">table</span><span class="o">.</span><span class="n">insert_all</span><span class="p">(</span>  <span class="c1"># type: ignore[possibly-missing-attribute]</span>
             <span class="bp">cls</span><span class="o">.</span><span class="n">_assay_readings</span><span class="p">(</span><span class="n">objects</span><span class="p">),</span>
-            <span class="n">pk</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;ident&quot;</span><span class="p">),</span>
-            <span class="n">foreign_keys</span><span class="o">=</span><span class="p">[</span>
-                <span class="p">(</span><span class="s2">&quot;person_id&quot;</span><span class="p">,</span> <span class="s2">&quot;person&quot;</span><span class="p">,</span> <span class="s2">&quot;ident&quot;</span><span class="p">),</span>
-                <span class="p">(</span><span class="s2">&quot;machine_id&quot;</span><span class="p">,</span> <span class="s2">&quot;machine&quot;</span><span class="p">,</span> <span class="s2">&quot;ident&quot;</span><span class="p">),</span>
-            <span class="p">],</span>
+            <span class="n">pk</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;assay_id&quot;</span><span class="p">,</span> <span class="s2">&quot;reading_id&quot;</span><span class="p">),</span>
+            <span class="n">foreign_keys</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;assay_id&quot;</span><span class="p">,</span> <span class="s2">&quot;assay&quot;</span><span class="p">,</span> <span class="s2">&quot;ident&quot;</span><span class="p">)],</span>
         <span class="p">)</span>
 
     <span class="nd">@classmethod</span>
@@ -1357,9 +1363,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="p">[</span>
-            <span class="p">{</span><span class="s2">&quot;assay_id&quot;</span><span class="p">:</span> <span class="n">a</span><span class="o">.</span><span class="n">ident</span><span class="p">,</span> <span class="s2">&quot;contents&quot;</span><span class="p">:</span> <span class="n">c</span><span class="p">,</span> <span class="s2">&quot;reading&quot;</span><span class="p">:</span> <span class="n">r</span><span class="p">}</span>
+            <span class="p">{</span><span class="s2">&quot;assay_id&quot;</span><span class="p">:</span> <span class="n">a</span><span class="o">.</span><span class="n">ident</span><span class="p">,</span> <span class="s2">&quot;reading_id&quot;</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;contents&quot;</span><span class="p">:</span> <span class="n">c</span><span class="p">,</span> <span class="s2">&quot;reading&quot;</span><span class="p">:</span> <span class="n">r</span><span class="p">}</span>
             <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">assays</span>
-            <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">contents</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">readings</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">contents</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">readings</span><span class="p">))</span>
         <span class="p">]</span>
 
     <span class="nd">@classmethod</span>
@@ -1435,12 +1441,12 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/snailz/assay.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generate unique identifier.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1573,13 +1579,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/snailz/assay.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">62</span>
 <span class="normal">63</span>
 <span class="normal">64</span>
 <span class="normal">65</span>
@@ -1609,7 +1609,13 @@
 <span class="normal">89</span>
 <span class="normal">90</span>
 <span class="normal">91</span>
-<span class="normal">92</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span>
+<span class="normal">96</span>
+<span class="normal">97</span>
+<span class="normal">98</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span>
     <span class="bp">cls</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Parameters</span><span class="p">,</span> <span class="n">grids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Grid</span><span class="p">],</span> <span class="n">ratings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Rating</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Assay&quot;</span><span class="p">]:</span>
@@ -1721,13 +1727,7 @@ in a separate file.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/snailz/assay.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">100</span>
 <span class="normal">101</span>
 <span class="normal">102</span>
 <span class="normal">103</span>
@@ -1739,7 +1739,13 @@ in a separate file.</p>
 <span class="normal">109</span>
 <span class="normal">110</span>
 <span class="normal">111</span>
-<span class="normal">112</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">save_csv</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">outdir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">objects</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Save assays as CSV. Scalar properties of all assays are saved in</span>
@@ -1833,13 +1839,7 @@ and saved in a separate table.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/snailz/assay.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">120</span>
 <span class="normal">121</span>
 <span class="normal">122</span>
 <span class="normal">123</span>
@@ -1855,7 +1855,10 @@ and saved in a separate table.</p>
 <span class="normal">133</span>
 <span class="normal">134</span>
 <span class="normal">135</span>
-<span class="normal">136</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">save_db</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Database</span><span class="p">,</span> <span class="n">objects</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Save assays to database. Scalar properties of all assays are</span>
@@ -1872,11 +1875,8 @@ and saved in a separate table.</p>
     <span class="n">table</span> <span class="o">=</span> <span class="n">db</span><span class="p">[</span><span class="s2">&quot;assay_readings&quot;</span><span class="p">]</span>
     <span class="n">table</span><span class="o">.</span><span class="n">insert_all</span><span class="p">(</span>  <span class="c1"># type: ignore[possibly-missing-attribute]</span>
         <span class="bp">cls</span><span class="o">.</span><span class="n">_assay_readings</span><span class="p">(</span><span class="n">objects</span><span class="p">),</span>
-        <span class="n">pk</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;ident&quot;</span><span class="p">),</span>
-        <span class="n">foreign_keys</span><span class="o">=</span><span class="p">[</span>
-            <span class="p">(</span><span class="s2">&quot;person_id&quot;</span><span class="p">,</span> <span class="s2">&quot;person&quot;</span><span class="p">,</span> <span class="s2">&quot;ident&quot;</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;machine_id&quot;</span><span class="p">,</span> <span class="s2">&quot;machine&quot;</span><span class="p">,</span> <span class="s2">&quot;ident&quot;</span><span class="p">),</span>
-        <span class="p">],</span>
+        <span class="n">pk</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;assay_id&quot;</span><span class="p">,</span> <span class="s2">&quot;reading_id&quot;</span><span class="p">),</span>
+        <span class="n">foreign_keys</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;assay_id&quot;</span><span class="p">,</span> <span class="s2">&quot;assay&quot;</span><span class="p">,</span> <span class="s2">&quot;ident&quot;</span><span class="p">)],</span>
     <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -1904,11 +1904,11 @@ and saved in a separate table.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/snailz/assay.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">138</span>
-<span class="normal">139</span>
-<span class="normal">140</span>
-<span class="normal">141</span>
-<span class="normal">142</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">table_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Database table name.&quot;&quot;&quot;</span>
 

@@ -44,6 +44,58 @@ options:
 
 <img src="https://raw.githubusercontent.com/gvwilson/snailz/refs/heads/main/pages/img/schema.svg" alt="snailz schema">
 
+| table          | field         | type  | purpose |
+| -------------- | ------------- | ----- | ------- |
+| grid           | ident         | text  | unique identifier for each survey grid |
+|                | size          | int   | height and width of survey grid in cells |
+|                | spacing       | float | size of survey grid cell (meters) |
+|                | lat0          | float | southernmost latitude of grid (fractional degrees) |
+|                | lon0          | float | westernmost longitude of grid (fractional degrees) |
+|                |               |       |         |
+| grid_cells     | grid_id       | text  | foreign key reference to grid |
+|                | lat           | float | foreign key reference to grid cell |
+|                | lon           | float | foreign key reference to grid cell |
+|                | value         | float | pollution measurement in that grid cell |
+|                |               |       |         |
+| machine        | ident         | text  | unique identifier for each piece of laboratory equipment |
+|                | name          | text  | name of piece of laboratory equipment |
+|                |               |       |         |
+| person         | ident         | text  | unique identifier for member of staff |
+|                | family        | text  | family name of staff member |
+|                | personal      | text  | personal name of staff member |
+|                | supervisor_id | text* | foreign key reference to person's supervisor |
+|                |               |       |         |
+| rating         | person_id     | text  | foreign key reference to person |
+|                | machine_id    | text  | foreign key reference to machine |
+|                | certified     | bool  | whether person is certified to use machine |
+|                |               |       |         |
+| assay          | ident         | text  | unique identifier for soil assay |
+|                | lat           | float | foreign key reference to grid cell |
+|                | lon           | float | foreign key reference to grid cell |
+|                | person_id     | text  | foreign key reference to person who did assay |
+|                | machine_id    | text  | foreign key reference to machine used to do assay |
+|                | performed     | date  | date that assay was done |
+|                |               |       |         |
+| assay_readings | assay_id      | text  | foreign key reference to assay |
+|                | reading_id    | int   | serial number within assay |
+|                | contents      | text  | "C" or "T" showing control or treatment |
+|                | reading       | float | pollution measurement |
+|                |               |       |         |
+| species        | reference     | text  | reference genome |
+|                | susc_locus    | int   | location of susceptible locus within genome |
+|                | susc_base     | text  | base that causes significant mutation at that locus |
+|                |               |       |         |
+| species_loci   | ident         | int   | unique locus serial number |
+|                | locus         | int   | locus where mutation might occur |
+|                |               |       |         |
+| specimen       | ident         | text  | unique identifier for specimen |
+|                | lat           | float | foreign key reference to grid cell |
+|                | lon           | float | foreign key reference to grid cell |
+|                | genome        | text  | specimen genome |
+|                | mass          | float | specimen mass (g) |
+|                | diameter      | float | specimen diameter (mm) |
+|                | collected     | date  | when specimen was collected |
+
 ## Colophon
 
 `snailz` was inspired by the [Palmer Penguins][penguins] dataset

@@ -32,8 +32,8 @@ def test_assay_assay_readings_long_format():
     a = Assay(contents="CT", readings=[1.1, 2.2])
     rows = Assay._assay_readings([a])
     assert rows == [
-        {"assay_id": a.ident, "contents": "C", "reading": 1.1},
-        {"assay_id": a.ident, "contents": "T", "reading": 2.2},
+        {"assay_id": a.ident, "reading_id": 1, "contents": "C", "reading": 1.1},
+        {"assay_id": a.ident, "reading_id": 2, "contents": "T", "reading": 2.2},
     ]
 
 
@@ -69,14 +69,15 @@ def test_assay_persist_to_csv(tmp_path):
 def test_assay_persist_to_db():
     db = Database(memory=True)
     params = Parameters(num_assays=2)
-    grid = Grid(size=1, spacing=1.0, params=params)
+    grids = [Grid(size=1, spacing=1.0, params=params)]
     persons = [Person(family="A", personal="B")]
     machines = [Machine(name="M1")]
-    rating = Rating(
+    ratings = [Rating(
         person_id=persons[0].ident, machine_id=machines[0].ident, certified=True
-    )
-    assays = Assay.make(params, [grid], [rating])
+    )]
+    assays = Assay.make(params, grids, ratings)
 
+    Grid.save_db(db, grids)
     Person.save_db(db, persons)
     Machine.save_db(db, machines)
     Assay.save_db(db, assays)

@@ -836,6 +836,312 @@ options:
 </code></pre>
 <h2 id="schema">Schema</h2>
 <p><img src="https://raw.githubusercontent.com/gvwilson/snailz/refs/heads/main/pages/img/schema.svg" alt="snailz schema"></p>
+<table>
+<thead>
+<tr>
+<th>table</th>
+<th>field</th>
+<th>type</th>
+<th>purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>grid</td>
+<td>ident</td>
+<td>text</td>
+<td>unique identifier for each survey grid</td>
+</tr>
+<tr>
+<td></td>
+<td>size</td>
+<td>int</td>
+<td>height and width of survey grid in cells</td>
+</tr>
+<tr>
+<td></td>
+<td>spacing</td>
+<td>float</td>
+<td>size of survey grid cell (meters)</td>
+</tr>
+<tr>
+<td></td>
+<td>lat0</td>
+<td>float</td>
+<td>southernmost latitude of grid (fractional degrees)</td>
+</tr>
+<tr>
+<td></td>
+<td>lon0</td>
+<td>float</td>
+<td>westernmost longitude of grid (fractional degrees)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>grid_cells</td>
+<td>grid_id</td>
+<td>text</td>
+<td>foreign key reference to grid</td>
+</tr>
+<tr>
+<td></td>
+<td>lat</td>
+<td>float</td>
+<td>foreign key reference to grid cell</td>
+</tr>
+<tr>
+<td></td>
+<td>lon</td>
+<td>float</td>
+<td>foreign key reference to grid cell</td>
+</tr>
+<tr>
+<td></td>
+<td>value</td>
+<td>float</td>
+<td>pollution measurement in that grid cell</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>machine</td>
+<td>ident</td>
+<td>text</td>
+<td>unique identifier for each piece of laboratory equipment</td>
+</tr>
+<tr>
+<td></td>
+<td>name</td>
+<td>text</td>
+<td>name of piece of laboratory equipment</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>person</td>
+<td>ident</td>
+<td>text</td>
+<td>unique identifier for member of staff</td>
+</tr>
+<tr>
+<td></td>
+<td>family</td>
+<td>text</td>
+<td>family name of staff member</td>
+</tr>
+<tr>
+<td></td>
+<td>personal</td>
+<td>text</td>
+<td>personal name of staff member</td>
+</tr>
+<tr>
+<td></td>
+<td>supervisor_id</td>
+<td>text*</td>
+<td>foreign key reference to person's supervisor</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>rating</td>
+<td>person_id</td>
+<td>text</td>
+<td>foreign key reference to person</td>
+</tr>
+<tr>
+<td></td>
+<td>machine_id</td>
+<td>text</td>
+<td>foreign key reference to machine</td>
+</tr>
+<tr>
+<td></td>
+<td>certified</td>
+<td>bool</td>
+<td>whether person is certified to use machine</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>assay</td>
+<td>ident</td>
+<td>text</td>
+<td>unique identifier for soil assay</td>
+</tr>
+<tr>
+<td></td>
+<td>lat</td>
+<td>float</td>
+<td>foreign key reference to grid cell</td>
+</tr>
+<tr>
+<td></td>
+<td>lon</td>
+<td>float</td>
+<td>foreign key reference to grid cell</td>
+</tr>
+<tr>
+<td></td>
+<td>person_id</td>
+<td>text</td>
+<td>foreign key reference to person who did assay</td>
+</tr>
+<tr>
+<td></td>
+<td>machine_id</td>
+<td>text</td>
+<td>foreign key reference to machine used to do assay</td>
+</tr>
+<tr>
+<td></td>
+<td>performed</td>
+<td>date</td>
+<td>date that assay was done</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>assay_readings</td>
+<td>assay_id</td>
+<td>text</td>
+<td>foreign key reference to assay</td>
+</tr>
+<tr>
+<td></td>
+<td>reading_id</td>
+<td>int</td>
+<td>serial number within assay</td>
+</tr>
+<tr>
+<td></td>
+<td>contents</td>
+<td>text</td>
+<td>"C" or "T" showing control or treatment</td>
+</tr>
+<tr>
+<td></td>
+<td>reading</td>
+<td>float</td>
+<td>pollution measurement</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>species</td>
+<td>reference</td>
+<td>text</td>
+<td>reference genome</td>
+</tr>
+<tr>
+<td></td>
+<td>susc_locus</td>
+<td>int</td>
+<td>location of susceptible locus within genome</td>
+</tr>
+<tr>
+<td></td>
+<td>susc_base</td>
+<td>text</td>
+<td>base that causes significant mutation at that locus</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>species_loci</td>
+<td>ident</td>
+<td>int</td>
+<td>unique locus serial number</td>
+</tr>
+<tr>
+<td></td>
+<td>locus</td>
+<td>int</td>
+<td>locus where mutation might occur</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>specimen</td>
+<td>ident</td>
+<td>text</td>
+<td>unique identifier for specimen</td>
+</tr>
+<tr>
+<td></td>
+<td>lat</td>
+<td>float</td>
+<td>foreign key reference to grid cell</td>
+</tr>
+<tr>
+<td></td>
+<td>lon</td>
+<td>float</td>
+<td>foreign key reference to grid cell</td>
+</tr>
+<tr>
+<td></td>
+<td>genome</td>
+<td>text</td>
+<td>specimen genome</td>
+</tr>
+<tr>
+<td></td>
+<td>mass</td>
+<td>float</td>
+<td>specimen mass (g)</td>
+</tr>
+<tr>
+<td></td>
+<td>diameter</td>
+<td>float</td>
+<td>specimen diameter (mm)</td>
+</tr>
+<tr>
+<td></td>
+<td>collected</td>
+<td>date</td>
+<td>when specimen was collected</td>
+</tr>
+</tbody>
+</table>
 <h2 id="colophon">Colophon</h2>
 <p><code>snailz</code> was inspired by the <a href="https://allisonhorst.github.io/palmerpenguins/">Palmer Penguins</a> dataset
 and by conversations with <a href="https://rohanalexander.com/">Rohan Alexander</a>

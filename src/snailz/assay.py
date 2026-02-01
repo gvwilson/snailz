@@ -8,7 +8,7 @@ from sqlite_utils import Database
 from typing import ClassVar, Self
 
 from ._base_mixin import BaseMixin
-from ._utils import IdGeneratorType, id_generator, random_date
+from ._utils import ForeignKeysType, IdGeneratorType, id_generator, random_date
 from .grid import Grid
 from .parameters import Parameters
 from .rating import Rating
@@ -34,6 +34,12 @@ class Assay(BaseMixin):
     """
 
     primary_key: ClassVar[str] = "ident"
+    foreign_keys: ClassVar[ForeignKeysType] = [
+        ("lat", "grid_cells", "lat"),
+        ("lon", "grid_cells", "lon"),
+        ("person_id", "person", "ident"),
+        ("machine_id", "machine", "ident"),
+    ]
     pivot_keys: ClassVar[set[str]] = {"contents", "readings"}
     _next_id: ClassVar[IdGeneratorType] = id_generator("A", 4)
 
@@ -128,11 +134,8 @@ class Assay(BaseMixin):
         table = db["assay_readings"]
         table.insert_all(  # type: ignore[possibly-missing-attribute]
             cls._assay_readings(objects),
-            pk=("ident"),
-            foreign_keys=[
-                ("person_id", "person", "ident"),
-                ("machine_id", "machine", "ident"),
-            ],
+            pk=("assay_id", "reading_id"),
+            foreign_keys=[("assay_id", "assay", "ident")],
         )
 
     @classmethod
@@ -154,9 +157,9 @@ class Assay(BaseMixin):
         """
 
         return [
-            {"assay_id": a.ident, "contents": c, "reading": r}
+            {"assay_id": a.ident, "reading_id": i + 1, "contents": c, "reading": r}
             for a in assays
-            for c, r in zip(a.contents, a.readings)
+            for i, (c, r) in enumerate(zip(a.contents, a.readings))
         ]
 
     @classmethod
