@@ -35,9 +35,10 @@ class Specimen(BaseMixin):
         genome: specimen genome
         mass: specimen mass (g)
         diameter: specimen diameter (mm)
-        collected: date specimen was collected
+        collected: date specimen was collected (possibly missing)
     """
 
+    nullable_keys: ClassVar[set[str]] = {"collected"}
     _next_id: ClassVar[IdGeneratorType] = id_generator("S", 4)
 
     ident: str = ""
@@ -46,7 +47,7 @@ class Specimen(BaseMixin):
     genome: str = ""
     mass: float = 0.0
     diameter: float = 0.0
-    collected: date = date.min
+    collected: date | None = None
 
     def __post_init__(self):
         """
@@ -62,7 +63,8 @@ class Specimen(BaseMixin):
         validate(self.mass > 0, "specimen must have positive mass")
         validate(self.diameter > 0, "specimen must have positive diameter")
         validate(
-            self.collected > date.min, "specimen must have sensible collection date"
+            (self.collected is None) or (self.collected > date.min),
+            "specimen must have sensible collection date"
         )
 
         self.ident = next(self._next_id)
@@ -94,7 +96,7 @@ class Specimen(BaseMixin):
             genome = species.random_genome(params)
             mass = cls.random_mass(params, g[x, y])
             diameter = cls.random_diameter(params, mass)
-            collected = random_date(params.start_date, params.end_date)
+            collected = random_date(params.start_date, params.end_date, params.p_date_missing)
             result.append(
                 Specimen(
                     lat=lat,

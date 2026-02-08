@@ -8,7 +8,7 @@ from sqlite_utils import Database
 from typing import ClassVar, Self
 
 from ._base_mixin import BaseMixin
-from ._utils import ForeignKeysType, IdGeneratorType, id_generator, random_date
+from ._utils import ForeignKeysType, IdGeneratorType, id_generator, random_date, validate
 from .grid import Grid
 from .parameters import Parameters
 from .rating import Rating
@@ -28,7 +28,7 @@ class Assay(BaseMixin):
         lon: longitude where assay performed (from grid cell)
         person_id: who performed assay (from persons)
         machine_id: machine used for assay (from machines)
-        performed: date assay was performed
+        performed: date assay was performed (possibly missing)
         contents: 'C' for control or 'T' for treatment
         readings: readings for contents
     """
@@ -40,6 +40,7 @@ class Assay(BaseMixin):
         ("person_id", "person", "ident"),
         ("machine_id", "machine", "ident"),
     ]
+    nullable_keys: ClassVar[set[str]] = {"performed"}
     pivot_keys: ClassVar[set[str]] = {"contents", "readings"}
     _next_id: ClassVar[IdGeneratorType] = id_generator("A", 4)
 
@@ -48,7 +49,7 @@ class Assay(BaseMixin):
     lon: float = 0.0
     person_id: str = ""
     machine_id: str = ""
-    performed: date = date.min
+    performed: date | None = None
     contents: str = ""
     readings: list[float] = field(default_factory=list)
 
@@ -56,6 +57,10 @@ class Assay(BaseMixin):
         """
         Generate unique identifier.
         """
+        validate(
+            (self.performed is None) or (self.performed > date.min),
+            "assay must have sensible date"
+        )
 
         self.ident = next(self._next_id)
 
@@ -81,7 +86,7 @@ class Assay(BaseMixin):
             x, y = random.randint(0, g.size - 1), random.randint(0, g.size - 1)
             lat, lon = g.lat_lon(x, y)
             rat = random.choice(ratings)
-            performed = random_date(params.start_date, params.end_date)
+            performed = random_date(params.start_date, params.end_date, params.p_date_missing)
             contents = cls._random_contents(params)
             readings = cls._random_readings(params, contents, g[x, y], rat.certified)
             result.append(

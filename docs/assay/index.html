@@ -1024,11 +1024,11 @@
           <tr class="doc-section-item">
             <td><code><span title="snailz.assay.Assay.performed">performed</span></code></td>
             <td>
-                  <code><span title="datetime.date">date</span></code>
+                  <code><span title="datetime.date">date</span> | None</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>date assay was performed</p>
+                <p>date assay was performed (possibly missing)</p>
               </div>
             </td>
           </tr>
@@ -1251,7 +1251,12 @@
 <span class="normal">202</span>
 <span class="normal">203</span>
 <span class="normal">204</span>
-<span class="normal">205</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Assay</span><span class="p">(</span><span class="n">BaseMixin</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A single pollution assay.</span>
@@ -1262,7 +1267,7 @@
 <span class="sd">        lon: longitude where assay performed (from grid cell)</span>
 <span class="sd">        person_id: who performed assay (from persons)</span>
 <span class="sd">        machine_id: machine used for assay (from machines)</span>
-<span class="sd">        performed: date assay was performed</span>
+<span class="sd">        performed: date assay was performed (possibly missing)</span>
 <span class="sd">        contents: &#39;C&#39; for control or &#39;T&#39; for treatment</span>
 <span class="sd">        readings: readings for contents</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1274,6 +1279,7 @@
         <span class="p">(</span><span class="s2">&quot;person_id&quot;</span><span class="p">,</span> <span class="s2">&quot;person&quot;</span><span class="p">,</span> <span class="s2">&quot;ident&quot;</span><span class="p">),</span>
         <span class="p">(</span><span class="s2">&quot;machine_id&quot;</span><span class="p">,</span> <span class="s2">&quot;machine&quot;</span><span class="p">,</span> <span class="s2">&quot;ident&quot;</span><span class="p">),</span>
     <span class="p">]</span>
+    <span class="n">nullable_keys</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;performed&quot;</span><span class="p">}</span>
     <span class="n">pivot_keys</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;contents&quot;</span><span class="p">,</span> <span class="s2">&quot;readings&quot;</span><span class="p">}</span>
     <span class="n">_next_id</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">IdGeneratorType</span><span class="p">]</span> <span class="o">=</span> <span class="n">id_generator</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 
@@ -1282,7 +1288,7 @@
     <span class="n">lon</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">person_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="n">machine_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="n">performed</span><span class="p">:</span> <span class="n">date</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">min</span>
+    <span class="n">performed</span><span class="p">:</span> <span class="n">date</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">contents</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="n">readings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
 
@@ -1290,6 +1296,10 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate unique identifier.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">validate</span><span class="p">(</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">performed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">performed</span> <span class="o">&gt;</span> <span class="n">date</span><span class="o">.</span><span class="n">min</span><span class="p">),</span>
+            <span class="s2">&quot;assay must have sensible date&quot;</span>
+        <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">ident</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_next_id</span><span class="p">)</span>
 
@@ -1315,7 +1325,7 @@
             <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">g</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">g</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
             <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">lat_lon</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
             <span class="n">rat</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">ratings</span><span class="p">)</span>
-            <span class="n">performed</span> <span class="o">=</span> <span class="n">random_date</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">end_date</span><span class="p">)</span>
+            <span class="n">performed</span> <span class="o">=</span> <span class="n">random_date</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">end_date</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">p_date_missing</span><span class="p">)</span>
             <span class="n">contents</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_random_contents</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
             <span class="n">readings</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_random_readings</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">contents</span><span class="p">,</span> <span class="n">g</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="n">rat</span><span class="o">.</span><span class="n">certified</span><span class="p">)</span>
             <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -1469,15 +1479,23 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/snailz/assay.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">55</span>
-<span class="normal">56</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">56</span>
 <span class="normal">57</span>
 <span class="normal">58</span>
 <span class="normal">59</span>
-<span class="normal">60</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generate unique identifier.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">validate</span><span class="p">(</span>
+        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">performed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">performed</span> <span class="o">&gt;</span> <span class="n">date</span><span class="o">.</span><span class="n">min</span><span class="p">),</span>
+        <span class="s2">&quot;assay must have sensible date&quot;</span>
+    <span class="p">)</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">ident</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_next_id</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -1612,43 +1630,43 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/snailz/assay.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span>
-<span class="normal">95</span>
-<span class="normal">96</span>
-<span class="normal">97</span>
-<span class="normal">98</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span>
     <span class="bp">cls</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Parameters</span><span class="p">,</span> <span class="n">grids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Grid</span><span class="p">],</span> <span class="n">ratings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Rating</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Assay&quot;</span><span class="p">]:</span>
@@ -1670,7 +1688,7 @@
         <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">g</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">g</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">lat_lon</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="n">rat</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">ratings</span><span class="p">)</span>
-        <span class="n">performed</span> <span class="o">=</span> <span class="n">random_date</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">end_date</span><span class="p">)</span>
+        <span class="n">performed</span> <span class="o">=</span> <span class="n">random_date</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">end_date</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">p_date_missing</span><span class="p">)</span>
         <span class="n">contents</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_random_contents</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
         <span class="n">readings</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_random_readings</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">contents</span><span class="p">,</span> <span class="n">g</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="n">rat</span><span class="o">.</span><span class="n">certified</span><span class="p">)</span>
         <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -1760,12 +1778,7 @@ in a separate file.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/snailz/assay.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">105</span>
 <span class="normal">106</span>
 <span class="normal">107</span>
 <span class="normal">108</span>
@@ -1778,7 +1791,12 @@ in a separate file.</p>
 <span class="normal">115</span>
 <span class="normal">116</span>
 <span class="normal">117</span>
-<span class="normal">118</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">save_csv</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">outdir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">objects</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Save assays as CSV. Scalar properties of all assays are saved in</span>
@@ -1872,12 +1890,7 @@ and saved in a separate table.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/snailz/assay.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span>
-<span class="normal">124</span>
-<span class="normal">125</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">125</span>
 <span class="normal">126</span>
 <span class="normal">127</span>
 <span class="normal">128</span>
@@ -1891,7 +1904,12 @@ and saved in a separate table.</p>
 <span class="normal">136</span>
 <span class="normal">137</span>
 <span class="normal">138</span>
-<span class="normal">139</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">save_db</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Database</span><span class="p">,</span> <span class="n">objects</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Save assays to database. Scalar properties of all assays are</span>
@@ -1937,11 +1955,11 @@ and saved in a separate table.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/snailz/assay.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">141</span>
-<span class="normal">142</span>
-<span class="normal">143</span>
-<span class="normal">144</span>
-<span class="normal">145</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">table_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Database table name.&quot;&quot;&quot;</span>
 

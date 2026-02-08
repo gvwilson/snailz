@@ -9,7 +9,7 @@ from snailz import Assay, Grid, Machine, Parameters, Person, Rating
 
 
 def test_assay_id_set_correctly():
-    ident = Assay().ident
+    ident = Assay(performed=None).ident
     assert ident.startswith("A")
     assert len(ident) == 5
 

@@ -866,6 +866,8 @@ options:
 for a description of data generation parameters.</p>
 <h2 id="schema">Schema</h2>
 <p><img src="https://raw.githubusercontent.com/gvwilson/snailz/refs/heads/main/pages/img/schema.svg" alt="snailz schema"></p>
+<p>An asterisk beside the name of a field indicates that the value may be missing
+(i.e., the field may be <code>NULL</code> in the final database).</p>
 <table>
 <thead>
 <tr>
@@ -1046,7 +1048,7 @@ for a description of data generation parameters.</p>
 </tr>
 <tr>
 <td></td>
-<td>performed</td>
+<td>performed*</td>
 <td>date</td>
 <td>date that assay was done</td>
 </tr>
@@ -1166,7 +1168,7 @@ for a description of data generation parameters.</p>
 </tr>
 <tr>
 <td></td>
-<td>collected</td>
+<td>collected*</td>
 <td>date</td>
 <td>when specimen was collected</td>
 </tr>

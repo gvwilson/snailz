@@ -103,6 +103,9 @@ class Parameters:
     end_date: date = date(2026, 5, 31)
     """End date of survey."""
 
+    p_date_missing: float = 0.1
+    """Probability that specimen collection date is missing."""
+
     def __post_init__(self):
         """Validate fields."""
 
@@ -127,6 +130,9 @@ class Parameters:
         validate(self.num_specimens > 0, "require positive number of specimens")
         validate(
             self.start_date <= self.end_date, "require non-negative survey date range"
+        )
+        validate(
+            0.0 <= self.p_date_missing <= 1.0, "require missing date probability in [0..1]"
         )
 
     def as_json(self, indent: int = JSON_INDENT) -> str:

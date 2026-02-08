@@ -47,6 +47,9 @@ for a description of data generation parameters.
 
 <img src="https://raw.githubusercontent.com/gvwilson/snailz/refs/heads/main/pages/img/schema.svg" alt="snailz schema">
 
+An asterisk beside the name of a field indicates that the value may be missing
+(i.e., the field may be `NULL` in the final database).
+
 | table          | field         | type  | purpose |
 | -------------- | ------------- | ----- | ------- |
 | grid           | ident         | text  | unique identifier for each survey grid |
@@ -77,7 +80,7 @@ for a description of data generation parameters.
 |                | lon           | float | foreign key reference to grid cell |
 |                | person_id     | text  | foreign key reference to person who did assay |
 |                | machine_id    | text  | foreign key reference to machine used to do assay |
-|                | performed     | date  | date that assay was done |
+|                | performed*    | date  | date that assay was done |
 |                |               |       |         |
 | assay_readings | assay_id      | text  | foreign key reference to assay |
 |                | reading_id    | int   | serial number within assay |
@@ -97,7 +100,7 @@ for a description of data generation parameters.
 |                | genome        | text  | specimen genome |
 |                | mass          | float | specimen mass (g) |
 |                | diameter      | float | specimen diameter (mm) |
-|                | collected     | date  | when specimen was collected |
+|                | collected*    | date  | when specimen was collected |
 
 ## Colophon
 

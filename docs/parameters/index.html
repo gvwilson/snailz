@@ -733,6 +733,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#snailz.parameters.Parameters.p_date_missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        p_date_missing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#snailz.parameters.Parameters.__post_init__" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1409,6 +1420,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#snailz.parameters.Parameters.p_date_missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        p_date_missing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#snailz.parameters.Parameters.__post_init__" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1638,7 +1660,13 @@
 <span class="normal">139</span>
 <span class="normal">140</span>
 <span class="normal">141</span>
-<span class="normal">142</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Parameters</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Store all data generation parameters.</span>
@@ -1728,6 +1756,9 @@
     <span class="n">end_date</span><span class="p">:</span> <span class="n">date</span> <span class="o">=</span> <span class="n">date</span><span class="p">(</span><span class="mi">2026</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">31</span><span class="p">)</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;End date of survey.&quot;&quot;&quot;</span>
 
+    <span class="n">p_date_missing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Probability that specimen collection date is missing.&quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate fields.&quot;&quot;&quot;</span>
 
@@ -1752,6 +1783,9 @@
         <span class="n">validate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_specimens</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;require positive number of specimens&quot;</span><span class="p">)</span>
         <span class="n">validate</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">start_date</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_date</span><span class="p">,</span> <span class="s2">&quot;require non-negative survey date range&quot;</span>
+        <span class="p">)</span>
+        <span class="n">validate</span><span class="p">(</span>
+            <span class="mf">0.0</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_date_missing</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">&quot;require missing date probability in [0..1]&quot;</span>
         <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">as_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">JSON_INDENT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -2422,6 +2456,29 @@
 
 </div>
 
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="snailz.parameters.Parameters.p_date_missing" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">p_date_missing</span> <span class="o">=</span> <span class="mf">0.1</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Probability that specimen collection date is missing.</p>
+
+    </div>
+
+</div>
+
 
 
 
@@ -2441,10 +2498,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/snailz/parameters.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">109</span>
 <span class="normal">110</span>
 <span class="normal">111</span>
 <span class="normal">112</span>
@@ -2465,7 +2519,13 @@
 <span class="normal">127</span>
 <span class="normal">128</span>
 <span class="normal">129</span>
-<span class="normal">130</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate fields.&quot;&quot;&quot;</span>
 
     <span class="n">validate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_grids</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;require positive number of grids&quot;</span><span class="p">)</span>
@@ -2489,6 +2549,9 @@
     <span class="n">validate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_specimens</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;require positive number of specimens&quot;</span><span class="p">)</span>
     <span class="n">validate</span><span class="p">(</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">start_date</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_date</span><span class="p">,</span> <span class="s2">&quot;require non-negative survey date range&quot;</span>
+    <span class="p">)</span>
+    <span class="n">validate</span><span class="p">(</span>
+        <span class="mf">0.0</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_date_missing</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">&quot;require missing date probability in [0..1]&quot;</span>
     <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2566,17 +2629,17 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/snailz/parameters.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">132</span>
-<span class="normal">133</span>
-<span class="normal">134</span>
-<span class="normal">135</span>
-<span class="normal">136</span>
-<span class="normal">137</span>
-<span class="normal">138</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">138</span>
 <span class="normal">139</span>
 <span class="normal">140</span>
 <span class="normal">141</span>
-<span class="normal">142</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">as_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">JSON_INDENT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">as_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">JSON_INDENT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert parameters to a JSON string.</span>
 

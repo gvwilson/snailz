@@ -80,18 +80,22 @@ def lat_lon(
     return round(lat, LAT_LON_PRECISION), round(lon, LAT_LON_PRECISION)
 
 
-def random_date(min_date: date, max_date: date) -> date:
+def random_date(min_date: date, max_date: date, p_date_missing: float = 0.0) -> date | None:
     """
-    Select random date in range (inclusive).
+    Select random date in range (inclusive) with a defined
+    probability of the date being `None` (missing).
 
     Args:
         min_date: Start of range.
         max_date: End of range.
+        p_date_missing: Probability that date is missing.
 
     Returns:
         Random date in range.
     """
 
+    if (p_date_missing > 0.0) and (random.random() < p_date_missing):
+        return None
     days = (max_date - min_date).days
     return min_date + timedelta(days=random.randint(0, days))
 

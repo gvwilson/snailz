@@ -1457,14 +1457,15 @@
 
 
 <h2 id="snailz._utils.random_date" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">random_date</span><span class="p">(</span><span class="n">min_date</span><span class="p">,</span> <span class="n">max_date</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">random_date</span><span class="p">(</span><span class="n">min_date</span><span class="p">,</span> <span class="n">max_date</span><span class="p">,</span> <span class="n">p_date_missing</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span></code>
 
 </h2>
 
 
     <div class="doc doc-contents ">
 
-        <p>Select random date in range (inclusive).</p>
+        <p>Select random date in range (inclusive) with a defined
+probability of the date being <code>None</code> (missing).</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -1510,6 +1511,22 @@
                 <em>required</em>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>p_date_missing</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Probability that date is missing.</p>
+              </div>
+            </td>
+            <td>
+                  <code>0.0</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -1525,7 +1542,7 @@
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="datetime.date">date</span></code>
+                  <code><span title="datetime.date">date</span> | None</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1539,31 +1556,39 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/snailz/_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span>
-<span class="normal">95</span>
-<span class="normal">96</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">random_date</span><span class="p">(</span><span class="n">min_date</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span> <span class="n">max_date</span><span class="p">:</span> <span class="n">date</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">date</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">random_date</span><span class="p">(</span><span class="n">min_date</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span> <span class="n">max_date</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span> <span class="n">p_date_missing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">date</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Select random date in range (inclusive).</span>
+<span class="sd">    Select random date in range (inclusive) with a defined</span>
+<span class="sd">    probability of the date being `None` (missing).</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        min_date: Start of range.</span>
 <span class="sd">        max_date: End of range.</span>
+<span class="sd">        p_date_missing: Probability that date is missing.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Random date in range.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="k">if</span> <span class="p">(</span><span class="n">p_date_missing</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">p_date_missing</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
     <span class="n">days</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_date</span> <span class="o">-</span> <span class="n">min_date</span><span class="p">)</span><span class="o">.</span><span class="n">days</span>
     <span class="k">return</span> <span class="n">min_date</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">days</span><span class="p">))</span>
 </code></pre></div></td></tr></table></div>
@@ -1658,11 +1683,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/snailz/_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">103</span>
 <span class="normal">104</span>
 <span class="normal">105</span>
 <span class="normal">106</span>
@@ -1671,7 +1692,11 @@
 <span class="normal">109</span>
 <span class="normal">110</span>
 <span class="normal">111</span>
-<span class="normal">112</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="n">cond</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="n">cond</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Validate a condition.</span>
 
@@ -1793,11 +1818,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/snailz/_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">119</span>
 <span class="normal">120</span>
 <span class="normal">121</span>
 <span class="normal">122</span>
@@ -1807,7 +1828,11 @@
 <span class="normal">126</span>
 <span class="normal">127</span>
 <span class="normal">128</span>
-<span class="normal">129</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate_lat_lon</span><span class="p">(</span><span class="n">caller</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lon</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate_lat_lon</span><span class="p">(</span><span class="n">caller</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lon</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Validate latitude and longitude.</span>
 
