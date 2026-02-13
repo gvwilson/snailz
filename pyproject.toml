@@ -28,12 +28,13 @@ snailz = "snailz.main:main"
 dev = [
     "build>=1.4.0",
     "coverage>=7.13.1",
+    "marimo>=0.19.11",
     "mkdocs>=1.6.1",
     "mkdocs-material>=9.7.1",
     "mkdocstrings[python]>=1.0.0",
     "pytest>=9.0.2",
     "ruff>=0.14.13",
-    "taskipy>=1.14.1"
+    "taskipy>=1.14.1",
 ]
 
 [build-system]
