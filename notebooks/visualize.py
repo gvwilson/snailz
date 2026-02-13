@@ -8,7 +8,7 @@
 
 import marimo
 
-__generated_with = "0.13.0"
+__generated_with = "0.19.11"
 app = marimo.App(width="medium")
 
 
@@ -19,6 +19,7 @@ def _():
     from datetime import date
     from faker.config import AVAILABLE_LOCALES
     from snailz import in_memory, Parameters
+
     return AVAILABLE_LOCALES, Parameters, date, in_memory, io, mo
 
 
@@ -37,7 +38,15 @@ def _(mo):
     grid_std_dev = mo.ui.number(value=0.5, start=0.0, step=0.1, label="Grid std dev")
     lat0 = mo.ui.number(value=48.8666632, start=-90.0, stop=90.0, step=0.0001, label="Latitude")
     lon0 = mo.ui.number(value=-124.1999992, start=-180.0, stop=180.0, step=0.0001, label="Longitude")
-    return grid_separation, grid_size, grid_spacing, grid_std_dev, lat0, lon0, num_grids
+    return (
+        grid_separation,
+        grid_size,
+        grid_spacing,
+        grid_std_dev,
+        lat0,
+        lon0,
+        num_grids,
+    )
 
 
 @app.cell
@@ -75,12 +84,21 @@ def _(mo):
 @app.cell
 def _(mo):
     num_specimens = mo.ui.number(value=1, start=1, label="Number of specimens")
+    p_variety_missing = mo.ui.slider(value=0.1, start=0.0, stop=1.0, step=0.05, label="P(variety missing)")
     mass_beta_0 = mo.ui.number(value=3.0, step=0.1, label="Mass beta_0")
     mass_beta_1 = mo.ui.number(value=0.5, step=0.1, label="Mass beta_1")
     mass_sigma = mo.ui.number(value=0.3, start=0.0, step=0.1, label="Mass sigma")
     diam_ratio = mo.ui.number(value=0.7, start=0.0, step=0.1, label="Diameter ratio")
     diam_sigma = mo.ui.number(value=0.7, start=0.0, step=0.1, label="Diameter sigma")
-    return diam_ratio, diam_sigma, mass_beta_0, mass_beta_1, mass_sigma, num_specimens
+    return (
+        diam_ratio,
+        diam_sigma,
+        mass_beta_0,
+        mass_beta_1,
+        mass_sigma,
+        num_specimens,
+        p_variety_missing,
+    )
 
 
 @app.cell
@@ -98,6 +116,7 @@ def _(
     diam_ratio,
     diam_sigma,
     end_date,
+    genome_length,
     grid_separation,
     grid_size,
     grid_spacing,
@@ -115,10 +134,10 @@ def _(
     num_machines,
     num_persons,
     num_specimens,
-    genome_length,
     p_certified,
     p_date_missing,
     p_mutation,
+    p_variety_missing,
     ratings_frac,
     seed,
     start_date,
@@ -147,7 +166,8 @@ def _(
     ])
     _specimens = mo.vstack([
         mo.md("### Specimens"),
-        mo.hstack([num_specimens, mass_beta_0, mass_beta_1], justify="start"),
+        mo.hstack([num_specimens, p_variety_missing], justify="start"),
+        mo.hstack([mass_beta_0, mass_beta_1], justify="start"),
         mo.hstack([mass_sigma, diam_ratio, diam_sigma], justify="start"),
     ])
     _dates = mo.vstack([
@@ -178,6 +198,7 @@ def _(
     diam_ratio,
     diam_sigma,
     end_date,
+    genome_length,
     grid_separation,
     grid_size,
     grid_spacing,
@@ -196,10 +217,10 @@ def _(
     num_machines,
     num_persons,
     num_specimens,
-    genome_length,
     p_certified,
     p_date_missing,
     p_mutation,
+    p_variety_missing,
     ratings_frac,
     run_button,
     seed,
@@ -229,6 +250,7 @@ def _(
         num_loci=num_loci.value,
         p_mutation=p_mutation.value,
         num_specimens=num_specimens.value,
+        p_variety_missing=p_variety_missing.value,
         mass_beta_0=mass_beta_0.value,
         mass_beta_1=mass_beta_1.value,
         mass_sigma=mass_sigma.value,

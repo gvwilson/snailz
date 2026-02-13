@@ -22,6 +22,9 @@ from .species import Species
 # Mass and diameter precision.
 SPECIMEN_PRECISION = 1
 
+# Possible specimen varieties.
+VARIETIES = ["banded", "whorled", "spotted", "plain"]
+
 
 @dataclass
 class Specimen(BaseMixin):
@@ -36,9 +39,10 @@ class Specimen(BaseMixin):
         mass: specimen mass (g)
         diameter: specimen diameter (mm)
         collected: date specimen was collected (possibly missing)
+        variety: shell variety (possibly missing)
     """
 
-    nullable_keys: ClassVar[set[str]] = {"collected"}
+    nullable_keys: ClassVar[set[str]] = {"collected", "variety"}
     _next_id: ClassVar[IdGeneratorType] = id_generator("S", 4)
 
     ident: str = ""
@@ -48,6 +52,7 @@ class Specimen(BaseMixin):
     mass: float = 0.0
     diameter: float = 0.0
     collected: date | None = None
+    variety: str | None = None
 
     def __post_init__(self):
         """
@@ -65,6 +70,10 @@ class Specimen(BaseMixin):
         validate(
             (self.collected is None) or (self.collected > date.min),
             "specimen must have sensible collection date"
+        )
+        validate(
+            (self.variety is None) or (self.variety in VARIETIES),
+            f"specimen variety must be None or one of {VARIETIES}"
         )
 
         self.ident = next(self._next_id)
@@ -97,6 +106,7 @@ class Specimen(BaseMixin):
             mass = cls.random_mass(params, g[x, y])
             diameter = cls.random_diameter(params, mass)
             collected = random_date(params.start_date, params.end_date, params.p_date_missing)
+            variety = None if (params.p_variety_missing > 0.0 and random.random() < params.p_variety_missing) else random.choice(VARIETIES)
             result.append(
                 Specimen(
                     lat=lat,
@@ -105,6 +115,7 @@ class Specimen(BaseMixin):
                     mass=mass,
                     diameter=diameter,
                     collected=collected,
+                    variety=variety,
                 )
             )
 

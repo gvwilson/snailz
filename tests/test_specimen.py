@@ -5,6 +5,7 @@ import pytest
 from sqlite_utils import Database
 
 from snailz import Grid, Parameters, Specimen
+from snailz.specimen import VARIETIES
 
 
 @pytest.fixture
@@ -72,3 +73,55 @@ def test_specimen_persist_to_db(a_grid):
     Specimen.save_db(db, specimens)
     rows = list(db[Specimen.table_name()].rows)
     assert len(rows) == params.num_specimens
+
+
+def test_specimen_with_valid_variety(seeded_rng):
+    specimen = Specimen(
+        lat=10.0, lon=20.0, genome="ACGT", mass=1.0, diameter=1.0, variety="banded"
+    )
+    assert specimen.variety == "banded"
+
+
+def test_specimen_with_none_variety(seeded_rng):
+    specimen = Specimen(
+        lat=10.0, lon=20.0, genome="ACGT", mass=1.0, diameter=1.0, variety=None
+    )
+    assert specimen.variety is None
+
+
+def test_specimen_rejects_invalid_variety(seeded_rng):
+    with pytest.raises(ValueError):
+        Specimen(
+            lat=10.0, lon=20.0, genome="ACGT", mass=1.0, diameter=1.0, variety="striped"
+        )
+
+
+def test_specimen_make_assigns_valid_varieties(a_grid):
+    species = DummySpecies(genome="ACGT")
+    params = Parameters(num_specimens=50, p_mutation=0.2, p_variety_missing=0.0)
+    specimens = Specimen.make(params, [a_grid], species)
+    assert all(s.variety in VARIETIES for s in specimens)
+
+
+def test_specimen_make_no_missing_variety_when_p_zero(a_grid):
+    species = DummySpecies(genome="ACGT")
+    params = Parameters(num_specimens=50, p_mutation=0.2, p_variety_missing=0.0)
+    specimens = Specimen.make(params, [a_grid], species)
+    assert all(s.variety is not None for s in specimens)
+
+
+def test_specimen_make_all_missing_variety_when_p_one(a_grid):
+    species = DummySpecies(genome="ACGT")
+    params = Parameters(num_specimens=50, p_mutation=0.2, p_variety_missing=1.0)
+    specimens = Specimen.make(params, [a_grid], species)
+    assert all(s.variety is None for s in specimens)
+
+
+def test_specimen_variety_persists_to_db(a_grid):
+    db = Database(memory=True)
+    species = DummySpecies(genome="ACGT")
+    params = Parameters(num_specimens=20, p_mutation=0.2, p_variety_missing=0.0)
+    specimens = Specimen.make(params, [a_grid], species)
+    Specimen.save_db(db, specimens)
+    rows = list(db[Specimen.table_name()].rows)
+    assert all(row["variety"] in VARIETIES for row in rows)

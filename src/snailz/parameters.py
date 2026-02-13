@@ -82,6 +82,9 @@ class Parameters:
     num_specimens: int = 1
     """Number of snail specimens to create."""
 
+    p_variety_missing: float = 0.1
+    """Probability that specimen variety is missing."""
+
     mass_beta_0: float = 3.0
     """Fixed mean for log-normal snail mass generation."""
 
@@ -128,6 +131,9 @@ class Parameters:
             0.0 <= self.p_mutation <= 1.0, "require mutation probability in [0..1]"
         )
         validate(self.num_specimens > 0, "require positive number of specimens")
+        validate(
+            0.0 <= self.p_variety_missing <= 1.0, "require missing variety probability in [0..1]"
+        )
         validate(
             self.start_date <= self.end_date, "require non-negative survey date range"
         )
