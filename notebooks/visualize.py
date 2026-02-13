@@ -14,11 +14,12 @@ app = marimo.App(width="medium")
 
 @app.cell
 def _():
+    import io
     import marimo as mo
     from datetime import date
     from faker.config import AVAILABLE_LOCALES
     from snailz import in_memory, Parameters
-    return AVAILABLE_LOCALES, Parameters, date, in_memory, mo
+    return AVAILABLE_LOCALES, Parameters, date, in_memory, io, mo
 
 
 @app.cell
@@ -246,12 +247,29 @@ def _(
     for _name in table_names:
         count = conn.execute(f"SELECT COUNT(*) FROM [{_name}]").fetchone()[0]
         rows.append({"table": _name, "records": count})
-    return (rows,)
+    return conn, rows, table_names
 
 
 @app.cell
-def _(mo, rows):
-    mo.ui.table(rows, selection=None)
+def _(conn, io, mo, rows, table_names):
+    def _make_table(name):
+        cursor = conn.execute(f"SELECT * FROM [{name}]")
+        cols = [desc[0] for desc in cursor.description]
+        data = cursor.fetchall()
+        table_rows = []
+        for row in data:
+            record = {}
+            for col, val in zip(cols, row):
+                if col == "image" and isinstance(val, bytes):
+                    record[col] = mo.image(io.BytesIO(val), width=150)
+                else:
+                    record[col] = val
+            table_rows.append(record)
+        return mo.ui.table(table_rows, selection=None, page_size=10)
+
+    accordion_items = {"summary": mo.ui.table(rows, selection=None)}
+    accordion_items.update({name: _make_table(name) for name in table_names})
+    mo.accordion(accordion_items, multiple=True)
     return
 
 
