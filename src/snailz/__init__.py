@@ -8,3 +8,4 @@ from .person import Person as Person
 from .rating import Rating as Rating
 from .species import Species as Species
 from .specimen import Specimen as Specimen
+from .main import in_memory as in_memory

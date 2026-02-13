@@ -1,6 +1,7 @@
 """Sampling grids."""
 
 from dataclasses import InitVar, dataclass, field
+import io
 import itertools
 import math
 import numpy as np
@@ -188,6 +189,14 @@ class Grid(BaseMixin):
         """
 
         super().save_db(db, objects)
+
+        grid_table = db["grid"]
+        grid_table.add_column("image", bytes)  # type: ignore[possibly-missing-attribute]
+        scale = max(g.min_max()[1] for g in objects) or 1.0
+        for g in objects:
+            buf = io.BytesIO()
+            g.as_image(scale).save(buf, format="PNG")
+            grid_table.update(g.ident, {"image": buf.getvalue()})  # type: ignore[possibly-missing-attribute]
 
         table = db["grid_cells"]
         table.insert_all(  # type: ignore[possibly-missing-attribute]

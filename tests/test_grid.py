@@ -99,8 +99,9 @@ def test_grid_persist_to_db():
 
     rows = list(db[Grid.table_name()].rows)
     assert set(r["ident"] for r in rows) == set(g.ident for g in grids)
-    field_names = {f.name for f in fields(grids[0])}
+    field_names = {f.name for f in fields(grids[0])} | {"image"}
     assert set(rows[0].keys()).issubset(field_names)
+    assert all(isinstance(r["image"], bytes) for r in rows)
 
 
 def test_grid_to_image(small_grid):

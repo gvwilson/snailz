@@ -8,6 +8,7 @@ import json
 from pathlib import Path
 import pstats
 import random
+import sqlite3
 import sys
 from typing import Any, Type
 
@@ -235,6 +236,28 @@ def _synthesize(params: Parameters) -> dict[Type[BaseMixin], Any]:
         Species: species,
         Specimen: specimens,
     }
+
+
+def in_memory(params: Parameters) -> sqlite3.Connection:
+    """
+    Generate all data and return an in-memory SQLite database connection.
+
+    Args:
+        params: Data synthesis parameters.
+
+    Returns:
+        Connection to in-memory SQLite database holding all generated data.
+    """
+
+    random.seed(params.seed)
+    data = _synthesize(params)
+
+    classes = [Grid, Machine, Person, Rating, Assay, Species, Specimen]
+    db = UnquotedDatabase(memory=True)
+    for cls in classes:
+        cls.save_db(db, data[cls])
+
+    return db.conn
 
 
 if __name__ == "__main__":
