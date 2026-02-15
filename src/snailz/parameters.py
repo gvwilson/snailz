@@ -112,6 +112,11 @@ class Parameters:
     def __post_init__(self):
         """Validate fields."""
 
+        if isinstance(self.start_date, str):
+            self.start_date = date.fromisoformat(self.start_date)
+        if isinstance(self.end_date, str):
+            self.end_date = date.fromisoformat(self.end_date)
+
         validate(self.num_grids > 0, "require positive number of grids")
         validate(self.grid_size > 0, "require positive grid size")
         validate(self.grid_spacing > 0, "require positive grid spacing")
