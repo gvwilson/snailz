@@ -73,6 +73,10 @@ cp README.md pages/index.md &&
 cp LICENSE.md pages/license.md &&
 cp CODE_OF_CONDUCT.md pages/conduct.md &&
 cp CONTRIBUTING.md pages/contributing.md &&
+echo '# Database Schema' > pages/schema.md &&
+echo '~~~sql' >> pages/schema.md &&
+snailz --schema >> pages/schema.md &&
+echo '~~~' >> pages/schema.md &&
 mkdocs build &&
 touch docs/.nojekyll &&
 cp docs-requirements.txt docs/requirements.txt

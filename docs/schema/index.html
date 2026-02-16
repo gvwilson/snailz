@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../schema/">
+        <link rel="prev" href="../utils/">
       
       
-        <link rel="next" href="../conduct/">
+        <link rel="next" href="../license/">
       
       
         
@@ -23,7 +23,7 @@
     
     
       
-        <title>License - Snailz Docs</title>
+        <title>Database Schema - Snailz Docs</title>
       
     
     
@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#license" class="md-skip">
+        <a href="#database-schema" class="md-skip">
           Skip to content
         </a>
       
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              License
+              Database Schema
             
           </span>
         </div>
@@ -182,18 +182,20 @@
       
   
   
+    
   
   
+  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -214,7 +216,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -509,10 +511,19 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../schema/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -528,6 +539,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -544,20 +556,18 @@
       
   
   
-    
   
   
-  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -578,7 +588,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -593,19 +603,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../license/" class="md-nav__link">
         
   
   
@@ -621,7 +622,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -725,25 +725,71 @@
 
 
 
-<h1 id="license">License</h1>
-<p><strong>The MIT License</strong></p>
-<p>Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:</p>
-<p>The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.</p>
-<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
-<p>Copyright © Greg Wilson</p>
+<h1 id="database-schema">Database Schema</h1>
+<pre><code class="language-sql">CREATE TABLE &quot;grid&quot; (
+   ident TEXT PRIMARY KEY NOT NULL,
+   size INTEGER NOT NULL,
+   spacing REAL NOT NULL,
+   lat0 REAL NOT NULL,
+   lon0 REAL NOT NULL
+, &quot;image&quot; BLOB)
+CREATE TABLE grid_cells (
+   grid_id TEXT REFERENCES grid(ident),
+   lat REAL,
+   lon REAL,
+   value REAL,
+   PRIMARY KEY (grid_id, lat, lon)
+)
+CREATE TABLE &quot;machine&quot; (
+   ident TEXT PRIMARY KEY NOT NULL,
+   name TEXT NOT NULL
+)
+CREATE TABLE &quot;person&quot; (
+   ident TEXT PRIMARY KEY NOT NULL,
+   family TEXT NOT NULL,
+   personal TEXT NOT NULL,
+   supervisor_id TEXT REFERENCES person(ident)
+)
+CREATE TABLE &quot;rating&quot; (
+   person_id TEXT NOT NULL REFERENCES person(ident),
+   machine_id TEXT NOT NULL REFERENCES machine(ident),
+   certified INTEGER NOT NULL
+)
+CREATE TABLE &quot;assay&quot; (
+   ident TEXT PRIMARY KEY NOT NULL,
+   lat REAL NOT NULL REFERENCES grid_cells(lat),
+   lon REAL NOT NULL REFERENCES grid_cells(lon),
+   person_id TEXT NOT NULL REFERENCES person(ident),
+   machine_id TEXT NOT NULL REFERENCES machine(ident),
+   performed TEXT
+)
+CREATE TABLE assay_readings (
+   assay_id TEXT REFERENCES assay(ident),
+   reading_id INTEGER,
+   contents TEXT,
+   reading REAL,
+   PRIMARY KEY (assay_id, reading_id)
+)
+CREATE TABLE &quot;species&quot; (
+   reference TEXT NOT NULL,
+   susc_locus INTEGER NOT NULL,
+   susc_base TEXT NOT NULL
+)
+CREATE TABLE species_loci (
+   ident INTEGER PRIMARY KEY,
+   locus INTEGER
+)
+CREATE TABLE &quot;specimen&quot; (
+   ident TEXT NOT NULL,
+   lat REAL NOT NULL,
+   lon REAL NOT NULL,
+   genome TEXT NOT NULL,
+   mass REAL NOT NULL,
+   diameter REAL NOT NULL,
+   collected TEXT,
+   variety TEXT
+)
+</code></pre>
 
 
 
