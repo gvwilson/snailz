@@ -35,10 +35,18 @@ def main():
         print(Parameters().as_json())
         return 0
 
-    with _profile_context(enabled=args.profile):
-        params = _initialize(args)
-        data = _synthesize(params)
+    params = _initialize(args)
 
+    if args.schema:
+        conn = in_memory(params)
+        cursor = conn.cursor()
+        cursor.execute("select sql from sqlite_master where type='table';")
+        for stmt in cursor.fetchall():
+            print(stmt[0])
+        return 0
+
+    with _profile_context(enabled=args.profile):
+        data = _synthesize(params)
         _save_params(args.outdir, params)
         if args.outdir not in (None, "-"):
             classes = [Grid, Machine, Person, Rating, Assay, Species, Specimen]
@@ -110,6 +118,7 @@ def _parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--params", default=None, help="JSON parameter file")
     parser.add_argument("--profile", action="store_true", help="enable profiling")
+    parser.add_argument("--schema", action="store_true", help="show database schema")
     return parser.parse_args()
 
 
