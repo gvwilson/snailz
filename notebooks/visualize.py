@@ -19,8 +19,9 @@ def _():
     from datetime import date
     from faker.config import AVAILABLE_LOCALES
     from snailz import in_memory, Parameters
+    from chart_xkcd import Bar, Line, Pie, Scatter, StackedBar, to_widget
 
-    return AVAILABLE_LOCALES, Parameters, date, in_memory, io, mo
+    return AVAILABLE_LOCALES, Bar, Line, Parameters, Pie, Scatter, StackedBar, date, in_memory, io, mo, to_widget
 
 
 @app.cell
@@ -292,6 +293,138 @@ def _(conn, io, mo, rows, table_names):
     accordion_items = {"summary": mo.ui.table(rows, selection=None)}
     accordion_items.update({name: _make_table(name) for name in table_names})
     mo.accordion(accordion_items, multiple=True)
+    return
+
+
+@app.cell
+def _(conn, Pie, to_widget):
+    _cursor = conn.execute(
+        "SELECT COALESCE(variety, 'unknown') as v, COUNT(*) as c FROM specimen GROUP BY v"
+    )
+    _rows = _cursor.fetchall()
+    _labels = [r[0] for r in _rows]
+    _data = [r[1] for r in _rows]
+    chart_variety = to_widget(Pie(
+        title="Specimen Variety Distribution",
+        labels=_labels,
+        datasets=[{"data": _data}],
+    ))
+    return (chart_variety,)
+
+
+@app.cell
+def _(conn, Scatter, to_widget):
+    _cursor = conn.execute("SELECT mass, diameter, COALESCE(variety, 'unknown') FROM specimen")
+    _rows = _cursor.fetchall()
+    _by_variety = {}
+    for _mass, _diam, _var in _rows:
+        _by_variety.setdefault(_var, []).append({"x": _mass, "y": _diam})
+    _datasets = [{"label": v, "data": pts} for v, pts in sorted(_by_variety.items())]
+    chart_mass_diam = to_widget(Scatter(
+        title="Mass vs Diameter",
+        x_label="Mass (g)",
+        y_label="Diameter (mm)",
+        datasets=_datasets,
+        options={"showLegend": True, "dotSize": 0.5},
+    ))
+    return (chart_mass_diam,)
+
+
+@app.cell
+def _(conn, Bar, to_widget):
+    _cursor = conn.execute(
+        "SELECT gc.grid_id, COUNT(*) as c FROM specimen s "
+        "JOIN grid_cells gc ON s.lat = gc.lat AND s.lon = gc.lon "
+        "GROUP BY gc.grid_id"
+    )
+    _rows = _cursor.fetchall()
+    _labels = [r[0] for r in _rows]
+    _data = [r[1] for r in _rows]
+    chart_per_grid = to_widget(Bar(
+        title="Specimens per Grid",
+        x_label="Grid",
+        y_label="Count",
+        labels=_labels,
+        datasets=[{"data": _data}],
+    ))
+    return (chart_per_grid,)
+
+
+@app.cell
+def _(conn, Line, to_widget):
+    _cursor = conn.execute(
+        "SELECT collected, COUNT(*) as c FROM specimen "
+        "WHERE collected IS NOT NULL GROUP BY collected ORDER BY collected"
+    )
+    _rows = _cursor.fetchall()
+    _labels = [str(r[0]) for r in _rows]
+    _data = [r[1] for r in _rows]
+    chart_over_time = to_widget(Line(
+        title="Specimens Collected Over Time",
+        x_label="Date",
+        y_label="Count",
+        labels=_labels,
+        datasets=[{"label": "Collected", "data": _data}],
+    ))
+    return (chart_over_time,)
+
+
+@app.cell
+def _(conn, StackedBar, to_widget):
+    _cursor = conn.execute(
+        "SELECT m.name, r.certified, COUNT(*) as c FROM rating r "
+        "JOIN machine m ON r.machine_id = m.ident "
+        "GROUP BY m.name, r.certified"
+    )
+    _rows = _cursor.fetchall()
+    _machines = sorted(set(r[0] for r in _rows))
+    _certified = {name: 0 for name in _machines}
+    _not_certified = {name: 0 for name in _machines}
+    for _name, _cert, _count in _rows:
+        if _cert:
+            _certified[_name] = _count
+        else:
+            _not_certified[_name] = _count
+    chart_certification = to_widget(StackedBar(
+        title="Certification Status by Machine",
+        x_label="Machine",
+        y_label="Count",
+        labels=_machines,
+        datasets=[
+            {"label": "Certified", "data": [_certified[m] for m in _machines]},
+            {"label": "Not Certified", "data": [_not_certified[m] for m in _machines]},
+        ],
+    ))
+    return (chart_certification,)
+
+
+@app.cell
+def _(conn, Bar, to_widget):
+    _cursor = conn.execute(
+        "SELECT contents, ROUND(AVG(reading), 2) FROM assay_readings GROUP BY contents"
+    )
+    _rows = _cursor.fetchall()
+    _label_map = {"C": "Control", "T": "Treatment"}
+    _labels = [_label_map.get(r[0], r[0]) for r in _rows]
+    _data = [r[1] for r in _rows]
+    chart_mean_assay = to_widget(Bar(
+        title="Mean Assay Reading by Type",
+        x_label="Type",
+        y_label="Mean Reading",
+        labels=_labels,
+        datasets=[{"data": _data}],
+    ))
+    return (chart_mean_assay,)
+
+
+@app.cell
+def _(mo, chart_variety, chart_mass_diam, chart_per_grid, chart_over_time, chart_certification, chart_mean_assay):
+    mo.vstack([
+        mo.md("## Charts"),
+        mo.hstack([chart_variety, chart_mass_diam], justify="center"),
+        mo.hstack([chart_per_grid, chart_over_time], justify="center"),
+        mo.hstack([chart_certification, chart_mean_assay], justify="center"),
+    ])
     return
 
 
