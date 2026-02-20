@@ -7,7 +7,7 @@ authors = [
     {name = "Greg Wilson", email = "gvwilson@third-bit.com"}
 ]
 
-version = "5.5.1"
+version = "5.5.2"
 requires-python = ">=3.13"
 dependencies = [
     "faker>=40.1.2",
@@ -20,6 +20,7 @@ dependencies = [
 
 [project.urls]
 Repository = "https://github.com/gvwilson/snailz"
+Documentation = "https://snailz.readthedocs.io"
 
 [project.scripts]
 snailz = "snailz.main:main"
