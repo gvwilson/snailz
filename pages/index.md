@@ -25,9 +25,9 @@ while learners can test their analysis pipelines using datasets they generate th
 ```
 usage: snailz [-h]
               [--defaults]
-	      [--outdir OUTDIR]
+              [--outdir OUTDIR]
               [--override OVERRIDE [OVERRIDE ...]]
-	      [--params PARAMS]
+              [--params PARAMS]
               [--profile]
 
 options:
