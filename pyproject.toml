@@ -7,8 +7,8 @@ authors = [
     {name = "Greg Wilson", email = "gvwilson@third-bit.com"}
 ]
 
-version = "5.5.2"
-requires-python = ">=3.13"
+version = "5.5.3"
+requires-python = ">=3.12"
 dependencies = [
     "faker>=40.1.2",
     "numpy>=2.4.1",
@@ -25,10 +25,10 @@ Documentation = "https://snailz.readthedocs.io"
 [project.scripts]
 snailz = "snailz.main:main"
 
+#    "chart-xkcd>=0.3.0",
 [dependency-groups]
 dev = [
     "build>=1.4.0",
-    "chart-xkcd>=0.3.0",
     "coverage>=7.13.1",
     "marimo>=0.19.11",
     "mkdocs>=1.6.1",
