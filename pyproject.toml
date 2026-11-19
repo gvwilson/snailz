@@ -13,6 +13,7 @@ dependencies = [
     "faker>=40.1.2",
     "numpy>=2.4.1",
     "pillow>=12.1.0",
+    "simplint>=0.14.2",
     "sqlite-utils>=4.0",
 ]
 
