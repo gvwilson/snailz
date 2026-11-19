@@ -29,6 +29,7 @@ usage: snailz [-h]
               [--override OVERRIDE [OVERRIDE ...]]
               [--params PARAMS]
               [--profile]
+              [--schema]
 
 options:
   -h, --help            show this help message and exit
@@ -101,6 +102,7 @@ An asterisk beside the name of a field indicates that the value may be missing
 |                | mass          | float | specimen mass (g) |
 |                | diameter      | float | specimen diameter (mm) |
 |                | collected*    | date  | when specimen was collected |
+|                | variety*      | text  | shell variety (possibly missing) |
 
 ## Colophon
 

@@ -60,7 +60,7 @@ class Person(BaseMixin):
             List of persons.
         """
 
-        num_supervisors = max(1, int(params.supervisor_frac * params.num_persons))
+        num_supervisors = round(params.supervisor_frac * params.num_persons)
         num_staff = params.num_persons - num_supervisors
 
         staff = [
@@ -80,7 +80,9 @@ class Person(BaseMixin):
         ]
 
         for person in staff:
-            person.supervisor_id = random.choice(supervisors).ident
+            person.supervisor_id = (
+                random.choice(supervisors).ident if supervisors else None
+            )
 
         return staff + supervisors
 

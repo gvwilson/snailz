@@ -129,5 +129,5 @@ def validate_lat_lon(caller: str, lat: float, lon: float):
         ValueError: If `(lat, lon)` pair is invalid.
     """
 
-    validate(-90.0 <= lat <= 90.0, f"invalid {caller} latitutde {lat}")
+    validate(-90.0 <= lat <= 90.0, f"invalid {caller} latitude {lat}")
     validate(-180.0 <= lon <= 180.0, f"invalid {caller} longitude {lon}")

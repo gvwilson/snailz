@@ -43,6 +43,7 @@ class Specimen(BaseMixin):
     """
 
     nullable_keys: ClassVar[set[str]] = {"collected", "variety"}
+    primary_key: ClassVar[str] = "ident"
     _next_id: ClassVar[IdGeneratorType] = id_generator("S", 4)
 
     ident: str = ""

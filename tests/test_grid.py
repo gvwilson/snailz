@@ -47,6 +47,12 @@ def test_grid_fill_creates_nonzero_values(small_grid):
     assert all(v >= 0 for v in small_grid.cells)
 
 
+def test_grid_fill_small_grids_nonzero(seeded_rng):
+    for size in (1, 2):
+        g = Grid(size=size, spacing=1.0, lat0=0.0, lon0=0.0, params=Parameters())
+        assert max(g.cells) > 0.0
+
+
 def test_grid_randomize_respects_std_dev(seeded_rng):
     g = Grid(size=5, spacing=1.0, lat0=0.0, lon0=0.0, params=Parameters())
     assert len(set(g.cells)) > 1

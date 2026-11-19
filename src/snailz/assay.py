@@ -35,8 +35,6 @@ class Assay(BaseMixin):
 
     primary_key: ClassVar[str] = "ident"
     foreign_keys: ClassVar[ForeignKeysType] = [
-        ("lat", "grid_cells", "lat"),
-        ("lon", "grid_cells", "lon"),
         ("person_id", "person", "ident"),
         ("machine_id", "machine", "ident"),
     ]

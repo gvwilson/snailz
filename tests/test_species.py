@@ -20,6 +20,11 @@ def test_species_reference_genome_length_and_bases(seeded_rng):
     assert set(genome).issubset(set(BASES.keys()))
 
 
+def test_species_requires_at_least_one_locus():
+    with pytest.raises(ValueError):
+        Parameters(num_loci=0)
+
+
 def test_species_make_constructs_consistent_species(a_species):
     assert len(a_species.reference) == 20
     assert len(a_species.loci) == 5

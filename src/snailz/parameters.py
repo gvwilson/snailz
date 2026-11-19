@@ -74,7 +74,7 @@ class Parameters:
     """Length of species genome in bases."""
 
     num_loci: int = 1
-    """Number of loci in genome at which mutations may occur."""
+    """Number of loci in genome at which mutations may occur (at least one)."""
 
     p_mutation: float = 0.5
     """Probability of mutation at each locus."""
@@ -123,7 +123,8 @@ class Parameters:
         validate_lat_lon("parameters", self.lat0, self.lon0)
         validate(self.num_persons > 0, "require positive number of persons")
         validate(
-            self.supervisor_frac >= 0.0, "require non-negative supervisor fraction"
+            0.0 <= self.supervisor_frac <= 1.0,
+            "require supervisor fraction in [0..1]",
         )
         validate(self.locale in AVAILABLE_LOCALES, f"unknown locale {self.locale}")
         validate(self.num_machines > 0, "require positive number of machines")
@@ -131,7 +132,7 @@ class Parameters:
         validate(self.num_assays >= 1, "require at least one assay")
         validate(self.assay_size >= 2, "require assay size at least two")
         validate(self.genome_length > 0, "require positive genome length")
-        validate(self.num_loci >= 0, "require non-negative number of loci")
+        validate(self.num_loci >= 1, "require at least one locus")
         validate(
             0.0 <= self.p_mutation <= 1.0, "require mutation probability in [0..1]"
         )

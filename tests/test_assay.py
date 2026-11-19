@@ -86,3 +86,25 @@ def test_assay_persist_to_db():
     assert set(r["ident"] for r in rows) == set(a.ident for a in assays)
     field_names = {f.name for f in fields(assays[0])}
     assert set(rows[0].keys()).issubset(field_names)
+
+
+def test_assay_schema_has_no_cell_coordinate_foreign_keys():
+    db = Database(memory=True)
+    params = Parameters(num_assays=1)
+    grids = [Grid(size=1, spacing=1.0, params=params)]
+    persons = [Person(family="A", personal="B")]
+    machines = [Machine(name="M1")]
+    ratings = [Rating(
+        person_id=persons[0].ident, machine_id=machines[0].ident, certified=True
+    )]
+    assays = Assay.make(params, grids, ratings)
+
+    Grid.save_db(db, grids)
+    Person.save_db(db, persons)
+    Machine.save_db(db, machines)
+    Assay.save_db(db, assays)
+
+    create_sql = db.conn.execute(
+        "select sql from sqlite_master where name='assay'"
+    ).fetchone()[0]
+    assert "grid_cells" not in create_sql

@@ -307,6 +307,12 @@ class Grid(BaseMixin):
         size_1 = self.size - 1
         x, y = center, center
 
+        # The random walk needs an interior center; 1x1 and 2x2 grids have
+        # none, so seed the center cell directly instead of leaving it empty.
+        if self.size < 3:
+            self[x, y] += 1
+            return
+
         while (x != 0) and (y != 0) and (x != size_1) and (y != size_1):
             self[x, y] += 1
             m = random.choice(MOVES)
@@ -338,5 +344,5 @@ class Grid(BaseMixin):
         Raises:
             ValueError: If either coordinate is out of range.
         """
-        validate(0 <= key[0] < self.size, "invalid X coordinate {key[0]}")
-        validate(0 <= key[1] < self.size, "invalid Y coordinate {key[1]}")
+        validate(0 <= key[0] < self.size, f"invalid X coordinate {key[0]}")
+        validate(0 <= key[1] < self.size, f"invalid Y coordinate {key[1]}")

@@ -36,3 +36,16 @@ def test_rating_persist_to_db():
     Rating.save_db(db, ratings)
     rows = list(db[Rating.table_name()].rows)
     assert len(rows) == len(persons) * len(machines)
+
+
+def test_rating_composite_primary_key():
+    db = Database(memory=True)
+    persons = [Person(family="A", personal="B"), Person(family="C", personal="D")]
+    Person.save_db(db, persons)
+    machines = [Machine(name="some machine")]
+    Machine.save_db(db, machines)
+    ratings = Rating.make(
+        Parameters(ratings_frac=1.0, p_certified=1.0), persons, machines
+    )
+    Rating.save_db(db, ratings)
+    assert db[Rating.table_name()].pks == ["person_id", "machine_id"]

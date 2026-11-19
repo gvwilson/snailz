@@ -75,6 +75,15 @@ def test_specimen_persist_to_db(a_grid):
     assert len(rows) == params.num_specimens
 
 
+def test_specimen_primary_key_is_ident(a_grid):
+    db = Database(memory=True)
+    species = DummySpecies(genome="ACGT")
+    params = Parameters(num_specimens=5, p_mutation=0.2)
+    specimens = Specimen.make(params, [a_grid], species)
+    Specimen.save_db(db, specimens)
+    assert db[Specimen.table_name()].pks == ["ident"]
+
+
 def test_specimen_with_valid_variety(seeded_rng):
     specimen = Specimen(
         lat=10.0, lon=20.0, genome="ACGT", mass=1.0, diameter=1.0, variety="banded"

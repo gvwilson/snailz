@@ -23,6 +23,7 @@ class Rating(BaseMixin):
         certified: whether person is certified on machine
     """
 
+    primary_key: ClassVar[tuple[str, str]] = ("person_id", "machine_id")
     foreign_keys: ClassVar[ForeignKeysType] = [
         ("person_id", "person", "ident"),
         ("machine_id", "machine", "ident"),

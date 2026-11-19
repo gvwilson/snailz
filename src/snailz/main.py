@@ -3,6 +3,7 @@
 import argparse
 from contextlib import contextmanager
 import cProfile
+from datetime import date
 from faker import Faker
 import json
 from pathlib import Path
@@ -89,11 +90,18 @@ def _initialize(args: argparse.Namespace) -> Parameters:
 
     for ov in args.override:
         fields = ov.split("=")
-        assert len(fields) == 2, f"malformed override {ov}"
+        if len(fields) != 2:
+            raise ValueError(f"malformed override {ov}")
         key, value = fields
-        assert hasattr(params, key), f"unknown override key {key}"
+        if not hasattr(params, key):
+            raise ValueError(f"unknown override key {key}")
         prior = getattr(params, key)
-        setattr(params, key, type(prior)(value))
+        if isinstance(prior, date):
+            setattr(params, key, date.fromisoformat(value))
+        elif isinstance(prior, bool):
+            setattr(params, key, value.lower() in {"true", "1", "yes"})
+        else:
+            setattr(params, key, type(prior)(value))
 
     random.seed(params.seed)
 

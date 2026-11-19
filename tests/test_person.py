@@ -43,6 +43,23 @@ def test_person_make_creates_supervisors(fake):
     assert people[-1].supervisor_id is None
 
 
+def test_person_supervisor_fraction_zero_gives_no_supervisors(fake):
+    people = Person.make(Parameters(num_persons=5, supervisor_frac=0.0), fake)
+    assert len(people) == 5
+    assert all(p.supervisor_id is None for p in people)
+
+
+def test_person_supervisor_fraction_one_gives_all_supervisors(fake):
+    people = Person.make(Parameters(num_persons=5, supervisor_frac=1.0), fake)
+    assert len(people) == 5
+    assert all(p.supervisor_id is None for p in people)
+
+
+def test_person_supervisor_fraction_rejects_out_of_range():
+    with pytest.raises(ValueError):
+        Parameters(supervisor_frac=1.5)
+
+
 def test_person_persist_to_csv(fake, tmp_path):
     persons = Person.make(Parameters(num_persons=2), fake)
     Person.save_csv(tmp_path, persons)
